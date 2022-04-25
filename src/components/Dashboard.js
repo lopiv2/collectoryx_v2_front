@@ -5,6 +5,7 @@ import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import { Card, CardMedia } from '@mui/material';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -28,6 +29,9 @@ import Avatar, { RedirectSource } from 'react-avatar';
 import AuthService from "../app/api/auth.api";
 import { AppContext } from "./AppContext";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/Collectoryx_Logo.png";
+import LazyLoad from "react-lazyload";
+import "./Dashboard.css";
 
 function Copyright(props) {
   return (

@@ -9,9 +9,15 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import logo from "../assets/Collectoryx_Logo.png";
+import LazyLoad from "react-lazyload";
+import "./Dashboard.css";
 
 export const mainListItems = (
   <React.Fragment>
+    <LazyLoad height={200}>
+      <img src={logo} className="logo" />
+    </LazyLoad>
     <ListItemButton>
       <ListItemIcon>
         <DashboardIcon />

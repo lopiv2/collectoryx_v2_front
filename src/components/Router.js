@@ -6,7 +6,6 @@ import {
 import SignInSide from "../components/SignInSide";
 import Dashboard from "../components/Dashboard";
 import ProtectedRoutes from "../components/ProtectedRoute";
-import AuthService from "../app/api/auth.api";
 
 
 export const Router = () => {
