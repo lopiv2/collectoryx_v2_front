@@ -14,13 +14,9 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthService from "../app/api/auth.api";
 import { AppContext } from "./AppContext";
-<<<<<<< HEAD
-=======
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-
->>>>>>> 4a1d133b (first commit)
 
 function Copyright(props) {
 
@@ -44,27 +40,12 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-<<<<<<< HEAD
-  const { isLogged, setIsLogged } = React.useContext(AppContext);
-
-  useEffect(() => {
-    if (isLogged === true) {
-      //console.log(isLogged);
-    }
-  }, [isLogged]);
-=======
   const { userName, setUserName, isLogged, setIsLogged } = React.useContext(AppContext);
   const navigate = useNavigate();
->>>>>>> 4a1d133b (first commit)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-<<<<<<< HEAD
-    AuthService.login(data.get("user_name"), data.get("password")).then(() => {
-      setIsLogged(true);
-      console.log(AuthService.getCurrentUser());
-=======
     AuthService.login(data.get("user_name"), data.get("password")).then((response) => {
       setIsLogged(true);
       setUserName(data.get("user_name"));
@@ -75,16 +56,12 @@ export default function SignInSide() {
       else {
         navigate("/dashboard");
       }
->>>>>>> 4a1d133b (first commit)
     });
   };
 
   return (
     <ThemeProvider theme={theme}>
-<<<<<<< HEAD
-=======
       <ToastContainer autoClose={3000} />
->>>>>>> 4a1d133b (first commit)
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
@@ -124,21 +101,13 @@ export default function SignInSide() {
               noValidate
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
-<<<<<<< HEAD
-=======
-
->>>>>>> 4a1d133b (first commit)
             >
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="user_name"
-<<<<<<< HEAD
-                label="Email Address"
-=======
                 label="User Name"
->>>>>>> 4a1d133b (first commit)
                 name="user_name"
                 autoComplete="user_name"
                 autoFocus

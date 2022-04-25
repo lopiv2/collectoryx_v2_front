@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import * as React from 'react';
-=======
 import React, { useEffect } from 'react';
->>>>>>> 4a1d133b (first commit)
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -19,25 +15,19 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
-<<<<<<< HEAD
-=======
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
->>>>>>> 4a1d133b (first commit)
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
-<<<<<<< HEAD
-=======
 import Avatar, { RedirectSource } from 'react-avatar';
 import AuthService from "../app/api/auth.api";
 import { AppContext } from "./AppContext";
 import { useNavigate } from "react-router-dom";
->>>>>>> 4a1d133b (first commit)
 
 function Copyright(props) {
   return (
@@ -54,10 +44,7 @@ function Copyright(props) {
 
 const drawerWidth = 240;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 4a1d133b (first commit)
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -105,8 +92,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 function DashboardContent() {
-<<<<<<< HEAD
-=======
   const navigate = useNavigate();
   const { userName, setUserName, isLogged, setIsLogged } = React.useContext(AppContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -118,14 +103,11 @@ function DashboardContent() {
   const handleClose = () => {
     setAnchorEl(null);
   };
->>>>>>> 4a1d133b (first commit)
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-<<<<<<< HEAD
-=======
   const onClickLogout = () => {
 
     AuthService.logout();
@@ -140,7 +122,6 @@ function DashboardContent() {
     //console.log(user_name);
   }, []);
 
->>>>>>> 4a1d133b (first commit)
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -177,8 +158,6 @@ function DashboardContent() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-<<<<<<< HEAD
-=======
             <IconButton onClick={handleClick} color="inherit">
               <Menu
                 id="basic-menu"
@@ -195,7 +174,6 @@ function DashboardContent() {
               </Menu>
               <Avatar name={userName} size={35} round="200px" />
             </IconButton>
->>>>>>> 4a1d133b (first commit)
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -270,11 +248,7 @@ function DashboardContent() {
           </Container>
         </Box>
       </Box>
-<<<<<<< HEAD
-    </ThemeProvider>
-=======
     </ThemeProvider >
->>>>>>> 4a1d133b (first commit)
   );
 }
 
