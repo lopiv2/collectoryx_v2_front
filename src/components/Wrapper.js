@@ -4,11 +4,11 @@ import Spanish from '../lang/es.json';
 import English from '../lang/en.json';
 const Context = React.createContext();
 const local = navigator.language;
-let lang=English;
-if (local === "en") {
+let lang = English;
+if (local === "en-EN") {
     lang = English;
 } else {
-    if (local === "es") {
+    if (local === "es-ES") {
         lang = Spanish;
     }
 }
@@ -19,10 +19,10 @@ const Wrapper = (props) => {
     function selectLanguage(e) {
         const newLocale = e.target.value;
         setLocale(newLocale);
-        if (newLocale === 'es') {
+        if (newLocale === 'es-ES') {
             setMessages(Spanish);
         } else {
-            if (newLocale === 'en') {
+            if (newLocale === 'en-EN') {
                 setMessages(English);
             }
         }
@@ -36,4 +36,4 @@ const Wrapper = (props) => {
     );
 }
 export default Wrapper;
-export {Context};
+export { Context };

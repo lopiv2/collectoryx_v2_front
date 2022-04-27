@@ -19,6 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { Context } from "../components/Wrapper";
 import { FormattedMessage } from 'react-intl';
+import LanguageSwitcher from '../components/LanguageSelector';
 
 function Copyright(props) {
 
@@ -84,7 +85,11 @@ export default function SignInSide() {
             backgroundPosition: "center",
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+
+        <Grid item xs={12} sm={8} md={5} p={2} component={Paper} elevation={6} square>
+          <Grid container justifyContent="flex-end" m={-3} p={2}>
+            <LanguageSwitcher></LanguageSwitcher>
+          </Grid>
           <Box
             sx={{
               my: 8,
@@ -100,10 +105,6 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <select value={context.locale} onChange={context.selectLanguage}>
-              <option value='en'>English</option>
-              <option value='es'>Español</option>
-            </select>
             <Box
               component="form"
               noValidate
