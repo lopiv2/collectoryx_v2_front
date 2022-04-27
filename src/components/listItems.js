@@ -9,26 +9,22 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import logo from "../assets/Collectoryx_Logo.png";
-import LazyLoad from "react-lazyload";
 import "./Dashboard.css";
+import { FormattedMessage } from 'react-intl';
 
 export const mainListItems = (
   <React.Fragment>
-    <LazyLoad height={200}>
-      <img src={logo} className="logo" />
-    </LazyLoad>
     <ListItemButton>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+      <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="Orders" />
+      <FormattedMessage id="app.sidemenu.collections"></FormattedMessage>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>

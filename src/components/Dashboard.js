@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/Collectoryx_Logo.png";
 import LazyLoad from "react-lazyload";
 import "./Dashboard.css";
+import { FormattedMessage } from 'react-intl';
 
 function Copyright(props) {
   return (
@@ -155,13 +156,14 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+
             <IconButton onClick={handleClick} color="inherit">
               <Menu
                 id="basic-menu"
@@ -189,6 +191,9 @@ function DashboardContent() {
               px: [1],
             }}
           >
+            <LazyLoad height={200}>
+              <img src={logo} className="logo" />
+            </LazyLoad>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>

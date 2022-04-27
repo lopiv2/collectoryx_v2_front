@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,6 +17,8 @@ import { AppContext } from "./AppContext";
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { Context } from "../components/Wrapper";
+import { FormattedMessage } from 'react-intl';
 
 function Copyright(props) {
 
@@ -40,8 +42,10 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const { userName, setUserName, isLogged, setIsLogged } = React.useContext(AppContext);
+  const { userName, setUserName, isLogged, setIsLogged } = useContext(AppContext);
   const navigate = useNavigate();
+  const context = useContext(Context);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -70,7 +74,7 @@ export default function SignInSide() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(https://source.unsplash.com/random)",
+            backgroundImage: "url(https://source.unsplash.com/random/:topic=arts-culture)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -96,6 +100,10 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
+            <select value={context.locale} onChange={context.selectLanguage}>
+              <option value='en'>English</option>
+              <option value='es'>Español</option>
+            </select>
             <Box
               component="form"
               noValidate
@@ -107,7 +115,7 @@ export default function SignInSide() {
                 required
                 fullWidth
                 id="user_name"
-                label="User Name"
+                label={<FormattedMessage id="app.signin.userName"></FormattedMessage>}
                 name="user_name"
                 autoComplete="user_name"
                 autoFocus
@@ -117,7 +125,7 @@ export default function SignInSide() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={<FormattedMessage id="app.signin.password"></FormattedMessage>}
                 type="password"
                 id="password"
                 autoComplete="current-password"

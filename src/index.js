@@ -3,10 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import  ContextProvider  from './components/AppContext';
+import ContextProvider from './components/AppContext';
+import { IntlProvider } from 'react-intl';
+import Wrapper from "./components/Wrapper";
 
 ReactDOM.render(
-  <ContextProvider><App /></ContextProvider>,
+  <Wrapper>
+    <ContextProvider><App /></ContextProvider>,
+  </Wrapper>,
   document.getElementById('root')
 );
 
