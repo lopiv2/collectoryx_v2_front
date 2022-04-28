@@ -1,6 +1,15 @@
 {
     "app.sidemenu.dashboard":"Dashboard",
     "app.sidemenu.collections":"Collections",
+    "app.sidemenu.collections.show":"Show Collections",
+    "app.sidemenu.collections.add":"Add Collection",
+    "app.sidemenu.collections.admin":"Admin Collections",
+    "app.sidemenu.feeds":"Web Feeds",
+    "app.sidemenu.reports":"Reports",
+    "app.sidemenu.config":"Settings",
+    "app.sidemenu.options.logs":"Logs",
+    "app.sidemenu.options.ui":"UI",
+    "app.signin":"Sign In",
     "app.signin.userName":"User Name",
     "app.signin.password":"Password",
     "app.language":"Language"

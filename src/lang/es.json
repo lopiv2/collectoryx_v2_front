@@ -1,6 +1,15 @@
 {
     "app.sidemenu.dashboard":"Panel de control",
     "app.sidemenu.collections":"Colecciones",
+    "app.sidemenu.collections.show":"Ver Colecciones",
+    "app.sidemenu.collections.add":"Agregar Coleccion",
+    "app.sidemenu.collections.admin":"Administrar Colecciones",
+    "app.sidemenu.feeds":"Fuentes Web",
+    "app.sidemenu.reports":"Reportes",
+    "app.sidemenu.config":"Configuracion",
+    "app.sidemenu.options.logs":"Logs",
+    "app.sidemenu.options.ui":"Interfaz",
+    "app.signin":"Ingresar",
     "app.signin.userName":"Nombre de Usuario",
     "app.signin.password":"Contraseña",
     "app.language":"Idioma"

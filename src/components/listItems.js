@@ -1,74 +1,113 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import PeopleIcon from '@mui/icons-material/People';
+import CollectionsIcon from '@mui/icons-material/Collections';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import LayersIcon from '@mui/icons-material/Layers';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import SettingsIcon from '@mui/icons-material/Settings';
+import RssFeedIcon from '@mui/icons-material/RssFeed';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import ScreenshotMonitorIcon from '@mui/icons-material/ScreenshotMonitor';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import PreviewIcon from '@mui/icons-material/Preview';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import Collapse from '@mui/material/Collapse';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
 import "./Dashboard.css";
 import { FormattedMessage } from 'react-intl';
 
-export const mainListItems = (
-  <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <FormattedMessage id="app.sidemenu.collections"></FormattedMessage>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItemButton>
-  </React.Fragment>
-);
+export default function MainListItems() {
+  const [open, setOpen] = useState(false);
+  const [openCol, setOpenCol] = useState(false);
 
-export const secondaryListItems = (
-  <React.Fragment>
-    <ListSubheader component="div" inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItemButton>
-  </React.Fragment>
-);
+  const handleClickSettings = () => {
+    setOpen(!open);
+  };
+
+  const handleClickCollections = () => {
+    setOpenCol(!openCol);
+  };
+
+  return (
+    <List
+      sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+      component="nav"
+      aria-labelledby="nested-list-subheader"
+    >
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
+      </ListItemButton>
+      <Divider sx={{ my: 1 }} />
+      <ListItemButton sx={{ margin: '5px 0' }} onClick={handleClickCollections}>
+        <ListItemIcon >
+          <CollectionsIcon />
+        </ListItemIcon>
+        <FormattedMessage id="app.sidemenu.collections"></FormattedMessage>
+        {openCol ? <ExpandLess sx={{ ml: 4 }} /> : <ExpandMore sx={{ ml: 4 }} />}
+      </ListItemButton>
+      <Collapse in={openCol} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
+            <ListItemIcon>
+              <PreviewIcon />
+            </ListItemIcon>
+            <FormattedMessage sx={{ pl: 4 }} id="app.sidemenu.collections.show"></FormattedMessage>
+          </ListItemButton>
+          <ListItemButton sx={{ pl: 4, margin: '5px 0',fontSize: '.75rem' }}>
+            <ListItemIcon>
+              <AddBoxIcon/>
+            </ListItemIcon>
+            <FormattedMessage id="app.sidemenu.collections.add"></FormattedMessage>
+          </ListItemButton>
+          <ListItemButton sx={{ pl: 4, margin: '5px 0' ,fontSize: '.75rem'}}>
+            <ListItemIcon>
+              <ConstructionIcon />
+            </ListItemIcon>
+            <FormattedMessage id="app.sidemenu.collections.admin"></FormattedMessage>
+          </ListItemButton>
+        </List>
+      </Collapse>
+      <ListItemButton sx={{ margin: '5px 0' }}>
+        <ListItemIcon>
+          <RssFeedIcon />
+        </ListItemIcon>
+        <FormattedMessage id="app.sidemenu.feeds"></FormattedMessage>
+      </ListItemButton>
+      <ListItemButton sx={{ margin: '5px 0' }}>
+        <ListItemIcon>
+          <BarChartIcon />
+        </ListItemIcon>
+        <FormattedMessage id="app.sidemenu.reports"></FormattedMessage>
+      </ListItemButton>
+      <ListItemButton sx={{ margin: '5px 0' }} onClick={handleClickSettings} >
+        <ListItemIcon>
+          <SettingsIcon />
+        </ListItemIcon>
+        <FormattedMessage id="app.sidemenu.config"></FormattedMessage>
+        {open ? <ExpandLess sx={{ ml: 4 }} /> : <ExpandMore sx={{ ml: 4 }} />}
+      </ListItemButton>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
+            <ListItemIcon>
+              <EventNoteIcon />
+            </ListItemIcon>
+            <FormattedMessage id="app.sidemenu.options.logs"></FormattedMessage>
+          </ListItemButton>
+          <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
+            <ListItemIcon>
+              <ScreenshotMonitorIcon />
+            </ListItemIcon>
+            <FormattedMessage id="app.sidemenu.options.ui"></FormattedMessage>
+          </ListItemButton>
+        </List>
+      </Collapse>
+    </List>
+  );
+}

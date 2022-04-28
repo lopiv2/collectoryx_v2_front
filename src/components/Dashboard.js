@@ -21,7 +21,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
+import MainListItems from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
@@ -33,6 +33,7 @@ import logo from "../assets/Collectoryx_Logo.png";
 import LazyLoad from "react-lazyload";
 import "./Dashboard.css";
 import { FormattedMessage } from 'react-intl';
+import LanguageSwitcher from '../components/LanguageSelector';
 
 function Copyright(props) {
   return (
@@ -158,28 +159,61 @@ function DashboardContent() {
             >
               <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
             </Typography>
+            <LanguageSwitcher></LanguageSwitcher>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-
-            <IconButton onClick={handleClick} color="inherit">
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={openAnch}
-                onClose={handleClose}
-                MenuListProps={{
-                  'aria-labelledby': 'basic-button',
-                }}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={onClickLogout}>Logout</MenuItem>
-              </Menu>
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 1 }}
+              aria-controls={openAnch ? 'account-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={openAnch ? 'true' : undefined}
+              color="inherit">
               <Avatar name={userName} size={35} round="200px" />
             </IconButton>
+            <Menu
+              id="account-menu"
+              anchorEl={anchorEl}
+              open={openAnch}
+              onClose={handleClose}
+              onClick={handleClose}
+              PaperProps={{
+                elevation: 0,
+                sx: {
+                  overflow: 'visible',
+                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                  mt: 1.5,
+                  '& .MuiAvatar-root': {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  '&:before': {
+                    content: '""',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: 'background.paper',
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    zIndex: 0,
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleClose}>My account</MenuItem>
+              <MenuItem onClick={onClickLogout}>Logout</MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -200,9 +234,8 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            {MainListItems()}
             <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
           </List>
         </Drawer>
         <Box
