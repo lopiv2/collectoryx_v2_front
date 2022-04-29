@@ -5,7 +5,6 @@ import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import { Card, CardMedia } from '@mui/material';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -16,7 +15,6 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
-import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -29,11 +27,13 @@ import Avatar, { RedirectSource } from 'react-avatar';
 import AuthService from "../app/api/auth.api";
 import { AppContext } from "./AppContext";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/Collectoryx_Logo.png";
+import Logo from "../assets/Collectoryx_Logo.png";
 import LazyLoad from "react-lazyload";
 import "./Dashboard.css";
 import { FormattedMessage } from 'react-intl';
-import LanguageSwitcher from '../components/LanguageSelector';
+import LanguageSwitcher from './LanguageSelector';
+import CollectionsSpentCard from './CollectionsSpentCard';
+import TotalItemsCard from './TotalItemsCard';
 
 function Copyright(props) {
   return (
@@ -99,7 +99,7 @@ const mdTheme = createTheme();
 
 function DashboardContent() {
   const navigate = useNavigate();
-  const { userName, setUserName, isLogged, setIsLogged } = React.useContext(AppContext);
+  const { user_name, setuser_name, isLogged, setIsLogged } = React.useContext(AppContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openAnch = Boolean(anchorEl);
 
@@ -124,7 +124,7 @@ function DashboardContent() {
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem('user'));
     const { user_name: user_name } = user;
-    setUserName(user_name);
+    setuser_name(user_name);
     //console.log(user_name);
   }, []);
 
@@ -173,7 +173,7 @@ function DashboardContent() {
               aria-haspopup="true"
               aria-expanded={openAnch ? 'true' : undefined}
               color="inherit">
-              <Avatar name={userName} size={35} round="200px" />
+              <Avatar name={user_name} size={35} round="200px" />
             </IconButton>
             <Menu
               id="account-menu"
@@ -226,7 +226,7 @@ function DashboardContent() {
             }}
           >
             <LazyLoad height={200}>
-              <img src={logo} className="logo" />
+              <img src={Logo} className="logo" />
             </LazyLoad>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
@@ -251,8 +251,16 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="xlg" sx={{ mt: 2, mb: 4 }}>
             <Grid container spacing={3}>
+              {/*Spent Money in all collections*/}
+              <Grid item xs={10} md={8} lg={4}>
+                <CollectionsSpentCard item xs={12} md={8} lg={9}></CollectionsSpentCard>
+              </Grid>
+              {/*Total items in all collections*/}
+              <Grid item xs={10} md={8} lg={4}>
+                <TotalItemsCard item xs={12} md={8} lg={9}></TotalItemsCard>
+              </Grid>
               {/* Chart */}
               <Grid item xs={12} md={8} lg={9}>
                 <Paper

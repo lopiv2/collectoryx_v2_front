@@ -10,7 +10,9 @@
     "app.sidemenu.options.logs":"Logs",
     "app.sidemenu.options.ui":"Interfaz",
     "app.signin":"Ingresar",
-    "app.signin.userName":"Nombre de Usuario",
+    "app.signin.user_name":"Nombre de Usuario",
     "app.signin.password":"Contraseña",
-    "app.language":"Idioma"
+    "app.language":"Idioma",
+    "app.money_spent":"Dinero gastado en total",
+    "app.total_items":"Articulos totales"
 }

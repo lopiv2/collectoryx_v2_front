@@ -10,7 +10,9 @@
     "app.sidemenu.options.logs":"Logs",
     "app.sidemenu.options.ui":"UI",
     "app.signin":"Sign In",
-    "app.signin.userName":"User Name",
+    "app.signin.user_name":"User Name",
     "app.signin.password":"Password",
-    "app.language":"Language"
+    "app.language":"Language",
+    "app.money_spent":"Total money spent",
+    "app.total_items":"Total items"
 }
