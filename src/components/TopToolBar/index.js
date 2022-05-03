@@ -11,36 +11,12 @@ import Avatar, { RedirectSource } from "react-avatar";
 //import "./Dashboard.css";
 import { FormattedMessage } from "react-intl";
 import LanguageSwitcher from "../LanguageSelector";
-import { useNavigate } from "react-router-dom";
-import AuthService from "../../app/api/auth.api";
 import { AppContext } from "../AppContext";
 
-export default function TopToolBar(props,{open2}) {
+export default function TopToolBar(props) {
   //const navigate = useNavigate();
   const { userName, setUserName, isLogged, setIsLogged } =
     React.useContext(AppContext);
-  /*const [anchorEl, setAnchorEl] = React.useState(null);
-  const openAnch = Boolean(anchorEl);*/
-  //const [open, setOpen] = props.open;
-  console.log(open2);
-
-  /*const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };*/
-  /*const handleClose = () => {
-    setAnchorEl(null);
-  };*/
-
-  /*const toggleDrawer = () => {
-    setOpen(!open);
-  };*/
-
-  /*const onClickLogout = () => {
-
-    AuthService.logout();
-    navigate('/login')
-    //console.log(AuthService.isLogged());
-  }*/
 
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem('user'));
@@ -62,7 +38,7 @@ export default function TopToolBar(props,{open2}) {
         onClick={props.toggleDrawer}
         sx={{
           marginRight: "36px",
-          ...(open2 && { display: "none" }),
+          ...(props.open && { display: "none" }),
         }}
       >
         <MenuIcon />

@@ -18,7 +18,14 @@ export const Router = () => {
           </ProtectedRoutes>
         }
       ></Route>
-      
+      <Route
+        path="/collections/add"
+        element={
+          <ProtectedRoutes>
+            <AddCollection />
+          </ProtectedRoutes>
+        }
+      ></Route>
 
       {/** Public Routes */}
       <Route path="/login" element={<SignInSide />} />

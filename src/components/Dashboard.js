@@ -99,7 +99,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+function DashboardContent(props) {
   const navigate = useNavigate();
   const { userName, setUserName, isLogged, setIsLogged } = React.useContext(AppContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -135,7 +135,7 @@ function DashboardContent() {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
-          <TopToolBar open={open}></TopToolBar>
+          <TopToolBar open={open} openAnch={openAnch} toggleDrawer={toggleDrawer}></TopToolBar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
           <Toolbar
