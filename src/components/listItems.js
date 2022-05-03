@@ -18,6 +18,7 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import "./Dashboard.css";
 import { FormattedMessage } from 'react-intl';
+import { NavLink } from "react-router-dom";
 
 export default function MainListItems() {
   const [open, setOpen] = useState(false);
@@ -59,20 +60,22 @@ export default function MainListItems() {
             </ListItemIcon>
             <FormattedMessage sx={{ pl: 4 }} id="app.sidemenu.collections.show"></FormattedMessage>
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4, margin: '5px 0',fontSize: '.75rem' }}>
-            <ListItemIcon>
-              <AddBoxIcon/>
-            </ListItemIcon>
-            <FormattedMessage id="app.sidemenu.collections.add"></FormattedMessage>
-          </ListItemButton>
-          <ListItemButton sx={{ pl: 4, margin: '5px 0' ,fontSize: '.75rem'}}>
+          <NavLink className="nav-link" to="/collections/add" style={{ textDecoration: 'none', color: 'black' }}>
+            <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
+              <ListItemIcon>
+                <AddBoxIcon />
+              </ListItemIcon>
+              <FormattedMessage id="app.sidemenu.collections.add"></FormattedMessage>
+            </ListItemButton>
+          </NavLink>
+          <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
             <ListItemIcon>
               <ConstructionIcon />
             </ListItemIcon>
             <FormattedMessage id="app.sidemenu.collections.admin"></FormattedMessage>
           </ListItemButton>
         </List>
-      </Collapse>
+      </Collapse >
       <ListItemButton sx={{ margin: '5px 0' }}>
         <ListItemIcon>
           <RssFeedIcon />
@@ -108,6 +111,6 @@ export default function MainListItems() {
           </ListItemButton>
         </List>
       </Collapse>
-    </List>
+    </List >
   );
 }

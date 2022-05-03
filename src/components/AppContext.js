@@ -4,9 +4,9 @@ const AppContext = React.createContext();
 
 const ContextProvider = (props) => {
     const [isLogged, setIsLogged] = useState(false);
-    const [user_name, setuser_name] = useState("");
+    const [userName, setUserName] = useState("");
     return (
-        <AppContext.Provider value={{ user_name, setuser_name, isLogged, setIsLogged }}>
+        <AppContext.Provider value={{ userName, setUserName, isLogged, setIsLogged }}>
             {props.children}
         </AppContext.Provider>
     );

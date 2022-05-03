@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Navigate } from 'react-router-dom'
+import { Navigate, Route } from 'react-router-dom'
 import AuthService from "../app/api/auth.api";
 import Dashboard from "../components/Dashboard";
 

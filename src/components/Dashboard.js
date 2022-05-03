@@ -34,6 +34,7 @@ import { FormattedMessage } from 'react-intl';
 import LanguageSwitcher from './LanguageSelector';
 import CollectionsSpentCard from './CollectionsSpentCard';
 import TotalItemsCard from './TotalItemsCard';
+import { RouterPages } from './RouterPages';
 
 function Copyright(props) {
   return (
@@ -99,7 +100,7 @@ const mdTheme = createTheme();
 
 function DashboardContent() {
   const navigate = useNavigate();
-  const { user_name, setuser_name, isLogged, setIsLogged } = React.useContext(AppContext);
+  const { userName, setUserName, isLogged, setIsLogged } = React.useContext(AppContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openAnch = Boolean(anchorEl);
 
@@ -123,9 +124,9 @@ function DashboardContent() {
 
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem('user'));
-    const { user_name: user_name } = user;
-    setuser_name(user_name);
-    //console.log(user_name);
+    const { user_name: userName } = user;
+    setUserName(userName);
+    //console.log(user);
   }, []);
 
   return (
@@ -173,7 +174,7 @@ function DashboardContent() {
               aria-haspopup="true"
               aria-expanded={openAnch ? 'true' : undefined}
               color="inherit">
-              <Avatar name={user_name} size={35} round="200px" />
+              <Avatar name={userName} size={35} round="200px" />
             </IconButton>
             <Menu
               id="account-menu"
@@ -252,6 +253,7 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="xlg" sx={{ mt: 2, mb: 4 }}>
+            <RouterPages/>
             <Grid container spacing={3}>
               {/*Spent Money in all collections*/}
               <Grid item xs={10} md={8} lg={4}>
