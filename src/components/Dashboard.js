@@ -35,6 +35,7 @@ import LanguageSwitcher from './LanguageSelector';
 import CollectionsSpentCard from './CollectionsSpentCard';
 import TotalItemsCard from './TotalItemsCard';
 import { RouterPages } from './RouterPages';
+import TopToolBar from './TopToolBar';
 
 function Copyright(props) {
   return (
@@ -134,88 +135,7 @@ function DashboardContent() {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
-            </Typography>
-            <LanguageSwitcher></LanguageSwitcher>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              onClick={handleClick}
-              size="small"
-              sx={{ ml: 1 }}
-              aria-controls={openAnch ? 'account-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={openAnch ? 'true' : undefined}
-              color="inherit">
-              <Avatar name={userName} size={35} round="200px" />
-            </IconButton>
-            <Menu
-              id="account-menu"
-              anchorEl={anchorEl}
-              open={openAnch}
-              onClose={handleClose}
-              onClick={handleClose}
-              PaperProps={{
-                elevation: 0,
-                sx: {
-                  overflow: 'visible',
-                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                  mt: 1.5,
-                  '& .MuiAvatar-root': {
-                    width: 32,
-                    height: 32,
-                    ml: -0.5,
-                    mr: 1,
-                  },
-                  '&:before': {
-                    content: '""',
-                    display: 'block',
-                    position: 'absolute',
-                    top: 0,
-                    right: 14,
-                    width: 10,
-                    height: 10,
-                    bgcolor: 'background.paper',
-                    transform: 'translateY(-50%) rotate(45deg)',
-                    zIndex: 0,
-                  },
-                },
-              }}
-              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={onClickLogout}>Logout</MenuItem>
-            </Menu>
-          </Toolbar>
+          <TopToolBar open={open}></TopToolBar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
           <Toolbar
