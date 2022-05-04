@@ -38,12 +38,14 @@ export default function MainListItems() {
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
+      <NavLink className="nav-link" to="/" style={{ textDecoration: 'none', color: 'black' }}>
       <ListItemButton>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
         <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
       </ListItemButton>
+      </NavLink>
       <Divider sx={{ my: 1 }} />
       <ListItemButton sx={{ margin: '5px 0' }} onClick={handleClickCollections}>
         <ListItemIcon >

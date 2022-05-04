@@ -60,7 +60,7 @@ export default function SignInSide() {
         //console.log(response.data.error);
       }
       else {
-        navigate("/dashboard");
+        navigate("/");
       }
     });
   };

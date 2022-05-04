@@ -1,34 +1,31 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import SignInSide from "../components/SignInSide";
-import Dashboard from "../components/Dashboard";
+
 import ProtectedRoutes from "../components/ProtectedRoute";
 import AddCollection from "../pages/AddCollection";
+import Layout from "./Layout";
 
 export const Router = () => {
-  return (
-    <Routes>
-      {/** Protected Routes */}
-      {/**{console.log(AuthService.isLogged())}*/}
-      <Route exact path="/" element={<Navigate to="/dashboard/*" />} />
-      <Route
-        path="/dashboard/*"
-        element={
-          <ProtectedRoutes>
-            <Dashboard />
-          </ProtectedRoutes>
-        }
-      ></Route>
-      <Route
-        path="/collections/add"
-        element={
-          <ProtectedRoutes>
-            <AddCollection />
-          </ProtectedRoutes>
-        }
-      ></Route>
+    return (
+        <Routes>
+            {/** Protected Routes */}
+            <Route exact path="/"
+                element={
+                    <ProtectedRoutes>
+                        <Layout />
+                    </ProtectedRoutes>
+                }
+            >
+                <Route path="/collections/add"
+                    element={
+                        <ProtectedRoutes>
+                            <AddCollection />
+                        </ProtectedRoutes>}>
+                </Route>
+            </Route>
 
-      {/** Public Routes */}
-      <Route path="/login" element={<SignInSide />} />
-    </Routes>
-  );
+            {/** Public Routes */}
+            < Route path="/login" element={< SignInSide />} />
+        </Routes >
+    );
 };
