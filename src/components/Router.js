@@ -4,6 +4,7 @@ import SignInSide from "../components/SignInSide";
 import ProtectedRoutes from "../components/ProtectedRoute";
 import AddCollection from "../pages/AddCollection";
 import Layout from "./Layout";
+import Dashboard from "./Dashboard";
 
 export const Router = () => {
     return (
@@ -16,6 +17,12 @@ export const Router = () => {
                     </ProtectedRoutes>
                 }
             >
+                <Route path="/"
+                    element={
+                        <ProtectedRoutes>
+                            <Dashboard></Dashboard>
+                        </ProtectedRoutes>}>
+                </Route>
                 <Route path="/collections/add"
                     element={
                         <ProtectedRoutes>
