@@ -7,7 +7,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import Avatar, { RedirectSource } from "react-avatar";
+import Avatar from "react-avatar";
 //import "./Dashboard.css";
 import MuiAppBar from '@mui/material/AppBar';
 import { FormattedMessage } from "react-intl";
@@ -56,14 +56,13 @@ export default function TopToolBar(props) {
   };
 
   //const navigate = useNavigate();
-  const { userName, setUserName, isLogged, setIsLogged } =
+  const { userName, setUserName} =
     React.useContext(AppContext);
 
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem('user'));
     const { user_name: userName } = user;
     setUserName(userName);
-    //console.log(user);
   }, []);
 
   return (

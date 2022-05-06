@@ -14,5 +14,6 @@
     "app.signin.password":"Contraseña",
     "app.language":"Idioma",
     "app.money_spent":"Dinero gastado en total",
-    "app.total_items":"Articulos totales"
+    "app.total_items":"Articulos totales",
+    "app.collection.add_collection_title": "Elija plantilla o escoja una nueva"
 }

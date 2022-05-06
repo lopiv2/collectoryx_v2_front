@@ -14,5 +14,6 @@
     "app.signin.password":"Password",
     "app.language":"Language",
     "app.money_spent":"Total money spent",
-    "app.total_items":"Total items"
+    "app.total_items":"Total items",
+    "app.collection.add_collection_title": "Choose template o start a new one"
 }

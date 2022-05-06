@@ -6,7 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { AppContext } from "../AppContext";
 import "../Dashboard.css";
 import { FormattedMessage } from 'react-intl';
 import Copyright from '../Copyright';
@@ -18,8 +17,6 @@ const mdTheme = createTheme();
 
 function Layout(props) {
 
-
-    const { userName, setUserName, isLogged, setIsLogged } = React.useContext(AppContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openAnch = Boolean(anchorEl);
 
@@ -29,14 +26,6 @@ function Layout(props) {
         setOpen(!open);
     };
 
-
-
-    useEffect(() => {
-        let user = JSON.parse(localStorage.getItem('user'));
-        const { user_name: userName } = user;
-        setUserName(userName);
-        //console.log(user);
-    }, []);
     return (
         <ThemeProvider theme={mdTheme}>
             <Box sx={{ display: 'flex' }}>

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route} from "react-router-dom";
 import SignInSide from "../components/SignInSide";
 
 import ProtectedRoutes from "../components/ProtectedRoute";
