@@ -16,7 +16,7 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import "./Dashboard.css";
+import "../styles/Dashboard.css";
 import { FormattedMessage } from 'react-intl';
 import { NavLink } from "react-router-dom";
 

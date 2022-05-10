@@ -15,5 +15,11 @@
     "app.language":"Idioma",
     "app.money_spent":"Dinero gastado en total",
     "app.total_items":"Articulos totales",
-    "app.collection.add_collection_title": "Elija plantilla o escoja una nueva"
+    "app.collection.add_collection_title": "Configuracion de nueva coleccion",
+    "app.collection.add_collection_name": "Nombre de coleccion",
+    "app.collection.add_collection_logo": "Logotipo",
+    "app.button.accept":"Aceptar",
+    "app.collection.new_template":"Nueva",
+    "app.collection.action_figures":"Figuras de Accion",
+    "app.collection.template_label":"Seleccione plantilla"
 }

@@ -15,5 +15,11 @@
     "app.language":"Language",
     "app.money_spent":"Total money spent",
     "app.total_items":"Total items",
-    "app.collection.add_collection_title": "Choose template o start a new one"
+    "app.collection.add_collection_title": "New Collection configuration",
+    "app.collection.add_collection_name": "Collection name",
+    "app.collection.add_collection_logo": "Logotype",
+    "app.button.accept":"Accept",
+    "app.collection.new_template":"New",
+    "app.collection.action_figures":"Action Figures",
+    "app.collection.template_label":"Select template"
 }
