@@ -54,10 +54,12 @@ const buildUser = (response, user_name) => {
   }
 };
 
-const register = (user_name, email, password) => {
+const register = (firstName, lastName, email, userName, password) => {
   return axios.post(REGISTER_URL, {
-    user_name,
+    firstName,
+    lastName,
     email,
+    userName,
     password,
   });
 };

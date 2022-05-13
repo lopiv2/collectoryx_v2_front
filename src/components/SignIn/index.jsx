@@ -12,14 +12,14 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import AuthService from "../app/api/auth.api";
-import { AppContext } from "./AppContext";
+import AuthService from "../../app/api/auth.api";
+import { AppContext } from "../AppContext";
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import { Context } from "../components/Wrapper";
+import { Context } from "../Wrapper";
 import { FormattedMessage } from 'react-intl';
-import LanguageSwitcher from '../components/LanguageSelector';
+import LanguageSwitcher from '../LanguageSelector';
 
 function Copyright(props) {
 
@@ -64,6 +64,11 @@ export default function SignInSide() {
       }
     });
   };
+
+  const onClickSignUp = () => {
+
+    navigate('/signup')
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -151,7 +156,10 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link
+                    href="#"
+                    variant="body2"
+                    onClick={onClickSignUp}>
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

@@ -1,6 +1,6 @@
 import { Routes, Route} from "react-router-dom";
-import SignInSide from "../components/SignInSide";
-
+import SignIn from "../components/SignIn"
+import SignUp from "../components/SignUp"
 import ProtectedRoutes from "../components/ProtectedRoute";
 import AddCollection from "../pages/AddCollection";
 import Layout from "./Layout";
@@ -32,7 +32,8 @@ export const Router = () => {
             </Route>
 
             {/** Public Routes */}
-            < Route path="/login" element={< SignInSide />} />
+            < Route path="/login" element={< SignIn />} />
+            < Route path="/signup" element={< SignUp />} />
         </Routes >
     );
 };
