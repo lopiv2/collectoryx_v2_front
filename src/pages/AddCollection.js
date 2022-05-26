@@ -7,6 +7,7 @@ import { Box } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { Grid } from '@mui/material';
 import { Button } from '@mui/material';
+import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 
 function AddCollection() {
@@ -21,13 +22,13 @@ function AddCollection() {
   return (
     <Box sx={{ display: 'flex' }}>
       <Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <Typography variant="h4" component="h4">
             <FormattedMessage id="app.collection.add_collection_title"></FormattedMessage>
           </Typography>
         </Grid>
         <Formik
-          initialValues={{ name: "", template: "New" , logo:""}}
+          initialValues={{ name: "", template: "New", logo: "" }}
           validate={values => {
             const errors = {};
             /*if (!values.name) {
@@ -41,7 +42,8 @@ function AddCollection() {
               setSubmitting(false);
             }, 400);
             values.template = template;
-            console.log("values: ", values);
+            //console.log("values: ", values);
+            ConfigService.createCollection(values.name,values.template,values.logo);
             setSubmitting(false);
           }}>
           {({
@@ -54,36 +56,67 @@ function AddCollection() {
             isSubmitting,
           }) => (
             <Form onSubmit={handleSubmit} id="form">
-              <Box pt={1} >
-                <Grid item xs={8} >
-                  <TextField
-                    sx={{ minWidth: 300 }}
-                    size="small"
-                    id="outlined-basic"
-                    name="name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    label={<FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>}
-                    variant="outlined"
-                    value={values.name} />
+              <Grid container spacing={2}>
+                <Grid item xs={12} >
+                  <Box pt={2} >
+                    <TextField
+                      sx={{ minWidth: 300 }}
+                      size="small"
+                      id="outlined-basic"
+                      name="name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      label={<FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>}
+                      variant="outlined"
+                      value={values.name} />
+                  </Box>
                 </Grid>
-              </Box>
-              <Box pt={1} >
-                <Grid item xs={8} >
-                  <TextField
-                    sx={{ minWidth: 300 }}
-                    size="small"
-                    id="outlined-basic"
-                    name="logo"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    label={<FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>}
-                    variant="outlined"
-                    value={values.logo} />
+                <Grid item xs={2}>
+                  <Box pt={16} >
+                    <Grid item xs={6} >
+                      <TextField
+                        sx={{ minWidth: 300 }}
+                        size="small"
+                        id="outlined-basic"
+                        name="logo"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        label={<FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>}
+                        variant="outlined"
+                        value={values.logo} />
+                    </Grid>
+                  </Box>
                 </Grid>
-              </Box>
-
-              <Box pt={3}>
+                <Grid item xs={2}>
+                  <Box pt={16.2} ml={9} >
+                    <Button
+                      variant="contained"
+                      component="label"
+                    >
+                      {<FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>}
+                      <input
+                        type="file"
+                        hidden
+                      />
+                    </Button>
+                  </Box>
+                </Grid>
+                <Grid item xs={5}>
+                  <Box
+                    pt={1}
+                    ml={2}
+                    component="img"
+                    sx={{
+                      height: 233,
+                      width: 350,
+                      maxHeight: { xs: 233, md: 167 },
+                      maxWidth: { xs: 350, md: 250 },
+                    }}
+                    alt="The house from the offer."
+                    src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2"
+                  >
+                  </Box>
+                </Grid>
                 <Grid item xs={8}>
                   <TextField
                     id="demo-simple-select"
@@ -104,6 +137,8 @@ function AddCollection() {
                     </MenuItem>
                   </TextField>
                 </Grid>
+              </Grid>
+              <Box pt={3}>
               </Box>
               <Box pt={3}>
                 <Grid item xs={8}>

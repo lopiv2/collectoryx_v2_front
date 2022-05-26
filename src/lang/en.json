@@ -28,6 +28,7 @@
     "app.collection.add_collection_title": "New Collection configuration",
     "app.collection.add_collection_name": "Collection name",
     "app.collection.add_collection_logo": "Logotype",
+    "app.collection.add_collection_upload": "Upload image...",
     "app.button.accept":"Accept",
     "app.collection.new_template":"New",
     "app.collection.action_figures":"Action Figures",
