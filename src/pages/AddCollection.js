@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Typography } from "@mui/material";
 import { FormattedMessage } from 'react-intl';
@@ -9,15 +9,32 @@ import { Grid } from '@mui/material';
 import { Button } from '@mui/material';
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
+import NoImage from "../images/no-photo-available.png";
 
 function AddCollection() {
 
   const [template, setTemplate] = useState("New");
+  const [selectedFile, setSelectedFile] = useState()
+  const [preview, setPreview] = useState()
 
   const handleChangeTemplate = (event) => {
     setTemplate(event.target.value);
-    //console.log(template);
   };
+
+  // create a preview as a side effect, whenever selected file is changed
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview(undefined)
+      return
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile)
+    setPreview(objectUrl)
+
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [selectedFile])
+
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -42,8 +59,8 @@ function AddCollection() {
               setSubmitting(false);
             }, 400);
             values.template = template;
-            //console.log("values: ", values);
-            ConfigService.createCollection(values.name,values.template,values.logo);
+            console.log("values: ", values);
+            //ConfigService.createCollection(values.name, values.template, values.logo, values.photo);
             setSubmitting(false);
           }}>
           {({
@@ -53,6 +70,7 @@ function AddCollection() {
             handleChange,
             handleBlur,
             handleSubmit,
+            setFieldValue,
             isSubmitting,
           }) => (
             <Form onSubmit={handleSubmit} id="form">
@@ -72,7 +90,7 @@ function AddCollection() {
                   </Box>
                 </Grid>
                 <Grid item xs={2}>
-                  <Box pt={16} >
+                  <Box pt={8} >
                     <Grid item xs={6} >
                       <TextField
                         sx={{ minWidth: 300 }}
@@ -88,7 +106,7 @@ function AddCollection() {
                   </Box>
                 </Grid>
                 <Grid item xs={2}>
-                  <Box pt={16.2} ml={9} >
+                  <Box pt={8.2} ml={9} >
                     <Button
                       variant="contained"
                       component="label"
@@ -97,23 +115,27 @@ function AddCollection() {
                       <input
                         type="file"
                         hidden
+                        name='photo'
+                        accept="image/png, image/jpeg"
+                        onChange={(e) => {
+                          setFieldValue('photo', e.currentTarget.files[0]);
+                          setSelectedFile(e.currentTarget.files[0])
+                        }}
                       />
                     </Button>
                   </Box>
                 </Grid>
                 <Grid item xs={5}>
                   <Box
-                    pt={1}
+                    pt={0}
                     ml={2}
                     component="img"
                     sx={{
-                      height: 233,
+                      height: 150,
                       width: 350,
-                      maxHeight: { xs: 233, md: 167 },
-                      maxWidth: { xs: 350, md: 250 },
                     }}
-                    alt="The house from the offer."
-                    src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2"
+                    alt="Logo"
+                    src={preview ? preview : NoImage}
                   >
                   </Box>
                 </Grid>
