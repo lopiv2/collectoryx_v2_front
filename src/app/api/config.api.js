@@ -2,23 +2,40 @@ import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const CREATE_COLLECTION_URL = `${API_URL}/create-collection`;
+const IMAGES_URL = `${API_URL}/images`;
 
-const createCollection = (name, template, logos) => {
-    console.log(name + " " + template + " " + logos);
-    const logo = {
-        name: logos,
-        path: logos
-    }
+const putImage = (name, image) => {
+    var formData = new FormData();
+    console.log(image);
+    formData.append("name", name);
+    formData.append("image", image);
+    const headers = {
+        "Content-Type": "multipart/form-data",
+    };
+    return axios.put(IMAGES_URL, formData, {
+        headers: headers,
+    })
+        .then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error.response.headers);
+                return error.response;
+            }
+        });
+};
+
+const createCollection = (name, template, file) => {
     return axios
         .post(CREATE_COLLECTION_URL, {
             name,
             template,
-            logo
+            file
         })
         .then((response) => {
-            console.log(response);
             if (response.status === 200 || response.status === 201) {
-                console.log(name, template, logo);
+                console.log(name, template, file);
+                //putImage()
                 return response;
             }
             return Promise.reject(response);
@@ -31,7 +48,7 @@ const createCollection = (name, template, logos) => {
 };
 
 const ConfigService = {
-    createCollection
+    createCollection, putImage
 };
 
 export default ConfigService;

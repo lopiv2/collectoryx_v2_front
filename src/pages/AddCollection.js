@@ -21,7 +21,10 @@ function AddCollection() {
     setTemplate(event.target.value);
   };
 
-  // create a preview as a side effect, whenever selected file is changed
+  const onUploadImage = async (file) => {
+    const response = await ConfigService.putImage(file.name, file);
+  };
+
   useEffect(() => {
     if (!selectedFile) {
       setPreview(undefined)
@@ -55,12 +58,11 @@ function AddCollection() {
           }}
           onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
-              //alert(JSON.stringify(values, null, 2));
               setSubmitting(false);
             }, 400);
             values.template = template;
             console.log("values: ", values);
-            //ConfigService.createCollection(values.name, values.template, values.logo, values.photo);
+            ConfigService.createCollection(values.name, values.template, values.file);
             setSubmitting(false);
           }}>
           {({
@@ -101,7 +103,7 @@ function AddCollection() {
                         onBlur={handleBlur}
                         label={<FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>}
                         variant="outlined"
-                        value={values.logo} />
+                        value="" />
                     </Grid>
                   </Box>
                 </Grid>
@@ -115,11 +117,12 @@ function AddCollection() {
                       <input
                         type="file"
                         hidden
-                        name='photo'
+                        name='file'
                         accept="image/png, image/jpeg"
-                        onChange={(e) => {
-                          setFieldValue('photo', e.currentTarget.files[0]);
-                          setSelectedFile(e.currentTarget.files[0])
+                        onChange={async (e) => {
+                          setFieldValue('file', e.currentTarget.files[0]);
+                          setSelectedFile(e.currentTarget.files[0]);
+                          //await onUploadImage(e.currentTarget.files[0]);
                         }}
                       />
                     </Button>
