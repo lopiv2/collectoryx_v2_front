@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import CollectionsSpentCard from '../CollectionsSpentCard';
+import CollectionsSpentCard from '../CollectionsSpendCard';
 import TotalItemsCard from '../TotalItemsCard';
+import TotalCollectionsCard from "../TotalCollectionsCard";
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -18,6 +19,9 @@ export default function Dashboard (props) {
             {/*Total items in all collections*/}
             <Grid item xs={10} md={8} lg={4}>
                 <TotalItemsCard item xs={12} md={8} lg={9}></TotalItemsCard>
+            </Grid>
+            <Grid item xs={10} md={8} lg={4}>
+                <TotalCollectionsCard item xs={12} md={8} lg={9}></TotalCollectionsCard>
             </Grid>
             {/* Chart */}
             <Grid item xs={12} md={8} lg={9}>

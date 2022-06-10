@@ -1,4 +1,5 @@
 import axios from "axios";
+import authHeader from './auth-header';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const LOGIN_URL = `${API_URL}/login`;
@@ -48,6 +49,7 @@ const buildUser = (response, user_name) => {
       status: status,
       token: response.data.token
     }
+    console.log(user.token);
     localStorage.setItem("user", JSON.stringify(user));
   }
 };

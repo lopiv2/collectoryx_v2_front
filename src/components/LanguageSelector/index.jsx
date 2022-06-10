@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { Context } from "../components/Wrapper";
+import { Context } from "../Wrapper";
 import Flags from 'country-flag-icons/react/3x2'
+import OptionsService from "../DropDownOptions";
 
 export default function LanguageSwitcher() {
 
@@ -17,15 +18,14 @@ export default function LanguageSwitcher() {
                 label={<FormattedMessage id="app.language"></FormattedMessage>}
                 onChange={context.selectLanguage}
             >
-                <MenuItem value='en-EN'>
-                    <Flags.US style={{ width: 20, height: 20 }} title="United States" />
-                    English
-                </MenuItem>
-
-                <MenuItem value='es-ES'>
-                    <Flags.ES style={{ width: 20, height: 20 }} title="Spain" />
-                    Español
-                </MenuItem>
+                {OptionsService.countriesOptions?.map(option => {
+                    return (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.flag}
+                            {option.language}
+                        </MenuItem>
+                    );
+                })}
             </Select>
         </FormControl>
 

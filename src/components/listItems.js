@@ -13,6 +13,7 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import PreviewIcon from '@mui/icons-material/Preview';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import TuneIcon from '@mui/icons-material/Tune';
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -39,12 +40,12 @@ export default function MainListItems() {
       aria-labelledby="nested-list-subheader"
     >
       <NavLink className="nav-link" to="/" style={{ textDecoration: 'none', color: 'black' }}>
-      <ListItemButton>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
-      </ListItemButton>
+        <ListItemButton>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
+        </ListItemButton>
       </NavLink>
       <Divider sx={{ my: 1 }} />
       <ListItemButton sx={{ margin: '5px 0' }} onClick={handleClickCollections}>
@@ -56,12 +57,14 @@ export default function MainListItems() {
       </ListItemButton>
       <Collapse in={openCol} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
-            <ListItemIcon>
-              <PreviewIcon />
-            </ListItemIcon>
-            <FormattedMessage sx={{ pl: 4 }} id="app.sidemenu.collections.show"></FormattedMessage>
-          </ListItemButton>
+          <NavLink className="nav-link" to="/collections/view" style={{ textDecoration: 'none', color: 'black' }}>
+            <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
+              <ListItemIcon>
+                <PreviewIcon />
+              </ListItemIcon>
+              <FormattedMessage sx={{ pl: 4 }} id="app.sidemenu.collections.show"></FormattedMessage>
+            </ListItemButton>
+          </NavLink>
           <NavLink className="nav-link" to="/collections/add" style={{ textDecoration: 'none', color: 'black' }}>
             <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
               <ListItemIcon>
@@ -99,6 +102,14 @@ export default function MainListItems() {
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
+        <NavLink className="nav-link" to="/config/general" style={{ textDecoration: 'none', color: 'black' }}>
+          <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
+            <ListItemIcon>
+              <TuneIcon />
+            </ListItemIcon>
+            <FormattedMessage id="app.sidemenu.options.general"></FormattedMessage>
+          </ListItemButton>
+          </NavLink>
           <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
             <ListItemIcon>
               <EventNoteIcon />

@@ -10,20 +10,35 @@ import { Button } from '@mui/material';
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import OptionsService from "../components/DropDownOptions";
+
 
 function AddCollection() {
 
   const [template, setTemplate] = useState("New");
-  const [selectedFile, setSelectedFile] = useState()
+  const [selectedFile, setSelectedFile] = useState("")
   const [preview, setPreview] = useState()
+  const navigate = useNavigate();
 
   const handleChangeTemplate = (event) => {
     setTemplate(event.target.value);
   };
 
-  const onUploadImage = async (file) => {
-    const response = await ConfigService.putImage(file.name, file);
+  const submitForm = (values) => {
+    ConfigService.putImage(values.name, values.file).then((response) => {
+      ConfigService.createCollection(values.name, values.template, response.data.path);
+      if (response.data.status = 200) {
+        toast.success(<FormattedMessage id="app.collection.created"></FormattedMessage>, { theme: "colored" });
+        setTimeout(() => {
+          navigate("/");
+        }, 3000)
+      }
+      console.log(response);
+    });
   };
+
 
   useEffect(() => {
     if (!selectedFile) {
@@ -41,6 +56,7 @@ function AddCollection() {
 
   return (
     <Box sx={{ display: 'flex' }}>
+      <ToastContainer autoClose={2000} />
       <Grid>
         <Grid item xs={6}>
           <Typography variant="h4" component="h4">
@@ -57,12 +73,8 @@ function AddCollection() {
             return errors;*/
           }}
           onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              setSubmitting(false);
-            }, 400);
             values.template = template;
-            console.log("values: ", values);
-            ConfigService.createCollection(values.name, values.template, values.file);
+            submitForm(values);
             setSubmitting(false);
           }}>
           {({
@@ -103,7 +115,7 @@ function AddCollection() {
                         onBlur={handleBlur}
                         label={<FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>}
                         variant="outlined"
-                        value="" />
+                        value={selectedFile.name || ''} />
                     </Grid>
                   </Box>
                 </Grid>
@@ -119,10 +131,9 @@ function AddCollection() {
                         hidden
                         name='file'
                         accept="image/png, image/jpeg"
-                        onChange={async (e) => {
+                        onChange={(e) => {
                           setFieldValue('file', e.currentTarget.files[0]);
                           setSelectedFile(e.currentTarget.files[0]);
-                          //await onUploadImage(e.currentTarget.files[0]);
                         }}
                       />
                     </Button>
@@ -154,12 +165,13 @@ function AddCollection() {
                     label={<FormattedMessage id="app.collection.template_label"></FormattedMessage>}
                     onChange={handleChangeTemplate}
                   >
-                    <MenuItem value="New">
-                      <FormattedMessage id="app.collection.new_template"></FormattedMessage>
-                    </MenuItem>
-                    <MenuItem value="Action_Figures">
-                      <FormattedMessage id="app.collection.action_figures"></FormattedMessage>
-                    </MenuItem>
+                    {OptionsService.createCollectionOptions?.map(option => {
+                      return (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label ?? option.value}
+                        </MenuItem>
+                      );
+                    })}
                   </TextField>
                 </Grid>
               </Grid>

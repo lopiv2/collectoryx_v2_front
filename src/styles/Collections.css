@@ -1,0 +1,29 @@
+.card-collection {
+    height: 1;
+    width: '5.25%';
+    margin-top: '300';
+    border-radius: 8px;
+}
+
+.cardListItem-img {
+    height: auto;
+    max-height: 250px;
+    width: auto;
+    max-width: 250px;
+}
+
+.container {
+    backgroundColor: "red";
+    width: "fit-content";
+}
+
+.auto-fit {
+    width: 90vw;
+    margin-top: 4%;
+    display: grid;
+
+    /* Use display property as grid*/
+    gap: 5px;
+    grid-template-columns: repeat(
+        auto-fit, minmax(200px, 1fr));
+}

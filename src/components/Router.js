@@ -1,8 +1,11 @@
-import { Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import SignIn from "../components/SignIn"
 import SignUp from "../components/SignUp"
 import ProtectedRoutes from "../components/ProtectedRoute";
 import AddCollection from "../pages/AddCollection";
+import ViewCollection from "../pages/ViewCollections";
+import DisplayCollection from "../pages/DisplayCollection";
+import ConfigGeneral from "../pages/ConfigGeneral";
 import Layout from "./Layout";
 import Dashboard from "./Dashboard";
 
@@ -27,6 +30,24 @@ export const Router = () => {
                     element={
                         <ProtectedRoutes>
                             <AddCollection />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/collections/view"
+                    element={
+                        <ProtectedRoutes>
+                            <ViewCollection />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/config/general"
+                    element={
+                        <ProtectedRoutes>
+                            <ConfigGeneral />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/collections/display-collection"
+                    element={
+                        <ProtectedRoutes>
+                            <DisplayCollection />
                         </ProtectedRoutes>}>
                 </Route>
             </Route>
