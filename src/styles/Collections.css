@@ -17,6 +17,15 @@
     width: "fit-content";
 }
 
+.own-text{
+    transform: rotate(45deg);
+    color: white;
+}
+
+.button-own{
+    padding-top: 100;
+}
+
 .auto-fit {
     width: 90vw;
     margin-top: 4%;

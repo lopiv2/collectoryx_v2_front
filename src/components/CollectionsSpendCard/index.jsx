@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardActions, Typography } from '@mui/material';
-import { Button } from '@mui/material';
+import ConfigService from "../../app/api/config.api";
 import { FormattedMessage } from 'react-intl';
 import PaidIcon from '@mui/icons-material/Paid';
 import Grid from '@mui/material/Grid';
@@ -16,6 +16,18 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function CollectionsSpentCard() {
+
+    const [collectionTotalCount, setCollectionTotalCount] = useState(0);
+
+    useEffect(() => {
+        const collections = ConfigService.countCollectionsMoney().then((response) => {
+            setCollectionTotalCount(response);
+        })
+            .catch(err => {
+                console.log(err);
+            });
+    }, [])
+
     return (
         <Card sx={{ minWidth: 200 }} style={{ backgroundColor: "#217dbf" }}>
             <CardContent >
@@ -29,7 +41,7 @@ export default function CollectionsSpentCard() {
                                 <FormattedMessage id="app.money_spent"></FormattedMessage>
                             </Typography>
                             <Typography sx={{ fontSize: 15 }} color="text.secondary" gutterBottom>
-                                ******
+                                {collectionTotalCount}
                             </Typography>
                         </Item>
                     </Grid>

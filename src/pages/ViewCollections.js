@@ -22,7 +22,6 @@ function ViewCollection(props) {
   useEffect(() => {
     const collections = ConfigService.getCollectionLists().then((response) => {
       setCollectionsList(response.data);
-      //console.log(collectionsList);
     })
       .catch(err => {
         console.log(err);
@@ -39,8 +38,8 @@ function ViewCollection(props) {
           </Typography>
         </Grid>
         <Grid container spacing={collectionsList.length} className="container" pt={3}>
-          {collectionsList.map((item, id) => (
-            <Grid item key={id}>
+          {collectionsList.map((item) => (
+            <Grid item key={item.id}>
               <Card sx={{ height: 400, minWidth: 250, maxWidth: 250, boxShadow: 5 }} ml={200}>
                 <CardContent>
                   {item.logo ? null : <Typography align="center" sx={{ fontSize: 20 }} color="text.primary" gutterBottom>
@@ -64,7 +63,7 @@ function ViewCollection(props) {
                   </BorderLinearProgressBar>
                 </CardContent>
                 <CardActions style={{ justifyContent: 'center' }}>
-                  <NavLink to={{ pathname: "/collections/display-collection", state: { id: 'item.id' } }} style={{ textDecoration: "none" }}>
+                  <NavLink to={{ pathname: "/collections/display-collection" }} state={{ id: item.id, logo: item.logo }} style={{ textDecoration: "none" }}>
                     <Button variant="contained">
                       <FormattedMessage id="app.button.open_collection"></FormattedMessage>
                     </Button>

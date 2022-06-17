@@ -49,7 +49,7 @@ const buildUser = (response, user_name) => {
       status: status,
       token: response.data.token
     }
-    console.log(user.token);
+    //console.log(user.token);
     localStorage.setItem("user", JSON.stringify(user));
   }
 };

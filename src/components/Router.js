@@ -5,6 +5,7 @@ import ProtectedRoutes from "../components/ProtectedRoute";
 import AddCollection from "../pages/AddCollection";
 import ViewCollection from "../pages/ViewCollections";
 import DisplayCollection from "../pages/DisplayCollection";
+import ManageSeries from "../pages/ManageSeries";
 import ConfigGeneral from "../pages/ConfigGeneral";
 import Layout from "./Layout";
 import Dashboard from "./Dashboard";
@@ -48,6 +49,12 @@ export const Router = () => {
                     element={
                         <ProtectedRoutes>
                             <DisplayCollection />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/collections/manage-series"
+                    element={
+                        <ProtectedRoutes>
+                            <ManageSeries />
                         </ProtectedRoutes>}>
                 </Route>
             </Route>

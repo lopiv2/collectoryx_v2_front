@@ -1,10 +1,12 @@
-import React from 'react';
+
 import { Card, CardContent, CardActions, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
+import ConfigService from "../../app/api/config.api";
+import React, { useState, useEffect } from 'react';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -15,6 +17,17 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function TotalCollectionsCard() {
+    const [collectionTotalCount, setCollectionTotalCount] = useState(0);
+
+    useEffect(() => {
+        const collections = ConfigService.countCollections().then((response) => {
+            setCollectionTotalCount(response);
+        })
+            .catch(err => {
+                console.log(err);
+            });
+    }, [])
+
     return (
         <Card sx={{ minWidth: 200 }}>
             <CardContent>
@@ -28,7 +41,7 @@ export default function TotalCollectionsCard() {
                                 <FormattedMessage id="app.total_collections"></FormattedMessage>
                             </Typography>
                             <Typography sx={{ fontSize: 15 }} color="text.secondary" gutterBottom>
-                                ******
+                                {collectionTotalCount}
                             </Typography>
                         </Item>
                     </Grid>

@@ -3,7 +3,7 @@ import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Logo from "../../assets/Collectoryx_Logo.png";
 import MainListItems from '../listItems';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import LazyLoad from "react-lazyload";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
@@ -43,7 +43,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function SideBar(props) {
 
-    
+
 
     return (
         <Drawer variant="permanent" open={props.open}>
@@ -55,9 +55,12 @@ export default function SideBar(props) {
                     px: [1],
                 }}
             >
-                <LazyLoad height={200}>
-                    <img src={Logo} className="logo" />
-                </LazyLoad>
+                <LazyLoadImage
+                    alt=""
+                    height={200}
+                    className="logo"
+                    src={Logo} // use normal <img> attributes as props
+                    width={"100%"} />
                 <IconButton onClick={props.toggleDrawer}>
                     <ChevronLeftIcon />
                 </IconButton>
@@ -68,7 +71,7 @@ export default function SideBar(props) {
                 <Divider sx={{ my: 1 }} />
             </List>
         </Drawer>
-        
+
 
     );
 }

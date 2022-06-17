@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import CollectionsSpentCard from '../CollectionsSpendCard';
 import TotalItemsCard from '../TotalItemsCard';
 import TotalCollectionsCard from "../TotalCollectionsCard";
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Chart from '../Chart';

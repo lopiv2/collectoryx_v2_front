@@ -35,7 +35,7 @@ function AddCollection() {
           navigate("/");
         }, 3000)
       }
-      console.log(response);
+      //console.log(response);
     });
   };
 

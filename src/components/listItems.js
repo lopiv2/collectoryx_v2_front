@@ -14,6 +14,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import PreviewIcon from '@mui/icons-material/Preview';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import TuneIcon from '@mui/icons-material/Tune';
+import BallotIcon from '@mui/icons-material/Ballot';
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -79,6 +80,14 @@ export default function MainListItems() {
             </ListItemIcon>
             <FormattedMessage id="app.sidemenu.collections.admin"></FormattedMessage>
           </ListItemButton>
+          <NavLink className="nav-link" to="/collections/manage-series" style={{ textDecoration: 'none', color: 'black' }}>
+            <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
+              <ListItemIcon>
+                <BallotIcon />
+              </ListItemIcon>
+              <FormattedMessage id="app.sidemenu.collections.lists"></FormattedMessage>
+            </ListItemButton>
+          </NavLink>
         </List>
       </Collapse >
       <ListItemButton sx={{ margin: '5px 0' }}>
@@ -102,13 +111,13 @@ export default function MainListItems() {
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-        <NavLink className="nav-link" to="/config/general" style={{ textDecoration: 'none', color: 'black' }}>
-          <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
-            <ListItemIcon>
-              <TuneIcon />
-            </ListItemIcon>
-            <FormattedMessage id="app.sidemenu.options.general"></FormattedMessage>
-          </ListItemButton>
+          <NavLink className="nav-link" to="/config/general" style={{ textDecoration: 'none', color: 'black' }}>
+            <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
+              <ListItemIcon>
+                <TuneIcon />
+              </ListItemIcon>
+              <FormattedMessage id="app.sidemenu.options.general"></FormattedMessage>
+            </ListItemButton>
           </NavLink>
           <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
             <ListItemIcon>
