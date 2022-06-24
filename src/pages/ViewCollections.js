@@ -7,17 +7,19 @@ import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer} from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
 import styles from "../styles/Collections.css";
 import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
 import { NavLink } from "react-router-dom";
+import useBreadcrumbs from 'use-react-router-breadcrumbs';
 
 function ViewCollection(props) {
   const [collectionsList, setCollectionsList] = useState([]);
   const navigate = useNavigate();
   const [col, setCol] = useState([]);
+  const breadcrumbs = useBreadcrumbs();
 
   useEffect(() => {
     const collections = ConfigService.getCollectionLists()
@@ -58,6 +60,15 @@ function ViewCollection(props) {
     <Box sx={{ display: "flex" }}>
       <ToastContainer autoClose={2000} />
       <Grid>
+        {/*breadcrumbs.map(({
+          match,
+          breadcrumb
+        }) => (
+          <span key={match.pathname}>
+             / 
+            <NavLink to={match.pathname}>{breadcrumb}</NavLink>
+          </span>
+        ))*/}
         <Grid item xs={6}>
           <Typography variant="h4" component="h4">
             <FormattedMessage id="app.collection.view_collections_title"></FormattedMessage>
@@ -106,8 +117,8 @@ function ViewCollection(props) {
                   <Typography align="center" color="text.secondary">
                     {col[col.findIndex((e) => e.id === item.id)]
                       ? col[col.findIndex((e) => e.id === item.id)].collected +
-                        "/" +
-                        col[col.findIndex((e) => e.id === item.id)].totalItems
+                      "/" +
+                      col[col.findIndex((e) => e.id === item.id)].totalItems
                       : null}
                   </Typography>
                   <BorderLinearProgressBar
@@ -115,17 +126,17 @@ function ViewCollection(props) {
                     value={
                       col[col.findIndex((e) => e.id === item.id)]
                         ? (col[col.findIndex((e) => e.id === item.id)]
-                            .collected /
-                            col[col.findIndex((e) => e.id === item.id)]
-                              .totalItems) *
-                          100
+                          .collected /
+                          col[col.findIndex((e) => e.id === item.id)]
+                            .totalItems) *
+                        100
                         : null
                     }
                   ></BorderLinearProgressBar>
                 </CardContent>
                 <CardActions style={{ justifyContent: "center" }}>
                   <NavLink
-                    to={{ pathname: "/collections/display-collection" }}
+                    to={{ pathname: `/collections/${item.name}` }}
                     state={{ id: item.id, logo: item.logo }}
                     style={{ textDecoration: "none" }}
                   >

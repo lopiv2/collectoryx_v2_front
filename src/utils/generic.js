@@ -1,5 +1,5 @@
 import { Context } from "../components/Wrapper";
-import React, { useState, useEffect, useContext } from "react";
+import {useContext } from "react";
 import OptionsService from "../components/DropDownOptions";
 
 const CurrencyChecker = () => {

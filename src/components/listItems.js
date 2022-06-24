@@ -58,7 +58,7 @@ export default function MainListItems() {
       </ListItemButton>
       <Collapse in={openCol} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <NavLink className="nav-link" to="/collections/view" style={{ textDecoration: 'none', color: 'black' }}>
+          <NavLink className="nav-link" to="/collections" style={{ textDecoration: 'none', color: 'black' }}>
             <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
               <ListItemIcon>
                 <PreviewIcon />

@@ -8,12 +8,29 @@ const createCollectionOptions = [
       <FormattedMessage id="app.collection.new_template"></FormattedMessage>
     ),
     value: "New",
+    fields: [
+      (<FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_image"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>)]
   },
   {
     label: (
       <FormattedMessage id="app.collection.action_figures"></FormattedMessage>
     ),
     value: "Action_Figures",
+    fields: [
+      (<FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>)]
   },
   {
     label: <FormattedMessage id="app.collection.coins"></FormattedMessage>,

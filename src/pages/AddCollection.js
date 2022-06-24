@@ -13,7 +13,9 @@ import NoImage from "../images/no-photo-available.png";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import OptionsService from "../components/DropDownOptions";
-
+import TagsInput from '../components/TagsInput';
+import AddIcon from '@mui/icons-material/Add';
+import TableCustomFields from '../components/TableCustomFields';
 
 function AddCollection() {
 
@@ -21,10 +23,24 @@ function AddCollection() {
   const [selectedFile, setSelectedFile] = useState("")
   const [preview, setPreview] = useState()
   const navigate = useNavigate();
+  const [fields, setFields] = useState([]);
+  const [optionalFields, setOptionalFields] = useState([]);
 
   const handleChangeTemplate = (event) => {
     setTemplate(event.target.value);
   };
+
+  const handleClickNewField = () => {
+    const newField = {
+      name: "",
+      type: "prueba",
+    };
+    setOptionalFields((optionalFields) => [...optionalFields, newField]);
+  }
+
+  useEffect(() => {
+    //console.log(optionalFields)
+  }, [optionalFields])
 
   const submitForm = (values) => {
     ConfigService.putImage(values.name, values.file).then((response) => {
@@ -39,6 +55,17 @@ function AddCollection() {
     });
   };
 
+  useEffect(() => {
+    var tempArray = [];
+    tempArray = OptionsService.createCollectionOptions.find((f) => f.value === template);
+    if (tempArray.fields) {
+      setFields(tempArray.fields);
+    }
+    else {
+      setFields("");
+    }
+
+  }, [template])
 
   useEffect(() => {
     if (!selectedFile) {
@@ -52,7 +79,6 @@ function AddCollection() {
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl)
   }, [selectedFile])
-
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -173,6 +199,20 @@ function AddCollection() {
                       );
                     })}
                   </TextField>
+                </Grid>
+                <Grid item xs={6.8}>
+                  <Typography variant="h6" component="h6">
+                    <FormattedMessage id="app.collection.template_default_fields"></FormattedMessage>
+                  </Typography>
+                  <TagsInput fields={fields} optional={optionalFields} ></TagsInput>
+                </Grid>
+                <Grid item xs={6.8}>
+                  <Button variant="contained" startIcon={<AddIcon />} onClick={handleClickNewField}>
+                    <FormattedMessage id="app.collection.add_collection_new_field"></FormattedMessage>
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <TableCustomFields></TableCustomFields>
                 </Grid>
               </Grid>
               <Box pt={3}>

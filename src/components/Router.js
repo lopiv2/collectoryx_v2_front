@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import SignIn from "../components/SignIn"
 import SignUp from "../components/SignUp"
 import ProtectedRoutes from "../components/ProtectedRoute";
@@ -10,7 +10,10 @@ import ConfigGeneral from "../pages/ConfigGeneral";
 import Layout from "./Layout";
 import Dashboard from "./Dashboard";
 
+
+
 export const Router = () => {
+    let { colId } = useParams();
     return (
         <Routes>
             {/** Protected Routes */}
@@ -33,7 +36,7 @@ export const Router = () => {
                             <AddCollection />
                         </ProtectedRoutes>}>
                 </Route>
-                <Route path="/collections/view"
+                <Route path="/collections"
                     element={
                         <ProtectedRoutes>
                             <ViewCollection />
@@ -45,7 +48,7 @@ export const Router = () => {
                             <ConfigGeneral />
                         </ProtectedRoutes>}>
                 </Route>
-                <Route path="/collections/display-collection"
+                <Route path="/collections/:colId"
                     element={
                         <ProtectedRoutes>
                             <DisplayCollection />

@@ -13,6 +13,7 @@
     "@mui/icons-material": "^5.6.2",
     "@mui/material": "^5.6.2",
     "@mui/styled-engine": "^5.6.1",
+    "@mui/x-data-grid": "^5.12.3",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
@@ -31,6 +32,7 @@
     "react-scripts": "5.0.0",
     "react-toastify": "^8.2.0",
     "recharts": "^2.1.9",
+    "use-react-router-breadcrumbs": "^3.2.1",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },

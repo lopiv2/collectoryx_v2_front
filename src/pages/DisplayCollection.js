@@ -9,6 +9,8 @@ import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
 import OwnImage from "../images/Own.png";
 import NotOwnImage from "../images/NotOwn.png";
+import Tick from "../images/Tick.png";
+import Cross from "../images/Cross.png";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
@@ -20,12 +22,20 @@ import { CurrencyChecker } from "../utils/generic";
 import Dialog from "@material-ui/core/Dialog";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import ConfirmDialog from "../components/ConfirmDialog";
+import GridViewIcon from '@mui/icons-material/GridView';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import MUIDataTable from "mui-datatables";
+import IconButton from "@mui/material/IconButton";
+import useBreadcrumbs from 'use-react-router-breadcrumbs';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 function DisplayCollection(props) {
   const [collectionItems, setCollectionItems] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const [collected, setCollected] = useState(0);
+  const [wished, setWished] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [moneySpent, setMoneySpent] = useState(0);
   const currency = CurrencyChecker();
@@ -33,6 +43,9 @@ function DisplayCollection(props) {
   const intl = useIntl();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [imageClicked, setImageClicked] = useState(null);
+  const [toggleView, setToggleView] = useState("grid");
+  const breadcrumbs = useBreadcrumbs();
 
   useEffect(() => {
     const collections = ConfigService.getCollectionById(location.state.id)
@@ -40,6 +53,7 @@ function DisplayCollection(props) {
         //console.log(response.data);
         let col = 0;
         let money = 0;
+        let want = 0;
         setCollectionItems(response.data);
         setTotalItems(response.data.length);
         response.data.map((item) => {
@@ -47,19 +61,44 @@ function DisplayCollection(props) {
             col = col + 1;
             money = money + item.price;
           }
+          if (item.wanted) {
+            want = want + 1;
+          }
         });
         setMoneySpent(money);
         setCollected(col);
+        setWished(want);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  const handleOwnClick = (event, own) => {
+  const handleWishClick = (event, own, wanted) => {
+    const toggle = ConfigService.toggleItemWish(
+      event.currentTarget.id,
+      own,
+      wanted
+    ).then((response) => {
+      var index = collectionItems.findIndex(
+        (collectionItems) => collectionItems.id === response.data.id
+      );
+      let newItems = [...collectionItems];
+      newItems[index].wanted = response.data.wanted;
+      if (response.data.wanted) {
+        setWished(wished + 1);
+      } else {
+        setWished(wished - 1);
+      }
+      setCollectionItems(newItems);
+    });
+  };
+
+  const handleOwnClick = (event, own, wanted) => {
     const toggle = ConfigService.toggleItemOwn(
       event.currentTarget.id,
-      own
+      own,
+      wanted
     ).then((response) => {
       var index = collectionItems.findIndex(
         (collectionItems) => collectionItems.id === response.data.id
@@ -78,6 +117,7 @@ function DisplayCollection(props) {
   };
 
   const handleDeleteClick = () => {
+
     const deleteItem = ConfigService.deleteCollectionItem(value).then(
       (response) => {
         if (response.data === true) {
@@ -85,7 +125,12 @@ function DisplayCollection(props) {
             <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
             { theme: "colored" }
           );
-          window.location.reload(true);
+          var index = collectionItems.findIndex(
+            (collectionItems) => collectionItems.id === value
+          );
+          if (index > -1) {
+            collectionItems.splice(index, 1);
+          }
         }
       }
     );
@@ -98,6 +143,20 @@ function DisplayCollection(props) {
     setOpen(false);
   };
 
+  const options = {
+    filterType: 'checkbox',
+  };
+
+  const columns = [
+    intl.formatMessage({ id: 'app.collection.view_collections_item_name' }),
+    intl.formatMessage({ id: 'app.collection.view_collections_item_serie' }),
+    intl.formatMessage({ id: 'app.collection.view_collections_item_price' }),
+    intl.formatMessage({ id: 'app.collection.view_collections_item_year' }),
+    intl.formatMessage({ id: 'app.collection.view_collections_item_own' }),
+    intl.formatMessage({ id: 'app.collection.view_collections_item_image' }),
+    intl.formatMessage({ id: 'app.collection.view_collections_item_notes' })
+  ];
+
   return (
     <Box sx={{ display: "flex" }}>
       <ToastContainer autoClose={2000} />
@@ -107,44 +166,144 @@ function DisplayCollection(props) {
             ? LogoDisplay(location.state.logo.path)
             : null}
         </Grid>
+        <Grid item ml={"36%"} mt={"7%"} justifyContent="right">
+          <Tooltip
+            title={intl.formatMessage({
+              id: "app.tooltip.grid_view",
+            })}
+            placement="left"
+            arrow
+          >
+            <Button variant="contained" color="success" onClick={() => setToggleView("grid")}>
+              <GridViewIcon></GridViewIcon>
+            </Button>
+          </Tooltip>
+          <Tooltip
+            title={intl.formatMessage({
+              id: "app.tooltip.list_view",
+            })}
+            placement="right"
+            arrow
+          >
+            <Button variant="contained" color="success" onClick={() => setToggleView("list")}>
+              <ViewListIcon></ViewListIcon>
+            </Button>
+          </Tooltip>
+        </Grid>
         <Grid item xs={12}>
           <BorderLinearProgressBar
             variant="determinate"
             value={(collected / totalItems) * 100}
           ></BorderLinearProgressBar>
         </Grid>
-        <Grid item xs={4}>
-          <Typography variant="h5" component="div">
-            <FormattedMessage id="app.collection.collected"></FormattedMessage>{" "}
-            {collected + " / " + totalItems}
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography variant="h5" component="div">
-            <FormattedMessage id="app.collection.missing"></FormattedMessage>{" "}
-            {totalItems - collected}
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography variant="h5" component="div">
-            <FormattedMessage id="app.collection.invested"></FormattedMessage>{" "}
-            {
-              <FormattedNumber
-                value={moneySpent}
-                style="currency"
-                currency={currency.currency}
+        <Grid container>
+          <Grid item xs={3}>
+            <Typography variant="h5" component="div">
+              <FormattedMessage id="app.collection.collected"></FormattedMessage>{" "}
+              {collected + " / " + totalItems}
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="h5" component="div">
+              <FormattedMessage id="app.collection.wanted"></FormattedMessage>{" "}
+              {wished}
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="h5" component="div">
+              <FormattedMessage id="app.collection.missing"></FormattedMessage>{" "}
+              {totalItems - collected}
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="h5" component="div">
+              <FormattedMessage id="app.collection.invested"></FormattedMessage>{" "}
+              {
+                <FormattedNumber
+                  value={moneySpent}
+                  style="currency"
+                  currency={currency.currency}
+                />
+              }
+            </Typography>
+          </Grid>
+          {toggleView === "list" && (<Grid
+            container
+            pt={3}>
+            <Grid item xs={12}>
+              <MUIDataTable
+                title={<FormattedMessage id="app.collection.view_collections_items"></FormattedMessage>}
+                data={collectionItems.length > 0 ? collectionItems.map(item => {
+                  return [
+                    item.name,
+                    item.serie.name,
+                    <FormattedNumber
+                      value={item.price}
+                      style="currency"
+                      currency={currency.currency}
+                    />,
+                    item.year,
+                    <Tooltip
+                      title={intl.formatMessage({
+                        id: "app.tooltip.click_own",
+                      })}
+                      placement="right"
+                      arrow
+                    >
+                      <Button
+                        id={item.id}
+                        onClick={(e) => {
+                          handleOwnClick(e, item.own);
+                        }}
+                        className="button-own"
+                        startIcon={
+                          <Avatar
+                            variant="square"
+                            sx={{ width: 35, height: 35, ml: 2 }}
+                            src={item.own ? Tick : Cross}
+                          />
+                        }
+                      ></Button></Tooltip>,
+                    <Tooltip
+                      title={intl.formatMessage({
+                        id: "app.tooltip.click_image",
+                      })}
+                      arrow
+                      followCursor
+                    >
+                      <IconButton
+                        onClick={() => {
+                          setImageClicked(item.image.path)
+                          handleOpen()
+                        }}
+                        size="small"
+                        sx={{ ml: 1 }}
+                        aria-controls={props.openAnch ? "account-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={props.openAnch ? "true" : undefined}
+                        color="inherit"
+                      >
+                        <Avatar variant="rounded"
+                          src={require('../../../images/' + item.image.path)}
+                          sx={{ width: 100, height: 35 }} />
+                      </IconButton>
+                    </Tooltip>,
+                    item.notes
+                  ]
+                }) : []}
+                columns={columns}
+                options={options}
               />
-            }
-          </Typography>
-        </Grid>
-        <Grid
-          container
-          spacing={collectionItems.length}
-          className="container"
-          pt={3}
-        >
-          {collectionItems !== undefined
-            ? collectionItems.map((item) => (
+            </Grid>
+          </Grid>)}
+          {toggleView === "grid" && (<Grid
+            container
+            spacing={collectionItems.length}
+            className="container"
+            pt={3}
+          >
+            {collectionItems !== undefined
+              ? collectionItems.map((item) => (
                 <Grid item key={item.id}>
                   <Card
                     sx={{
@@ -156,6 +315,35 @@ function DisplayCollection(props) {
                     ml={200}
                   >
                     <Box ml={23.1}>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.tooltip.click_wish",
+                        })}
+                        placement="right"
+                        arrow
+                      >
+                        <IconButton
+                          id={item.id}
+                          color="primary"
+                          sx={{
+                            position: "absolute",
+                            height: 25,
+                            width: 25,
+                            ml: -23.5,
+
+                          }}
+                          onClick={(e) => {
+                            handleWishClick(e, item.own, item.wanted);
+                          }}
+                          className="button-wish"
+                        >
+                          {item.wanted ? (
+                            <BookmarkIcon fontSize="large"></BookmarkIcon>
+                          ) : (
+                            <BookmarkBorderIcon fontSize="large"></BookmarkBorderIcon>
+                          )}
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip
                         title={intl.formatMessage({
                           id: "app.tooltip.click_own",
@@ -173,7 +361,7 @@ function DisplayCollection(props) {
                             mt: -0.5,
                           }}
                           onClick={(e) => {
-                            handleOwnClick(e, item.own);
+                            handleOwnClick(e, item.own, item.wanted);
                           }}
                           className="button-own"
                           startIcon={
@@ -219,28 +407,14 @@ function DisplayCollection(props) {
                           image={require("../../../images/" + item.image.path)}
                           alt={item.name}
                           className="card-collection"
-                          onClick={handleOpen}
+                          value={item.image.path}
+                          onClick={() => {
+                            setImageClicked(item.image.path)
+                            handleOpen()
+                          }}
                           style={styles}
                         />
                       </Tooltip>
-                      {open && (
-                        <Dialog
-                          open={open}
-                          onClose={handleClose}
-                          style={{ maxWidth: "100%", maxHeight: "100%" }}
-                        >
-                          <LazyLoadImage
-                            alt=""
-                            height={350}
-                            src={
-                              item.image.path !== ""
-                                ? require("../../../images/" + item.image.path)
-                                : null
-                            }
-                            width="100%"
-                          />
-                        </Dialog>
-                      )}
                       <Typography
                         align="center"
                         sx={{ mb: 0.5 }}
@@ -286,11 +460,31 @@ function DisplayCollection(props) {
                   </Card>
                 </Grid>
               ))
-            : null}
+              : null}
+          </Grid>
+          )}
         </Grid>
+        {open && (
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            style={{ maxWidth: "100%", maxHeight: "100%" }}
+          >
+            <LazyLoadImage
+              alt=""
+              height={350}
+              src={
+                imageClicked !== ""
+                  ? require("../../../images/" + imageClicked)
+                  : null
+              }
+              width="100%"
+            />
+          </Dialog>
+        )}
       </Grid>
-    </Box>
-  );
+    </Box >
+  )
 }
 
 export default DisplayCollection;

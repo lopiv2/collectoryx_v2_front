@@ -183,7 +183,6 @@ function ManageSeries(props) {
             options={options}
           />
         </Grid>
-
       </Grid>
     </Box >
   );
