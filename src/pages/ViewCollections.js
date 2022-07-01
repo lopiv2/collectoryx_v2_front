@@ -7,7 +7,7 @@ import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
-import { ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
 import styles from "../styles/Collections.css";
@@ -76,7 +76,7 @@ function ViewCollection(props) {
         </Grid>
         <Grid
           container
-          spacing={collectionsList.length}
+          spacing={10}
           className="container"
           pt={3}
         >
@@ -98,14 +98,15 @@ function ViewCollection(props) {
                     </Typography>
                   )}
                   <Typography variant="h5" component="div"></Typography>
-                  <CardMedia
+                  {item.logo != null && (<CardMedia
                     component="img"
                     width="100%"
                     image={require("../../../images/" + item.logo.path)}
                     alt={item.name}
                     className="card-collection"
                     style={styles}
-                  />
+                  />)}
+
                   <Typography
                     align="center"
                     sx={{ mb: 0.5 }}
@@ -137,7 +138,7 @@ function ViewCollection(props) {
                 <CardActions style={{ justifyContent: "center" }}>
                   <NavLink
                     to={{ pathname: `/collections/${item.name}` }}
-                    state={{ id: item.id, logo: item.logo }}
+                    state={{ id: item.id, logo: item.logo, name: item.name }}
                     style={{ textDecoration: "none" }}
                   >
                     <Button variant="contained">

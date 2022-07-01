@@ -5,6 +5,7 @@ const CREATE_COLLECTION_URL = `${API_URL}/create-collection`;
 const CREATE_SERIE_URL = `${API_URL}/create-serie`;
 const VIEW_COLLECTIONS_URL = `${API_URL}/view-collections`;
 const VIEW_SERIES_URL = `${API_URL}/view-series`;
+const VIEW_COLLECTION_SERIES_URL = (id) => `${API_URL}/view-collection-series/${id}`;
 const GET_COLLECTION_ID_URL = (id) => `${API_URL}/collections/${id}`;
 const DELETE_COLLECTION_ITEM_ID_URL = (id) =>
     `${API_URL}/delete-collection-item/${id}`;
@@ -59,11 +60,12 @@ const countCollectionsItems = () => {
     });
 };
 
-const createCollection = (name, template, file) => {
+const createCollection = (name, template, file, metadata) => {
     const data = {
         name: name,
         template: template,
         file: file,
+        metadata: metadata
     };
     return axios
         .post(CREATE_COLLECTION_URL, data)
@@ -81,11 +83,13 @@ const createCollection = (name, template, file) => {
         });
 };
 
-const createSerie = (name, file) => {
+const createSerie = (name, collection, file) => {
     const data = {
         name: name,
+        collection: collection,
         file: file,
     };
+    console.log(data)
     return axios
         .post(CREATE_SERIE_URL, data)
         .then((response) => {
@@ -139,8 +143,15 @@ const getCollectionLists = () => {
     });
 };
 
-const getCollectionSeries = () => {
+const getAllSeries = () => {
     return axios.get(VIEW_SERIES_URL).then((response) => {
+        //console.log(response.data);
+        return response;
+    });
+};
+
+const getCollectionSeries = (id) => {
+    return axios.get(VIEW_COLLECTION_SERIES_URL(id)).then((response) => {
         //console.log(response.data);
         return response;
     });
@@ -162,6 +173,7 @@ const ConfigService = {
     getCollectionById,
     countCollections,
     countCollectionsItems,
+    getAllSeries,
     getCollectionSeries,
     toggleItemOwn,
     toggleItemWish,

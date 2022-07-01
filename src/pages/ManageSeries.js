@@ -10,26 +10,35 @@ import NoImage from "../images/no-photo-available.png";
 import MUIDataTable from "mui-datatables";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-import styles from "../styles/Collections.css"
 import { Formik, Form } from 'formik';
-import { TextField } from "@mui/material";
+import { TextField, MenuItem } from "@mui/material";
 import { useIntl } from 'react-intl';
 import { Avatar } from "@mui/material";
+import * as Yup from 'yup';
 
 function ManageSeries(props) {
 
-  const [collectionsList, setCollectionsList] = useState([]);
+  const [collectionSeriesList, setCollectionSeriesList] = useState([]);
+  const [collectionList, setCollectionList] = useState([]);
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState("");
   const [preview, setPreview] = useState();
+  const [collection, setCollection] = useState();
   const intl = useIntl();
 
   useEffect(() => {
-    const collections = ConfigService.getCollectionSeries().then((response) => {
-      setCollectionsList(response.data);
+    const collectionSeries = ConfigService.getAllSeries().then((response) => {
+      setCollectionSeriesList(response.data);
       //console.log(response.data);
     })
       .catch(err => {
+        console.log(err);
+      });
+    const collections = ConfigService.getCollectionLists()
+      .then((response) => {
+        setCollectionList(response.data);
+      })
+      .catch((err) => {
         console.log(err);
       });
   }, [])
@@ -48,14 +57,32 @@ function ManageSeries(props) {
   }, [selectedFile])
 
   const submitForm = (values) => {
-    ConfigService.putImage(values.name, values.file).then((response) => {
-      ConfigService.createSerie(values.name, response.data.path);
-      if (response.data.status === 200) {
-        toast.success(<FormattedMessage id="app.collection.serie-created"></FormattedMessage>, { theme: "colored" });
-      }
-      //console.log(response);
-    });
+    if (values.file === undefined) {
+      ConfigService.createSerie(values.name, values.collection, null).then((response) => {
+        if (response.status === 200) {
+          toast.success(<FormattedMessage id="app.collection.serie-created"></FormattedMessage>, { theme: "colored" });
+        }
+      });
+    }
+    else {
+      ConfigService.putImage(values.name, values.file).then((response) => {
+        ConfigService.createSerie(values.name, values.collection, response.data.path);
+        if (response.status === 200) {
+          toast.success(<FormattedMessage id="app.collection.serie-created"></FormattedMessage>, { theme: "colored" });
+        }
+        //console.log(response);
+      });
+    }
   };
+
+  const handleChangeCollection = (event) => {
+    setCollection(event.target.value);
+  };
+
+  const newSerieSchema = Yup.object().shape({
+    name: Yup.string()
+      .required(<FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>),
+  });
 
   const options = {
     filterType: 'checkbox',
@@ -82,7 +109,9 @@ function ManageSeries(props) {
               }
               return errors;*/
             }}
+            validationSchema={newSerieSchema}
             onSubmit={(values, { setSubmitting }) => {
+              values.collection = collection;
               submitForm(values);
               setSubmitting(false);
             }}>
@@ -108,9 +137,34 @@ function ManageSeries(props) {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         label={<FormattedMessage id="app.collection.add_collection_serie"></FormattedMessage>}
+                        error={touched.name && Boolean(errors.name)}
+                        helperText={touched.name && errors.name}
                         variant="outlined"
                         value={values.name} />
                     </Box>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <TextField
+                      id="demo-simple-select"
+                      name="collection"
+                      select
+                      size="small"
+                      sx={{ minWidth: 300 }}
+                      defaultValue=""
+                      value={collection ?? ""}
+                      error={touched.collection && Boolean(errors.collection)}
+                      helperText={touched.collection && errors.collection}
+                      label={<FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>}
+                      onChange={handleChangeCollection}
+                    >
+                      {collectionList?.map(option => {
+                        return (
+                          <MenuItem key={option.id} value={option.id}>
+                            {option.name}
+                          </MenuItem>
+                        );
+                      })}
+                    </TextField>
                   </Grid>
                   <Grid item xs={4} pt={1} >
                     <TextField
@@ -171,12 +225,13 @@ function ManageSeries(props) {
         <Grid item xs={6}>
           <MUIDataTable
             title={<FormattedMessage id="app.collection.view_collections_series"></FormattedMessage>}
-            data={collectionsList.length > 0 ? collectionsList.map(item => {
+            data={collectionSeriesList.length > 0 ? collectionSeriesList.map(item => {
               return [
                 item.name,
-                <Avatar variant="rounded" src={require('../../../images/' + item.logo.path)} sx={{ width: 100, height: 35 }} >
-                </Avatar>,
-                "hola"
+                item.logo === null 
+                ? (<Avatar variant="rounded" src={require("../images/no-photo-available.png")} sx={{ width: 100, height: 35 }}></Avatar>) 
+                : (<Avatar variant="rounded" src={require('../../../images/' + item.logo.path)} sx={{ width: 100, height: 35 }} >
+                </Avatar>)
               ]
             }) : []}
             columns={columns}

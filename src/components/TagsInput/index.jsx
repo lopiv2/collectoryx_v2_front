@@ -14,10 +14,6 @@ function TagsInput(props) {
         setOptionalFields(props.optional);
     }, [props]);
 
-    useEffect(() => {
-        console.log(optionalFields.length)
-    }, [optionalFields]);
-
     return (
         <Box sx={{ border: 1 }} style={styles} classname="tag-box">
             {fields.length > 0 ? fields.map((field, index) => (
@@ -25,12 +21,6 @@ function TagsInput(props) {
                     <span className="text">{field}</span>
                 </Grid>
             )) : null}
-            {/*optionalFields.length > 0 ? optionalFields.map((name, index) => (
-                <Grid item className="tag-item" key={index}>
-                    <span className="text">{name}</span>
-                    <span className="close">&times;</span>
-                </Grid>
-            )) : null*/}
         </Box>
 
     )

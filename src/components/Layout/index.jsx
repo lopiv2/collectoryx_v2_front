@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import TopToolBar from "../TopToolBar";
 import SideBar from "../SideBar";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -7,7 +7,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import "../../styles/Dashboard.css";
-import { FormattedMessage } from 'react-intl';
 import Copyright from '../Copyright';
 import { Outlet } from 'react-router-dom';
 

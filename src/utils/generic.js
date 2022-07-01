@@ -1,6 +1,8 @@
 import { Context } from "../components/Wrapper";
-import {useContext } from "react";
+import { useContext } from "react";
 import OptionsService from "../components/DropDownOptions";
+
+
 
 const CurrencyChecker = () => {
   const context = useContext(Context);
@@ -10,5 +12,14 @@ const CurrencyChecker = () => {
   return res;
 };
 
+const GetCurrencySymbolLocale = () => {
+  const res = CurrencyChecker();
+  const currency = res.currency;
+  const locale = res.value;
+  return (0).toLocaleString(locale, { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    .replace(/\d/g, '')
+    .trim()
+}
 
-export { CurrencyChecker };
+
+export { CurrencyChecker, GetCurrencySymbolLocale };

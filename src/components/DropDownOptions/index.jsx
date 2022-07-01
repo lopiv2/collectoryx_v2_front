@@ -48,6 +48,33 @@ const createCollectionOptions = [
   },
 ];
 
+const fieldTypes = [
+  {
+    label: "Integer",
+    value: "INTEGER"
+  },
+  {
+    label: "Long",
+    value: "LONG"
+  },
+  {
+    label: "Float",
+    value: "FLOAT"
+  },
+  {
+    label: "Boolean",
+    value: "BOOLEAN"
+  },
+  {
+    label: "Double",
+    value: "DOUBLE"
+  },
+  {
+    label: "String",
+    value: "STRING"
+  },
+]
+
 const countriesOptions = [
   {
     value: "en-EN",
@@ -66,6 +93,7 @@ const countriesOptions = [
 const OptionsService = {
   createCollectionOptions,
   countriesOptions,
+  fieldTypes
 };
 
 export default OptionsService;

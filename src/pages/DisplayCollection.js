@@ -29,6 +29,7 @@ import IconButton from "@mui/material/IconButton";
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import AddIcon from '@mui/icons-material/Add';
 
 function DisplayCollection(props) {
   const [collectionItems, setCollectionItems] = useState([]);
@@ -40,17 +41,18 @@ function DisplayCollection(props) {
   const [moneySpent, setMoneySpent] = useState(0);
   const currency = CurrencyChecker();
   const [open, setOpen] = useState(false);
+  const [openNewItem, setOpenNewItem] = useState(false);
   const intl = useIntl();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [imageClicked, setImageClicked] = useState(null);
   const [toggleView, setToggleView] = useState("grid");
   const breadcrumbs = useBreadcrumbs();
+  const [collectionId, setCollectionId] = useState(location.state.id);
 
   useEffect(() => {
     const collections = ConfigService.getCollectionById(location.state.id)
       .then((response) => {
-        //console.log(response.data);
         let col = 0;
         let money = 0;
         let want = 0;
@@ -161,34 +163,52 @@ function DisplayCollection(props) {
     <Box sx={{ display: "flex" }}>
       <ToastContainer autoClose={2000} />
       <Grid container>
-        <Grid item ml={"30%"} justifyContent="center">
-          {location.state.logo.path
-            ? LogoDisplay(location.state.logo.path)
-            : null}
-        </Grid>
-        <Grid item ml={"36%"} mt={"7%"} justifyContent="right">
-          <Tooltip
-            title={intl.formatMessage({
-              id: "app.tooltip.grid_view",
-            })}
-            placement="left"
-            arrow
-          >
-            <Button variant="contained" color="success" onClick={() => setToggleView("grid")}>
-              <GridViewIcon></GridViewIcon>
-            </Button>
-          </Tooltip>
-          <Tooltip
-            title={intl.formatMessage({
-              id: "app.tooltip.list_view",
-            })}
-            placement="right"
-            arrow
-          >
-            <Button variant="contained" color="success" onClick={() => setToggleView("list")}>
-              <ViewListIcon></ViewListIcon>
-            </Button>
-          </Tooltip>
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          <Grid item xs={3} mt={"115px"}>
+            <Tooltip
+              title={intl.formatMessage({
+                id: "app.button.add_new_item",
+              })}
+              placement="top"
+              arrow
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() =>
+                  navigate('/collections/add-item', { state: { id: collectionId, name: location.state.name } })}
+              >
+                <AddIcon></AddIcon>
+              </Button>
+            </Tooltip>
+            <Tooltip
+              title={intl.formatMessage({
+                id: "app.tooltip.grid_view",
+              })}
+              placement="top"
+              arrow
+            >
+              <Button variant="contained" color="success" onClick={() => setToggleView("grid")}>
+                <GridViewIcon></GridViewIcon>
+              </Button>
+            </Tooltip>
+            <Tooltip
+              title={intl.formatMessage({
+                id: "app.tooltip.list_view",
+              })}
+              placement="top"
+              arrow
+            >
+              <Button variant="contained" color="success" onClick={() => setToggleView("list")}>
+                <ViewListIcon></ViewListIcon>
+              </Button>
+            </Tooltip>
+          </Grid>
+          <Grid item xs={4} >
+            {location.state.logo.path
+              ? LogoDisplay(location.state.logo.path)
+              : null}
+          </Grid>
         </Grid>
         <Grid item xs={12}>
           <BorderLinearProgressBar

@@ -1,54 +1,68 @@
-import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import React, { useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Typography } from '@mui/material';
-
-function createData(name, type) {
-    return { name, type };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159),
-];
+import { TextField, Select, MenuItem, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
+import {
+    DragDropContext,
+    Droppable,
+    OnDragEndResponder
+} from 'react-beautiful-dnd';
+import DraggableListItem from '../DraggableListItem';
+import "../../styles/Collections.css";
 
 export default function TableCustomFields(props) {
+    const [itemList, setItemList] = useState(props.rows);
+
+    const handleDrop = (droppedItem) => {
+        // Ignore drop outside droppable container
+        if (!droppedItem.destination) return;
+        var updatedList = [...itemList];
+        // Remove dragged item
+        const [reorderedItem] = updatedList.splice(droppedItem.source.index, 1);
+        // Add dropped item
+        updatedList.splice(droppedItem.destination.index, 0, reorderedItem);
+        // Update State
+        setItemList(updatedList);
+    };
+
+    useEffect(() => {
+        setItemList(props.rows);
+    }, [props.rows])
+
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 120 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            <Typography style={{ fontWeight: 600 }}>
-                                <FormattedMessage id="app.collection.add_collection_field_name"></FormattedMessage>
-                            </Typography>
-                        </TableCell>
-                        <TableCell>
-                            <Typography style={{ fontWeight: 600 }}>
-                                <FormattedMessage id="app.collection.add_collection_field_type"></FormattedMessage>
-                            </Typography>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow
-                            key={row.name}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {row.name}
-                            </TableCell>
-                            <TableCell align="center">{row.type}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <DragDropContext onDragEnd={handleDrop}>
+            <Grid container >
+                <Grid item xs={3} ml={8}>
+                    <Typography style={{ fontWeight: 600 }}>
+                        <FormattedMessage id="app.collection.add_collection_field_name"></FormattedMessage>
+                    </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography style={{ fontWeight: 600 }}>
+                        <FormattedMessage id="app.collection.add_collection_field_type"></FormattedMessage>
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <Droppable droppableId="droppable-list">
+                        {provided => (
+                            <div className="list-container" ref={provided.innerRef} {...provided.droppableProps}>
+                                {itemList.map((item, index) => (
+                                    <DraggableListItem
+                                        className="item-container"
+                                        updateOptionalFields={props.updateFields}
+                                        updateItems={setItemList}
+                                        item={item}
+                                        index={index}
+                                        key={item.id}
+                                        itemsList={itemList} />
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </Grid>
+            </Grid>
+
+        </DragDropContext>
     );
-}
+};
