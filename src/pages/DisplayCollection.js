@@ -48,7 +48,7 @@ function DisplayCollection(props) {
   const [imageClicked, setImageClicked] = useState(null);
   const [toggleView, setToggleView] = useState("grid");
   const breadcrumbs = useBreadcrumbs();
-  const [collectionId, setCollectionId] = useState(location.state.id);
+  const [collectionId, setCollectionId] = useState();
 
   useEffect(() => {
     const collections = ConfigService.getCollectionById(location.state.id)
@@ -70,6 +70,7 @@ function DisplayCollection(props) {
         setMoneySpent(money);
         setCollected(col);
         setWished(want);
+        setCollectionId(location.state.id)
       })
       .catch((err) => {
         console.log(err);
@@ -205,7 +206,7 @@ function DisplayCollection(props) {
             </Tooltip>
           </Grid>
           <Grid item xs={4} >
-            {location.state.logo.path
+            {location.state
               ? LogoDisplay(location.state.logo.path)
               : null}
           </Grid>
@@ -213,7 +214,7 @@ function DisplayCollection(props) {
         <Grid item xs={12}>
           <BorderLinearProgressBar
             variant="determinate"
-            value={(collected / totalItems) * 100}
+            value={+Number.parseFloat((collected / totalItems) * 100).toFixed(2)}
           ></BorderLinearProgressBar>
         </Grid>
         <Grid container>
@@ -303,9 +304,11 @@ function DisplayCollection(props) {
                         aria-expanded={props.openAnch ? "true" : undefined}
                         color="inherit"
                       >
-                        <Avatar variant="rounded"
+                        {item.image != null ? (<Avatar variant="rounded"
                           src={require('../../../images/' + item.image.path)}
-                          sx={{ width: 100, height: 35 }} />
+                          sx={{ width: 100, height: 35 }} />) : (<Avatar variant="rounded"
+                            src={require('../images/no-photo-available.png')}
+                            sx={{ width: 100, height: 35 }} />)}
                       </IconButton>
                     </Tooltip>,
                     item.notes
@@ -318,7 +321,7 @@ function DisplayCollection(props) {
           </Grid>)}
           {toggleView === "grid" && (<Grid
             container
-            spacing={collectionItems.length}
+            spacing={5}
             className="container"
             pt={3}
           >
@@ -334,7 +337,7 @@ function DisplayCollection(props) {
                     }}
                     ml={200}
                   >
-                    <Box ml={23.1}>
+                    <Box ml={23.1} mb={-10}>
                       <Tooltip
                         title={intl.formatMessage({
                           id: "app.tooltip.click_wish",
@@ -346,11 +349,11 @@ function DisplayCollection(props) {
                           id={item.id}
                           color="primary"
                           sx={{
-                            position: "absolute",
+                            position: "relative",
                             height: 25,
                             width: 25,
                             ml: -23.5,
-
+                            mb: 6
                           }}
                           onClick={(e) => {
                             handleWishClick(e, item.own, item.wanted);
@@ -374,10 +377,10 @@ function DisplayCollection(props) {
                         <Button
                           id={item.id}
                           sx={{
-                            position: "absolute",
+                            position: "relative",
                             height: 75,
                             width: 75,
-                            ml: -1,
+                            ml: 19.153,
                             mt: -0.5,
                           }}
                           onClick={(e) => {
@@ -414,16 +417,17 @@ function DisplayCollection(props) {
                           gutterBottom
                         ></Typography>
                       )}
-                      <Tooltip
+                      {item.image != null && (<Tooltip
                         title={intl.formatMessage({
                           id: "app.tooltip.click_image",
                         })}
                         arrow
                         followCursor
                       >
-                        <CardMedia
+                        {item.image != null && (<CardMedia
                           component="img"
                           width="100%"
+                          height="220"
                           image={require("../../../images/" + item.image.path)}
                           alt={item.name}
                           className="card-collection"
@@ -433,14 +437,21 @@ function DisplayCollection(props) {
                             handleOpen()
                           }}
                           style={styles}
-                        />
-                      </Tooltip>
+                        />)}
+                      </Tooltip>)}
                       <Typography
                         align="center"
                         sx={{ mb: 0.5 }}
                         mt={1}
                         color="text.secondary"
                       >
+                        {item.image === null && (<CardMedia
+                          component="img"
+                          width="100%"
+                          image={require('../images/no-photo-available.png')}
+                          alt={item.name}
+                          style={styles}
+                        />)}
                         {item.name}
                       </Typography>
                     </CardContent>
@@ -471,8 +482,8 @@ function DisplayCollection(props) {
                       <Button
                         variant="contained"
                         color="success"
-                        type="submit"
-                        form="form"
+                        onClick={() =>
+                          navigate('/collections/edit-item', { state: { id: collectionId, item: item, name: location.state.name } })}
                       >
                         <FormattedMessage id="app.button.edit"></FormattedMessage>
                       </Button>

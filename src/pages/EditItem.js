@@ -22,62 +22,87 @@ import esLocale from 'date-fns/locale/es';
 import enLocale from 'date-fns/locale/en-US';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Tooltip } from '@mui/material';
-import { parseISO, format } from 'date-fns';
+import { format, set } from 'date-fns';
+import ImageGalleryDialog from '../components/ImageGalleryDialog';
 
 const localeMap = {
     en: enLocale,
     es: esLocale,
 };
 
-function AddItem(props) {
+function EditItem(props) {
     const [date, setDate] = useState(new Date());
     const [own, setOwn] = useState(false);
     const [selectedFile, setSelectedFile] = useState("")
+    const location = useLocation();
     const [preview, setPreview] = useState()
     const navigate = useNavigate();
     const intl = useIntl();
     const [fields, setFields] = useState([]);
     const [collectionSeriesList, setCollectionSeriesList] = useState([]);
-    const location = useLocation();
+    const [collectionId, setCollectionId] = useState(location.state.id);
     const currency = GetCurrencySymbolLocale();
-    const [locale, setLocale] = React.useState('es');
+    const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
+    const [img, setImg]=useState();
 
     const handleChangeOwn = (event) => {
         setOwn(event.target.checked);
     };
 
+    const handleImageClick=()=>{
+        console.log(img)
+    };
+
     useEffect(() => {
-        const collectionSeries = ConfigService.getCollectionSeries(location.state.id).then((response) => {
+        const collectionSeries = ConfigService.getCollectionSeries(collectionId).then((response) => {
             setCollectionSeriesList(response.data);
-            //console.log(response.data);
         })
             .catch(err => {
                 console.log(err);
             });
-    }, [])
+    }, [location.state.id])
 
     const submitForm = (values) => {
-        //console.log(values)
-        if (values.file === undefined) {
-            ConfigService.createItem(values, location.state.id, null, values.metadata).then((response) => {
+        console.log(values)
+        //Tiene imagen seteada ya en la BBDD y no la actualizamos
+        if (preview !== undefined && values.file === undefined) {
+            console.log("set")
+            ConfigService.updateItem(values, location.state.id, location.state.item.image.path, values.metadata).then((response) => {
                 if (response.status === 200) {
-                    toast.success(<FormattedMessage id="app.collection.item-created"></FormattedMessage>, { theme: "colored" });
+                    toast.success(<FormattedMessage id="app.collection.item-edited"></FormattedMessage>, { theme: "colored" });
                     setTimeout(() => {
                         navigate(-1);
                     }, 3000)
                 }
             });
         }
-        else {
-            ConfigService.putImage(values.name, values.file).then((response) => {
-                ConfigService.createItem(values, location.state.id, response.data.path, values.metadata);
+        //Si no tiene imagen seteada y no actualizamos dicha imagen
+        if (preview === undefined && values.file === undefined) {
+            console.log("unset")
+            ConfigService.updateItem(values, location.state.id, null, values.metadata).then((response) => {
                 if (response.status === 200) {
-                    toast.success(<FormattedMessage id="app.collection.item-created"></FormattedMessage>, { theme: "colored" });
+                    toast.success(<FormattedMessage id="app.collection.item-edited"></FormattedMessage>, { theme: "colored" });
                     setTimeout(() => {
                         navigate(-1);
                     }, 3000)
                 }
-                //console.log(response);
+            });
+        }
+
+        //Si se actualiza la imagen, sea la que sea
+        if (values.file !== undefined) {
+            ConfigService.putImage(values.name, values.file).then((response) => {
+                if (response.data.path) {
+                    ConfigService.updateItem(values, location.state.id, response.data.path, values.metadata).then((responseItem) => {
+                        if (response.status === 200 && responseItem.status === 200) {
+                            navigate(-1);
+                            /*toast.success(<FormattedMessage id="app.collection.item-edited"></FormattedMessage>, { theme: "colored" });
+                            setTimeout(() => {
+                                navigate(-1);
+                            }, 3000)*/
+                        }
+                    });
+                }
             });
         }
     };
@@ -87,13 +112,23 @@ function AddItem(props) {
             setPreview(undefined)
             return
         }
+        if (selectedFile) {
+            const objectUrl = URL.createObjectURL(selectedFile)
+            setPreview(objectUrl)
+            return () => URL.revokeObjectURL(objectUrl)
+        }
 
-        const objectUrl = URL.createObjectURL(selectedFile)
-        setPreview(objectUrl)
-
-        // free memory when ever this component is unmounted
-        return () => URL.revokeObjectURL(objectUrl)
     }, [selectedFile])
+
+    useEffect(() => {
+        if (location.state.item.image) {
+            setPreview(require("../../../images/" + location.state.item.image.path))
+        }
+        setOwn(location.state.item.own)
+        const dateFormatPickup = new Date(location.state.item.adquiringDate)
+        setDate(dateFormatPickup)
+
+    }, [location.state.item])
 
     const newItemSchema = Yup.object().shape({
         name: Yup.string()
@@ -111,35 +146,33 @@ function AddItem(props) {
         /*adquiringDate: Yup.date()
             .required(<FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>),*/
     });
-
+    //console.log(location.state.item)
     return (
         <Box sx={{ display: 'flex' }}>
             <ToastContainer autoClose={2000} />
             <Grid container>
                 <Grid item xs={6}>
                     <Typography variant="h5" component="h5">
-                        <FormattedMessage id="app.button.add_new_item"></FormattedMessage>
+                        <FormattedMessage id="app.button.edit_item"></FormattedMessage>
                         {location.state.name}
                     </Typography>
                 </Grid>
                 <Grid>
                     <Formik
                         initialValues={{
-                            name: "",
-                            serie: "",
-                            price: "",
-                            year: "",
+                            id: location.state.item.id,
+                            name: location.state.item.name,
+                            serie: location.state.item.serie.id,
+                            price: location.state.item.price,
+                            year: location.state.item.year,
                             adquiringDate: date,
-                            own: "",
+                            own: location.state.item.own,
                             image: "",
-                            notes: "",
+                            notes: location.state.item.notes,
                             metadata: []
                         }}
                         validationSchema={newItemSchema}
                         onSubmit={(values, { setSubmitting }) => {
-                            {
-
-                            }
                             values.own = own;
                             const d = format(new Date(date), "yyyy-MM-dd")
                             values.adquiringDate = d;
@@ -198,7 +231,27 @@ function AddItem(props) {
                                             <Grid item>
                                                 <Tooltip
                                                     title={intl.formatMessage({
-                                                        id: "app.button.search_google",
+                                                        id: "app.tooltip.search_gallery",
+                                                    })}
+                                                    placement="bottom"
+                                                    arrow
+                                                >
+                                                    <Button
+                                                        color="primary"
+                                                        variant="contained"
+                                                        onClick={(e) => {
+                                                            setConfirmOpenGallery(true)
+                                                        }}
+
+                                                    >
+                                                        {<FormattedMessage id="app.button.search_gallery"></FormattedMessage>}
+                                                    </Button>
+                                                </Tooltip>
+                                            </Grid>
+                                            <Grid item>
+                                                <Tooltip
+                                                    title={intl.formatMessage({
+                                                        id: "app.tooltip.search_google",
                                                     })}
                                                     placement="right"
                                                     arrow
@@ -245,6 +298,7 @@ function AddItem(props) {
                                                     name="serie"
                                                     select
                                                     size="small"
+                                                    defaultValue=""
                                                     sx={{ minWidth: 300 }}
                                                     value={values.serie}
                                                     error={touched.serie && Boolean(errors.serie)}
@@ -312,7 +366,7 @@ function AddItem(props) {
                                                 <Typography variant="body1">
                                                     <FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>
                                                 </Typography>
-                                                <Checkbox value={own} onChange={handleChangeOwn}>
+                                                <Checkbox value={own} checked={own} onChange={handleChangeOwn}>
                                                 </Checkbox>
                                             </Box>
                                         </Grid>
@@ -326,15 +380,9 @@ function AddItem(props) {
                                                     name="date"
                                                     label=""
                                                     size="small"
-                                                    //value={values.adquiringDate}
                                                     value={date}
                                                     error={touched.year && Boolean(errors.year)}
                                                     helperText={touched.year && errors.year}
-                                                    /*onChange={selectedOption => {
-                                                        let event = { target: { name: 'date', value: selectedOption } }
-                                                        console.log(selectedOption);
-                                                        handleChange(event.target.value)
-                                                    }}*/
                                                     onChange={(newValue) => {
                                                         setDate(newValue);
                                                     }}
@@ -383,8 +431,19 @@ function AddItem(props) {
                     </Formik>
                 </Grid>
             </Grid >
+            <ImageGalleryDialog
+                title={intl.formatMessage({
+                    id: "app.dialog.gallery_title",
+                })}
+                open={confirmOpenGallery}
+                setImageSelected={setImg}
+                setOpen={setConfirmOpenGallery}
+                onConfirm={handleImageClick}
+            >
+                <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+            </ImageGalleryDialog>
         </Box >
     );
 }
 
-export default AddItem;
+export default EditItem;

@@ -23,13 +23,14 @@ export default function BasicDatePicker(props) {
   };
 
   useEffect(() => {
-    console.log(esLocale);
+    //console.log(esLocale);
   }, [])
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={localeMap[locale]}>
       <DatePicker
         id={props.id}
+        dateFormat="yyyy-MM-dd"
         name={props.name}
         label={props.label}
         value={props.value}

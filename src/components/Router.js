@@ -10,8 +10,7 @@ import AddItem from "../pages/AddItem";
 import ConfigGeneral from "../pages/ConfigGeneral";
 import Layout from "./Layout";
 import Dashboard from "./Dashboard";
-
-
+import EditItem from "../pages/EditItem";
 
 export const Router = () => {
     let { colId } = useParams();
@@ -65,6 +64,12 @@ export const Router = () => {
                     element={
                         <ProtectedRoutes>
                             <AddItem />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/collections/edit-item"
+                    element={
+                        <ProtectedRoutes>
+                            <EditItem />
                         </ProtectedRoutes>}>
                 </Route>
             </Route>

@@ -21,5 +21,11 @@ const GetCurrencySymbolLocale = () => {
     .trim()
 }
 
+function getImagePaths(directory) {
+  let images = [];
+  directory.keys().map((item, index) => images.push(item.replace("./", "")));
+  return images;
+}
 
-export { CurrencyChecker, GetCurrencySymbolLocale };
+
+export { CurrencyChecker, GetCurrencySymbolLocale, getImagePaths };

@@ -126,11 +126,11 @@ function ViewCollection(props) {
                     variant="determinate"
                     value={
                       col[col.findIndex((e) => e.id === item.id)]
-                        ? (col[col.findIndex((e) => e.id === item.id)]
+                        ? +Number.parseFloat((col[col.findIndex((e) => e.id === item.id)]
                           .collected /
                           col[col.findIndex((e) => e.id === item.id)]
                             .totalItems) *
-                        100
+                        100).toFixed(2)
                         : null
                     }
                   ></BorderLinearProgressBar>
