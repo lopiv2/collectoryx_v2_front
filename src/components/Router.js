@@ -11,6 +11,7 @@ import ConfigGeneral from "../pages/ConfigGeneral";
 import Layout from "./Layout";
 import Dashboard from "./Dashboard";
 import EditItem from "../pages/EditItem";
+import ManageCollections from "../pages/ManageCollections";
 
 export const Router = () => {
     let { colId } = useParams();
@@ -40,6 +41,12 @@ export const Router = () => {
                     element={
                         <ProtectedRoutes>
                             <ViewCollection />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/collections/manage"
+                    element={
+                        <ProtectedRoutes>
+                            <ManageCollections />
                         </ProtectedRoutes>}>
                 </Route>
                 <Route path="/config/general"

@@ -40,6 +40,7 @@
   "app.collection.add_item_number_positive": "Debe ser 0 o superior",
   "app.collection.add_item_year_4digits": "El año debe ser de 4 digitos",
   "app.collection.add_item_year_1900": "El año debe ser igual o superior a 1900",
+  "app.collection.manage_collections_title": "Administrar colecciones",
   "app.collection.view_collections_title": "Lista de colecciones",
   "app.collection.view_collections_series": "Lista de series",
   "app.collection.view_collections_items": "Lista de objetos",
@@ -76,13 +77,13 @@
   "app.button.delete": "Borrar",
   "app.button.edit": "Editar",
   "app.button.add_new": "Añadir nueva...",
-  "app.button.add_new_item": "Añadir nuevo elemento para coleccion ",
   "app.button.edit_item": "Editar elemento de coleccion ",
   "app.button.own": "Tengo",
   "app.button.not_own": "Falta",
   "app.button.yes": "Si",
   "app.button.no": "No",
   "app.button.search_gallery": "Galeria",
+  "app.dialog.search_image": "Buscar imagen",
   "app.dialog.confirm_delete": "¿Está seguro que desea borrar este elemento?",
   "app.dialog.delete_title": "¿Borrar elemento?",
   "app.dialog.gallery_title": "Galeria de imagenes",
@@ -92,5 +93,7 @@
   "app.tooltip.grid_view": "Cuadricula",
   "app.tooltip.list_view": "Tabla",
   "app.tooltip.search_google": "Buscar imagen en Google",
-  "app.tooltip.search_gallery": "Buscar imagen en galeria"
+  "app.tooltip.search_gallery": "Buscar imagen en galeria",
+  "app.tooltip.add_new_item": "Añadir nuevo elemento para coleccion ",
+  "app.tooltip.add_new_collection": "Añadir nueva coleccion"
 }

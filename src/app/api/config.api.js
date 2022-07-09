@@ -128,6 +128,12 @@ const deleteCollectionItem = (id) => {
     });
 };
 
+const deleteCollection = (id) => {
+    return axios.delete(DELETE_COLLECTION_ID_URL(id), { headers: authHeader() }).then((response) => {
+        return response;
+    });
+};
+
 const getAllSeries = () => {
     return axios.get(VIEW_SERIES_URL, { headers: authHeader() }).then((response) => {
         //console.log(response.data);
@@ -249,6 +255,7 @@ const ConfigService = {
     createItem,
     createSerie,
     deleteCollectionItem,
+    deleteCollection,
     getAllSeries,
     getCollectionById,
     getCollectionItem,

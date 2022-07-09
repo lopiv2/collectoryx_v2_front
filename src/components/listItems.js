@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import SettingsIcon from '@mui/icons-material/Settings';
-import RssFeedIcon from '@mui/icons-material/RssFeed';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import ScreenshotMonitorIcon from '@mui/icons-material/ScreenshotMonitor';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import PreviewIcon from '@mui/icons-material/Preview';
-import ConstructionIcon from '@mui/icons-material/Construction';
-import TuneIcon from '@mui/icons-material/Tune';
-import BallotIcon from '@mui/icons-material/Ballot';
-import Collapse from '@mui/material/Collapse';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
+import React, { useState } from "react";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import CollectionsIcon from "@mui/icons-material/Collections";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import SettingsIcon from "@mui/icons-material/Settings";
+import RssFeedIcon from "@mui/icons-material/RssFeed";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import ScreenshotMonitorIcon from "@mui/icons-material/ScreenshotMonitor";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import PreviewIcon from "@mui/icons-material/Preview";
+import ConstructionIcon from "@mui/icons-material/Construction";
+import TuneIcon from "@mui/icons-material/Tune";
+import BallotIcon from "@mui/icons-material/Ballot";
+import Collapse from "@mui/material/Collapse";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
 import "../styles/Dashboard.css";
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl";
 import { NavLink } from "react-router-dom";
 
 export default function MainListItems() {
@@ -36,11 +36,15 @@ export default function MainListItems() {
 
   return (
     <List
-      sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+      sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
-      <NavLink className="nav-link" to="/" style={{ textDecoration: 'none', color: 'black' }}>
+      <NavLink
+        className="nav-link"
+        to="/"
+        style={{ textDecoration: "none", color: "black" }}
+      >
         <ListItemButton>
           <ListItemIcon>
             <DashboardIcon />
@@ -49,39 +53,52 @@ export default function MainListItems() {
         </ListItemButton>
       </NavLink>
       <Divider sx={{ my: 1 }} />
-      <ListItemButton sx={{ margin: '5px 0' }} onClick={handleClickCollections}>
-        <ListItemIcon >
+      <ListItemButton sx={{ margin: "5px 0" }} onClick={handleClickCollections}>
+        <ListItemIcon>
           <CollectionsIcon />
         </ListItemIcon>
         <FormattedMessage id="app.sidemenu.collections"></FormattedMessage>
-        {openCol ? <ExpandLess sx={{ ml: 4 }} /> : <ExpandMore sx={{ ml: 4 }} />}
+        {openCol ? (
+          <ExpandLess sx={{ ml: 4 }} />
+        ) : (
+          <ExpandMore sx={{ ml: 4 }} />
+        )}
       </ListItemButton>
       <Collapse in={openCol} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <NavLink className="nav-link" to="/collections" style={{ textDecoration: 'none', color: 'black' }}>
-            <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
+          <NavLink
+            className="nav-link"
+            to="/collections"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
               <ListItemIcon>
                 <PreviewIcon />
               </ListItemIcon>
-              <FormattedMessage sx={{ pl: 4 }} id="app.sidemenu.collections.show"></FormattedMessage>
+              <FormattedMessage
+                sx={{ pl: 4 }}
+                id="app.sidemenu.collections.show"
+              ></FormattedMessage>
             </ListItemButton>
           </NavLink>
-          <NavLink className="nav-link" to="/collections/add" style={{ textDecoration: 'none', color: 'black' }}>
-            <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
+          <NavLink
+            className="nav-link"
+            to="/collections/manage"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
               <ListItemIcon>
-                <AddBoxIcon />
+                <ConstructionIcon />
               </ListItemIcon>
-              <FormattedMessage id="app.sidemenu.collections.add"></FormattedMessage>
+              <FormattedMessage id="app.sidemenu.collections.admin"></FormattedMessage>
             </ListItemButton>
           </NavLink>
-          <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
-            <ListItemIcon>
-              <ConstructionIcon />
-            </ListItemIcon>
-            <FormattedMessage id="app.sidemenu.collections.admin"></FormattedMessage>
-          </ListItemButton>
-          <NavLink className="nav-link" to="/collections/manage-series" style={{ textDecoration: 'none', color: 'black' }}>
-            <ListItemButton sx={{ pl: 4, margin: '5px 0', fontSize: '.75rem' }}>
+          <NavLink
+            className="nav-link"
+            to="/collections/manage-series"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
               <ListItemIcon>
                 <BallotIcon />
               </ListItemIcon>
@@ -89,20 +106,20 @@ export default function MainListItems() {
             </ListItemButton>
           </NavLink>
         </List>
-      </Collapse >
-      <ListItemButton sx={{ margin: '5px 0' }}>
+      </Collapse>
+      <ListItemButton sx={{ margin: "5px 0" }}>
         <ListItemIcon>
           <RssFeedIcon />
         </ListItemIcon>
         <FormattedMessage id="app.sidemenu.feeds"></FormattedMessage>
       </ListItemButton>
-      <ListItemButton sx={{ margin: '5px 0' }}>
+      <ListItemButton sx={{ margin: "5px 0" }}>
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>
         <FormattedMessage id="app.sidemenu.reports"></FormattedMessage>
       </ListItemButton>
-      <ListItemButton sx={{ margin: '5px 0' }} onClick={handleClickSettings} >
+      <ListItemButton sx={{ margin: "5px 0" }} onClick={handleClickSettings}>
         <ListItemIcon>
           <SettingsIcon />
         </ListItemIcon>
@@ -111,21 +128,25 @@ export default function MainListItems() {
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <NavLink className="nav-link" to="/config/general" style={{ textDecoration: 'none', color: 'black' }}>
-            <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
+          <NavLink
+            className="nav-link"
+            to="/config/general"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>
               <ListItemIcon>
                 <TuneIcon />
               </ListItemIcon>
               <FormattedMessage id="app.sidemenu.options.general"></FormattedMessage>
             </ListItemButton>
           </NavLink>
-          <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
+          <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>
             <ListItemIcon>
               <EventNoteIcon />
             </ListItemIcon>
             <FormattedMessage id="app.sidemenu.options.logs"></FormattedMessage>
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4, margin: '5px 0' }}>
+          <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>
             <ListItemIcon>
               <ScreenshotMonitorIcon />
             </ListItemIcon>
@@ -133,6 +154,6 @@ export default function MainListItems() {
           </ListItemButton>
         </List>
       </Collapse>
-    </List >
+    </List>
   );
 }
