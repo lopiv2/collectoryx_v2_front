@@ -56,10 +56,6 @@ function EditItem(props) {
   };
 
   useEffect(() => {
-    //console.log(preview);
-  }, [preview]);
-
-  useEffect(() => {
     const collectionSeries = ConfigService.getCollectionSeries(collectionId)
       .then((response) => {
         setCollectionSeriesList(response.data);
@@ -225,7 +221,7 @@ function EditItem(props) {
       <Grid container>
         <Grid item xs={6}>
           <Typography variant="h5" component="h5">
-            <FormattedMessage id="app.button.edit_item"></FormattedMessage>
+            <FormattedMessage id="app.collection.edit_item_title"></FormattedMessage>
             {location.state.name}
           </Typography>
         </Grid>

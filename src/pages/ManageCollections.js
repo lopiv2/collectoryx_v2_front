@@ -201,15 +201,19 @@ function ManageCollections(props) {
                   >
                     <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
                   </ConfirmDialog>
-                  <NavLink
-                    to={{ pathname: `/collections/${item.name}` }}
-                    state={{ id: item.id, logo: item.logo, name: item.name }}
-                    style={{ textDecoration: "none" }}
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() =>
+                      navigate("/collections/edit", {
+                        state: {
+                          item: item,
+                        },
+                      })
+                    }
                   >
-                    <Button variant="contained">
-                      <FormattedMessage id="app.button.edit"></FormattedMessage>
-                    </Button>
-                  </NavLink>
+                    <FormattedMessage id="app.button.edit"></FormattedMessage>
+                  </Button>
                 </CardActions>
               </Card>
             </Grid>
