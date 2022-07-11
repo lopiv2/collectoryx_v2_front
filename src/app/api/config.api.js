@@ -2,7 +2,7 @@ import axios from "axios";
 import authHeader from "./auth-header";
 
 const API_URL = process.env.REACT_APP_API_URL;
-const GET_COLLECTION_ID_URL = (id) => `${API_URL}/collections/${id}`;
+const GET_COLLECTION_ITEMS_ID_URL = (id) => `${API_URL}/collections/${id}`;
 const COUNT_COLLECTIONS_URL = `${API_URL}/count-collections`;
 const COUNT_COLLECTIONS_ITEMS_URL = `${API_URL}/count-collections-items`;
 const COUNT_COLLECTIONS_MONEY_URL = `${API_URL}/count-collections-money`;
@@ -15,6 +15,7 @@ const DELETE_COLLECTION_ID_URL = (id) =>
     `${API_URL}/delete-collection/${id}`;
 const GET_COLLECTION_ITEM_ID_URL = (id) =>
     `${API_URL}/get-item/${id}`;
+const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const IMAGES_URL = `${API_URL}/images`;
 const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
@@ -141,8 +142,8 @@ const getAllSeries = () => {
     });
 };
 
-const getCollectionById = (id) => {
-    return axios.get(GET_COLLECTION_ID_URL(id), { headers: authHeader() }).then((response) => {
+const getCollectionItemsById = (id) => {
+    return axios.get(GET_COLLECTION_ITEMS_ID_URL(id), { headers: authHeader() }).then((response) => {
         //console.log(response.data);
         return response;
     });
@@ -163,6 +164,13 @@ const getCollectionLists = () => {
 
 const getCollectionSeries = (id) => {
     return axios.get(VIEW_COLLECTION_SERIES_URL(id), { headers: authHeader() }).then((response) => {
+        //console.log(response.data);
+        return response;
+    });
+};
+
+const getCollectionById = (id) => {
+    return axios.get(GET_COLLECTION_ID_URL(id), { headers: authHeader() }).then((response) => {
         //console.log(response.data);
         return response;
     });
@@ -257,6 +265,7 @@ const ConfigService = {
     deleteCollectionItem,
     deleteCollection,
     getAllSeries,
+    getCollectionItemsById,
     getCollectionById,
     getCollectionItem,
     getCollectionLists,

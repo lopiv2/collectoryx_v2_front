@@ -221,7 +221,7 @@ function DisplayCollection(props) {
             </Tooltip>
           </Grid>
           <Grid item xs={4}>
-            {location.state ? LogoDisplay(location.state.logo.path) : null}
+            {location.state.logo ? LogoDisplay(location.state.logo.path) : <Typography variant="h4" component="h4">{location.state.name}</Typography>}
           </Grid>
         </Grid>
         <Grid item xs={12}>

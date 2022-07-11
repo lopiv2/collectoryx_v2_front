@@ -4,7 +4,6 @@ import { Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
-import { MenuItem } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
@@ -12,13 +11,11 @@ import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import OptionsService from "../components/DropDownOptions";
 import TagsInput from "../components/TagsInput";
 import AddIcon from "@mui/icons-material/Add";
 import TableCustomFields from "../components/TableCustomFields";
 import * as Yup from "yup";
 import { useLocation } from "react-router-dom";
-import { PermDeviceInformationTwoTone } from "@material-ui/icons";
 
 function EditCollection() {
   const [template, setTemplate] = useState("New");
@@ -46,7 +43,6 @@ function EditCollection() {
       name: "",
       type: "INTEGER",
     };
-
     setOptionalFields((optionalFields) => [...optionalFields, newField]);
   };
 
@@ -94,6 +90,11 @@ function EditCollection() {
     if (location.state.item.logo) {
       setPreview(require("../../../images/" + location.state.item.logo.path));
     }
+    ConfigService.getCollectionById(location.state.item.id).then((response) => {
+      //setFields(response.data.metadata)
+      console.log(response.data)
+    })
+    
   }, [location.state.item]);
 
   /*useEffect(() => {
@@ -109,16 +110,15 @@ function EditCollection() {
   }, [template]);*/
 
   useEffect(() => {
-    /*if (!selectedFile) {
-      setPreview(undefined);
+    if (!selectedFile) {
+      //setPreview(undefined);
       return;
     }
 
     const objectUrl = URL.createObjectURL(selectedFile);
     setPreview(objectUrl);
 
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);*/
+    return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile]);
 
   const newCollectionSchema = Yup.object().shape({
