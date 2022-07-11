@@ -82,7 +82,6 @@ function ManageCollections(props) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <ToastContainer autoClose={2000} />
       <Grid>
         {/*breadcrumbs.map(({
           match,

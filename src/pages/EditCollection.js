@@ -16,6 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import TableCustomFields from "../components/TableCustomFields";
 import * as Yup from "yup";
 import { useLocation } from "react-router-dom";
+import OptionsService from "../components/DropDownOptions";
 
 function EditCollection() {
   const [template, setTemplate] = useState("New");
@@ -91,23 +92,18 @@ function EditCollection() {
       setPreview(require("../../../images/" + location.state.item.logo.path));
     }
     ConfigService.getCollectionById(location.state.item.id).then((response) => {
-      //setFields(response.data.metadata)
-      console.log(response.data)
-    })
-    
+      var tempArray = [];
+      tempArray = OptionsService.createCollectionOptions.find(
+        (f) => f.value === response.data.template
+      );
+      if (tempArray.fields) {
+        setFields(tempArray.fields);
+      } else {
+        setFields("");
+      }
+      setOptionalFields(response.data.metadata);
+    });
   }, [location.state.item]);
-
-  /*useEffect(() => {
-    var tempArray = [];
-    tempArray = OptionsService.createCollectionOptions.find(
-      (f) => f.value === template
-    );
-    if (tempArray.fields) {
-      setFields(tempArray.fields);
-    } else {
-      setFields("");
-    }
-  }, [template]);*/
 
   useEffect(() => {
     if (!selectedFile) {
@@ -210,7 +206,7 @@ function EditCollection() {
                           <FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>
                         }
                         variant="outlined"
-                        value={selectedFile.name || ""}
+                        value={location.state.item.logo ? selectedFile.name || "" || location.state.item.logo.path : ""}
                       />
                     </Grid>
                   </Box>
@@ -251,10 +247,7 @@ function EditCollection() {
                   <Typography variant="h6" component="h6">
                     <FormattedMessage id="app.collection.template_default_fields"></FormattedMessage>
                   </Typography>
-                  <TagsInput
-                    fields={fields}
-                    optional={optionalFields}
-                  ></TagsInput>
+                  <TagsInput fields={fields}></TagsInput>
                 </Grid>
                 {template === "New" && (
                   <Grid item xs={6.8}>

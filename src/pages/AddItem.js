@@ -72,8 +72,6 @@ function AddItem(props) {
     //console.log(values)
     //Si se sube imagen desde la galeria
     if (imgGallerySelected === true) {
-        console.log("gallery")
-        console.log(imgGallerySelected)
       ConfigService.createItem(
         values,
         location.state.id,
@@ -184,11 +182,10 @@ function AddItem(props) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <ToastContainer autoClose={2000} />
       <Grid container>
         <Grid item xs={6}>
           <Typography variant="h5" component="h5">
-            <FormattedMessage id="app.button.add_new_item"></FormattedMessage>
+            <FormattedMessage id="app.tooltip.add_new_item"></FormattedMessage>
             {location.state.name}
           </Typography>
         </Grid>

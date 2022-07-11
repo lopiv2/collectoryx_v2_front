@@ -60,33 +60,31 @@ function AddCollection() {
         values.metadata
       ).then((response) => {
         if (response.status === 200) {
+          navigate(-1);
           toast.success(
             <FormattedMessage id="app.collection.created"></FormattedMessage>,
             { theme: "colored" }
           );
-          setTimeout(() => {
-            navigate("/");
-          }, 3000);
         }
       });
     } else {
-      ConfigService.putImage(values.name, values.file).then((response) => {
+      ConfigService.putImage(values.name, values.file).then((resp) => {
         ConfigService.createCollection(
           values.name,
           values.template,
-          response.data.path,
+          resp.data.path,
           values.metadata
-        );
-        if (response.status === 200) {
-          toast.success(
-            <FormattedMessage id="app.collection.created"></FormattedMessage>,
-            { theme: "colored" }
-          );
-          setTimeout(() => {
-            navigate("/");
-          }, 3000);
-        }
-        //console.log(response);
+        ).then((response) => {
+          if (response.status === 200 && resp.status === 200) {
+            setTimeout(() => {
+              navigate(-1);
+            }, 3000);
+            toast.success(
+              <FormattedMessage id="app.collection.created"></FormattedMessage>,
+              { theme: "colored" }
+            );
+          }
+        });
       });
     }
   };
@@ -127,7 +125,6 @@ function AddCollection() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <ToastContainer autoClose={2000} />
       <Grid>
         <Grid item xs={6}>
           <Typography variant="h4" component="h4">

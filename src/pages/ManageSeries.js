@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl";
 import { Box } from "@mui/material";
-import { Grid } from '@mui/material';
-import { Button } from '@mui/material';
+import { Grid } from "@mui/material";
+import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
 import MUIDataTable from "mui-datatables";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Formik, Form } from 'formik';
+import { Formik, Form } from "formik";
 import { TextField, MenuItem } from "@mui/material";
-import { useIntl } from 'react-intl';
+import { useIntl } from "react-intl";
 import { Avatar } from "@mui/material";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
 function ManageSeries(props) {
-
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
   const [collectionList, setCollectionList] = useState([]);
   const navigate = useNavigate();
@@ -27,11 +26,12 @@ function ManageSeries(props) {
   const intl = useIntl();
 
   useEffect(() => {
-    const collectionSeries = ConfigService.getAllSeries().then((response) => {
-      setCollectionSeriesList(response.data);
-      //console.log(response.data);
-    })
-      .catch(err => {
+    const collectionSeries = ConfigService.getAllSeries()
+      .then((response) => {
+        setCollectionSeriesList(response.data);
+        //console.log(response.data);
+      })
+      .catch((err) => {
         console.log(err);
       });
     const collections = ConfigService.getCollectionLists()
@@ -41,34 +41,49 @@ function ManageSeries(props) {
       .catch((err) => {
         console.log(err);
       });
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (!selectedFile) {
-      setPreview(undefined)
-      return
+      setPreview(undefined);
+      return;
     }
 
-    const objectUrl = URL.createObjectURL(selectedFile)
-    setPreview(objectUrl)
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
 
     // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [selectedFile])
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
 
   const submitForm = (values) => {
     if (values.file === undefined) {
-      ConfigService.createSerie(values.name, values.collection, null).then((response) => {
-        if (response.status === 200) {
-          toast.success(<FormattedMessage id="app.collection.serie-created"></FormattedMessage>, { theme: "colored" });
+      ConfigService.createSerie(values.name, values.collection, null).then(
+        (response) => {
+          if (response.status === 200) {
+            toast.success(
+              <FormattedMessage id="app.collection.serie-created"></FormattedMessage>,
+              { theme: "colored" }
+            );
+            setCollectionSeriesList((collectionSeriesList) => [
+              ...collectionSeriesList,
+              response.data,
+            ]);
+          }
         }
-      });
-    }
-    else {
+      );
+    } else {
       ConfigService.putImage(values.name, values.file).then((response) => {
-        ConfigService.createSerie(values.name, values.collection, response.data.path);
+        ConfigService.createSerie(
+          values.name,
+          values.collection,
+          response.data.path
+        );
         if (response.status === 200) {
-          toast.success(<FormattedMessage id="app.collection.serie-created"></FormattedMessage>, { theme: "colored" });
+          toast.success(
+            <FormattedMessage id="app.collection.serie-created"></FormattedMessage>,
+            { theme: "colored" }
+          );
         }
         //console.log(response);
       });
@@ -80,18 +95,22 @@ function ManageSeries(props) {
   };
 
   const newSerieSchema = Yup.object().shape({
-    name: Yup.string()
-      .required(<FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>),
+    name: Yup.string().required(
+      <FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>
+    ),
   });
 
   const options = {
-    filterType: 'checkbox',
+    filterType: "checkbox",
   };
 
-  const columns = [intl.formatMessage({ id: 'app.collection.add_collection_serie' }), intl.formatMessage({ id: 'app.collection.add_collection_logo' })];
+  const columns = [
+    intl.formatMessage({ id: "app.collection.add_collection_serie" }),
+    intl.formatMessage({ id: "app.collection.add_collection_logo" }),
+  ];
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <ToastContainer autoClose={2000} />
       <Grid container spacing={2}>
         <Grid item xs={12}>
@@ -102,7 +121,7 @@ function ManageSeries(props) {
         <Grid item xs={6}>
           <Formik
             initialValues={{ name: "", logo: "" }}
-            validate={values => {
+            validate={(values) => {
               const errors = {};
               /*if (!values.name) {
                 errors.name = 'Required';
@@ -114,7 +133,8 @@ function ManageSeries(props) {
               values.collection = collection;
               submitForm(values);
               setSubmitting(false);
-            }}>
+            }}
+          >
             {({
               values,
               errors,
@@ -127,8 +147,8 @@ function ManageSeries(props) {
             }) => (
               <Form onSubmit={handleSubmit} id="form">
                 <Grid container spacing={2}>
-                  <Grid item xs={12} >
-                    <Box pt={2} >
+                  <Grid item xs={12}>
+                    <Box pt={2}>
                       <TextField
                         sx={{ minWidth: 300 }}
                         size="small"
@@ -136,11 +156,14 @@ function ManageSeries(props) {
                         name="name"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        label={<FormattedMessage id="app.collection.add_collection_serie"></FormattedMessage>}
+                        label={
+                          <FormattedMessage id="app.collection.add_collection_serie"></FormattedMessage>
+                        }
                         error={touched.name && Boolean(errors.name)}
                         helperText={touched.name && errors.name}
                         variant="outlined"
-                        value={values.name} />
+                        value={values.name}
+                      />
                     </Box>
                   </Grid>
                   <Grid item xs={9}>
@@ -154,10 +177,12 @@ function ManageSeries(props) {
                       value={collection ?? ""}
                       error={touched.collection && Boolean(errors.collection)}
                       helperText={touched.collection && errors.collection}
-                      label={<FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>}
+                      label={
+                        <FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>
+                      }
                       onChange={handleChangeCollection}
                     >
-                      {collectionList?.map(option => {
+                      {collectionList?.map((option) => {
                         return (
                           <MenuItem key={option.id} value={option.id}>
                             {option.name}
@@ -166,7 +191,7 @@ function ManageSeries(props) {
                       })}
                     </TextField>
                   </Grid>
-                  <Grid item xs={4} pt={1} >
+                  <Grid item xs={4} pt={1}>
                     <TextField
                       sx={{ minWidth: 300 }}
                       size="small"
@@ -174,24 +199,26 @@ function ManageSeries(props) {
                       name="logo"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      label={<FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>}
+                      label={
+                        <FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>
+                      }
                       variant="outlined"
-                      value={selectedFile.name || ''} />
+                      value={selectedFile.name || ""}
+                    />
                   </Grid>
                   <Grid item xs={4}>
-                    <Box pt={.3} ml={5} >
-                      <Button
-                        variant="contained"
-                        component="label"
-                      >
-                        {<FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>}
+                    <Box pt={0.3} ml={5}>
+                      <Button variant="contained" component="label">
+                        {
+                          <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
+                        }
                         <input
                           type="file"
                           hidden
-                          name='file'
+                          name="file"
                           accept="image/png, image/jpeg"
                           onChange={(e) => {
-                            setFieldValue('file', e.currentTarget.files[0]);
+                            setFieldValue("file", e.currentTarget.files[0]);
                             setSelectedFile(e.currentTarget.files[0]);
                           }}
                         />
@@ -209,11 +236,15 @@ function ManageSeries(props) {
                       }}
                       alt="Logo"
                       src={preview ? preview : NoImage}
-                    >
-                    </Box>
+                    ></Box>
                   </Grid>
                   <Grid item xs={8}>
-                    <Button variant="contained" type="submit" disabled={isSubmitting} form="form">
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      disabled={isSubmitting}
+                      form="form"
+                    >
                       <FormattedMessage id="app.button.add_new"></FormattedMessage>
                     </Button>
                   </Grid>
@@ -224,22 +255,37 @@ function ManageSeries(props) {
         </Grid>
         <Grid item xs={6}>
           <MUIDataTable
-            title={<FormattedMessage id="app.collection.view_collections_series"></FormattedMessage>}
-            data={collectionSeriesList.length > 0 ? collectionSeriesList.map(item => {
-              return [
-                item.name,
-                item.logo === null 
-                ? (<Avatar variant="rounded" src={require("../images/no-photo-available.png")} sx={{ width: 100, height: 35 }}></Avatar>) 
-                : (<Avatar variant="rounded" src={require('../../../images/' + item.logo.path)} sx={{ width: 100, height: 35 }} >
-                </Avatar>)
-              ]
-            }) : []}
+            title={
+              <FormattedMessage id="app.collection.view_collections_series"></FormattedMessage>
+            }
+            data={
+              collectionSeriesList.length > 0
+                ? collectionSeriesList.map((item) => {
+                    return [
+                      item.name,
+                      item.logo === null ? (
+                        <Avatar
+                          variant="rounded"
+                          src={require("../images/no-photo-available.png")}
+                          sx={{ width: 100, height: 35 }}
+                        ></Avatar>
+                      ) : (
+                        <Avatar
+                          variant="rounded"
+                          src={require("../../../images/" + item.logo.path)}
+                          sx={{ width: 100, height: 35 }}
+                        ></Avatar>
+                      ),
+                    ];
+                  })
+                : []
+            }
             columns={columns}
             options={options}
           />
         </Grid>
       </Grid>
-    </Box >
+    </Box>
   );
 }
 

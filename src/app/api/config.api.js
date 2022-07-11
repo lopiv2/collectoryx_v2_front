@@ -48,6 +48,7 @@ const countCollectionsItems = () => {
 };
 
 const createCollection = (name, template, file, metadata) => {
+    console.log(template)
     const data = {
         name: name,
         template: template,
@@ -106,7 +107,7 @@ const createSerie = (name, collection, file) => {
         collection: collection,
         file: file,
     };
-    console.log(data)
+    //console.log(data)
     return axios
         .post(CREATE_SERIE_URL, data, { headers: authHeader() })
         .then((response) => {

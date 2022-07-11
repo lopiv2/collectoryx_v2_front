@@ -34,8 +34,9 @@ function ViewCollection(props) {
   useEffect(() => {
     if (collectionsList.length > 0) {
       collectionsList.map((item) => {
-        const collections = ConfigService.getCollectionById(item.id).then(
+        const collections = ConfigService.getCollectionItemsById(item.id).then(
           (response) => {
+            //console.log(response.data)
             let collected = 0;
             let totalItems = 0;
             response.data.map((item) => {

@@ -50,7 +50,7 @@ function DisplayCollection(props) {
   const [collectionId, setCollectionId] = useState();
 
   useEffect(() => {
-    const collections = ConfigService.getCollectionById(location.state.id)
+    const collections = ConfigService.getCollectionItemsById(location.state.id)
       .then((response) => {
         let col = 0;
         let money = 0;
