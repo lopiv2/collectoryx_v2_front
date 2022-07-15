@@ -15,6 +15,7 @@ import PreviewIcon from "@mui/icons-material/Preview";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import TuneIcon from "@mui/icons-material/Tune";
 import BallotIcon from "@mui/icons-material/Ballot";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
@@ -25,6 +26,7 @@ import { NavLink } from "react-router-dom";
 export default function MainListItems() {
   const [open, setOpen] = useState(false);
   const [openCol, setOpenCol] = useState(false);
+  const [openMarket, setOpenMarket] = useState(false);
 
   const handleClickSettings = () => {
     setOpen(!open);
@@ -32,6 +34,10 @@ export default function MainListItems() {
 
   const handleClickCollections = () => {
     setOpenCol(!openCol);
+  };
+
+  const handleClickMarket = () => {
+    setOpenMarket(!openMarket);
   };
 
   return (
@@ -113,6 +119,60 @@ export default function MainListItems() {
         </ListItemIcon>
         <FormattedMessage id="app.sidemenu.feeds"></FormattedMessage>
       </ListItemButton>
+      <ListItemButton sx={{ margin: "5px 0" }} onClick={handleClickMarket}>
+        <ListItemIcon>
+          <ShoppingCartIcon />
+        </ListItemIcon>
+        <FormattedMessage id="app.sidemenu.marketplace"></FormattedMessage>
+        {openMarket ? (
+          <ExpandLess sx={{ ml: 4 }} />
+        ) : (
+          <ExpandMore sx={{ ml: 4 }} />
+        )}
+      </ListItemButton>
+      <Collapse in={openMarket} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <NavLink
+            className="nav-link"
+            to="/collections"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
+              <ListItemIcon>
+                <PreviewIcon />
+              </ListItemIcon>
+              <FormattedMessage
+                sx={{ pl: 4 }}
+                id="app.sidemenu.collections.show"
+              ></FormattedMessage>
+            </ListItemButton>
+          </NavLink>
+          <NavLink
+            className="nav-link"
+            to="/collections/manage"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
+              <ListItemIcon>
+                <ConstructionIcon />
+              </ListItemIcon>
+              <FormattedMessage id="app.sidemenu.collections.admin"></FormattedMessage>
+            </ListItemButton>
+          </NavLink>
+          <NavLink
+            className="nav-link"
+            to="/collections/manage-series"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
+              <ListItemIcon>
+                <BallotIcon />
+              </ListItemIcon>
+              <FormattedMessage id="app.sidemenu.collections.lists"></FormattedMessage>
+            </ListItemButton>
+          </NavLink>
+        </List>
+      </Collapse>
       <ListItemButton sx={{ margin: "5px 0" }}>
         <ListItemIcon>
           <BarChartIcon />

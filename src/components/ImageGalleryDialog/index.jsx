@@ -4,17 +4,19 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Grid, Box, Avatar, TextField, Typography } from "@mui/material";
 import { getImagePaths } from "../../utils/generic";
+import { Tooltip } from "@mui/material";
 
 const ImageGalleryDialog = (props) => {
   const { title, open, setOpen, onConfirm, setImageSelected } = props;
   const [images, setImages] = useState([]);
   const [imageClicked, setImageClicked] = useState();
   var listOfImages = [];
+  const intl = useIntl();
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   useEffect(() => {
     if (open === true) {
@@ -66,24 +68,33 @@ const ImageGalleryDialog = (props) => {
         <Box sx={{ display: "flex" }}>
           <Grid container style={{ border: "3px solid grey" }}>
             {open && images.length > 0 && (
-              <Grid container spacing="13">
+              <Grid
+                container
+                spacing={{ xs: 5, md: 15 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}>
                 {images.map((i) => (
                   <Grid item xs={2} key={i}>
-                    <Avatar
-                      key={i}
-                      variant="rounded"
-                      sx={
-                        imageClicked === i
-                          ? avatarStyleClicked
-                          : avatarStyleHover
-                      }
-                      src={require("../../../../images/" + i)} // use normal <img> attributes as props
-                      width="100%"
-                      onClick={(e) => {
-                        setImageClicked(i);
-                        setImageSelected(i);
-                      }}
-                    />
+                    <Tooltip
+                      title={i}
+                      placement="bottom"
+                      arrow
+                    >
+                      <Avatar
+                        key={i}
+                        variant="rounded"
+                        sx={
+                          imageClicked === i
+                            ? avatarStyleClicked
+                            : avatarStyleHover
+                        }
+                        src={require("../../../../images/" + i)} // use normal <img> attributes as props
+                        width="100%"
+                        onClick={(e) => {
+                          setImageClicked(i);
+                          setImageSelected(i);
+                        }}
+                      />
+                    </Tooltip>
                   </Grid>
                 ))}
               </Grid>

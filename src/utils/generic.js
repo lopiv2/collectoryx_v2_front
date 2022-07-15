@@ -3,7 +3,6 @@ import { useContext } from "react";
 import OptionsService from "../components/DropDownOptions";
 
 
-
 const CurrencyChecker = () => {
   const context = useContext(Context);
   const res = OptionsService.countriesOptions.find(

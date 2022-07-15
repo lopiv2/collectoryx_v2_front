@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { TextField, Select, MenuItem, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Grid } from '@mui/material';
 import {
     DragDropContext,
@@ -26,7 +26,23 @@ export default function TableCustomFields(props) {
     };
 
     useEffect(() => {
-        setItemList(props.rows);
+        if (props.operation === "add") {
+            if (itemList.length > 1) {
+                setItemList((itemList) => [...itemList, props.rows[props.rows.length - 1]]);
+            }
+            else {
+                setItemList(props.rows)
+            }
+        }
+        if (props.operation === "edit") {
+
+            setItemList(props.rows)
+
+        }
+    }, [props.rows])
+
+    useEffect(() => {
+        //props.updateFields(itemList)
     }, [props.rows])
 
     return (
@@ -54,6 +70,7 @@ export default function TableCustomFields(props) {
                                         item={item}
                                         index={index}
                                         key={item.id}
+                                        operation={props.operation}
                                         itemsList={itemList} />
                                 ))}
                                 {provided.placeholder}

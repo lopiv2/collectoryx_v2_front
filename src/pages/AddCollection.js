@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Typography } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { MenuItem } from "@mui/material";
@@ -10,13 +10,16 @@ import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import OptionsService from "../components/DropDownOptions";
 import TagsInput from "../components/TagsInput";
 import AddIcon from "@mui/icons-material/Add";
 import TableCustomFields from "../components/TableCustomFields";
 import * as Yup from "yup";
+import GoogleIcon from "@mui/icons-material/Google";
+import { Tooltip } from "@mui/material";
+import ImageGalleryDialog from "../components/ImageGalleryDialog";
 
 function AddCollection() {
   const [template, setTemplate] = useState("New");
@@ -25,9 +28,18 @@ function AddCollection() {
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
   const [optionalFields, setOptionalFields] = useState([]);
+  const intl = useIntl();
+  const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
+  const [img, setImg] = useState();
+  const [imgGallerySelected, setImgGallerySelected] = useState(false);
 
   const handleChangeTemplate = (event) => {
     setTemplate(event.target.value);
+  };
+
+  const handleImageClick = () => {
+    setPreview(require("../../../images/" + img));
+    setImgGallerySelected(true);
   };
 
   function generateId(length) {
@@ -47,12 +59,31 @@ function AddCollection() {
       name: "",
       type: "INTEGER",
     };
-
     setOptionalFields((optionalFields) => [...optionalFields, newField]);
   };
 
   const submitForm = (values) => {
-    if (values.file === undefined) {
+
+    //Si se sube imagen desde la galeria
+    if (imgGallerySelected === true) {
+      ConfigService.createCollection(
+        values.name,
+        values.template,
+        img,
+        values.metadata
+      ).then((response) => {
+        if (response.status === 200) {
+          navigate(-1);
+          toast.success(
+            <FormattedMessage id="app.collection.created"></FormattedMessage>,
+            { theme: "colored" }
+          );
+        }
+      });
+    }
+
+    //Si no se sube imagen
+    if (values.file === undefined && imgGallerySelected === false) {
       ConfigService.createCollection(
         values.name,
         values.template,
@@ -67,7 +98,9 @@ function AddCollection() {
           );
         }
       });
-    } else {
+    }
+    //Si se sube imagen nueva y no de galeria 
+    if (values.file !== undefined && imgGallerySelected === false) {
       ConfigService.putImage(values.name, values.file).then((resp) => {
         ConfigService.createCollection(
           values.name,
@@ -165,45 +198,21 @@ function AddCollection() {
             <Form onSubmit={handleSubmit} id="form">
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Box pt={2}>
-                    <TextField
-                      sx={{ minWidth: 300 }}
-                      size="small"
-                      id="name"
-                      name="name"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.name && Boolean(errors.name)}
-                      helperText={touched.name && errors.name}
-                      label={
-                        <FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>
-                      }
-                      variant="outlined"
-                      value={values.name}
-                    />
-                  </Box>
+                  <Box
+                    pt={0}
+                    component="img"
+                    sx={{
+                      height: "auto",
+                      width: "auto",
+                      maxHeight: 300,
+                      maxWidth: 400,
+                    }}
+                    alt="Logo"
+                    src={preview ? preview : NoImage}
+                  ></Box>
                 </Grid>
-                <Grid item xs={2}>
-                  <Box pt={8}>
-                    <Grid item xs={6}>
-                      <TextField
-                        sx={{ minWidth: 300 }}
-                        size="small"
-                        id="outlined-basic"
-                        name="logo"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        label={
-                          <FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>
-                        }
-                        variant="outlined"
-                        value={selectedFile.name || ""}
-                      />
-                    </Grid>
-                  </Box>
-                </Grid>
-                <Grid item xs={2}>
-                  <Box pt={8.2} ml={9}>
+                <Grid item>
+                  <Box>
                     <Button variant="contained" component="label">
                       {
                         <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
@@ -221,18 +230,64 @@ function AddCollection() {
                     </Button>
                   </Box>
                 </Grid>
-                <Grid item xs={5}>
-                  <Box
-                    pt={0}
-                    ml={2}
-                    component="img"
-                    sx={{
-                      height: 150,
-                      width: 350,
-                    }}
-                    alt="Logo"
-                    src={preview ? preview : NoImage}
-                  ></Box>
+                <Grid item>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.tooltip.search_gallery",
+                    })}
+                    placement="bottom"
+                    arrow
+                  >
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={(e) => {
+                        setConfirmOpenGallery(true);
+                      }}
+                    >
+                      {
+                        <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
+                      }
+                    </Button>
+                  </Tooltip>
+                </Grid>
+                <Grid item xs={2}>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.tooltip.search_google",
+                    })}
+                    placement="right"
+                    arrow
+                  >
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={(e) => {
+                        console.log(e);
+                      }}
+                    >
+                      <GoogleIcon></GoogleIcon>
+                    </Button>
+                  </Tooltip>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box pt={2}>
+                    <TextField
+                      sx={{ minWidth: 300 }}
+                      size="small"
+                      id="name"
+                      name="name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touched.name && Boolean(errors.name)}
+                      helperText={touched.name && errors.name}
+                      label={
+                        <FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>
+                      }
+                      variant="outlined"
+                      value={values.name}
+                    />
+                  </Box>
                 </Grid>
                 <Grid item xs={8}>
                   <TextField
@@ -282,6 +337,7 @@ function AddCollection() {
                     <TableCustomFields
                       updateFields={setOptionalFields}
                       rows={optionalFields}
+                      operation="add"
                     ></TableCustomFields>
                   )}
                 </Grid>
@@ -309,6 +365,17 @@ function AddCollection() {
           )}
         </Formik>
       </Grid>
+      <ImageGalleryDialog
+        title={intl.formatMessage({
+          id: "app.dialog.gallery_title",
+        })}
+        open={confirmOpenGallery}
+        setImageSelected={setImg}
+        setOpen={setConfirmOpenGallery}
+        onConfirm={handleImageClick}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </ImageGalleryDialog>
     </Box>
   );
 }

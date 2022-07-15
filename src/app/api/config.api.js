@@ -13,9 +13,12 @@ const DELETE_COLLECTION_ITEM_ID_URL = (id) =>
     `${API_URL}/delete-collection-item/${id}`;
 const DELETE_COLLECTION_ID_URL = (id) =>
     `${API_URL}/delete-collection/${id}`;
+const DELETE_COLLECTION_ID_URL_CASCADE = (id) =>
+    `${API_URL}/delete-collection-cascade/${id}`;
 const GET_COLLECTION_ITEM_ID_URL = (id) =>
     `${API_URL}/get-item/${id}`;
 const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
+const GET_IMAGES_QUERY_URL = (query) => `${API_URL}/marvel/item-images/${query}`;
 const IMAGES_URL = `${API_URL}/images`;
 const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
@@ -48,7 +51,7 @@ const countCollectionsItems = () => {
 };
 
 const createCollection = (name, template, file, metadata) => {
-    console.log(template)
+    //console.log(template)
     const data = {
         name: name,
         template: template,
@@ -130,10 +133,18 @@ const deleteCollectionItem = (id) => {
     });
 };
 
-const deleteCollection = (id) => {
-    return axios.delete(DELETE_COLLECTION_ID_URL(id), { headers: authHeader() }).then((response) => {
-        return response;
-    });
+const deleteCollection = (id, cascade) => {
+    if (cascade === false) {
+        return axios.delete(DELETE_COLLECTION_ID_URL(id), { headers: authHeader() }).then((response) => {
+            return response;
+        });
+    }
+    else {
+        return axios.delete(DELETE_COLLECTION_ID_URL_CASCADE(id), { headers: authHeader() }).then((response) => {
+            return response;
+        });
+    }
+
 };
 
 const getAllSeries = () => {
@@ -173,6 +184,13 @@ const getCollectionSeries = (id) => {
 const getCollectionById = (id) => {
     return axios.get(GET_COLLECTION_ID_URL(id), { headers: authHeader() }).then((response) => {
         //console.log(response.data);
+        return response;
+    });
+};
+
+const getImages = (query) => {
+    return axios.get(GET_IMAGES_QUERY_URL(query), { headers: authHeader() }).then((response) => {
+        console.log(response.data);
         return response;
     });
 };
@@ -271,6 +289,7 @@ const ConfigService = {
     getCollectionItem,
     getCollectionLists,
     getCollectionSeries,
+    getImages,
     putImage,
     toggleItemOwn,
     toggleItemWish,

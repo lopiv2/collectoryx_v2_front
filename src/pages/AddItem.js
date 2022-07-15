@@ -46,6 +46,7 @@ function AddItem(props) {
   const [img, setImg] = useState();
   const [imgGallerySelected, setImgGallerySelected] = useState(false);
 
+
   const handleChangeOwn = (event) => {
     setOwn(event.target.checked);
   };
@@ -54,6 +55,14 @@ function AddItem(props) {
     setPreview(require("../../../images/" + img));
     setImgGallerySelected(true);
   };
+
+  const searchWebClick = (query) => {
+    console.log(query)
+    const collectionSeries = ConfigService.getImages(query)
+      .then((response) => {
+        console.log(response.data)
+      });
+  }
 
   useEffect(() => {
     const collectionSeries = ConfigService.getCollectionSeries(
@@ -293,7 +302,7 @@ function AddItem(props) {
                             color="primary"
                             variant="contained"
                             onClick={(e) => {
-                              console.log(e);
+                              searchWebClick(values.name)
                             }}
                           >
                             <GoogleIcon></GoogleIcon>
@@ -421,15 +430,9 @@ function AddItem(props) {
                           name="date"
                           label=""
                           size="small"
-                          //value={values.adquiringDate}
                           value={date}
                           error={touched.year && Boolean(errors.year)}
                           helperText={touched.year && errors.year}
-                          /*onChange={selectedOption => {
-                                                        let event = { target: { name: 'date', value: selectedOption } }
-                                                        console.log(selectedOption);
-                                                        handleChange(event.target.value)
-                                                    }}*/
                           onChange={(newValue) => {
                             setDate(newValue);
                           }}

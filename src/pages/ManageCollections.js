@@ -6,12 +6,13 @@ import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
 import styles from "../styles/Collections.css";
 import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
 import { NavLink } from "react-router-dom";
+import OptionsService from "../components/DropDownOptions";
 import useBreadcrumbs from "use-react-router-breadcrumbs";
 import AddIcon from "@mui/icons-material/Add";
 import ConfirmDialog from "../components/ConfirmDialog";
@@ -24,6 +25,7 @@ function ManageCollections(props) {
   const intl = useIntl();
   const [value, setValue] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [cascade, setCascade] = useState(false);
 
   useEffect(() => {
     const collections = ConfigService.getCollectionLists()
@@ -61,7 +63,8 @@ function ManageCollections(props) {
   }, [collectionsList]);
 
   const handleDeleteClick = () => {
-    const deleteColl = ConfigService.deleteCollection(value).then(
+    console.log(cascade)
+    const deleteColl = ConfigService.deleteCollection(value, cascade).then(
       (response) => {
         if (response.data === true) {
           toast.success(
@@ -79,6 +82,16 @@ function ManageCollections(props) {
       }
     );
   };
+
+  const getTemplateLabel = (template) => {
+    var tempArray = [];
+    tempArray = OptionsService.createCollectionOptions.find(
+      (f) => f.value === template
+    );
+    if (tempArray !== undefined) {
+      return (tempArray.label.props.id)
+    }
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -145,20 +158,28 @@ function ManageCollections(props) {
                       style={styles}
                     />
                   )}
+                  <Typography
+                    align="center"
+                    color="text.secondary"
+                    style={{ fontWeight: 100 }}
+                  >{getTemplateLabel(item.template) !== undefined ? intl.formatMessage({
+                    id: getTemplateLabel(item.template),
+                  }) : null}</Typography>
+
 
                   <Typography
                     align="center"
                     sx={{ mb: 0.5 }}
-                    mt={1}
                     color="text.secondary"
+                    style={{ fontWeight: 600 }}
                   >
                     <FormattedMessage id="app.collection.items"></FormattedMessage>
                   </Typography>
                   <Typography align="center" color="text.secondary">
                     {col[col.findIndex((e) => e.id === item.id)]
                       ? col[col.findIndex((e) => e.id === item.id)].collected +
-                        "/" +
-                        col[col.findIndex((e) => e.id === item.id)].totalItems
+                      "/" +
+                      col[col.findIndex((e) => e.id === item.id)].totalItems
                       : null}
                   </Typography>
                   <BorderLinearProgressBar
@@ -166,12 +187,12 @@ function ManageCollections(props) {
                     value={
                       col[col.findIndex((e) => e.id === item.id)]
                         ? +Number.parseFloat(
-                            (col[col.findIndex((e) => e.id === item.id)]
-                              .collected /
-                              col[col.findIndex((e) => e.id === item.id)]
-                                .totalItems) *
-                              100
-                          ).toFixed(2)
+                          (col[col.findIndex((e) => e.id === item.id)]
+                            .collected /
+                            col[col.findIndex((e) => e.id === item.id)]
+                              .totalItems) *
+                          100
+                        ).toFixed(2)
                         : 0
                     }
                   ></BorderLinearProgressBar>
@@ -197,10 +218,22 @@ function ManageCollections(props) {
                     open={confirmOpen}
                     setOpen={setConfirmOpen}
                     onConfirm={handleDeleteClick}
+                    showCascade={true}
+                    setCascade={setCascade}
                   >
                     <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
                   </ConfirmDialog>
                   <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() =>
+                      console.log("Exportar")
+
+                    }
+                  >
+                    <FormattedMessage id="app.button.export_module"></FormattedMessage>
+                  </Button>
+                  {/*<Button
                     variant="contained"
                     color="success"
                     onClick={() =>
@@ -212,14 +245,14 @@ function ManageCollections(props) {
                     }
                   >
                     <FormattedMessage id="app.button.edit"></FormattedMessage>
-                  </Button>
+                  </Button>*/}
                 </CardActions>
               </Card>
             </Grid>
           ))}
         </Grid>
       </Grid>
-    </Box>
+    </Box >
   );
 }
 

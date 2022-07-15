@@ -10,7 +10,7 @@ import OwnImage from "../images/Own.png";
 import NotOwnImage from "../images/NotOwn.png";
 import Tick from "../images/Tick.png";
 import Cross from "../images/Cross.png";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
 import styles from "../styles/Collections.css";
@@ -162,7 +162,6 @@ function DisplayCollection(props) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <ToastContainer autoClose={2000} />
       <Grid container>
         <Grid
           container
@@ -459,7 +458,7 @@ function DisplayCollection(props) {
                               {item.image != null && (
                                 <CardMedia
                                   component="img"
-                                  width="100%"
+                                  width="500%"
                                   height="220"
                                   image={require("../../../images/" +
                                     item.image.path)}

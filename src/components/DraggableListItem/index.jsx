@@ -37,7 +37,7 @@ const DraggableListItem = (props) => {
 
         // updating the list
         props.updateItems(temp);
-        props.updateOptionalFields(temp);
+        //props.updateOptionalFields(temp);
     };
 
     const onChangeField = (event) => {
@@ -45,9 +45,11 @@ const DraggableListItem = (props) => {
     }
 
     useEffect(() => {
-        props.itemsList[props.index].name = field;
-        props.itemsList[props.index].type = fieldType;
-    }, [fieldType, field])
+        if (props.operation === "add") {
+            props.itemsList[props.index].name = field;
+            props.itemsList[props.index].type = fieldType;
+        }
+    }, [props.itemsList])
 
     return (
         <Draggable key={props.item} draggableId={props.item.id} index={props.index}>
@@ -70,10 +72,9 @@ const DraggableListItem = (props) => {
                         </Grid>
                         <Grid item xs={2}>
                             <TextField
-                                value={fieldType}
+                                value={props.operation === "add" ? fieldType : props.item.type}
                                 id="demo-simple-select"
                                 select
-                                label="Type"
                                 size="small"
                                 onChange={handleChangeType}
                             >

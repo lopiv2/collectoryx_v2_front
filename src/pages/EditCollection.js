@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Typography } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
@@ -17,15 +17,22 @@ import TableCustomFields from "../components/TableCustomFields";
 import * as Yup from "yup";
 import { useLocation } from "react-router-dom";
 import OptionsService from "../components/DropDownOptions";
+import GoogleIcon from "@mui/icons-material/Google";
+import { Tooltip } from "@mui/material";
+import ImageGalleryDialog from "../components/ImageGalleryDialog";
 
 function EditCollection() {
-  const [template, setTemplate] = useState("New");
+  const [template, setTemplate] = useState("app.collection.new_template");
   const [selectedFile, setSelectedFile] = useState("");
   const location = useLocation();
   const [preview, setPreview] = useState();
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
   const [optionalFields, setOptionalFields] = useState([]);
+  const intl = useIntl();
+  const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
+  const [img, setImg] = useState();
+  const [imgGallerySelected, setImgGallerySelected] = useState(false);
 
   function generateId(length) {
     var result = "";
@@ -38,6 +45,11 @@ function EditCollection() {
     return result;
   }
 
+  const handleImageClick = () => {
+    setPreview(require("../../../images/" + img));
+    setImgGallerySelected(true);
+  };
+
   const handleClickNewField = () => {
     const newField = {
       id: generateId(8),
@@ -48,7 +60,8 @@ function EditCollection() {
   };
 
   const submitForm = (values) => {
-    if (values.file === undefined) {
+    console.log(values)
+    /*if (values.file === undefined) {
       ConfigService.createCollection(
         values.name,
         values.template,
@@ -84,7 +97,7 @@ function EditCollection() {
         }
         //console.log(response);
       });
-    }
+    }*/
   };
 
   useEffect(() => {
@@ -101,8 +114,11 @@ function EditCollection() {
       } else {
         setFields("");
       }
+      console.log(response.data.metadata)
       setOptionalFields(response.data.metadata);
+      setTemplate(tempArray.label.props.id)
     });
+
   }, [location.state.item]);
 
   useEffect(() => {
@@ -140,6 +156,7 @@ function EditCollection() {
           initialValues={{
             name: location.state.item.name,
             logo: "",
+            template: template,
             metadata: [],
           }}
           validate={(values) => {
@@ -152,11 +169,11 @@ function EditCollection() {
           validationSchema={newCollectionSchema}
           onSubmit={(values, { setSubmitting }) => {
             {
-              template === "New"
+              location.state.item.template === "New"
                 ? (values.metadata = optionalFields)
                 : (values.metadata = []);
             }
-            values.template = template;
+            //values.template = location.state.item.template;
             submitForm(values);
             setSubmitting(false);
           }}
@@ -173,6 +190,79 @@ function EditCollection() {
           }) => (
             <Form onSubmit={handleSubmit} id="form">
               <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Box
+                    pt={0}
+                    component="img"
+                    sx={{
+                      height: "auto",
+                      width: "auto",
+                      maxHeight: 300,
+                      maxWidth: 400,
+                    }}
+                    alt="Logo"
+                    src={preview ? preview : NoImage}
+                  ></Box>
+                </Grid>
+                <Grid item>
+                  <Box>
+                    <Button variant="contained" component="label">
+                      {
+                        <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
+                      }
+                      <input
+                        type="file"
+                        hidden
+                        name="file"
+                        accept="image/png, image/jpeg"
+                        onChange={(e) => {
+                          setFieldValue("file", e.currentTarget.files[0]);
+                          setSelectedFile(e.currentTarget.files[0]);
+                        }}
+                      />
+                    </Button>
+                  </Box>
+                </Grid>
+                <Grid item>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.tooltip.search_gallery",
+                    })}
+                    placement="bottom"
+                    arrow
+                  >
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={(e) => {
+                        setConfirmOpenGallery(true);
+                      }}
+                    >
+                      {
+                        <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
+                      }
+                    </Button>
+                  </Tooltip>
+                </Grid>
+                <Grid item xs={2}>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.tooltip.search_google",
+                    })}
+                    placement="right"
+                    arrow
+                  >
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={(e) => {
+                        console.log(e);
+                      }}
+                    >
+                      <GoogleIcon></GoogleIcon>
+                    </Button>
+                  </Tooltip>
+                </Grid>
                 <Grid item xs={12}>
                   <Box pt={2}>
                     <TextField
@@ -192,8 +282,8 @@ function EditCollection() {
                     />
                   </Box>
                 </Grid>
-                <Grid item xs={2}>
-                  <Box pt={8}>
+                <Grid item xs={12}>
+                  <Box>
                     <Grid item xs={6}>
                       <TextField
                         sx={{ minWidth: 300 }}
@@ -203,45 +293,17 @@ function EditCollection() {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         label={
-                          <FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>
+                          <FormattedMessage id="app.collection.add_collection_template"></FormattedMessage>
                         }
                         variant="outlined"
-                        value={location.state.item.logo ? selectedFile.name || "" || location.state.item.logo.path : ""}
+                        value={template ?
+                          intl.formatMessage({
+                            id: template,
+                          }) : null
+                        }
                       />
                     </Grid>
                   </Box>
-                </Grid>
-                <Grid item xs={2}>
-                  <Box pt={8.2} ml={9}>
-                    <Button variant="contained" component="label">
-                      {
-                        <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
-                      }
-                      <input
-                        type="file"
-                        hidden
-                        name="file"
-                        accept="image/png, image/jpeg"
-                        onChange={(e) => {
-                          setFieldValue("file", e.currentTarget.files[0]);
-                          setSelectedFile(e.currentTarget.files[0]);
-                        }}
-                      />
-                    </Button>
-                  </Box>
-                </Grid>
-                <Grid item xs={5}>
-                  <Box
-                    pt={0}
-                    ml={2}
-                    component="img"
-                    sx={{
-                      height: 150,
-                      width: 350,
-                    }}
-                    alt="Logo"
-                    src={preview ? preview : NoImage}
-                  ></Box>
                 </Grid>
                 <Grid item xs={6.8}>
                   <Typography variant="h6" component="h6">
@@ -249,7 +311,7 @@ function EditCollection() {
                   </Typography>
                   <TagsInput fields={fields}></TagsInput>
                 </Grid>
-                {template === "New" && (
+                {location.state.item.template === "New" && (
                   <Grid item xs={6.8}>
                     <Button
                       variant="contained"
@@ -265,6 +327,7 @@ function EditCollection() {
                     <TableCustomFields
                       updateFields={setOptionalFields}
                       rows={optionalFields}
+                      operation="edit"
                     ></TableCustomFields>
                   )}
                 </Grid>
@@ -292,6 +355,17 @@ function EditCollection() {
           )}
         </Formik>
       </Grid>
+      <ImageGalleryDialog
+        title={intl.formatMessage({
+          id: "app.dialog.gallery_title",
+        })}
+        open={confirmOpenGallery}
+        setImageSelected={setImg}
+        setOpen={setConfirmOpenGallery}
+        onConfirm={handleImageClick}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </ImageGalleryDialog>
     </Box>
   );
 }

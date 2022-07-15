@@ -30,6 +30,7 @@ const createCollectionOptions = [
       (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
       (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
       (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
+      (<FormattedMessage id="app.collection.view_collections_item_image"></FormattedMessage>),
       (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>)]
   },
   {
