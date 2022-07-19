@@ -1,6 +1,6 @@
 import { Routes, Route, useParams } from "react-router-dom";
-import SignIn from "../components/SignIn"
-import SignUp from "../components/SignUp"
+import SignIn from "../pages/SignIn"
+import SignUp from "../pages/SignUp"
 import ProtectedRoutes from "../components/ProtectedRoute";
 import AddCollection from "../pages/AddCollection";
 import ViewCollection from "../pages/ViewCollections";
@@ -13,6 +13,7 @@ import Dashboard from "./Dashboard";
 import EditItem from "../pages/EditItem";
 import ManageCollections from "../pages/ManageCollections";
 import EditCollection from "../pages/EditCollection";
+import ValidateUserAdmin from "./ValidateUserAdmin";
 
 export const Router = () => {
     let { colId } = useParams();
@@ -29,6 +30,8 @@ export const Router = () => {
                 <Route path="/"
                     element={
                         <ProtectedRoutes>
+                            <ValidateUserAdmin></ValidateUserAdmin>
+                            
                             <Dashboard></Dashboard>
                         </ProtectedRoutes>}>
                 </Route>

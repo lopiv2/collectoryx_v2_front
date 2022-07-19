@@ -5,7 +5,7 @@ import AuthService from "../app/api/auth.api";
 
 
 const ProtectedRoutes = (props) => {
-    return AuthService.isLogged() ? props.children : <Navigate to="/login" />
+    return AuthService.isLogged() && AuthService.checkTokenExpired() ? props.children : <Navigate to="/login" />
 }
 
 export default ProtectedRoutes;

@@ -1,4 +1,7 @@
 import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { toast } from 'react-toastify';
+import { FormattedMessage } from "react-intl";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const LOGIN_URL = `${API_URL}/login`;
@@ -28,6 +31,40 @@ const login = (user_name, password) => {
 const isLogged = () => {
   if (getCurrentUser()) {
     return true;
+  }
+  else {
+    return false;
+  }
+};
+
+const checkUserLogged = () => {
+  if (localStorage.getItem("user")) {
+    var user = localStorage.getItem("user")
+    var userData = JSON.parse(user);
+    if (userData.user_name === "admin_server") {
+      return "admin"
+    }
+    else {
+      return "user"
+    }
+  }
+}
+
+const checkTokenExpired = (props) => {
+  if (localStorage.getItem("user")) {
+    var user = localStorage.getItem("user")
+    var userData = JSON.parse(user);
+    //console.log(userData)
+    const jwt_Token_decoded = jwt_decode(userData.token);
+    if (jwt_Token_decoded.exp * 1000 < Date.now()) {
+      //console.log("caducado")
+      toast.error(<FormattedMessage id="app.signin.token_expired"></FormattedMessage>, { theme: "colored" })
+      localStorage.clear();
+      return false;
+    }
+    else {
+      return true;
+    }
   }
   else {
     return false;
@@ -71,6 +108,8 @@ const getCurrentUser = () => {
 };
 
 const AuthService = {
+  checkUserLogged,
+  checkTokenExpired,
   register,
   login,
   logout,

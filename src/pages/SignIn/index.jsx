@@ -13,13 +13,13 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthService from "../../app/api/auth.api";
-import { AppContext } from "../AppContext";
+import { AppContext } from "../../components/AppContext";
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
-import { Context } from "../Wrapper";
+import { toast } from 'react-toastify';
+import { Context } from "../../components/Wrapper";
 import { FormattedMessage } from 'react-intl';
-import LanguageSwitcher from '../LanguageSelector';
+import LanguageSwitcher from '../../components/LanguageSelector';
 
 function Copyright(props) {
 
@@ -47,7 +47,6 @@ export default function SignInSide() {
   const navigate = useNavigate();
   const context = useContext(Context);
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -72,7 +71,6 @@ export default function SignInSide() {
 
   return (
     <ThemeProvider theme={theme}>
-      <ToastContainer autoClose={3000} />
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import { Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -11,7 +11,7 @@ import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { GetCurrencySymbolLocale } from "../utils/generic";

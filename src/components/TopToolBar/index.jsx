@@ -8,7 +8,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "react-avatar";
-//import "./Dashboard.css";
+import Grid from "@mui/material/Grid";
 import MuiAppBar from '@mui/material/AppBar';
 import { FormattedMessage } from "react-intl";
 import LanguageSwitcher from "../LanguageSelector";
@@ -56,7 +56,7 @@ export default function TopToolBar(props) {
   };
 
   //const navigate = useNavigate();
-  const { userName, setUserName} =
+  const { userName, setUserName } =
     React.useContext(AppContext);
 
   useEffect(() => {
@@ -91,7 +91,16 @@ export default function TopToolBar(props) {
           noWrap
           sx={{ flexGrow: 1 }}
         >
-          <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
+          <Grid container>
+            <Grid item xs={2}>
+              <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
+            </Grid>
+            <Grid item xs={2} ml={50}>
+              <FormattedMessage id="app.dashboard.license_days" values={{
+                days: "3"
+              }}></FormattedMessage>
+            </Grid>
+          </Grid>
         </Typography>
         <LanguageSwitcher></LanguageSwitcher>
         <IconButton color="inherit">

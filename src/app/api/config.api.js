@@ -29,9 +29,7 @@ const VIEW_COLLECTION_SERIES_URL = (id) => `${API_URL}/view-collection-series/${
 
 
 const countCollectionsMoney = () => {
-    //console.log(authHeader())
     return axios.get(COUNT_COLLECTIONS_MONEY_URL, { headers: authHeader() }).then((response) => {
-        //console.log(response.data);
         return response;
     });
 };
