@@ -7,9 +7,10 @@ import Paper from '@mui/material/Paper';
 import Chart from '../Chart';
 import Deposits from '../Deposits';
 import Orders from '../Orders';
+import AuthService from "../../app/api/auth.api";
 
 export default function Dashboard (props) {
-    return (
+    return AuthService.checkUserLogged() === "USER_ROLE" && (
         <Grid container spacing={3}>
             {/*Spent Money in all collections*/}
             <Grid item xs={10} md={8} lg={4}>

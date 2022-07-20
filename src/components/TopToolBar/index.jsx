@@ -95,11 +95,23 @@ export default function TopToolBar(props) {
             <Grid item xs={2}>
               <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
             </Grid>
-            <Grid item xs={2} ml={50}>
-              <FormattedMessage id="app.dashboard.license_days" values={{
-                days: "3"
-              }}></FormattedMessage>
-            </Grid>
+            {AuthService.checkUserLogged() === "USER_ROLE" ?
+              (<Grid item xs={2} ml={50}>
+                <FormattedMessage id="app.dashboard.license_days" values={{
+                  days: "3"
+                }}></FormattedMessage>
+              </Grid>) :
+              (<Grid item xs={2} ml={50}>
+                <Typography
+                  component="h1"
+                  variant="h6"
+                  color="yellow"
+                  noWrap
+                  sx={{ flexGrow: 1 }}
+                >
+                  <FormattedMessage id="app.dashboard.admin_panel"></FormattedMessage>
+                </Typography>
+              </Grid>)}
           </Grid>
         </Typography>
         <LanguageSwitcher></LanguageSwitcher>

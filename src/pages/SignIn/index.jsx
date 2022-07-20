@@ -43,7 +43,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const { userName, setUserName, isLogged, setIsLogged } = useContext(AppContext);
+  const { userName, setUserName, isLogged, setIsLogged, role, setRole } = useContext(AppContext);
   const navigate = useNavigate();
   const context = useContext(Context);
 
@@ -53,7 +53,7 @@ export default function SignInSide() {
     AuthService.login(data.get("user_name"), data.get("password")).then((response) => {
       setIsLogged(true);
       setUserName(data.get("user_name"));
-      //console.log(data.get("user_name"));
+      setRole(response.data.role)
       if (response.data.error === true) {
         toast.error(response.data.message, { theme: "colored" });
         //console.log(response.data.error);

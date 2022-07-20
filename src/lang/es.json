@@ -1,5 +1,7 @@
 {
   "app.sidemenu.dashboard": "Panel de control",
+  "app.sidemenu.admin.license_server": "Servidor Licencias",
+  "app.sidemenu.admin.sales": "Ventas",
   "app.sidemenu.collections": "Colecciones",
   "app.sidemenu.collections.show": "Ver Colecciones",
   "app.sidemenu.collections.add": "Agregar Coleccion",
@@ -31,6 +33,7 @@
   "app.total_items": "Articulos totales",
   "app.total_collections": "Colecciones totales",
   "app.dashboard.license_days": "Quedan {days} dias de licencia",
+  "app.dashboard.admin_panel": "Gestion de la aplicación",
   "app.collection.add_collection_title": "Configuracion de nueva coleccion",
   "app.collection.add_collection_name": "Nombre de coleccion",
   "app.collection.add_collection_logo": "Logotipo",

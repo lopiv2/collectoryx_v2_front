@@ -1,5 +1,7 @@
 {
   "app.sidemenu.dashboard": "Dashboard",
+  "app.sidemenu.admin.license_server": "License Server",
+  "app.sidemenu.admin.sales": "Sales",
   "app.sidemenu.collections": "Collections",
   "app.sidemenu.collections.show": "Show Collections",
   "app.sidemenu.collections.add": "Add Collection",
@@ -31,6 +33,7 @@
   "app.total_items": "Total items",
   "app.total_collections": "Total collections",
   "app.dashboard.license_days": "License valid for {days} days",
+  "app.dashboard.admin_panel": "App management",
   "app.collection.add_collection_title": "New Collection configuration",
   "app.collection.add_collection_name": "Collection name",
   "app.collection.add_collection_logo": "Logotype",

@@ -2,6 +2,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { toast } from 'react-toastify';
 import { FormattedMessage } from "react-intl";
+import { useEffect, useState, useContext } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const LOGIN_URL = `${API_URL}/login`;
@@ -41,11 +42,11 @@ const checkUserLogged = () => {
   if (localStorage.getItem("user")) {
     var user = localStorage.getItem("user")
     var userData = JSON.parse(user);
-    if (userData.user_name === "admin_server") {
-      return "admin"
+    if (userData.role === "ADMIN_ROLE") {
+      return "ADMIN_ROLE"
     }
     else {
-      return "user"
+      return "USER_ROLE"
     }
   }
 }
@@ -83,7 +84,8 @@ const buildUser = (response, user_name) => {
     const user = {
       user_name: user_name,
       status: status,
-      token: response.data.token
+      token: response.data.token,
+      role: response.data.role
     }
     //console.log(user.token);
     localStorage.setItem("user", JSON.stringify(user));

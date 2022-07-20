@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Logo from "../../assets/Collectoryx_Logo.png";
 import MainListItems from '../listItems';
+import AdminListItems from '../listItemsAdmin';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import IconButton from '@mui/material/IconButton';
@@ -9,6 +10,7 @@ import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import MuiDrawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
+import AuthService from "../../app/api/auth.api";
 
 const drawerWidth = 240;
 
@@ -43,8 +45,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function SideBar(props) {
 
-
-
     return (
         <Drawer variant="permanent" open={props.open}>
             <Toolbar
@@ -67,7 +67,7 @@ export default function SideBar(props) {
             </Toolbar>
             <Divider />
             <List component="nav">
-                {MainListItems()}
+                {AuthService.checkUserLogged() === "USER_ROLE" ? MainListItems() : AdminListItems()}
                 <Divider sx={{ my: 1 }} />
             </List>
         </Drawer>

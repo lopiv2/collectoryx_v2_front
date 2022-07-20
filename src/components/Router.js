@@ -13,10 +13,10 @@ import Dashboard from "./Dashboard";
 import EditItem from "../pages/EditItem";
 import ManageCollections from "../pages/ManageCollections";
 import EditCollection from "../pages/EditCollection";
-import ValidateUserAdmin from "./ValidateUserAdmin";
 
 export const Router = () => {
     let { colId } = useParams();
+
     return (
         <Routes>
             {/** Protected Routes */}
@@ -30,8 +30,6 @@ export const Router = () => {
                 <Route path="/"
                     element={
                         <ProtectedRoutes>
-                            <ValidateUserAdmin></ValidateUserAdmin>
-                            
                             <Dashboard></Dashboard>
                         </ProtectedRoutes>}>
                 </Route>
