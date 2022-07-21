@@ -108,7 +108,7 @@ export default function AdminListItems() {
               <ListItemIcon>
                 <BallotIcon />
               </ListItemIcon>
-              <FormattedMessage id="app.sidemenu.collections.lists"></FormattedMessage>
+              <FormattedMessage id="app.sidemenu.collections.series"></FormattedMessage>
             </ListItemButton>
           </NavLink>
         </List>
@@ -119,12 +119,18 @@ export default function AdminListItems() {
         </ListItemIcon>
         <FormattedMessage id="app.sidemenu.admin.sales"></FormattedMessage>
       </ListItemButton>
-      <ListItemButton sx={{ margin: "5px 0" }}>
-        <ListItemIcon>
-          <LanIcon />
-        </ListItemIcon>
-        <FormattedMessage id="app.sidemenu.admin.license_server"></FormattedMessage>
-      </ListItemButton>
+      <NavLink
+        className="nav-link"
+        to="/admin/keygen"
+        style={{ textDecoration: "none", color: "black" }}
+      >
+        <ListItemButton sx={{ margin: "5px 0" }}>
+          <ListItemIcon>
+            <LanIcon />
+          </ListItemIcon>
+          <FormattedMessage id="app.sidemenu.admin.license_server"></FormattedMessage>
+        </ListItemButton>
+      </NavLink>
       <ListItemButton sx={{ margin: "5px 0" }} onClick={handleClickMarket}>
         <ListItemIcon>
           <ShoppingCartIcon />

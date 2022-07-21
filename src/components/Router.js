@@ -13,6 +13,7 @@ import Dashboard from "./Dashboard";
 import EditItem from "../pages/EditItem";
 import ManageCollections from "../pages/ManageCollections";
 import EditCollection from "../pages/EditCollection";
+import KeyGeneration from "../pages/KeyGeneration";
 
 export const Router = () => {
     let { colId } = useParams();
@@ -85,6 +86,12 @@ export const Router = () => {
                     element={
                         <ProtectedRoutes>
                             <EditItem />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/admin/keygen"
+                    element={
+                        <ProtectedRoutes>
+                            <KeyGeneration />
                         </ProtectedRoutes>}>
                 </Route>
             </Route>

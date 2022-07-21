@@ -6,7 +6,7 @@
   "app.sidemenu.collections.show": "Show Collections",
   "app.sidemenu.collections.add": "Add Collection",
   "app.sidemenu.collections.admin": "Admin Collections",
-  "app.sidemenu.collections.lists": "Admin series lists",
+  "app.sidemenu.collections.series": "Admin series lists",
   "app.sidemenu.feeds": "Web Feeds",
   "app.sidemenu.reports": "Reports",
   "app.sidemenu.config": "Settings",

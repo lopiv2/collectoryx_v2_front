@@ -108,7 +108,7 @@ export default function MainListItems() {
               <ListItemIcon>
                 <BallotIcon />
               </ListItemIcon>
-              <FormattedMessage id="app.sidemenu.collections.lists"></FormattedMessage>
+              <FormattedMessage id="app.sidemenu.collections.series"></FormattedMessage>
             </ListItemButton>
           </NavLink>
         </List>
