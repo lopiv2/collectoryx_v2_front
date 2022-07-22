@@ -14,6 +14,7 @@ import EditItem from "../pages/EditItem";
 import ManageCollections from "../pages/ManageCollections";
 import EditCollection from "../pages/EditCollection";
 import KeyGeneration from "../pages/KeyGeneration";
+import BuyLicense from "../pages/BuyLicense";
 
 export const Router = () => {
     let { colId } = useParams();
@@ -86,6 +87,12 @@ export const Router = () => {
                     element={
                         <ProtectedRoutes>
                             <EditItem />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/market/license"
+                    element={
+                        <ProtectedRoutes>
+                            <BuyLicense />
                         </ProtectedRoutes>}>
                 </Route>
                 <Route path="/admin/keygen"

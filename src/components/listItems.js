@@ -10,7 +10,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ScreenshotMonitorIcon from "@mui/icons-material/ScreenshotMonitor";
 import EventNoteIcon from "@mui/icons-material/EventNote";
-import AddBoxIcon from "@mui/icons-material/AddBox";
+import KeyIcon from '@mui/icons-material/Key';
 import PreviewIcon from "@mui/icons-material/Preview";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -134,16 +134,16 @@ export default function MainListItems() {
         <List component="div" disablePadding>
           <NavLink
             className="nav-link"
-            to="/collections"
+            to="/market/license"
             style={{ textDecoration: "none", color: "black" }}
           >
             <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
               <ListItemIcon>
-                <PreviewIcon />
+                <KeyIcon />
               </ListItemIcon>
               <FormattedMessage
                 sx={{ pl: 4 }}
-                id="app.sidemenu.collections.show"
+                id="app.sidemenu.marketplace.buy_license"
               ></FormattedMessage>
             </ListItemButton>
           </NavLink>
@@ -168,7 +168,7 @@ export default function MainListItems() {
               <ListItemIcon>
                 <BallotIcon />
               </ListItemIcon>
-              <FormattedMessage id="app.sidemenu.collections.lists"></FormattedMessage>
+              <FormattedMessage id="app.sidemenu.collections.series"></FormattedMessage>
             </ListItemButton>
           </NavLink>
         </List>
