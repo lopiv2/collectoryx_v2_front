@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import AdminService from "../app/api/admin.api";
+import ShopService from "../app/api/shop.api";
 import DoneIcon from '@mui/icons-material/Done';
 import { CurrencyChecker } from "../utils/generic";
 import LicenseService from "../components/LicenseTypes";
@@ -41,8 +42,10 @@ function BuyLicense(props) {
 
 
   const key = () => {
-    console.log(email);
-    const collectionSeries = AdminService.getKeyFileByEmail(email)
+    //console.log(email);
+    var user = localStorage.getItem("user")
+    var userData = JSON.parse(user);
+    const collectionSeries = ShopService.getKeyFileByEmail(userData.email)
       .then((response) => {
         console.log(response.data)
       });

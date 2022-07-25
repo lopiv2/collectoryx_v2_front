@@ -16,7 +16,7 @@ const login = (user_name, password) => {
     })
     .then((response) => {
       buildUser(response, user_name);
-      //console.log(user_name);
+      //console.log(response.data);
       if (response.status === 200 || response.status === 201) {
         return response;
       }
@@ -85,7 +85,8 @@ const buildUser = (response, user_name) => {
       user_name: user_name,
       status: status,
       token: response.data.token,
-      role: response.data.role
+      role: response.data.role,
+      email: response.data.email
     }
     //console.log(user.token);
     localStorage.setItem("user", JSON.stringify(user));
