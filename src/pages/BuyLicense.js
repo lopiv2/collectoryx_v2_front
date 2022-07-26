@@ -21,7 +21,7 @@ import LicenseService from "../components/LicenseTypes";
 function BuyLicense(props) {
   const intl = useIntl();
   const [email, setEmail] = useState("");
-  const [licenseSelected, setLicenseSelected] = useState("free");
+  const [licenseSelected, setLicenseSelected] = useState("Free");
   const [licenses, setLicenses] = useState([]);
   const currency = CurrencyChecker();
 
@@ -36,16 +36,11 @@ function BuyLicense(props) {
       (f) => f.label === "Lifetime")]);
   }, [])
 
-  useEffect(() => {
-    console.log(licenseSelected)
-  }, [licenseSelected])
-
-
   const key = () => {
     //console.log(email);
     var user = localStorage.getItem("user")
     var userData = JSON.parse(user);
-    const collectionSeries = ShopService.getKeyFileByEmail(userData.email)
+    const collectionSeries = ShopService.getKeyFileByEmail(userData.email, licenseSelected)
       .then((response) => {
         console.log(response.data)
       });
@@ -55,7 +50,7 @@ function BuyLicense(props) {
     <Box sx={{ display: "flex" }}>
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"
-        defaultValue="free"
+        defaultValue={licenses.length > 0 ? licenses[0].value : null}
         name="radio-buttons-group"
         value={licenseSelected}
         onChange={(e) => { setLicenseSelected(e.target.value) }}
@@ -92,7 +87,7 @@ function BuyLicense(props) {
 
                   <Grid item xs={3}>
                     <FormControlLabel
-                      value="free"
+                      value={licenses.length > 0 ? licenses[0].value : ""}
                       control={<Radio />}
                       label={intl.formatMessage({ id: 'app.license.select' })} />
                   </Grid>
@@ -134,7 +129,7 @@ function BuyLicense(props) {
 
                   <Grid item xs={3}>
                     <FormControlLabel
-                      value="monthly"
+                      value={licenses.length > 0 ? licenses[1].value : ""}
                       control={<Radio />}
                       label={intl.formatMessage({ id: 'app.license.select' })} />
                   </Grid>
@@ -175,7 +170,7 @@ function BuyLicense(props) {
 
                   <Grid item xs={3}>
                     <FormControlLabel
-                      value="yearly"
+                      value={licenses.length > 0 ? licenses[2].value : ""}
                       control={<Radio />}
                       label={intl.formatMessage({ id: 'app.license.select' })} />
                   </Grid>
@@ -217,7 +212,7 @@ function BuyLicense(props) {
 
                   <Grid item xs={3}>
                     <FormControlLabel
-                      value="lifetime"
+                      value={licenses.length > 0 ? licenses[3].value : ""}
                       control={<Radio />}
                       label={intl.formatMessage({ id: 'app.license.select' })} />
                   </Grid>

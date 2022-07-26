@@ -5,22 +5,22 @@ import Flags from "country-flag-icons/react/3x2";
 const LicenseTypes = [
   {
     label: "Free",
-    value: "FREE",
+    value: "Free",
     price: 0
   },
   {
     label: "Monthly",
-    value: "MONTHLY",
+    value: "Monthly",
     price: 4
   },
   {
     label: "Yearly",
-    value: "YEARLY",
+    value: "Yearly",
     price: 40
   },
   {
     label: "Lifetime",
-    value: "LIFETIME",
+    value: "Lifetime",
     price: 150
   },
 ]
