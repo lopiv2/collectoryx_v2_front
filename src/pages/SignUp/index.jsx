@@ -40,14 +40,17 @@ const Signup = () => {
         //console.log(values)
         //console.log(props)
         AuthService.register(values.firstName, values.lastName, values.email, values.userName, values.password).then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
             if (response.data.error === false) {
-                /*toast.success(response.data.message, { theme: "colored" });
+                toast.success(response.data.message, { theme: "colored" });
                 setTimeout(() => {
                     props.resetForm()
                     props.setSubmitting(false)
                     navigate("/login");
-                }, 2000)*/
+                }, 2000)
+            }
+            else {
+                console.log(response.data.error)
             }
         })
     };

@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 import { useEffect, useState, useContext } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL;
+//const API_URL = "http://localhost:8083";
 const LOGIN_URL = `${API_URL}/login`;
 const REGISTER_URL = `${API_URL}/register`;
 
@@ -83,6 +84,7 @@ const buildUser = (response, user_name) => {
     }
     const user = {
       user_name: user_name,
+      id: response.data.id,
       status: status,
       token: response.data.token,
       role: response.data.role,

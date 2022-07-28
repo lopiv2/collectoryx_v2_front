@@ -22,7 +22,11 @@ function ViewCollection(props) {
   const breadcrumbs = useBreadcrumbs();
 
   useEffect(() => {
-    const collections = ConfigService.getCollectionLists()
+    if (localStorage.getItem("user")) {
+      var user = localStorage.getItem("user")
+      var userData = JSON.parse(user);
+    }
+    const collections = ConfigService.getCollectionLists(userData.id)
       .then((response) => {
         setCollectionsList(response.data);
       })

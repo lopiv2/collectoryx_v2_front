@@ -23,7 +23,7 @@ const IMAGES_URL = `${API_URL}/images`;
 const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
 const UPDATE_ITEM_URL = `${API_URL}/update-item`;
-const VIEW_COLLECTIONS_URL = `${API_URL}/view-collections`;
+const VIEW_COLLECTIONS_URL = (id) => `${API_URL}/view-collections/${id}`;
 const VIEW_SERIES_URL = `${API_URL}/view-series`;
 const VIEW_COLLECTION_SERIES_URL = (id) => `${API_URL}/view-collection-series/${id}`;
 
@@ -165,8 +165,8 @@ const getCollectionItem = (id) => {
     });
 };
 
-const getCollectionLists = () => {
-    return axios.get(VIEW_COLLECTIONS_URL, { headers: authHeader() }).then((response) => {
+const getCollectionLists = (id) => {
+    return axios.get(VIEW_COLLECTIONS_URL(id), { headers: authHeader() }).then((response) => {
         //console.log(response.data);
         return response;
     });

@@ -27,8 +27,14 @@ function ManageCollections(props) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [cascade, setCascade] = useState(false);
 
+
+
   useEffect(() => {
-    const collections = ConfigService.getCollectionLists()
+    if (localStorage.getItem("user")) {
+      var user = localStorage.getItem("user")
+      var userData = JSON.parse(user);
+    }
+    const collections = ConfigService.getCollectionLists(userData.id)
       .then((response) => {
         setCollectionsList(response.data);
       })
