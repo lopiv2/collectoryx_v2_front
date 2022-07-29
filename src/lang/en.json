@@ -25,6 +25,7 @@
   "app.license.per_year": "per year",
   "app.license.per_life": "forever",
   "app.license.select": "Select",
+  "app.license.state": "License state: ",
   "app.signin": "Sign In",
   "app.signin.user_name": "User Name",
   "app.signin.password": "Password",

@@ -20,7 +20,11 @@ export default function TotalCollectionsCard() {
     const [collectionTotalCount, setCollectionTotalCount] = useState(0);
 
     useEffect(() => {
-        const collections = ConfigService.countCollections().then((response) => {
+        if (localStorage.getItem("user")) {
+          var user = localStorage.getItem("user");
+          var userData = JSON.parse(user);
+        }
+        const collections = ConfigService.countCollections(userData.id).then((response) => {
             setCollectionTotalCount(response);
         })
             .catch(err => {

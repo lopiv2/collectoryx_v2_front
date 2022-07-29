@@ -86,6 +86,7 @@ const buildUser = (response, user_name) => {
       user_name: user_name,
       id: response.data.id,
       status: status,
+      license: response.data.license,
       token: response.data.token,
       role: response.data.role,
       email: response.data.email

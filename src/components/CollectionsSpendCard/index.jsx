@@ -21,8 +21,12 @@ export default function CollectionsSpentCard() {
   const currency = CurrencyChecker();
 
   useEffect(() => {
+    if (localStorage.getItem("user")) {
+      var user = localStorage.getItem("user");
+      var userData = JSON.parse(user);
+    }
     let money = 0;
-    const collections = ConfigService.countCollectionsMoney()
+    const collections = ConfigService.countCollectionsMoney(userData.id)
       .then((response) => {
         if (response.data.length > 0) {
           response.data.map((item) => {
