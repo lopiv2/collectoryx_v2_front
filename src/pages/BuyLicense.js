@@ -21,13 +21,13 @@ import LicenseService from "../components/LicenseTypes";
 function BuyLicense(props) {
   const intl = useIntl();
   const [email, setEmail] = useState("");
-  const [licenseSelected, setLicenseSelected] = useState("Free");
+  const [licenseSelected, setLicenseSelected] = useState("Trial");
   const [licenses, setLicenses] = useState([]);
   const currency = CurrencyChecker();
 
   useEffect(() => {
     setLicenses((licenses) => [...licenses, LicenseService.LicenseTypes.find(
-      (f) => f.label === "Free")]);
+      (f) => f.label === "Trial")]);
     setLicenses((licenses) => [...licenses, LicenseService.LicenseTypes.find(
       (f) => f.label === "Monthly")]);
     setLicenses((licenses) => [...licenses, LicenseService.LicenseTypes.find(
@@ -67,7 +67,7 @@ function BuyLicense(props) {
               ml={200}
             >
               <Typography align="center" variant="h6" pt={2}>
-                <FormattedMessage id="app.license.free"></FormattedMessage>
+                <FormattedMessage id="app.license.trial"></FormattedMessage>
               </Typography>
               <CardContent>
                 <Typography align="center" variant="h3" color="text.secondary">
@@ -78,11 +78,14 @@ function BuyLicense(props) {
                   />)
                   }
                 </Typography>
+                <Typography align="center" variant="body1" color="text.secondary">
+                  <FormattedMessage id="app.license.15_days"></FormattedMessage>
+                </Typography>
                 <Grid
                   container
                   spacing={0}
                   ml={6}
-                  pt={4}
+                  pt={1}
                 >
 
                   <Grid item xs={3}>

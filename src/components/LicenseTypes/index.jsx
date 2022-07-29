@@ -4,8 +4,8 @@ import Flags from "country-flag-icons/react/3x2";
 
 const LicenseTypes = [
   {
-    label: "Free",
-    value: "Free",
+    label: "Trial",
+    value: "Trial",
     price: 0
   },
   {
