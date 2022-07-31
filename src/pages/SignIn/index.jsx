@@ -50,9 +50,9 @@ export default function SignInSide() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    AuthService.login(data.get("user_name"), data.get("password")).then((response) => {
+    AuthService.login(data.get("userName"), data.get("password")).then((response) => {
       setIsLogged(true);
-      setUserName(data.get("user_name"));
+      setUserName(data.get("userName"));
       setRole(response.data.role)
       if (response.data.error === true) {
         toast.error(response.data.message, { theme: "colored" });
@@ -119,10 +119,10 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                id="user_name"
-                label={<FormattedMessage id="app.signin.user_name"></FormattedMessage>}
-                name="user_name"
-                autoComplete="user_name"
+                id="userName"
+                label={<FormattedMessage id="app.signin.userName"></FormattedMessage>}
+                name="userName"
+                autoComplete="userName"
                 autoFocus
               />
               <TextField

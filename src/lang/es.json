@@ -27,7 +27,7 @@
   "app.license.select": "Seleccionar",
   "app.license.state": "Estado de licencia: ",
   "app.signin": "Ingresar",
-  "app.signin.user_name": "Nombre de Usuario",
+  "app.signin.userName": "Nombre de Usuario",
   "app.signin.password": "Contraseña",
   "app.signin.required": "Requerido",
   "app.signin.token_expired": "La sesion ha expirado. Por favor, identificate de nuevo",

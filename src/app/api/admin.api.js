@@ -15,7 +15,7 @@ const getKeyFileByEmail = (email) => {
 
 const getAllPendingLicenses = () => {
     return axios.get(VIEW_LICENSES_URL, { headers: authHeader() }).then((response) => {
-        //console.log(response.data);
+        console.log(response.data);
         return response;
     });
 };

@@ -9,14 +9,14 @@ const API_URL = process.env.REACT_APP_API_URL;
 const LOGIN_URL = `${API_URL}/login`;
 const REGISTER_URL = `${API_URL}/register`;
 
-const login = (user_name, password) => {
+const login = (userName, password) => {
   return axios
     .post(LOGIN_URL, {
-      user_name,
+      userName,
       password,
     })
     .then((response) => {
-      buildUser(response, user_name);
+      buildUser(response, userName);
       //console.log(response.data);
       if (response.status === 200 || response.status === 201) {
         return response;
@@ -73,7 +73,7 @@ const checkTokenExpired = (props) => {
   }
 };
 
-const buildUser = (response, user_name) => {
+const buildUser = (response, userName) => {
   var status = "";
   if (response.data.token) {
     if (response.status === 200) {
@@ -83,7 +83,7 @@ const buildUser = (response, user_name) => {
       status = "not_logged"
     }
     const user = {
-      user_name: user_name,
+      userName: userName,
       id: response.data.id,
       status: status,
       license: response.data.license,

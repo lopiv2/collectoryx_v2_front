@@ -61,7 +61,7 @@ export default function TopToolBar(props) {
 
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem('user'));
-    const { user_name: userName } = user;
+    const { userName: userName } = user;
     setUserName(userName);
   }, []);
 

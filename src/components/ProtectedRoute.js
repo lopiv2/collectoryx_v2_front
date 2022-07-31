@@ -9,7 +9,7 @@ const ProtectedRoutes = (props) => {
   const user = localStorage.getItem("user");
   const userData = JSON.parse(user);
   //Si no hay token generado porque se ha borrado, se manda a login a generar uno nuevo
-  if (userData.token === undefined) {
+  if (userData === undefined) {
     toast.error(
       <FormattedMessage id="app.signin.token_expired"></FormattedMessage>,
       { theme: "colored" }
