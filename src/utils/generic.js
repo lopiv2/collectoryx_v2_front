@@ -2,7 +2,6 @@ import { Context } from "../components/Wrapper";
 import { useContext } from "react";
 import OptionsService from "../components/DropDownOptions";
 
-
 const CurrencyChecker = () => {
   const context = useContext(Context);
   const res = OptionsService.countriesOptions.find(
@@ -15,10 +14,16 @@ const GetCurrencySymbolLocale = () => {
   const res = CurrencyChecker();
   const currency = res.currency;
   const locale = res.value;
-  return (0).toLocaleString(locale, { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    .replace(/\d/g, '')
-    .trim()
-}
+  return (0)
+    .toLocaleString(locale, {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    })
+    .replace(/\d/g, "")
+    .trim();
+};
 
 function getImagePaths(directory) {
   let images = [];
@@ -26,5 +31,8 @@ function getImagePaths(directory) {
   return images;
 }
 
-
-export { CurrencyChecker, GetCurrencySymbolLocale, getImagePaths };
+export {
+  CurrencyChecker,
+  GetCurrencySymbolLocale,
+  getImagePaths,
+};

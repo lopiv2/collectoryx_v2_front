@@ -55,13 +55,14 @@ const countCollectionsItems = (id) => {
     });
 };
 
-const createCollection = (name, template, file, metadata) => {
+const createCollection = (name, template, file, metadata, userId) => {
   //console.log(template)
   const data = {
     name: name,
     template: template,
     file: file,
     metadata: metadata,
+    userId: userId,
   };
   return axios
     .post(CREATE_COLLECTION_URL, data, { headers: authHeader() })
@@ -222,14 +223,10 @@ const putImage = (name, image) => {
   var formData = new FormData();
   formData.append("name", name);
   formData.append("image", image);
-  const headerAuth = authHeader();
-  const headers = {
-    "Content-Type": "multipart/form-data",
-    headerAuth,
-  };
   return axios
     .put(IMAGES_URL, formData, {
-      headers: headers,
+      headers: authHeader(),
+      "Content-Type": "multipart/form-data",
     })
     .then((response) => {
       return response;

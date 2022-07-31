@@ -63,14 +63,20 @@ function AddCollection() {
   };
 
   const submitForm = (values) => {
-
+    var user=null;
+    var userData=null;
+    if (localStorage.getItem("user")) {
+      user = localStorage.getItem("user");
+      userData = JSON.parse(user);
+    }
     //Si se sube imagen desde la galeria
     if (imgGallerySelected === true) {
       ConfigService.createCollection(
         values.name,
         values.template,
         img,
-        values.metadata
+        values.metadata,
+        userData.id
       ).then((response) => {
         if (response.status === 200) {
           navigate(-1);
@@ -88,7 +94,8 @@ function AddCollection() {
         values.name,
         values.template,
         null,
-        values.metadata
+        values.metadata,
+        userData.id
       ).then((response) => {
         if (response.status === 200) {
           navigate(-1);
@@ -99,14 +106,15 @@ function AddCollection() {
         }
       });
     }
-    //Si se sube imagen nueva y no de galeria 
+    //Si se sube imagen nueva y no de galeria
     if (values.file !== undefined && imgGallerySelected === false) {
       ConfigService.putImage(values.name, values.file).then((resp) => {
         ConfigService.createCollection(
           values.name,
           values.template,
           resp.data.path,
-          values.metadata
+          values.metadata,
+          userData.id
         ).then((response) => {
           if (response.status === 200 && resp.status === 200) {
             setTimeout(() => {

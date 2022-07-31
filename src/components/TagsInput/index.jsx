@@ -15,7 +15,7 @@ function TagsInput(props) {
     }, [props]);
 
     return (
-        <Box sx={{ border: 1 }} style={styles} classname="tag-box">
+        <Box sx={{ border: 1 }} style={styles} className="tag-box">
             {fields.length > 0 ? fields.map((field, index) => (
                 <Grid item className="tag-item" key={index}>
                     <span className="text">{field}</span>
