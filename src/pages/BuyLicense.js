@@ -284,9 +284,18 @@ function BuyLicense(props) {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} pt={4} ml={1}>
-              <Typography variant="h6">
-                <FormattedMessage id="app.license.state"></FormattedMessage>
+            <Grid item xs={11} pt={4} ml={1}>
+              <Typography display="inline" variant="h6">
+                {intl.formatMessage({ id: "app.license.state" })}
+              </Typography>
+              <Typography display="inline" variant="h6" style={{
+                color: userData.licenseState.includes("Pend")
+                  ? "orange"
+                  : userData.licenseState.includes("Act")
+                    ? "green"
+                    : "red"
+              }}>
+                {intl.formatMessage({ id: "app.license." + userData.licenseState })}
               </Typography>
             </Grid>
             <Grid item xs={4} pt={4}>

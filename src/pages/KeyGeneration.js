@@ -3,6 +3,9 @@ import { Box, Grid, TextField, Button } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import AdminService from "../app/api/admin.api";
 import MaterialTable, { Column } from "@material-table/core";
+import { Delete } from "@material-ui/icons";
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import VpnKeyOffIcon from '@mui/icons-material/VpnKeyOff';
 
 function KeyGeneration(props) {
   const intl = useIntl();
@@ -48,14 +51,15 @@ function KeyGeneration(props) {
   const data = licensesList.map((lic) => {
     let cols = {
       email: lic.email,
-      state: lic.state,
+      state: intl.formatMessage({ id: "app.license." + lic.state }),
       paid: lic.paid,
       type: lic.type,
       code: lic.code,
-      mac: lic.mac,
+      mac: lic.machine.macAddress,
     };
     return cols;
   });
+
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -64,15 +68,32 @@ function KeyGeneration(props) {
           <MaterialTable
             options={{
               sorting: true,
+              filtering: true,
+              exportButton: true,
+              actionsColumnIndex: -1,
               cellStyle: (e, rowData) => {
-                if (rowData.state === "Pending") {
+                if (rowData.state.includes("Pend")) {
                   return { color: "red" };
                 }
               },
             }}
-            title="Licencias"
+            title={intl.formatMessage({ id: "app.sidemenu.admin.license_server" })}
             columns={columns}
             data={data}
+            actions={[
+              rowData => ({
+                icon: Delete,
+                tooltip: 'Delete User',
+                onClick: (event, rowData) => console.log("You want to delete " + rowData.email),
+                disabled: rowData.birthYear < 2000
+              }),
+              rowData => ({
+                icon: rowData.state.includes("Pend") ? VpnKeyIcon : VpnKeyOffIcon,
+                tooltip: 'Generate license',
+                onClick: (event, rowData) => console.log("You want to delete " + rowData.email),
+                disabled: rowData.birthYear < 2000
+              })
+            ]}
           ></MaterialTable>
         </Grid>
         <Grid item xs={8}></Grid>
@@ -82,7 +103,7 @@ function KeyGeneration(props) {
           </Button>
         </Grid>
       </Grid>
-    </Box>
+    </Box >
   );
 }
 

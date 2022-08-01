@@ -17,7 +17,7 @@ const login = (userName, password) => {
     })
     .then((response) => {
       buildUser(response, userName);
-      //console.log(response.data);
+      console.log(response.data);
       if (response.status === 200 || response.status === 201) {
         return response;
       }
@@ -87,6 +87,7 @@ const buildUser = (response, userName) => {
       id: response.data.id,
       status: status,
       license: response.data.license,
+      licenseState: response.data.licenseState,
       token: response.data.token,
       role: response.data.role,
       email: response.data.email

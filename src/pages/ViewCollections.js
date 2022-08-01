@@ -20,6 +20,7 @@ function ViewCollection(props) {
   const navigate = useNavigate();
   const [col, setCol] = useState([]);
   const breadcrumbs = useBreadcrumbs();
+  var contCollections = 0;
 
   useEffect(() => {
     if (localStorage.getItem("user")) {
@@ -85,8 +86,8 @@ function ViewCollection(props) {
           className="container"
           pt={3}
         >
-          {collectionsList.map((item) => (
-            <Grid item key={item.id}>
+          {contCollections < 3 && collectionsList.map((item) => (
+            < Grid item key={item.id} >
               <Card
                 sx={{ height: 400, minWidth: 250, maxWidth: 250, boxShadow: 5 }}
                 ml={200}
@@ -135,7 +136,7 @@ function ViewCollection(props) {
                           .collected /
                           col[col.findIndex((e) => e.id === item.id)]
                             .totalItems) *
-                        100).toFixed(2)
+                          100).toFixed(2)
                         : 0
                     }
                   ></BorderLinearProgressBar>
@@ -153,10 +154,13 @@ function ViewCollection(props) {
                 </CardActions>
               </Card>
             </Grid>
-          ))}
+
+          ))
+           contCollections++
+          }
         </Grid>
       </Grid>
-    </Box>
+    </Box >
   );
 }
 
