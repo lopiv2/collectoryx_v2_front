@@ -13,23 +13,26 @@ import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
 import styles from "../styles/Collections.css";
 import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
 import { NavLink } from "react-router-dom";
-import useBreadcrumbs from 'use-react-router-breadcrumbs';
+import useBreadcrumbs from "use-react-router-breadcrumbs";
 
 function ViewCollection(props) {
   const [collectionsList, setCollectionsList] = useState([]);
   const navigate = useNavigate();
   const [col, setCol] = useState([]);
   const breadcrumbs = useBreadcrumbs();
-  var contCollections = 0;
+  if (localStorage.getItem("user")) {
+    var user = localStorage.getItem("user");
+    var userData = JSON.parse(user);
+  }
 
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      var user = localStorage.getItem("user")
-      var userData = JSON.parse(user);
-    }
     const collections = ConfigService.getCollectionLists(userData.id)
       .then((response) => {
-        setCollectionsList(response.data);
+        if (userData.license.includes("Free")) {
+          setCollectionsList(response.data.slice(0, 3));
+        } else {
+          setCollectionsList(response.data);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -76,18 +79,18 @@ function ViewCollection(props) {
           </span>
         ))*/}
         <Grid item xs={6}>
-          <Typography variant="h4" component="h4">
+          <Typography display="inline" variant="h4" component="h4">
             <FormattedMessage id="app.collection.view_collections_title"></FormattedMessage>
           </Typography>
+          {userData.license.includes("Free") && (
+            <Typography display="inline" variant="h4" component="h4">
+              {" (" + collectionsList.length + "/3)"}
+            </Typography>
+          )}
         </Grid>
-        <Grid
-          container
-          spacing={10}
-          className="container"
-          pt={3}
-        >
-          {contCollections < 3 && collectionsList.map((item) => (
-            < Grid item key={item.id} >
+        <Grid container spacing={10} className="container" pt={3}>
+          {collectionsList.map((item, index) => (
+            <Grid item key={item.id}>
               <Card
                 sx={{ height: 400, minWidth: 250, maxWidth: 250, boxShadow: 5 }}
                 ml={200}
@@ -104,14 +107,16 @@ function ViewCollection(props) {
                     </Typography>
                   )}
                   <Typography variant="h5" component="div"></Typography>
-                  {item.logo != null && (<CardMedia
-                    component="img"
-                    width="100%"
-                    image={require("../../../images/" + item.logo.path)}
-                    alt={item.name}
-                    className="card-collection"
-                    style={styles}
-                  />)}
+                  {item.logo != null && (
+                    <CardMedia
+                      component="img"
+                      width="100%"
+                      image={require("../../../images/" + item.logo.path)}
+                      alt={item.name}
+                      className="card-collection"
+                      style={styles}
+                    />
+                  )}
 
                   <Typography
                     align="center"
@@ -124,19 +129,21 @@ function ViewCollection(props) {
                   <Typography align="center" color="text.secondary">
                     {col[col.findIndex((e) => e.id === item.id)]
                       ? col[col.findIndex((e) => e.id === item.id)].collected +
-                      "/" +
-                      col[col.findIndex((e) => e.id === item.id)].totalItems
+                        "/" +
+                        col[col.findIndex((e) => e.id === item.id)].totalItems
                       : null}
                   </Typography>
                   <BorderLinearProgressBar
                     variant="determinate"
                     value={
                       col[col.findIndex((e) => e.id === item.id)]
-                        ? +Number.parseFloat((col[col.findIndex((e) => e.id === item.id)]
-                          .collected /
-                          col[col.findIndex((e) => e.id === item.id)]
-                            .totalItems) *
-                          100).toFixed(2)
+                        ? +Number.parseFloat(
+                            (col[col.findIndex((e) => e.id === item.id)]
+                              .collected /
+                              col[col.findIndex((e) => e.id === item.id)]
+                                .totalItems) *
+                              100
+                          ).toFixed(2)
                         : 0
                     }
                   ></BorderLinearProgressBar>
@@ -154,13 +161,10 @@ function ViewCollection(props) {
                 </CardActions>
               </Card>
             </Grid>
-
-          ))
-           contCollections++
-          }
+          ))}
         </Grid>
       </Grid>
-    </Box >
+    </Box>
   );
 }
 

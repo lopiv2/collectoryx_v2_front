@@ -22,7 +22,7 @@ import { Tooltip } from "@mui/material";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
 
 function AddCollection() {
-  const [template, setTemplate] = useState("New");
+  const [template, setTemplate] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
   const [preview, setPreview] = useState();
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ function AddCollection() {
   const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
   const [img, setImg] = useState();
   const [imgGallerySelected, setImgGallerySelected] = useState(false);
+  const [licenseCollections, setLicenseCollections] = useState([]);
 
   const handleChangeTemplate = (event) => {
     setTemplate(event.target.value);
@@ -62,13 +63,14 @@ function AddCollection() {
     setOptionalFields((optionalFields) => [...optionalFields, newField]);
   };
 
+  var user = null;
+  var userData = null;
+  if (localStorage.getItem("user")) {
+    user = localStorage.getItem("user");
+    userData = JSON.parse(user);
+  }
+
   const submitForm = (values) => {
-    var user=null;
-    var userData=null;
-    if (localStorage.getItem("user")) {
-      user = localStorage.getItem("user");
-      userData = JSON.parse(user);
-    }
     //Si se sube imagen desde la galeria
     if (imgGallerySelected === true) {
       ConfigService.createCollection(
@@ -131,14 +133,35 @@ function AddCollection() {
   };
 
   useEffect(() => {
-    var tempArray = [];
-    tempArray = OptionsService.createCollectionOptions.find(
-      (f) => f.value === template
-    );
-    if (tempArray.fields) {
-      setFields(tempArray.fields);
+    if (userData.license.includes("Free")) {
+      setTemplate("Action_Figures")
+      setLicenseCollections(OptionsService.createCollectionOptions.slice(1));
     } else {
-      setFields("");
+      setTemplate("New")
+      setLicenseCollections(OptionsService.createCollectionOptions);
+    }
+  }, []);
+
+  useEffect(() => {
+    var tempArray = [];
+    if (userData.license.includes("Free")) {
+      tempArray = OptionsService.createCollectionOptions
+        .slice(1)
+        .find((f) => f.value === template);
+      if (tempArray) {
+        setFields(tempArray.fields);
+      } else {
+        setFields("");
+      }
+    } else {
+      tempArray = OptionsService.createCollectionOptions.find(
+        (f) => f.value === template
+      );
+      if (tempArray && template) {
+        setFields(tempArray.fields);
+      } else {
+        setFields("");
+      }
     }
   }, [template]);
 
@@ -297,29 +320,31 @@ function AddCollection() {
                     />
                   </Box>
                 </Grid>
-                <Grid item xs={8}>
-                  <TextField
-                    id="demo-simple-select"
-                    name="template"
-                    select
-                    size="small"
-                    sx={{ minWidth: 300 }}
-                    defaultValue={template}
-                    value={template}
-                    label={
-                      <FormattedMessage id="app.collection.template_label"></FormattedMessage>
-                    }
-                    onChange={handleChangeTemplate}
-                  >
-                    {OptionsService.createCollectionOptions?.map((option) => {
-                      return (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label ?? option.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </TextField>
-                </Grid>
+                {licenseCollections && (
+                  <Grid item xs={8}>
+                    <TextField
+                      id="demo-simple-select"
+                      name="template"
+                      select
+                      size="small"
+                      sx={{ minWidth: 300 }}
+                      defaultValue=""
+                      value={template}
+                      label={
+                        <FormattedMessage id="app.collection.template_label"></FormattedMessage>
+                      }
+                      onChange={handleChangeTemplate}
+                    >
+                      {licenseCollections?.map((option) => {
+                        return (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label ?? option.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </TextField>
+                  </Grid>
+                )}
                 <Grid item xs={6.8}>
                   <Typography variant="h6" component="h6">
                     <FormattedMessage id="app.collection.template_default_fields"></FormattedMessage>
