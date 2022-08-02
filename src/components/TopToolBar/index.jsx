@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -9,28 +9,28 @@ import MenuItem from "@mui/material/MenuItem";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "react-avatar";
 import Grid from "@mui/material/Grid";
-import MuiAppBar from '@mui/material/AppBar';
+import MuiAppBar from "@mui/material/AppBar";
 import { FormattedMessage } from "react-intl";
 import LanguageSwitcher from "../LanguageSelector";
 import { AppContext } from "../AppContext";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import AuthService from "../../app/api/auth.api";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -38,16 +38,14 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function TopToolBar(props) {
-
   const navigate = useNavigate();
   let user;
 
   const onClickLogout = () => {
-
     AuthService.logout();
-    navigate('/login')
+    navigate("/login");
     //console.log(AuthService.isLogged());
-  }
+  };
 
   const handleClick = (event) => {
     props.setAnchorEl(event.currentTarget);
@@ -57,14 +55,15 @@ export default function TopToolBar(props) {
   };
 
   //const navigate = useNavigate();
-  const { userName, setUserName } =
-    React.useContext(AppContext);
+  const { userName, setUserName } = React.useContext(AppContext);
+  const [expiringDate, setExpiringDate] = useState();
 
   useEffect(() => {
-    user = JSON.parse(localStorage.getItem('user'));
+    user = JSON.parse(localStorage.getItem("user"));
     const { userName: userName } = user;
+    const { expiringDate: expiringDate } = user;
     setUserName(userName);
-    console.log(user)
+    setExpiringDate(expiringDate);
   }, []);
 
   return (
@@ -97,13 +96,17 @@ export default function TopToolBar(props) {
             <Grid item xs={2}>
               <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
             </Grid>
-            {AuthService.checkUserLogged() === "USER_ROLE" ? 
-              (<Grid item xs={2} ml={50}>
-                <FormattedMessage id="app.dashboard.license_days" values={{
-                  days: user ? user.license : "hola"
-                }}></FormattedMessage>
-              </Grid>) :
-              (<Grid item xs={2} ml={50}>
+            {AuthService.checkUserLogged() === "USER_ROLE" ? (
+              <Grid item xs={2} ml={50}>
+                <FormattedMessage
+                  id="app.dashboard.license_days"
+                  values={{
+                    days: expiringDate ?? expiringDate,
+                  }}
+                ></FormattedMessage>
+              </Grid>
+            ) : (
+              <Grid item xs={2} ml={50}>
                 <Typography
                   component="h1"
                   variant="h6"
@@ -113,7 +116,8 @@ export default function TopToolBar(props) {
                 >
                   <FormattedMessage id="app.dashboard.admin_panel"></FormattedMessage>
                 </Typography>
-              </Grid>)}
+              </Grid>
+            )}
           </Grid>
         </Typography>
         <LanguageSwitcher></LanguageSwitcher>

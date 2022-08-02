@@ -17,7 +17,7 @@ const login = (userName, password) => {
     })
     .then((response) => {
       buildUser(response, userName);
-      console.log(response.data);
+      //console.log(response.data);
       if (response.status === 200 || response.status === 201) {
         return response;
       }

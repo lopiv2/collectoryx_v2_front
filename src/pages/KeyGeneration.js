@@ -19,6 +19,9 @@ function KeyGeneration(props) {
       var index = licensesList.findIndex(x => x.email === email);
       let newItems = [...licensesList];
       newItems[index].state = response.data.state;
+      newItems[index].grantedDate = response.data.grantedDate;
+      newItems[index].expiringDate = response.data.expiringDate;
+      newItems[index].licenseCode = response.data.licenseCode;
       setLicensesList(newItems);
     });
   };
