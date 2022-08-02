@@ -40,6 +40,7 @@ const AppBar = styled(MuiAppBar, {
 export default function TopToolBar(props) {
 
   const navigate = useNavigate();
+  let user;
 
   const onClickLogout = () => {
 
@@ -60,9 +61,10 @@ export default function TopToolBar(props) {
     React.useContext(AppContext);
 
   useEffect(() => {
-    let user = JSON.parse(localStorage.getItem('user'));
+    user = JSON.parse(localStorage.getItem('user'));
     const { userName: userName } = user;
     setUserName(userName);
+    console.log(user)
   }, []);
 
   return (
@@ -95,10 +97,10 @@ export default function TopToolBar(props) {
             <Grid item xs={2}>
               <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
             </Grid>
-            {AuthService.checkUserLogged() === "USER_ROLE" ?
+            {AuthService.checkUserLogged() === "USER_ROLE" ? 
               (<Grid item xs={2} ml={50}>
                 <FormattedMessage id="app.dashboard.license_days" values={{
-                  days: "3"
+                  days: user ? user.license : "hola"
                 }}></FormattedMessage>
               </Grid>) :
               (<Grid item xs={2} ml={50}>

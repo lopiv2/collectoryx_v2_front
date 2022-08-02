@@ -20,16 +20,17 @@ function ViewCollection(props) {
   const navigate = useNavigate();
   const [col, setCol] = useState([]);
   const breadcrumbs = useBreadcrumbs();
+  var userData=null;
   if (localStorage.getItem("user")) {
     var user = localStorage.getItem("user");
-    var userData = JSON.parse(user);
+    userData = JSON.parse(user);
   }
 
   useEffect(() => {
     const collections = ConfigService.getCollectionLists(userData.id)
       .then((response) => {
         if (userData.license.includes("Free")) {
-          setCollectionsList(response.data.slice(0, 3));
+          setCollectionsList(response.data.slice(0, 5));
         } else {
           setCollectionsList(response.data);
         }
@@ -37,7 +38,7 @@ function ViewCollection(props) {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [userData]);
 
   useEffect(() => {
     if (collectionsList.length > 0) {

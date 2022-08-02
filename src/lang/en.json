@@ -30,10 +30,13 @@
   "app.license.select": "Select",
   "app.license.state": "License state: ",
   "app.license.paid": "Paid? ",
+  "app.license.granted_date": "Purchase date",
+  "app.license.expiring_date": "Expiring date",
   "app.license.type": "Type ",
   "app.license.code": "Code ",
   "app.license.MAC": "MAC ",
   "app.license.actions": "Actions",
+  "app.license.show_code": "Show",
   "app.signin": "Sign In",
   "app.signin.userName": "User Name",
   "app.signin.password": "Password",
@@ -126,5 +129,6 @@
   "app.tooltip.search_google": "Search for image on Google",
   "app.tooltip.search_gallery": "Search for image on gallery",
   "app.tooltip.add_new_item": "Add new item for collection ",
-  "app.tooltip.add_new_collection": "Add new collection"
+  "app.tooltip.add_new_collection": "Add new collection",
+  "app.tooltip.generate_license": "Generate license code"
 }

@@ -88,6 +88,7 @@ const buildUser = (response, userName) => {
       status: status,
       license: response.data.license,
       licenseState: response.data.licenseState,
+      expiringDate: response.data.licenseDuration,
       token: response.data.token,
       role: response.data.role,
       email: response.data.email

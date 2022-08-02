@@ -3,13 +3,15 @@ import authHeader from "./auth-header";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const ADMIN_URL = `${API_URL}/admin`;
-const GET_KEYFILE_EMAIL_URL = (email) => `${ADMIN_URL}/keygen/${email}`;
+const GET_KEYFILE_EMAIL_URL = `${ADMIN_URL}/keygen`;
 const VIEW_PENDING_LICENSES_URL = `${ADMIN_URL}/get-pending-licenses`;
 const VIEW_ALL_LICENSES_URL = `${ADMIN_URL}/get-all-licenses`;
 
-const getKeyFileByEmail = (email) => {
-    return axios.get(GET_KEYFILE_EMAIL_URL(email), { headers: authHeader() }).then((response) => {
-        //console.log(response.data);
+const setKeyFileByEmail = (email) => {
+    const data = {
+        email: email,
+      };
+    return axios.post(GET_KEYFILE_EMAIL_URL, data, { headers: authHeader() }).then((response) => {
         return response;
     });
 };
@@ -29,7 +31,7 @@ const getAllLicenses = () => {
 };
 
 const AdminService = {
-    getKeyFileByEmail,
+    setKeyFileByEmail,
     getAllLicenses,
     getAllPendingLicenses
 };
