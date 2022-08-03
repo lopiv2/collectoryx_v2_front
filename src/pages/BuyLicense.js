@@ -14,25 +14,31 @@ import {
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import ShopService from "../app/api/shop.api";
 import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from '@mui/icons-material/Close';
 import { CurrencyChecker } from "../utils/generic";
 import LicenseService from "../components/LicenseTypes";
+import FeaturesService from "../components/SaasFeatures";
 
 function BuyLicense(props) {
   const intl = useIntl();
   const user = localStorage.getItem("user");
   const [userStorage, setUserStorage] = useState(user);
-  var userData = JSON.parse(user);
+  const userData = JSON.parse(user);
   const [email, setEmail] = useState("");
   const [licenseSelected, setLicenseSelected] = useState(userData.license);
   const [licenses, setLicenses] = useState([]);
   const currency = CurrencyChecker();
 
-  useEffect(() => {
+  /*useEffect(() => {
     userData = JSON.parse(user);
     //console.log(user)
-  }, [userStorage]);
+  }, [userStorage]);*/
 
   useEffect(() => {
+    setLicenses((licenses) => [
+      ...licenses,
+      LicenseService.LicenseTypes.find((f) => f.label === "Free"),
+    ]);
     setLicenses((licenses) => [
       ...licenses,
       LicenseService.LicenseTypes.find((f) => f.label === "Trial"),
@@ -82,7 +88,83 @@ function BuyLicense(props) {
             <Grid item>
               <Card
                 sx={{
-                  height: 450,
+                  height: "auto",
+                  minWidth: 250,
+                  maxWidth: 250,
+                  boxShadow: 5,
+                }}
+                ml={200}
+                style={
+                  userData.license === licenses[0].value
+                    ? { backgroundColor: "#b2f7ec" }
+                    : null
+                }
+              >
+                <Typography align="center" variant="h6" pt={2}>
+                  <FormattedMessage id="app.license.free"></FormattedMessage>
+                </Typography>
+                <CardContent>
+                  <Typography
+                    align="center"
+                    variant="h3"
+                    color="text.secondary"
+                  >
+                    {licenses.length > 0 && (
+                      <FormattedNumber
+                        value={licenses[0].price}
+                        style="currency"
+                        currency={currency.currency}
+                      />
+                    )}
+                  </Typography>
+                  <Typography
+                    align="center"
+                    variant="body1"
+                    color="text.secondary"
+                  >
+                    <FormattedMessage id="app.license.per_life"></FormattedMessage>
+                  </Typography>
+                  <Grid container spacing={0} ml={6} pt={1}>
+                    <Grid item xs={3}>
+                      <FormControlLabel
+                        value={licenses[0].value}
+                        control={<Radio />}
+                        label={intl.formatMessage({ id: "app.license.select" })}
+                      />
+                    </Grid>
+                  </Grid>
+                  {FeaturesService.Features.map((item, index) => (
+                    item.license === "Free" && (
+                      <Grid key={index} container spacing={0} ml={1} pt={1}>
+                        <Grid item xs={1}>
+                          {item.icon === "done" ? (<DoneIcon color="success" />) : (<CloseIcon sx={{ color: "red" }} />)}
+                        </Grid>
+                        <Grid item xs={9} ml={1}>
+                          <Typography
+                            align="center"
+                            variant="caption"
+                          >
+                            <FormattedMessage id={item.id}></FormattedMessage>
+                          </Typography>
+                        </Grid>
+                      </Grid>)))}
+                  <Grid container spacing={0} pt={1}>
+                    <Grid item ml={1}>
+                      <Typography
+                        align="center"
+                        variant="caption"
+                      >
+                        <FormattedMessage id="app.license.features_all"></FormattedMessage>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+            {userData.trialActivated == false && (<Grid item>
+              <Card
+                sx={{
+                  height: "auto",
                   minWidth: 250,
                   maxWidth: 250,
                   boxShadow: 5,
@@ -106,7 +188,7 @@ function BuyLicense(props) {
                   >
                     {licenses.length > 0 && (
                       <FormattedNumber
-                        value={licenses[0].price}
+                        value={licenses[1].price}
                         style="currency"
                         currency={currency.currency}
                       />
@@ -122,70 +204,34 @@ function BuyLicense(props) {
                   <Grid container spacing={0} ml={6} pt={1}>
                     <Grid item xs={3}>
                       <FormControlLabel
-                        value={licenses[0].value}
-                        control={<Radio />}
-                        label={intl.formatMessage({ id: "app.license.select" })}
-                      />
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item>
-              <Card
-                sx={{
-                  height: 450,
-                  minWidth: 250,
-                  maxWidth: 250,
-                  boxShadow: 5,
-                }}
-                ml={200}
-                style={
-                  userData.license === licenses[1].value
-                    ? { backgroundColor: "#b2f7ec" }
-                    : null
-                }
-              >
-                <Typography align="center" variant="h6" pt={2}>
-                  <FormattedMessage id="app.license.monthly"></FormattedMessage>
-                </Typography>
-                <CardContent>
-                  <Typography
-                    align="center"
-                    variant="h3"
-                    color="text.secondary"
-                  >
-                    {licenses.length > 0 && (
-                      <FormattedNumber
-                        value={licenses[1].price}
-                        style="currency"
-                        currency={currency.currency}
-                      />
-                    )}
-                  </Typography>
-                  <Typography
-                    align="center"
-                    variant="body1"
-                    color="text.secondary"
-                  >
-                    <FormattedMessage id="app.license.per_month"></FormattedMessage>
-                  </Typography>
-                  <Grid container spacing={0} ml={6} pt={1}>
-                    <Grid item xs={3}>
-                      <FormControlLabel
                         value={licenses[1].value}
                         control={<Radio />}
                         label={intl.formatMessage({ id: "app.license.select" })}
                       />
                     </Grid>
                   </Grid>
+                  {FeaturesService.Features.map((item, index) => (
+                    item.license === "Premium" && (
+                      <Grid key={index} container spacing={0} ml={1} pt={1}>
+                        <Grid item xs={1}>
+                          {item.icon === "done" ? (<DoneIcon color="success" />) : (<CloseIcon sx={{ color: "red" }} />)}
+                        </Grid>
+                        <Grid item xs={9} ml={1}>
+                          <Typography
+                            align="center"
+                            variant="caption"
+                          >
+                            <FormattedMessage id={item.id}></FormattedMessage>
+                          </Typography>
+                        </Grid>
+                      </Grid>)))}
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid>)}
             <Grid item>
               <Card
                 sx={{
-                  height: 450,
+                  height: "auto",
                   minWidth: 250,
                   maxWidth: 250,
                   boxShadow: 5,
@@ -198,7 +244,7 @@ function BuyLicense(props) {
                 }
               >
                 <Typography align="center" variant="h6" pt={2}>
-                  <FormattedMessage id="app.license.yearly"></FormattedMessage>
+                  <FormattedMessage id="app.license.monthly"></FormattedMessage>
                 </Typography>
                 <CardContent>
                   <Typography
@@ -219,7 +265,7 @@ function BuyLicense(props) {
                     variant="body1"
                     color="text.secondary"
                   >
-                    <FormattedMessage id="app.license.per_year"></FormattedMessage>
+                    <FormattedMessage id="app.license.per_month"></FormattedMessage>
                   </Typography>
                   <Grid container spacing={0} ml={6} pt={1}>
                     <Grid item xs={3}>
@@ -230,13 +276,28 @@ function BuyLicense(props) {
                       />
                     </Grid>
                   </Grid>
+                  {FeaturesService.Features.map((item, index) => (
+                    item.license === "Premium" && (
+                      <Grid key={index} container spacing={0} ml={1} pt={1}>
+                        <Grid item xs={1}>
+                          {item.icon === "done" ? (<DoneIcon color="success" />) : (<CloseIcon sx={{ color: "red" }} />)}
+                        </Grid>
+                        <Grid item xs={9} ml={1}>
+                          <Typography
+                            align="center"
+                            variant="caption"
+                          >
+                            <FormattedMessage id={item.id}></FormattedMessage>
+                          </Typography>
+                        </Grid>
+                      </Grid>)))}
                 </CardContent>
               </Card>
             </Grid>
             <Grid item>
               <Card
                 sx={{
-                  height: 450,
+                  height: "auto",
                   minWidth: 250,
                   maxWidth: 250,
                   boxShadow: 5,
@@ -249,7 +310,7 @@ function BuyLicense(props) {
                 }
               >
                 <Typography align="center" variant="h6" pt={2}>
-                  <FormattedMessage id="app.license.lifetime"></FormattedMessage>
+                  <FormattedMessage id="app.license.yearly"></FormattedMessage>
                 </Typography>
                 <CardContent>
                   <Typography
@@ -270,7 +331,7 @@ function BuyLicense(props) {
                     variant="body1"
                     color="text.secondary"
                   >
-                    <FormattedMessage id="app.license.per_life"></FormattedMessage>
+                    <FormattedMessage id="app.license.per_year"></FormattedMessage>
                   </Typography>
                   <Grid container spacing={0} ml={6} pt={1}>
                     <Grid item xs={3}>
@@ -281,8 +342,97 @@ function BuyLicense(props) {
                       />
                     </Grid>
                   </Grid>
+                  {FeaturesService.Features.map((item, index) => (
+                    item.license === "Premium" && (
+                      <Grid key={index} container spacing={0} ml={1} pt={1}>
+                        <Grid item xs={1}>
+                          {item.icon === "done" ? (<DoneIcon color="success" />) : (<CloseIcon sx={{ color: "red" }} />)}
+                        </Grid>
+                        <Grid item xs={9} ml={1}>
+                          <Typography
+                            align="center"
+                            variant="caption"
+                          >
+                            <FormattedMessage id={item.id}></FormattedMessage>
+                          </Typography>
+                        </Grid>
+                      </Grid>)))}
                 </CardContent>
               </Card>
+            </Grid>
+            <Grid item>
+              <Card
+                sx={{
+                  height: "auto",
+                  minWidth: 250,
+                  maxWidth: 250,
+                  boxShadow: 5,
+                }}
+                ml={200}
+                style={
+                  userData.license === licenses[4].value
+                    ? { backgroundColor: "#b2f7ec" }
+                    : null
+                }
+              >
+                <Typography align="center" variant="h6" pt={2}>
+                  <FormattedMessage id="app.license.lifetime"></FormattedMessage>
+                </Typography>
+                <CardContent>
+                  <Typography
+                    align="center"
+                    variant="h3"
+                    color="text.secondary"
+                  >
+                    {licenses.length > 0 && (
+                      <FormattedNumber
+                        value={licenses[4].price}
+                        style="currency"
+                        currency={currency.currency}
+                      />
+                    )}
+                  </Typography>
+                  <Typography
+                    align="center"
+                    variant="body1"
+                    color="text.secondary"
+                  >
+                    <FormattedMessage id="app.license.per_life"></FormattedMessage>
+                  </Typography>
+                  <Grid container spacing={0} ml={6} pt={1}>
+                    <Grid item xs={3}>
+                      <FormControlLabel
+                        value={licenses[4].value}
+                        control={<Radio />}
+                        label={intl.formatMessage({ id: "app.license.select" })}
+                      />
+                    </Grid>
+                  </Grid>
+                  {FeaturesService.Features.map((item, index) => (
+                    item.license === "Premium" && (
+                      <Grid key={index} container spacing={0} ml={1} pt={1}>
+                        <Grid item xs={1}>
+                          {item.icon === "done" ? (<DoneIcon color="success" />) : (<CloseIcon sx={{ color: "red" }} />)}
+                        </Grid>
+                        <Grid item xs={9} ml={1}>
+                          <Typography
+                            align="center"
+                            variant="caption"
+                          >
+                            <FormattedMessage id={item.id}></FormattedMessage>
+                          </Typography>
+                        </Grid>
+                      </Grid>)))}
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={11} pt={4} ml={1}>
+              <Typography display="inline" variant="h6">
+                {intl.formatMessage({ id: "app.license.type_text" })}
+              </Typography>
+              <Typography display="inline" variant="h6">
+                {intl.formatMessage({ id: "app.license." + userData.license.toLowerCase() })}
+              </Typography>
             </Grid>
             <Grid item xs={11} pt={4} ml={1}>
               <Typography display="inline" variant="h6">
@@ -295,7 +445,7 @@ function BuyLicense(props) {
                     ? "green"
                     : "red"
               }}>
-                {intl.formatMessage({ id: "app.license." + userData.licenseState })}
+                {intl.formatMessage({ id: "app.license." + userData.licenseState.toLowerCase() })}
               </Typography>
             </Grid>
             <Grid item xs={4} pt={4}>

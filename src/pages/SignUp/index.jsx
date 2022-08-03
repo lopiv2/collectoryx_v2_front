@@ -50,7 +50,7 @@ const Signup = () => {
                 }, 2000)
             }
             else {
-                console.log(response.data.error)
+                toast.error(response.data.message, { theme: "colored" });
             }
         })
     };
@@ -104,7 +104,7 @@ const Signup = () => {
                                 </Grid>
                                 <Grid item xs={10} md={8} lg={4}>
                                     <Button onClick={onClickCancel} variant='contained' disabled={props.isSubmitting}
-                                        color='error'>{props.isSubmitting ? "Loading" : "Cancel"}</Button>
+                                        color='secondary'>{props.isSubmitting ? "Loading" : "Cancel"}</Button>
                                 </Grid>
                             </Grid>
                         </Form>

@@ -16,7 +16,7 @@ const getKeyFileByEmail = (email, licenseSelected) => {
       { headers: authHeader() }
     )
     .then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       return response;
     });
 };

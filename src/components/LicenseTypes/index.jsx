@@ -4,6 +4,11 @@ import Flags from "country-flag-icons/react/3x2";
 
 const LicenseTypes = [
   {
+    label: "Free",
+    value: "Free",
+    price: 0
+  },
+  {
     label: "Trial",
     value: "Trial",
     price: 0

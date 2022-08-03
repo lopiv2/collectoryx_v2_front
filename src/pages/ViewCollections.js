@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { Box } from "@mui/material";
@@ -20,10 +20,11 @@ function ViewCollection(props) {
   const navigate = useNavigate();
   const [col, setCol] = useState([]);
   const breadcrumbs = useBreadcrumbs();
-  var userData=null;
+  let isMounted = useRef(false);
+  //var userData=null;
   if (localStorage.getItem("user")) {
     var user = localStorage.getItem("user");
-    userData = JSON.parse(user);
+    var userData = JSON.parse(user);
   }
 
   useEffect(() => {
@@ -32,13 +33,16 @@ function ViewCollection(props) {
         if (userData.license.includes("Free")) {
           setCollectionsList(response.data.slice(0, 5));
         } else {
-          setCollectionsList(response.data);
+          if (isMounted) {
+            setCollectionsList(response.data);
+          }
         }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [userData]);
+    return () => { isMounted = false };
+  }, []);
 
   useEffect(() => {
     if (collectionsList.length > 0) {
@@ -130,8 +134,8 @@ function ViewCollection(props) {
                   <Typography align="center" color="text.secondary">
                     {col[col.findIndex((e) => e.id === item.id)]
                       ? col[col.findIndex((e) => e.id === item.id)].collected +
-                        "/" +
-                        col[col.findIndex((e) => e.id === item.id)].totalItems
+                      "/" +
+                      col[col.findIndex((e) => e.id === item.id)].totalItems
                       : null}
                   </Typography>
                   <BorderLinearProgressBar
@@ -139,12 +143,12 @@ function ViewCollection(props) {
                     value={
                       col[col.findIndex((e) => e.id === item.id)]
                         ? +Number.parseFloat(
-                            (col[col.findIndex((e) => e.id === item.id)]
-                              .collected /
-                              col[col.findIndex((e) => e.id === item.id)]
-                                .totalItems) *
-                              100
-                          ).toFixed(2)
+                          (col[col.findIndex((e) => e.id === item.id)]
+                            .collected /
+                            col[col.findIndex((e) => e.id === item.id)]
+                              .totalItems) *
+                          100
+                        ).toFixed(2)
                         : 0
                     }
                   ></BorderLinearProgressBar>

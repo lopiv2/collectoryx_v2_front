@@ -17,7 +17,7 @@ const login = (userName, password) => {
     })
     .then((response) => {
       buildUser(response, userName);
-      //console.log(response.data);
+      console.log(response.data);
       if (response.status === 200 || response.status === 201) {
         return response;
       }
@@ -89,6 +89,7 @@ const buildUser = (response, userName) => {
       license: response.data.license,
       licenseState: response.data.licenseState,
       expiringDate: response.data.licenseDuration,
+      trialActivated: response.data.trialActivated,
       token: response.data.token,
       role: response.data.role,
       email: response.data.email
@@ -105,7 +106,19 @@ const register = (firstName, lastName, email, userName, password) => {
     email,
     userName,
     password,
-  });
+  })
+    .then((response) => {
+      console.log(response.data);
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    }).catch((error) => {
+      if (error.response) {
+        //console.log(error.response.status);
+        return error.response;
+      }
+    });
 };
 
 const logout = () => {

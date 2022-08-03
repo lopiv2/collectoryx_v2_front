@@ -87,7 +87,7 @@ function KeyGeneration(props) {
     const grantedDateFormatted = format(new Date(lic.grantedDate), "dd-MM-yyyy");
     let cols = {
       email: lic.email,
-      state: intl.formatMessage({ id: "app.license." + lic.state }),
+      state: intl.formatMessage({ id: "app.license." + lic.state.toLowerCase() }),
       paid: lic.paid,
       granted: grantedDateFormatted,
       expiring: expDateFormatted,
