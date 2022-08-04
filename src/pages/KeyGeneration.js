@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Box, Grid, TextField, Button } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import AdminService from "../app/api/admin.api";
-import MaterialTable, { Column } from "@material-table/core";
+import MaterialTable from "@material-table/core";
 import { Delete } from "@material-ui/icons";
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import VpnKeyOffIcon from '@mui/icons-material/VpnKeyOff';
 import { Tooltip } from "@mui/material";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 
 function KeyGeneration(props) {
   const intl = useIntl();

@@ -16,6 +16,7 @@ import ConstructionIcon from "@mui/icons-material/Construction";
 import TuneIcon from "@mui/icons-material/Tune";
 import BallotIcon from "@mui/icons-material/Ballot";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import FeedIcon from '@mui/icons-material/Feed';
 import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
@@ -27,6 +28,7 @@ export default function MainListItems() {
   const [open, setOpen] = useState(false);
   const [openCol, setOpenCol] = useState(false);
   const [openMarket, setOpenMarket] = useState(false);
+  const [openFeeds, setOpenFeeds] = useState(false);
 
   const handleClickSettings = () => {
     setOpen(!open);
@@ -38,6 +40,10 @@ export default function MainListItems() {
 
   const handleClickMarket = () => {
     setOpenMarket(!openMarket);
+  };
+
+  const handleClickFeed = () => {
+    setOpenFeeds(!openFeeds);
   };
 
   return (
@@ -113,12 +119,48 @@ export default function MainListItems() {
           </NavLink>
         </List>
       </Collapse>
-      <ListItemButton sx={{ margin: "5px 0" }}>
+      <ListItemButton sx={{ margin: "5px 0" }} onClick={handleClickFeed}>
         <ListItemIcon>
           <RssFeedIcon />
         </ListItemIcon>
         <FormattedMessage id="app.sidemenu.feeds"></FormattedMessage>
+        {openFeeds ? (
+          <ExpandLess sx={{ ml: 4 }} />
+        ) : (
+          <ExpandMore sx={{ ml: 4 }} />
+        )}
       </ListItemButton>
+      <Collapse in={openFeeds} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <NavLink
+            className="nav-link"
+            to="/feeds"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
+              <ListItemIcon>
+                <FeedIcon />
+              </ListItemIcon>
+              <FormattedMessage
+                sx={{ pl: 4 }}
+                id="app.sidemenu.feeds.show"
+              ></FormattedMessage>
+            </ListItemButton>
+          </NavLink>
+          <NavLink
+            className="nav-link"
+            to="/feeds/manage"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
+              <ListItemIcon>
+                <ConstructionIcon />
+              </ListItemIcon>
+              <FormattedMessage id="app.sidemenu.feeds.admin"></FormattedMessage>
+            </ListItemButton>
+          </NavLink>
+        </List>
+      </Collapse>
       <ListItemButton sx={{ margin: "5px 0" }} onClick={handleClickMarket}>
         <ListItemIcon>
           <ShoppingCartIcon />

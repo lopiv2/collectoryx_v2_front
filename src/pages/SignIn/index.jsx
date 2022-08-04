@@ -120,7 +120,7 @@ export default function SignInSide() {
                 required
                 fullWidth
                 id="userName"
-                label={<FormattedMessage id="app.signin.userName"></FormattedMessage>}
+                label={<FormattedMessage id="app.signup.fields.name"></FormattedMessage>}
                 name="userName"
                 autoComplete="userName"
                 autoFocus

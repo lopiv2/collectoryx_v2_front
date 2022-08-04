@@ -7,7 +7,7 @@ import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
-import MUIDataTable from "mui-datatables";
+import MaterialTable from "@material-table/core";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -25,8 +25,13 @@ function ManageSeries(props) {
   const [collection, setCollection] = useState();
   const intl = useIntl();
 
+  if (localStorage.getItem("user")) {
+    var user = localStorage.getItem("user");
+    var userData = JSON.parse(user);
+  }
+
   useEffect(() => {
-    const collectionSeries = ConfigService.getAllSeries()
+    const collectionSeries = ConfigService.getAllSeries(userData.id)
       .then((response) => {
         setCollectionSeriesList(response.data);
         //console.log(response.data);
@@ -34,7 +39,7 @@ function ManageSeries(props) {
       .catch((err) => {
         console.log(err);
       });
-    const collections = ConfigService.getCollectionLists()
+    const collections = ConfigService.getCollectionLists(userData.id)
       .then((response) => {
         setCollectionList(response.data);
       })
@@ -101,13 +106,40 @@ function ManageSeries(props) {
   });
 
   const options = {
-    filterType: "checkbox",
+    sorting: true,
+    exportButton: true,
   };
 
   const columns = [
-    intl.formatMessage({ id: "app.collection.add_collection_serie" }),
-    intl.formatMessage({ id: "app.collection.add_collection_logo" }),
+    {
+      title: intl.formatMessage({ id: "app.collection.add_collection_serie" }),
+      field: "name",
+    },
+    {
+      title: intl.formatMessage({ id: "app.collection.add_collection_logo" }),
+      field: "logo",
+    },
   ];
+
+  const data = collectionSeriesList.map((item) => {
+    let cols = {
+      name: item.name,
+      logo: item.logo === null ? (
+        <Avatar
+          variant="rounded"
+          src={require("../images/no-photo-available.png")}
+          sx={{ width: 100, height: 35 }}
+        ></Avatar>
+      ) : (
+        <Avatar
+          variant="rounded"
+          src={require("../../../images/" + item.logo.path)}
+          sx={{ width: 100, height: 35 }}
+        ></Avatar>
+      ),
+    };
+    return cols;
+  });
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -115,7 +147,7 @@ function ManageSeries(props) {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h4" component="h4">
-            <FormattedMessage id="app.collection.view_collections_series"></FormattedMessage>
+            <FormattedMessage id="app.collection.view_collections_series_add"></FormattedMessage>
           </Typography>
         </Grid>
         <Grid item xs={6}>
@@ -253,33 +285,12 @@ function ManageSeries(props) {
             )}
           </Formik>
         </Grid>
-        <Grid item xs={6}>
-          <MUIDataTable
+        <Grid item xs={5} mr={2}>
+          <MaterialTable
             title={
               <FormattedMessage id="app.collection.view_collections_series"></FormattedMessage>
             }
-            data={
-              collectionSeriesList.length > 0
-                ? collectionSeriesList.map((item) => {
-                    return [
-                      item.name,
-                      item.logo === null ? (
-                        <Avatar
-                          variant="rounded"
-                          src={require("../images/no-photo-available.png")}
-                          sx={{ width: 100, height: 35 }}
-                        ></Avatar>
-                      ) : (
-                        <Avatar
-                          variant="rounded"
-                          src={require("../../../images/" + item.logo.path)}
-                          sx={{ width: 100, height: 35 }}
-                        ></Avatar>
-                      ),
-                    ];
-                  })
-                : []
-            }
+            data={data}
             columns={columns}
             options={options}
           />

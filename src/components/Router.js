@@ -6,6 +6,7 @@ import AddCollection from "../pages/AddCollection";
 import ViewCollection from "../pages/ViewCollections";
 import DisplayCollection from "../pages/DisplayCollection";
 import ManageSeries from "../pages/ManageSeries";
+import ManageFeeds from "../pages/ManageFeeds";
 import AddItem from "../pages/AddItem";
 import ConfigGeneral from "../pages/ConfigGeneral";
 import Layout from "./Layout";
@@ -87,6 +88,18 @@ export const Router = () => {
                     element={
                         <ProtectedRoutes>
                             <EditItem />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/feeds"
+                    element={
+                        <ProtectedRoutes>
+                            <AddCollection />
+                        </ProtectedRoutes>}>
+                </Route>
+                <Route path="/feeds/manage"
+                    element={
+                        <ProtectedRoutes>
+                            <ManageFeeds />
                         </ProtectedRoutes>}>
                 </Route>
                 <Route path="/market/license"

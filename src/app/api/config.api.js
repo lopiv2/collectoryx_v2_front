@@ -25,7 +25,8 @@ const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
 const UPDATE_ITEM_URL = `${API_URL}/update-item`;
 const VIEW_COLLECTIONS_URL = (id) => `${API_URL}/view-collections/${id}`;
-const VIEW_SERIES_URL = `${API_URL}/view-series`;
+const VIEW_SERIES_URL = (id) => `${API_URL}/view-series/${id}`;
+const VIEW_FEEDS_URL = (id) => `${API_URL}/feeds/view/${id}`;
 const VIEW_COLLECTION_SERIES_URL = (id) =>
   `${API_URL}/view-collection-series/${id}`;
 
@@ -110,6 +111,28 @@ const createItem = (values, collection, file, metadata) => {
     });
 };
 
+const createFeed = (name, url) => {
+  const data = {
+    name: name,
+    url: url,
+  };
+  //console.log(data)
+  return axios
+    .post(CREATE_SERIE_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const createSerie = (name, collection, file) => {
   const data = {
     name: name,
@@ -157,9 +180,18 @@ const deleteCollection = (id, cascade) => {
   }
 };
 
-const getAllSeries = () => {
+const getAllUserFeeds = (id) => {
   return axios
-    .get(VIEW_SERIES_URL, { headers: authHeader() })
+    .get(VIEW_FEEDS_URL(id), { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
+const getAllSeries = (id) => {
+  return axios
+    .get(VIEW_SERIES_URL(id), { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
       return response;
@@ -302,11 +334,13 @@ const ConfigService = {
   countCollectionsItems,
   countCollectionsMoney,
   createCollection,
+  createFeed,
   createItem,
   createSerie,
   deleteCollectionItem,
   deleteCollection,
   getAllSeries,
+  getAllUserFeeds,
   getCollectionItemsById,
   getCollectionById,
   getCollectionItem,
