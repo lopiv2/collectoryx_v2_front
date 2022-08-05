@@ -26,6 +26,7 @@
     "crypto-browserify": "^3.12.0",
     "date-fns": "^2.28.0",
     "formik": "^2.2.9",
+    "http-browserify": "^1.7.0",
     "jwt-decode": "^3.1.2",
     "mui-datatables": "^4.2.2",
     "react": "^17.0.2",
@@ -42,14 +43,17 @@
     "react-scripts": "5.0.0",
     "react-toastify": "^8.2.0",
     "recharts": "^2.1.9",
+    "rss-parser": "^3.12.0",
+    "stream-http": "^3.2.0",
+    "timers-browserify": "^2.0.12",
     "use-react-router-breadcrumbs": "^3.2.1",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -69,5 +73,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "url": "^0.11.0"
   }
 }

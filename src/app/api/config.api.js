@@ -11,6 +11,7 @@ const COUNT_COLLECTIONS_MONEY_URL = (id) =>
 const CREATE_COLLECTION_URL = `${API_URL}/create-collection`;
 const CREATE_ITEM_URL = `${API_URL}/create-item`;
 const CREATE_SERIE_URL = `${API_URL}/create-serie`;
+const CREATE_FEED_URL = `${API_URL}/feeds/create-feed`;
 const DELETE_COLLECTION_ITEM_ID_URL = (id) =>
   `${API_URL}/delete-collection-item/${id}`;
 const DELETE_COLLECTION_ID_URL = (id) => `${API_URL}/delete-collection/${id}`;
@@ -118,7 +119,7 @@ const createFeed = (name, url) => {
   };
   //console.log(data)
   return axios
-    .post(CREATE_SERIE_URL, data, { headers: authHeader() })
+    .post(CREATE_FEED_URL, data, { headers: authHeader() })
     .then((response) => {
       if (response.status === 200 || response.status === 201) {
         return response;
@@ -329,6 +330,10 @@ const updateItem = (values, collection, file, metadata) => {
     });
 };
 
+const viewFeed=(url)=>{
+  
+}
+
 const ConfigService = {
   countCollections,
   countCollectionsItems,
@@ -351,6 +356,7 @@ const ConfigService = {
   toggleItemOwn,
   toggleItemWish,
   updateItem,
+  viewFeed
 };
 
 export default ConfigService;

@@ -16,6 +16,7 @@ import ManageCollections from "../pages/ManageCollections";
 import EditCollection from "../pages/EditCollection";
 import KeyGeneration from "../pages/KeyGeneration";
 import BuyLicense from "../pages/BuyLicense";
+import ViewFeeds from "../pages/ViewFeeds";
 
 export const Router = () => {
     let { colId } = useParams();
@@ -93,7 +94,7 @@ export const Router = () => {
                 <Route path="/feeds"
                     element={
                         <ProtectedRoutes>
-                            <AddCollection />
+                            <ViewFeeds />
                         </ProtectedRoutes>}>
                 </Route>
                 <Route path="/feeds/manage"
