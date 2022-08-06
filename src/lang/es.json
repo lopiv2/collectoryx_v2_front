@@ -148,6 +148,7 @@
   "app.feed.created": "Fuente creada correctamente",
   "app.feed.list": "Lista de Feeds",
   "app.feed.loading": "Cargando feeds...",
+  "app.feed.title": "Feeds de {site}",
   "app.feed.add_feed_name": "Nombre de Feed",
   "app.feed.add_feed_url": "Url de Feed",
   "app.feed.add_feed": "Añadir subscripción Feed",

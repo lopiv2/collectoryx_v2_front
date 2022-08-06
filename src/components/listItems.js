@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import { ListItemText, ListItem, ListItemAvatar } from "@material-ui/core";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import BarChartIcon from "@mui/icons-material/BarChart";
@@ -29,6 +30,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Box, Grid } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import { ThemeProvider, createTheme } from "@material-ui/core";
+import { getFavicon } from "../utils/generic";
 
 export default function MainListItems() {
   const [open, setOpen] = useState(false);
@@ -46,8 +48,8 @@ export default function MainListItems() {
   }
 
   const avatarStyle = {
-    backgroundColor: "#1bbd7e",
-    height: 24, // whatever height
+    backgroundColor: "#71a9c9",
+    height: 24,
     width: 24,
   };
 
@@ -78,6 +80,17 @@ export default function MainListItems() {
         console.log(err);
       });
   }, []);
+
+  useEffect(() => {
+    feedsList.map((feed, index) => {
+      const icons = getFavicon(feed.rssUrl).then((response) => {
+        //console.log(totalLogosDownload);
+        let newItems = [...feedsList];
+        newItems[index].feedData.imageLink = response.icons[0].src;
+        setFeedsList(newItems);
+      });
+    });
+  }, [feedsList]);
 
   useEffect(() => {
     feedsList.map((feed) => {
@@ -310,11 +323,15 @@ export default function MainListItems() {
             <ExpandMore sx={{ ml: 4 }} />
           )}
           {totalFeeds > 0 && (
-            <Avatar sx={{ mr: 10 }} style={avatarStyle}>
-              <Typography display="inline" variant="subtitle1">
-                {totalFeeds}
-              </Typography>
-            </Avatar>
+            <Grid container direction="row-reverse">
+              <Grid item>
+                <Avatar sx={{ mr: 10 }} style={avatarStyle}>
+                  <Typography display="inline" variant="subtitle1">
+                    {totalFeeds}
+                  </Typography>
+                </Avatar>
+              </Grid>
+            </Grid>
           )}
         </ListItemButton>
         <Collapse in={openFeeds} timeout="auto" unmountOnExit>
@@ -328,47 +345,49 @@ export default function MainListItems() {
                   to={{ pathname: `/feeds/${feed.name}` }}
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                  <ListItemButton
-                    sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
-                  >
-                    {feed.feedData.imageLink ? (
-                      <Box
-                        component="img"
-                        sx={{
-                          height: "auto",
-                          width: "auto",
-                          maxHeight: 24,
-                          maxWidth: 24,
-                        }}
-                        alt="Logo"
-                        src={feed.feedData.imageLink}
-                      ></Box>
-                    ) : (
-                      <ListItemIcon>
-                        <FeedIcon />
+                  <ListItem disableGutters>
+                    <ListItemButton
+                      sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
+                    >
+                      <ListItemIcon style={{ minWidth: 40 }}>
+                        {feed.feedData.imageLink ? (
+                          <Box
+                            component="img"
+                            sx={{
+                              height: "auto",
+                              width: "auto",
+                              maxHeight: 24,
+                              maxWidth: 24,
+                            }}
+                            alt="Logo"
+                            src={feed.feedData.imageLink}
+                          ></Box>
+                        ) : (
+                          <Box
+                            sx={{
+                              height: "auto",
+                              width: "auto",
+                              maxHeight: 24,
+                              maxWidth: 24,
+                            }}
+                          >
+                            <FeedIcon />
+                          </Box>
+                        )}
                       </ListItemIcon>
-                    )}
-                    <Grid container>
-                      <Grid item xs>
-                        <Grid container direction="row">
-                          <Typography display="inline" variant="subtitle2">
-                            {feed.name}
+                      <ListItemText
+                        primary={feed.name}
+                        primaryTypographyProps={{ variant: "subtitle1" }}
+                      ></ListItemText>
+                      <ListItemAvatar style={{ minWidth: 0 }}>
+                        <Avatar style={avatarStyle}>
+                          <Typography display="inline" variant="subtitle1">
+                            {feed.feedData.articles}
                           </Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs>
-                        <Grid container direction="row-reverse">
-                          <Grid item>
-                            <Avatar style={avatarStyle}>
-                              <Typography display="inline" variant="subtitle1">
-                                {feed.feedData.articles}
-                              </Typography>
-                            </Avatar>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </ListItemButton>
+                        </Avatar>
+                      </ListItemAvatar>
+                    </ListItemButton>
+                  </ListItem>
                 </NavLink>
               ))
             ) : (

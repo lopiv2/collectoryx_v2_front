@@ -148,6 +148,7 @@
   "app.feed.created": "Feed created sucesfully",
   "app.feed.list": "Feed list",
   "app.feed.loading": "Loading feeds...",
+  "app.feed.title": "{site} feeds",
   "app.feed.add_feed_name": "Feed name",
   "app.feed.add_feed_url": "Feed URL",
   "app.feed.add_feed": "Add Web feed subscription",

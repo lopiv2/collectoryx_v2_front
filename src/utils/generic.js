@@ -1,6 +1,7 @@
 import { Context } from "../components/Wrapper";
 import { useContext } from "react";
 import OptionsService from "../components/DropDownOptions";
+import axios from "axios";
 
 const CurrencyChecker = () => {
   const context = useContext(Context);
@@ -31,8 +32,21 @@ function getImagePaths(directory) {
   return images;
 }
 
-export {
-  CurrencyChecker,
-  GetCurrencySymbolLocale,
-  getImagePaths,
+const cleanUrl = (url) => {
+  let cleanedUrl = url.includes("https")
+    ? url.slice(8)
+    : url.includes("http") && url.slice(7);
+  cleanedUrl = cleanedUrl.includes("/") ? cleanedUrl.split("/")[0] : cleanedUrl;
+  return cleanedUrl;
 };
+
+const getFavicon = async (url) => {
+  return await axios
+    .get(`https://favicongrabber.com/api/grab/${cleanUrl(url)}`)
+    .then((response) => {
+      //console.log(response.data);
+      return response.data;
+    });
+};
+
+export { CurrencyChecker, GetCurrencySymbolLocale, getFavicon, getImagePaths };
