@@ -37,21 +37,18 @@ function ManageFeeds(props) {
   }, []);
 
   const submitForm = (values) => {
-    ConfigService.createFeed(values.name, values.url, null).then(
+    ConfigService.createFeed(userData.id, values.name, values.url, null).then(
       (response) => {
         if (response.status === 200) {
           toast.success(
             <FormattedMessage id="app.feed.created"></FormattedMessage>,
             { theme: "colored" }
           );
-          setFeedsList((feedsList) => [
-            ...feedsList,
-            response.data,
-          ]);
+          setFeedsList((feedsList) => [...feedsList, response.data]);
         }
       }
     );
-  }
+  };
 
   const newSerieSchema = Yup.object().shape({
     name: Yup.string().required(
@@ -65,6 +62,7 @@ function ManageFeeds(props) {
   const options = {
     sorting: true,
     exportButton: true,
+    headerStyle: { fontWeight: 'bold',},
   };
 
   const columns = [
@@ -81,7 +79,7 @@ function ManageFeeds(props) {
   const data = feedsList.map((item) => {
     let rows = {
       name: item.name,
-      url: item.rssUrl
+      url: item.rssUrl,
     };
     return rows;
   });
@@ -178,9 +176,7 @@ function ManageFeeds(props) {
         </Grid>
         <Grid item xs={6}>
           <MaterialTable
-            title={
-              <FormattedMessage id="app.feed.list"></FormattedMessage>
-            }
+            title={<FormattedMessage id="app.feed.list"></FormattedMessage>}
             data={data}
             columns={columns}
             options={options}

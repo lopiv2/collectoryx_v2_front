@@ -91,7 +91,7 @@ export const Router = () => {
                             <EditItem />
                         </ProtectedRoutes>}>
                 </Route>
-                <Route path="/feeds"
+                <Route path="/feeds/:feedId"
                     element={
                         <ProtectedRoutes>
                             <ViewFeeds />

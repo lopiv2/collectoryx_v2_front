@@ -107,6 +107,7 @@ function KeyGeneration(props) {
             options={{
               sorting: true,
               filtering: true,
+              headerStyle: { fontWeight: 'bold',},
               exportButton: true,
               actionsColumnIndex: -1,
               cellStyle: (e, rowData) => {

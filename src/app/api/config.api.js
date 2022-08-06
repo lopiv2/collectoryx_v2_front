@@ -28,6 +28,9 @@ const UPDATE_ITEM_URL = `${API_URL}/update-item`;
 const VIEW_COLLECTIONS_URL = (id) => `${API_URL}/view-collections/${id}`;
 const VIEW_SERIES_URL = (id) => `${API_URL}/view-series/${id}`;
 const VIEW_FEEDS_URL = (id) => `${API_URL}/feeds/view/${id}`;
+const VIEW_FEEDS_READ_URL = (id) => `${API_URL}/feeds/get-all/${id}`;
+const VIEW_FEEDS_READ_URL_ID = (id, title) =>
+  `${API_URL}/feeds/get-feeds/${id}/${title}`;
 const VIEW_COLLECTION_SERIES_URL = (id) =>
   `${API_URL}/view-collection-series/${id}`;
 
@@ -112,8 +115,9 @@ const createItem = (values, collection, file, metadata) => {
     });
 };
 
-const createFeed = (name, url) => {
+const createFeed = (userId, name, url) => {
   const data = {
+    userId: userId,
     name: name,
     url: url,
   };
@@ -184,6 +188,25 @@ const deleteCollection = (id, cascade) => {
 const getAllUserFeeds = (id) => {
   return axios
     .get(VIEW_FEEDS_URL(id), { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
+const getAllUserReadFeeds = (id) => {
+  return axios
+    .get(VIEW_FEEDS_READ_URL(id), { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
+//Obtiene todos los Feeds por titulo clickado y usuario
+const getUserFeedsIDTitle = (id, title) => {
+  return axios
+    .get(VIEW_FEEDS_READ_URL_ID(id, title), { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
       return response;
@@ -330,9 +353,7 @@ const updateItem = (values, collection, file, metadata) => {
     });
 };
 
-const viewFeed=(url)=>{
-  
-}
+const viewFeed = (url) => {};
 
 const ConfigService = {
   countCollections,
@@ -346,6 +367,8 @@ const ConfigService = {
   deleteCollection,
   getAllSeries,
   getAllUserFeeds,
+  getUserFeedsIDTitle,
+  getAllUserReadFeeds,
   getCollectionItemsById,
   getCollectionById,
   getCollectionItem,
@@ -356,7 +379,7 @@ const ConfigService = {
   toggleItemOwn,
   toggleItemWish,
   updateItem,
-  viewFeed
+  viewFeed,
 };
 
 export default ConfigService;
