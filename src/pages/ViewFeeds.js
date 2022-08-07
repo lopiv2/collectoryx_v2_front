@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Parser from "rss-parser";
-import htmlParser from "html-react-parser";
+import { parse } from "himalaya";
 import "../styles/Dashboard.css";
 import ConfigService from "../app/api/config.api";
 import {
@@ -19,15 +19,38 @@ import { useLocation } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 
 export default function ViewFeeds(props) {
-  const parser = new Parser();
-  const [feedUrl, setFeedUrl] = useState();
+  const parser = new Parser({
+    customFields: {
+      item: [["media:content", "media:content", { keepArray: true }]],
+    },
+  });
   const [feedsList, setFeedsList] = useState([]);
   const location = useLocation();
+  let image = "";
 
   if (localStorage.getItem("user")) {
     var user = localStorage.getItem("user");
     var userData = JSON.parse(user);
   }
+
+  const parseContentHTMLForImage = (html) => {
+    const json = parse(html);
+    json.map((item) => {
+      if (item.tagName === "img") {
+        image = item.attributes[0].value;
+      }
+      if (item.tagName === "p") {
+        for (let i = 0; i < item.children.length; i++) {
+          if (item.children[i].tagName === "img") {
+            console.log(item.children[i].attributes[2].value);
+            image=item.children[i].attributes[2].value
+            //image = item.attributes[0].value;
+            //return item.children[i];
+          }
+        }
+      }
+    });
+  };
 
   /*useEffect(() => {
     console.log("Location changed");
@@ -38,7 +61,6 @@ export default function ViewFeeds(props) {
       userData.id,
       location.state
     ).then((response) => {
-      const result = response.data;
       var feed = parser.parseString(response.data).then((resp) => {
         setFeedsList(resp.items);
         //console.log(resp.items);
@@ -48,7 +70,7 @@ export default function ViewFeeds(props) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Grid container>
+      <Grid>
         {/*breadcrumbs.map(({
           match,
           breadcrumb
@@ -75,16 +97,33 @@ export default function ViewFeeds(props) {
                 sx={{ height: 400, minWidth: 250, maxWidth: 250, boxShadow: 5 }}
                 ml={200}
               >
-                {htmlParser(item.content)}
-                <CardMedia height="94">{htmlParser(item.content)}</CardMedia>
+                {parseContentHTMLForImage(item.content)}
+                <CardMedia
+                  component="img"
+                  image={image ?? image}
+                  className="card-collection"
+                  style={{ height: "auto" }}
+                >
+                  {/*console.log(parseContentHTMLForImage(item.content))*/}
+                </CardMedia>
                 <CardHeader
-                  avatar={
-                    <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-                      R
-                    </Avatar>
+                  sx={{
+                    display: "flex",
+                    overflow: "hidden",
+                    "& .MuiCardHeader-content": {
+                      overflow: "hidden",
+                    },
+                  }}
+                  title={
+                    <Typography gutterBottom noWrap variant="h6" component="h4">
+                      {item.title}
+                    </Typography>
                   }
-                  title={item.title}
+                  titleTypographyProps={{ noWrap: true }}
                 />
+                <CardContent>
+                  <Typography variant="body2" color="initial"></Typography>
+                </CardContent>
               </Card>
             </Grid>
           ))}
