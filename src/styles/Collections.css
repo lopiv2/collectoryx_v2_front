@@ -13,6 +13,13 @@
   max-width: 250px;
 }
 
+.cardListItem-img-feed {
+  height: auto;
+  max-height: 300px;
+  width: auto;
+  max-width: 300px;
+}
+
 .container {
   backgroundcolor: "red";
   width: "fit-content";
