@@ -49,6 +49,7 @@
     "timers-browserify": "^2.0.12",
     "use-react-router-breadcrumbs": "^3.2.1",
     "web-vitals": "^2.1.4",
+    "xml-js": "^1.6.11",
     "yup": "^0.32.11"
   },
   "scripts": {
