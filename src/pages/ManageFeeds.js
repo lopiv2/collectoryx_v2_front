@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { TextField, MenuItem } from "@mui/material";
 import { useIntl } from "react-intl";
-import { Avatar } from "@mui/material";
+import { cleanUrl } from "../utils/generic";
 import * as Yup from "yup";
 
 function ManageFeeds(props) {
@@ -37,7 +37,7 @@ function ManageFeeds(props) {
   }, []);
 
   const submitForm = (values) => {
-    ConfigService.createFeed(userData.id, values.name, values.url, null).then(
+    ConfigService.createFeed(userData.id, values.name, values.url, cleanUrl(values.url)).then(
       (response) => {
         if (response.status === 200) {
           toast.success(
@@ -62,7 +62,7 @@ function ManageFeeds(props) {
   const options = {
     sorting: true,
     exportButton: true,
-    headerStyle: { fontWeight: 'bold',},
+    headerStyle: { fontWeight: 'bold', },
   };
 
   const columns = [

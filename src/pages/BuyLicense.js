@@ -72,7 +72,7 @@ function BuyLicense(props) {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"
         defaultValue={userData.license}

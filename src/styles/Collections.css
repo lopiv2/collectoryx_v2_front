@@ -14,14 +14,22 @@
 }
 
 .cardListItem-img-feed {
-  height: auto;
-  max-height: 300px;
+  height: 320px;
+  max-height: 320px;
   width: auto;
-  max-width: 300px;
+  max-width: 320px;
+}
+
+.cardListItem-img-media {
+  min-height: 200px;
+  max-height: 200px;
+  height: "auto";
+  width: "auto";
+  max-width: 320px;
 }
 
 .container {
-  backgroundcolor: "red";
+  background-color: "red";
   width: "fit-content";
 }
 

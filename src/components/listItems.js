@@ -81,16 +81,6 @@ export default function MainListItems() {
       });
   }, []);
 
-  useEffect(() => {
-    feedsList.map((feed, index) => {
-      const icons = getFavicon(feed.rssUrl).then((response) => {
-        //console.log(totalLogosDownload);
-        let newItems = [...feedsList];
-        newItems[index].feedData.imageLink = response.icons[0].src;
-        setFeedsList(newItems);
-      });
-    });
-  }, [feedsList]);
 
   useEffect(() => {
     feedsList.map((feed) => {
@@ -325,7 +315,7 @@ export default function MainListItems() {
           {totalFeeds > 0 && (
             <Grid container direction="row-reverse">
               <Grid item>
-                <Avatar sx={{ mr: 10 }} style={avatarStyle}>
+                <Avatar sx={{ mr: 5 }} style={avatarStyle}>
                   <Typography display="inline" variant="subtitle1">
                     {totalFeeds}
                   </Typography>
@@ -345,12 +335,12 @@ export default function MainListItems() {
                   to={{ pathname: `/feeds/${feed.name}` }}
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                  <ListItem disableGutters>
+                  <ListItem disableGutters style={{ paddingTop: 0, paddingBottom: 0, margin: 0 }}>
                     <ListItemButton
                       sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
                     >
                       <ListItemIcon style={{ minWidth: 40 }}>
-                        {feed.feedData.imageLink ? (
+                        {feed.logo ? (
                           <Box
                             component="img"
                             sx={{
@@ -360,7 +350,7 @@ export default function MainListItems() {
                               maxWidth: 24,
                             }}
                             alt="Logo"
-                            src={feed.feedData.imageLink}
+                            src={feed.logo}
                           ></Box>
                         ) : (
                           <Box

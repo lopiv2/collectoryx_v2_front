@@ -115,11 +115,12 @@ const createItem = (values, collection, file, metadata) => {
     });
 };
 
-const createFeed = (userId, name, url) => {
+const createFeed = (userId, name, url, cleanUrl) => {
   const data = {
     userId: userId,
     name: name,
     url: url,
+    cleanUrl: cleanUrl
   };
   //console.log(data)
   return axios
@@ -353,7 +354,7 @@ const updateItem = (values, collection, file, metadata) => {
     });
 };
 
-const viewFeed = (url) => {};
+const viewFeed = (url) => { };
 
 const ConfigService = {
   countCollections,
