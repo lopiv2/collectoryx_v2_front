@@ -39,6 +39,24 @@ export default function ViewFeeds(props) {
         },
     });
 
+    const openInNewTab = url => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
+
+    const getHour = ((hour) => {
+        const d = new Date(hour)
+        if (d.getHours() > 24) {
+            return d.get
+        }
+        if (d.getHours() > 0 && d.getHours() < 24) {
+            return d.getHours() + "h"
+        }
+        else {
+            return d.getMinutes() + "m"
+        }
+
+    })
+
 
     useEffect(() => {
         const feeds = ConfigService.getUserFeedsIDTitle(
@@ -75,8 +93,7 @@ export default function ViewFeeds(props) {
                 <Grid container spacing={10} className="container">
                     {feedsList.map((item, index) => (
                         <Grid item key={index}>
-                            {console.log(item.link)}
-                            <Button href={item.link}>
+                            <Button onClick={() => openInNewTab(item.link)}>
                                 <Card
                                     className="cardListItem-img-feed"
                                     ml={200}
@@ -91,14 +108,15 @@ export default function ViewFeeds(props) {
                                         ></CardMedia>
                                     </Grid>
                                     <Grid container justifyContent="flex-end" style={{
-                                        paddingTop: "0px"
+                                        paddingTop: "0px",
+                                        paddingRight: "10px"
                                     }}>
                                         <Grid item >
-                                            <CircleIcon sx={{ color: "orange", fontSize: "10px" }} fontSize="small"></CircleIcon>
+                                            <CircleIcon sx={{ color: "orange", fontSize: "10px", paddingRight: "2px" }} fontSize="small"></CircleIcon>
                                         </Grid>
                                         <Grid item >
-                                            <Typography display="inline" variant="subtitle1">
-                                                {item.pubDate}
+                                            <Typography display="inline" variant="subtitle1" style={{ textTransform: "lowercase" }}>
+                                                {getHour(item.pubDate)}
                                             </Typography>
                                         </Grid>
                                     </Grid>

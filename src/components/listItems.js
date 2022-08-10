@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { ListItemText, ListItem, ListItemAvatar } from "@material-ui/core";
@@ -30,16 +30,17 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Box, Grid } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import { ThemeProvider, createTheme } from "@material-ui/core";
-import { getFavicon } from "../utils/generic";
+import { AppContext } from "./AppContext";
 
 export default function MainListItems() {
   const [open, setOpen] = useState(false);
   const [openCol, setOpenCol] = useState(false);
   const [openMarket, setOpenMarket] = useState(false);
   const [openFeeds, setOpenFeeds] = useState(false);
-  const [feedsList, setFeedsList] = useState([]);
+  //const [feedsList, setFeedsList] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [totalFeeds, setTotalFeeds] = useState(0);
+  const { feedsList, setFeedsList } = useContext(AppContext);
   let totalFeedsCount = 0;
 
   if (localStorage.getItem("user")) {
@@ -79,12 +80,14 @@ export default function MainListItems() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [feedsList]);
 
 
   useEffect(() => {
     feedsList.map((feed) => {
-      totalFeedsCount = totalFeedsCount + feed.feedData.articles;
+      if (feed.feedData) {
+        totalFeedsCount = totalFeedsCount + feed.feedData.articles;
+      }
     });
     setTotalFeeds(totalFeedsCount);
   }, [feedsList]);
@@ -326,7 +329,7 @@ export default function MainListItems() {
         </ListItemButton>
         <Collapse in={openFeeds} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {isLoading == false ? (
+            {isLoading == false && feedsList ? (
               feedsList.map((feed, index) => (
                 <NavLink
                   key={index}
@@ -372,7 +375,7 @@ export default function MainListItems() {
                       <ListItemAvatar style={{ minWidth: 0 }}>
                         <Avatar style={avatarStyle}>
                           <Typography display="inline" variant="subtitle1">
-                            {feed.feedData.articles}
+                            {feed.feedData ? feed.feedData.articles : 0}
                           </Typography>
                         </Avatar>
                       </ListItemAvatar>

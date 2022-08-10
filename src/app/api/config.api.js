@@ -12,6 +12,8 @@ const CREATE_COLLECTION_URL = `${API_URL}/create-collection`;
 const CREATE_ITEM_URL = `${API_URL}/create-item`;
 const CREATE_SERIE_URL = `${API_URL}/create-serie`;
 const CREATE_FEED_URL = `${API_URL}/feeds/create-feed`;
+const DELETE_FEED_ID_URL = (id) =>
+  `${API_URL}/feeds/delete-feed/${id}`;
 const DELETE_COLLECTION_ITEM_ID_URL = (id) =>
   `${API_URL}/delete-collection-item/${id}`;
 const DELETE_COLLECTION_ID_URL = (id) => `${API_URL}/delete-collection/${id}`;
@@ -184,6 +186,14 @@ const deleteCollection = (id, cascade) => {
         return response;
       });
   }
+};
+
+const deleteFeed = (id) => {
+  return axios
+    .delete(DELETE_FEED_ID_URL(id), { headers: authHeader() })
+    .then((response) => {
+      return response;
+    });
 };
 
 const getAllUserFeeds = (id) => {
@@ -366,6 +376,7 @@ const ConfigService = {
   createSerie,
   deleteCollectionItem,
   deleteCollection,
+  deleteFeed,
   getAllSeries,
   getAllUserFeeds,
   getUserFeedsIDTitle,

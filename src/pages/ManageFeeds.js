@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { Box } from "@mui/material";
@@ -6,7 +6,6 @@ import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
-import NoImage from "../images/no-photo-available.png";
 import MaterialTable from "@material-table/core";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -14,19 +13,46 @@ import { Formik, Form } from "formik";
 import { TextField, MenuItem } from "@mui/material";
 import { useIntl } from "react-intl";
 import { cleanUrl } from "../utils/generic";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import * as Yup from "yup";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { AppContext } from "../components/AppContext";
 
 function ManageFeeds(props) {
-  const [feedsList, setFeedsList] = useState([]);
+  //const [feedsList, setFeedsList] = useState([]);
+  const { feedsList, setFeedsList } = useContext(AppContext);
   const navigate = useNavigate();
   const intl = useIntl();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [value, setValue] = useState(null);
 
   if (localStorage.getItem("user")) {
     var user = localStorage.getItem("user");
     var userData = JSON.parse(user);
   }
 
-  useEffect(() => {
+  const handleDeleteClick = () => {
+    const deleteColl = ConfigService.deleteFeed(value).then(
+      (response) => {
+        if (response.data === true) {
+          toast.success(
+            <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
+            { theme: "colored" }
+          );
+          var index = feedsList.findIndex(
+            (feedsList) => feedsList.id === value
+          );
+          if (index > -1) {
+            feedsList.splice(index, 1);
+            setFeedsList([...feedsList]);
+          }
+        }
+      }
+    );
+  };
+
+  /*useEffect(() => {
     const feeds = ConfigService.getAllUserFeeds(userData.id)
       .then((response) => {
         setFeedsList(response.data);
@@ -34,7 +60,7 @@ function ManageFeeds(props) {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, []);*/
 
   const submitForm = (values) => {
     ConfigService.createFeed(userData.id, values.name, values.url, cleanUrl(values.url)).then(
@@ -59,13 +85,35 @@ function ManageFeeds(props) {
     ),
   });
 
+  const actions = [
+    {
+      icon: EditIcon,
+      tooltip: intl.formatMessage({ id: "app.button.edit" }),
+      onClick: (event, rowData) => alert("You saved " + rowData.name)
+    },
+    rowData => ({
+      icon: DeleteIcon,
+      tooltip: intl.formatMessage({ id: "app.button.delete" }),
+      onClick: (event, rowData) => {
+        setValue(rowData.id);
+        setConfirmOpen(true);
+      }
+    })
+  ]
+
   const options = {
     sorting: true,
     exportButton: true,
     headerStyle: { fontWeight: 'bold', },
+    actionsColumnIndex: -1
   };
 
   const columns = [
+    {
+      title: intl.formatMessage({ id: "app.feed.add_feed_name" }),
+      field: "id",
+      hidden: true,
+    },
     {
       title: intl.formatMessage({ id: "app.feed.add_feed_name" }),
       field: "name",
@@ -78,6 +126,7 @@ function ManageFeeds(props) {
 
   const data = feedsList.map((item) => {
     let rows = {
+      id: item.id,
       name: item.name,
       url: item.rssUrl,
     };
@@ -180,7 +229,18 @@ function ManageFeeds(props) {
             data={data}
             columns={columns}
             options={options}
+            actions={actions}
           />
+          <ConfirmDialog
+            title={intl.formatMessage({
+              id: "app.dialog.delete_title",
+            })}
+            open={confirmOpen}
+            setOpen={setConfirmOpen}
+            onConfirm={handleDeleteClick}
+          >
+            <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+          </ConfirmDialog>
         </Grid>
       </Grid>
     </Box>
