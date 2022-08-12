@@ -14,12 +14,15 @@ const CREATE_SERIE_URL = `${API_URL}/create-serie`;
 const CREATE_FEED_URL = `${API_URL}/feeds/create-feed`;
 const DELETE_FEED_ID_URL = (id) =>
   `${API_URL}/feeds/delete-feed/${id}`;
+  const DELETE_SERIE_ID_URL = (id) =>
+  `${API_URL}/delete-serie/${id}`;
 const DELETE_COLLECTION_ITEM_ID_URL = (id) =>
   `${API_URL}/delete-collection-item/${id}`;
 const DELETE_COLLECTION_ID_URL = (id) => `${API_URL}/delete-collection/${id}`;
 const DELETE_COLLECTION_ID_URL_CASCADE = (id) =>
   `${API_URL}/delete-collection-cascade/${id}`;
 const GET_COLLECTION_ITEM_ID_URL = (id) => `${API_URL}/get-item/${id}`;
+const GET_COLLECTION_ITEMS_YEAR_ID_URL = (id) => `${API_URL}/get-items-per-year/${id}`;
 const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
@@ -196,6 +199,14 @@ const deleteFeed = (id) => {
     });
 };
 
+const deleteSerie = (id) => {
+  return axios
+    .delete(DELETE_SERIE_ID_URL(id), { headers: authHeader() })
+    .then((response) => {
+      return response;
+    });
+};
+
 const getAllUserFeeds = (id) => {
   return axios
     .get(VIEW_FEEDS_URL(id), { headers: authHeader() })
@@ -255,6 +266,14 @@ const getCollectionLists = (id) => {
     .get(VIEW_COLLECTIONS_URL(id), { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
+      return response;
+    });
+};
+
+const getCollectionItemsPerYear = (id) => {
+  return axios
+    .get(GET_COLLECTION_ITEMS_YEAR_ID_URL(id), { headers: authHeader() }) 
+    .then((response) => {
       return response;
     });
 };
@@ -377,6 +396,7 @@ const ConfigService = {
   deleteCollectionItem,
   deleteCollection,
   deleteFeed,
+  deleteSerie,
   getAllSeries,
   getAllUserFeeds,
   getUserFeedsIDTitle,
@@ -384,6 +404,7 @@ const ConfigService = {
   getCollectionItemsById,
   getCollectionById,
   getCollectionItem,
+  getCollectionItemsPerYear,
   getCollectionLists,
   getCollectionSeries,
   getImages,

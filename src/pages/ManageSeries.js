@@ -15,6 +15,9 @@ import { TextField, MenuItem } from "@mui/material";
 import { useIntl } from "react-intl";
 import { Avatar } from "@mui/material";
 import * as Yup from "yup";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import ConfirmDialog from "../components/ConfirmDialog";
 
 function ManageSeries(props) {
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
@@ -24,17 +27,38 @@ function ManageSeries(props) {
   const [preview, setPreview] = useState();
   const [collection, setCollection] = useState();
   const intl = useIntl();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [value, setValue] = useState(null);
 
   if (localStorage.getItem("user")) {
     var user = localStorage.getItem("user");
     var userData = JSON.parse(user);
   }
 
+  const handleDeleteClick = () => {
+    const deleteItem = ConfigService.deleteSerie(value).then(
+      (response) => {
+        if (response.data === true) {
+          toast.success(
+            <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
+            { theme: "colored" }
+          );
+          var index = collectionSeriesList.findIndex(
+            (collectionSeriesList) => collectionSeriesList.id === value
+          );
+          if (index > -1) {
+            collectionSeriesList.splice(index, 1);
+            setCollectionSeriesList([...collectionSeriesList])
+          }
+        }
+      }
+    );
+  };
+
   useEffect(() => {
     const collectionSeries = ConfigService.getAllSeries(userData.id)
       .then((response) => {
         setCollectionSeriesList(response.data);
-        //console.log(response.data);
       })
       .catch((err) => {
         console.log(err);
@@ -105,12 +129,34 @@ function ManageSeries(props) {
     ),
   });
 
+  const actions = [
+    {
+      icon: EditIcon,
+      tooltip: intl.formatMessage({ id: "app.button.edit" }),
+      onClick: (event, rowData) => alert("You saved " + rowData.name)
+    },
+    rowData => ({
+      icon: DeleteIcon,
+      tooltip: intl.formatMessage({ id: "app.button.delete" }),
+      onClick: (event, rowData) => {
+        setValue(rowData.id);
+        setConfirmOpen(true);
+      }
+    })
+  ]
+
   const options = {
     sorting: true,
     exportButton: true,
+    actionsColumnIndex: -1
   };
 
   const columns = [
+    {
+      title: intl.formatMessage({ id: "app.feed.add_feed_name" }),
+      field: "id",
+      hidden: true,
+    },
     {
       title: intl.formatMessage({ id: "app.collection.add_collection_serie" }),
       field: "name",
@@ -123,6 +169,7 @@ function ManageSeries(props) {
 
   const data = collectionSeriesList.map((item) => {
     let cols = {
+      id: item.id,
       name: item.name,
       logo: item.logo === null ? (
         <Avatar
@@ -293,9 +340,20 @@ function ManageSeries(props) {
             data={data}
             columns={columns}
             options={options}
+            actions={actions}
           />
         </Grid>
       </Grid>
+      <ConfirmDialog
+        title={intl.formatMessage({
+          id: "app.dialog.delete_title",
+        })}
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={handleDeleteClick}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </ConfirmDialog>
     </Box>
   );
 }

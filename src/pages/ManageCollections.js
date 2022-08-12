@@ -11,31 +11,45 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
 import styles from "../styles/Collections.css";
 import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
-import { NavLink } from "react-router-dom";
 import OptionsService from "../components/DropDownOptions";
 import useBreadcrumbs from "use-react-router-breadcrumbs";
 import AddIcon from "@mui/icons-material/Add";
 import ConfirmDialog from "../components/ConfirmDialog";
+import Dialog from "@material-ui/core/Dialog";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import IconButton from "@mui/material/IconButton";
 
 function ManageCollections(props) {
   const [collectionsList, setCollectionsList] = useState([]);
   const navigate = useNavigate();
   const [col, setCol] = useState([]);
   const breadcrumbs = useBreadcrumbs();
+  const [open, setOpen] = useState(false);
   const intl = useIntl();
   const [value, setValue] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [cascade, setCascade] = useState(false);
+  const [imageClicked, setImageClicked] = useState(null);
 
   if (localStorage.getItem("user")) {
     var user = localStorage.getItem("user")
     var userData = JSON.parse(user);
   }
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     const collections = ConfigService.getCollectionLists(userData.id)
       .then((response) => {
         setCollectionsList(response.data);
+        //console.log(response.data)
       })
       .catch((err) => {
         console.log(err);
@@ -134,13 +148,44 @@ function ManageCollections(props) {
             </Tooltip>
           </Grid>
         </Grid>
-        <Grid container spacing={10} className="container">
+        <Grid container spacing={5} className="container">
           {collectionsList.map((item) => (
             <Grid item key={item.id}>
               <Card
                 sx={{ height: 400, minWidth: 250, maxWidth: 250, boxShadow: 5 }}
                 ml={200}
               >
+                <Box ml={23.1} mb={-10}>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.tooltip.click_wish",
+                    })}
+                    placement="right"
+                    arrow
+                  >
+                    <IconButton
+                      id={item.id}
+                      color="primary"
+                      sx={{
+                        position: "relative",
+                        height: 25,
+                        width: 25,
+                        ml: -20.5,
+                        mb: 6,
+                      }}
+                      onClick={(e) => {
+                        //handleWishClick(e, item.own, item.wanted);
+                      }}
+                      className="button-wish"
+                    >
+                      {item.ambit ? (
+                        <VisibilityIcon fontSize="large"></VisibilityIcon>
+                      ) : (
+                        <VisibilityOffIcon fontSize="large"></VisibilityOffIcon>
+                      )}
+                    </IconButton>
+                  </Tooltip>               
+                </Box>
                 <CardContent>
                   {item.logo ? null : (
                     <Typography
@@ -160,6 +205,10 @@ function ManageCollections(props) {
                       image={require("../../../images/" + item.logo.path)}
                       alt={item.name}
                       className="card-collection"
+                      onClick={() => {
+                        setImageClicked(item.logo.path);
+                        handleOpen();
+                      }}
                       style={styles}
                     />
                   )}
@@ -238,24 +287,29 @@ function ManageCollections(props) {
                   >
                     <FormattedMessage id="app.button.export_module"></FormattedMessage>
                   </Button>
-                  {/*<Button
-                    variant="contained"
-                    color="success"
-                    onClick={() =>
-                      navigate("/collections/edit", {
-                        state: {
-                          item: item,
-                        },
-                      })
-                    }
-                  >
-                    <FormattedMessage id="app.button.edit"></FormattedMessage>
-                  </Button>*/}
                 </CardActions>
               </Card>
             </Grid>
           ))}
         </Grid>
+        {open && (
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            style={{ maxWidth: "100%", maxHeight: "100%" }}
+          >
+            <LazyLoadImage
+              alt=""
+              height={350}
+              src={
+                imageClicked !== ""
+                  ? require("../../../images/" + imageClicked)
+                  : null
+              }
+              width="100%"
+            />
+          </Dialog>
+        )}
       </Grid>
     </Box >
   );

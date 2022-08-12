@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Parser from "rss-parser";
 import "../styles/Dashboard.css";
-import xml from "xml-js";
+import differenceInHours from "date-fns/esm/differenceInHours/index.js";
+import differenceInMinutes from "date-fns/differenceInMinutes";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ConfigService from "../app/api/config.api";
 import CircleIcon from '@mui/icons-material/Circle';
@@ -45,25 +46,28 @@ export default function ViewFeeds(props) {
 
     const getHour = ((hour) => {
         const d = new Date(hour)
-        if (d.getHours() > 24) {
-            return d.get
+        const n = new Date()
+        const hoursDif = differenceInHours(n, d);
+        const minDif = differenceInMinutes(n, d);
+        if (hoursDif > 24) {
+            var totaldays = Math.round(hoursDif / 24);
+            return totaldays + "d"
         }
-        if (d.getHours() > 0 && d.getHours() < 24) {
-            return d.getHours() + "h"
+        if (hoursDif > 0 && hoursDif < 24) {
+            return hoursDif + "h"
         }
-        else {
-            return d.getMinutes() + "m"
+        if (hoursDif == 0) {
+
+            return minDif + "m"
         }
 
     })
-
 
     useEffect(() => {
         const feeds = ConfigService.getUserFeedsIDTitle(
             userData.id,
             location.state
         ).then((response) => {
-            //console.log(response.data);
             setFeedsList(response.data);
         });
     }, [location]);

@@ -93,7 +93,7 @@ function ViewCollection(props) {
             </Typography>
           )}
         </Grid>
-        <Grid container spacing={10} className="container" pt={3}>
+        <Grid container spacing={5} className="container" pt={3}>
           {collectionsList.map((item, index) => (
             <Grid item key={item.id}>
               <Card

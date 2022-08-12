@@ -22,6 +22,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@unicef/material-ui-currency-textfield": "^0.8.6",
     "axios": "^0.26.1",
+    "chart.js": "^3.9.1",
     "country-flag-icons": "^1.4.26",
     "crypto-browserify": "^3.12.0",
     "date-fns": "^2.28.0",
@@ -32,6 +33,7 @@
     "react": "^17.0.2",
     "react-avatar": "^4.0.0",
     "react-beautiful-dnd": "^13.1.0",
+    "react-chartjs-2": "^4.3.1",
     "react-currency-input-field": "^3.6.4",
     "react-datepicker": "^4.8.0",
     "react-dom": "^17.0.2",
@@ -76,6 +78,7 @@
     ]
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.4.0",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "https-browserify": "^1.0.0",
