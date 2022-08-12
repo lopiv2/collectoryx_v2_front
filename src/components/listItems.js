@@ -137,9 +137,9 @@ export default function MainListItems() {
           </ListItemIcon>
           <FormattedMessage id="app.sidemenu.collections"></FormattedMessage>
           {openCol ? (
-            <ExpandLess sx={{ ml: 4 }} />
+            <ExpandLess sx={{ ml: 2 }} />
           ) : (
-            <ExpandMore sx={{ ml: 4 }} />
+            <ExpandMore sx={{ ml: 2 }} />
           )}
         </ListItemButton>
         <Collapse in={openCol} timeout="auto" unmountOnExit>
@@ -197,9 +197,9 @@ export default function MainListItems() {
           </ListItemIcon>
           <FormattedMessage id="app.sidemenu.marketplace"></FormattedMessage>
           {openMarket ? (
-            <ExpandLess sx={{ ml: 4 }} />
+            <ExpandLess sx={{ ml: 2 }} />
           ) : (
-            <ExpandMore sx={{ ml: 4 }} />
+            <ExpandMore sx={{ ml: 2 }} />
           )}
         </ListItemButton>
         <Collapse in={openMarket} timeout="auto" unmountOnExit>
@@ -311,9 +311,9 @@ export default function MainListItems() {
           </ListItemIcon>
           <FormattedMessage id="app.sidemenu.feeds"></FormattedMessage>
           {openFeeds ? (
-            <ExpandLess sx={{ ml: 4 }} />
+            <ExpandLess sx={{ ml: 2 }} />
           ) : (
-            <ExpandMore sx={{ ml: 4 }} />
+            <ExpandMore sx={{ ml: 2 }} />
           )}
           {totalFeeds > 0 && (
             <Grid container direction="row-reverse">

@@ -45,6 +45,20 @@ function ManageCollections(props) {
     setOpen(false);
   };
 
+  const handleAmbitClick = (event, ambit) => {
+    const toggle = ConfigService.toggleCollectionAmbit(
+      event.currentTarget.id,
+      ambit
+    ).then((response) => {
+      var index = collectionsList.findIndex(
+        (collectionsList) => collectionsList.id === response.data.id
+      );
+      let newItems = [...collectionsList];
+      newItems[index].ambit = response.data.ambit;
+      setCollectionsList(newItems);
+    });
+  };
+
   useEffect(() => {
     const collections = ConfigService.getCollectionLists(userData.id)
       .then((response) => {
@@ -158,7 +172,7 @@ function ManageCollections(props) {
                 <Box ml={23.1} mb={-10}>
                   <Tooltip
                     title={intl.formatMessage({
-                      id: "app.tooltip.click_wish",
+                      id: "app.tooltip.click_public",
                     })}
                     placement="right"
                     arrow
@@ -170,18 +184,18 @@ function ManageCollections(props) {
                         position: "relative",
                         height: 25,
                         width: 25,
-                        ml: -20.5,
+                        ml: -22.5,
                         mb: 6,
                       }}
                       onClick={(e) => {
-                        //handleWishClick(e, item.own, item.wanted);
+                        handleAmbitClick(e, item.ambit);
                       }}
                       className="button-wish"
                     >
                       {item.ambit ? (
-                        <VisibilityIcon fontSize="large"></VisibilityIcon>
+                        <VisibilityIcon  color="success" fontSize="large"></VisibilityIcon>
                       ) : (
-                        <VisibilityOffIcon fontSize="large"></VisibilityOffIcon>
+                        <VisibilityOffIcon htmlColor="red" fontSize="large"></VisibilityOffIcon>
                       )}
                     </IconButton>
                   </Tooltip>               

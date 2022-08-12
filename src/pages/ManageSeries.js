@@ -15,8 +15,8 @@ import { TextField, MenuItem } from "@mui/material";
 import { useIntl } from "react-intl";
 import { Avatar } from "@mui/material";
 import * as Yup from "yup";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import ConfirmDialog from "../components/ConfirmDialog";
 
 function ManageSeries(props) {
@@ -36,23 +36,21 @@ function ManageSeries(props) {
   }
 
   const handleDeleteClick = () => {
-    const deleteItem = ConfigService.deleteSerie(value).then(
-      (response) => {
-        if (response.data === true) {
-          toast.success(
-            <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
-            { theme: "colored" }
-          );
-          var index = collectionSeriesList.findIndex(
-            (collectionSeriesList) => collectionSeriesList.id === value
-          );
-          if (index > -1) {
-            collectionSeriesList.splice(index, 1);
-            setCollectionSeriesList([...collectionSeriesList])
-          }
+    const deleteItem = ConfigService.deleteSerie(value).then((response) => {
+      if (response.data === true) {
+        toast.success(
+          <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
+          { theme: "colored" }
+        );
+        var index = collectionSeriesList.findIndex(
+          (collectionSeriesList) => collectionSeriesList.id === value
+        );
+        if (index > -1) {
+          collectionSeriesList.splice(index, 1);
+          setCollectionSeriesList([...collectionSeriesList]);
         }
       }
-    );
+    });
   };
 
   useEffect(() => {
@@ -114,7 +112,10 @@ function ManageSeries(props) {
             { theme: "colored" }
           );
         }
-        //console.log(response);
+        setCollectionSeriesList((collectionSeriesList) => [
+          ...collectionSeriesList,
+          response.data,
+        ]);
       });
     }
   };
@@ -133,22 +134,22 @@ function ManageSeries(props) {
     {
       icon: EditIcon,
       tooltip: intl.formatMessage({ id: "app.button.edit" }),
-      onClick: (event, rowData) => alert("You saved " + rowData.name)
+      onClick: (event, rowData) => alert("You saved " + rowData.name),
     },
-    rowData => ({
+    (rowData) => ({
       icon: DeleteIcon,
       tooltip: intl.formatMessage({ id: "app.button.delete" }),
       onClick: (event, rowData) => {
         setValue(rowData.id);
         setConfirmOpen(true);
-      }
-    })
-  ]
+      },
+    }),
+  ];
 
   const options = {
     sorting: true,
     exportButton: true,
-    actionsColumnIndex: -1
+    actionsColumnIndex: -1,
   };
 
   const columns = [
@@ -171,19 +172,20 @@ function ManageSeries(props) {
     let cols = {
       id: item.id,
       name: item.name,
-      logo: item.logo === null ? (
-        <Avatar
-          variant="rounded"
-          src={require("../images/no-photo-available.png")}
-          sx={{ width: 100, height: 35 }}
-        ></Avatar>
-      ) : (
-        <Avatar
-          variant="rounded"
-          src={require("../../../images/" + item.logo.path)}
-          sx={{ width: 100, height: 35 }}
-        ></Avatar>
-      ),
+      logo:
+        item.logo === null ? (
+          <Avatar
+            variant="rounded"
+            src={require("../images/no-photo-available.png")}
+            sx={{ width: 100, height: 35 }}
+          ></Avatar>
+        ) : (
+          <Avatar
+            variant="rounded"
+            src={require("../../../images/" + item.logo.path)}
+            sx={{ width: 100, height: 35 }}
+          ></Avatar>
+        ),
     };
     return cols;
   });

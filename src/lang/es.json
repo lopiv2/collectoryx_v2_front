@@ -159,6 +159,7 @@
   "app.tooltip.click_image": "Click en imagen para ampliar",
   "app.tooltip.click_own": "Click para coleccionar o no",
   "app.tooltip.click_wish": "Click para añadir a deseados",
+  "app.tooltip.click_public": "Click para hacer pública o no",
   "app.tooltip.grid_view": "Cuadricula",
   "app.tooltip.list_view": "Tabla",
   "app.tooltip.search_google": "Buscar imagen en Google",

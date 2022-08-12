@@ -27,6 +27,7 @@ const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
 const IMAGES_URL = `${API_URL}/images`;
+const TOGGLE_COLLECTION_AMBIT_URL = `${API_URL}/toggle-collection-ambit`;
 const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
 const UPDATE_ITEM_URL = `${API_URL}/update-item`;
@@ -324,6 +325,19 @@ const putImage = (name, image) => {
     });
 };
 
+const toggleCollectionAmbit = (id, ambit) => {
+  const data = {
+    id: id,
+    ambit: ambit,
+  };
+  return axios
+    .post(TOGGLE_COLLECTION_AMBIT_URL, data, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response);
+      return response;
+    });
+};
+
 const toggleItemOwn = (id, own, wanted) => {
   const data = {
     id: id,
@@ -409,6 +423,7 @@ const ConfigService = {
   getCollectionSeries,
   getImages,
   putImage,
+  toggleCollectionAmbit,
   toggleItemOwn,
   toggleItemWish,
   updateItem,
