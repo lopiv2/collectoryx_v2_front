@@ -32,7 +32,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { ThemeProvider, createTheme } from "@material-ui/core";
 import { AppContext } from "./AppContext";
 
-export default function MainListItems() {
+export default function MainListItems(props) {
   const [open, setOpen] = useState(false);
   const [openCol, setOpenCol] = useState(false);
   const [openMarket, setOpenMarket] = useState(false);
@@ -59,9 +59,6 @@ export default function MainListItems() {
       subtitle1: {
         fontSize: 12,
       },
-      subtitle1: {
-        fontSize: 12,
-      },
       body1: {
         fontWeight: 500,
       },
@@ -81,7 +78,6 @@ export default function MainListItems() {
         console.log(err);
       });
   }, [feedsList]);
-
 
   useEffect(() => {
     feedsList.map((feed) => {
@@ -118,7 +114,10 @@ export default function MainListItems() {
         <NavLink
           className="nav-link"
           to="/"
-          style={{ textDecoration: "none", color: "black" }}
+          style={{
+            textDecoration: "none",
+            color: props.theme.palette.text.primary,
+          }}
         >
           <ListItemButton>
             <ListItemIcon>
@@ -147,7 +146,10 @@ export default function MainListItems() {
             <NavLink
               className="nav-link"
               to="/collections"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
             >
               <ListItemButton
                 sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
@@ -164,7 +166,10 @@ export default function MainListItems() {
             <NavLink
               className="nav-link"
               to="/collections/manage"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
             >
               <ListItemButton
                 sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
@@ -178,7 +183,10 @@ export default function MainListItems() {
             <NavLink
               className="nav-link"
               to="/collections/manage-series"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
             >
               <ListItemButton
                 sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
@@ -207,7 +215,10 @@ export default function MainListItems() {
             <NavLink
               className="nav-link"
               to="/market/license"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
             >
               <ListItemButton
                 sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
@@ -224,7 +235,10 @@ export default function MainListItems() {
             <NavLink
               className="nav-link"
               to="/collections/manage"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
             >
               <ListItemButton
                 sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
@@ -238,7 +252,10 @@ export default function MainListItems() {
             <NavLink
               className="nav-link"
               to="/collections/manage-series"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
             >
               <ListItemButton
                 sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
@@ -269,7 +286,10 @@ export default function MainListItems() {
             <NavLink
               className="nav-link"
               to="/config/general"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
             >
               <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>
                 <ListItemIcon>
@@ -284,16 +304,28 @@ export default function MainListItems() {
               </ListItemIcon>
               <FormattedMessage id="app.sidemenu.options.logs"></FormattedMessage>
             </ListItemButton>
-            <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>
-              <ListItemIcon>
-                <ScreenshotMonitorIcon />
-              </ListItemIcon>
-              <FormattedMessage id="app.sidemenu.options.ui"></FormattedMessage>
-            </ListItemButton>
+            <NavLink
+              className="nav-link"
+              to="/config/interface"
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
+            >
+              <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>
+                <ListItemIcon>
+                  <ScreenshotMonitorIcon />
+                </ListItemIcon>
+                <FormattedMessage id="app.sidemenu.options.ui"></FormattedMessage>
+              </ListItemButton>
+            </NavLink>
             <NavLink
               className="nav-link"
               to="/feeds/manage"
-              style={{ textDecoration: "none", color: "black" }}
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
             >
               <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>
                 <ListItemIcon>
@@ -329,16 +361,22 @@ export default function MainListItems() {
         </ListItemButton>
         <Collapse in={openFeeds} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {isLoading == false && feedsList ? (
+            {isLoading === false && feedsList ? (
               feedsList.map((feed, index) => (
                 <NavLink
                   key={index}
                   className="nav-link"
                   state={feed.name}
                   to={{ pathname: `/feeds/${feed.name}` }}
-                  style={{ textDecoration: "none", color: "black" }}
+                  style={{
+                    textDecoration: "none",
+                    color: props.theme.palette.text.primary,
+                  }}
                 >
-                  <ListItem disableGutters style={{ paddingTop: 0, paddingBottom: 0, margin: 0 }}>
+                  <ListItem
+                    disableGutters
+                    style={{ paddingTop: 0, paddingBottom: 0, margin: 0 }}
+                  >
                     <ListItemButton
                       sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
                     >

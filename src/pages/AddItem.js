@@ -46,23 +46,21 @@ function AddItem(props) {
   const [img, setImg] = useState();
   const [imgGallerySelected, setImgGallerySelected] = useState(false);
 
-
   const handleChangeOwn = (event) => {
     setOwn(event.target.checked);
   };
 
   const handleImageClick = () => {
-    setPreview(require("../../../images/" + img));
+    setPreview(require("../../public/images/" + img));
     setImgGallerySelected(true);
   };
 
   const searchWebClick = (query) => {
-    console.log(query)
-    const collectionSeries = ConfigService.getImages(query)
-      .then((response) => {
-        console.log(response.data)
-      });
-  }
+    console.log(query);
+    const collectionSeries = ConfigService.getImages(query).then((response) => {
+      console.log(response.data);
+    });
+  };
 
   useEffect(() => {
     const collectionSeries = ConfigService.getCollectionSeries(
@@ -154,8 +152,18 @@ function AddItem(props) {
 
   const newItemSchema = Yup.object().shape({
     name: Yup.string()
-      .min(2, "Too Short!")
-      .max(50, "Too Long!")
+      .min(
+        5,
+        intl.formatMessage({
+          id: "app.form.too_short",
+        })
+      )
+      .max(
+        50,
+        intl.formatMessage({
+          id: "app.form.too_long",
+        })
+      )
       .required(
         <FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>
       ),
@@ -302,7 +310,7 @@ function AddItem(props) {
                             color="primary"
                             variant="contained"
                             onClick={(e) => {
-                              searchWebClick(values.name)
+                              searchWebClick(values.name);
                             }}
                           >
                             <GoogleIcon></GoogleIcon>

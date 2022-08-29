@@ -1,7 +1,79 @@
 import { Context } from "../components/Wrapper";
 import { useContext } from "react";
 import OptionsService from "../components/DropDownOptions";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { green, blue, grey } from "@mui/material/colors";
 //import axios from "axios";
+
+const CreateTheme = (userData) => {
+  const currTheme = createTheme({
+    palette: {
+      mode: userData.theme.mode,
+      primary: {
+        main: userData.theme.topBarColor, //Barra top
+        light: "#42a5f5",
+        dark: blue[50],
+        contrastText: "#000000",
+      },
+      secondary: {
+        main: "#9c27b0",
+        light: "#ba68c8",
+        dark: green[50],
+        contrastText: "#fff",
+      },
+      text: {
+        primary: userData.theme.primaryTextColor, //Texto primario
+        secondary: userData.theme.secondaryTextColor, //Texto Secundario
+        disabled: green[50],
+      },
+      background: {
+        paper: userData.theme.sideBarColor, //Barra lateral y cartas
+        default: green[50],
+      },
+    },
+    components: {
+      MuiContainer: {
+        //Sobreescribe el estilo del contenedor
+        styleOverrides: {
+          root: {
+            backgroundColor: userData.theme.backgroundColor,
+            backgroundImage: "url(" + userData.theme.backgroundImage + ")",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center center",
+            backgroundSize: "cover",
+            backgroundAttachment: "fixed",
+            height: "100%",
+          },
+        },
+      },
+      MuiListItemIcon: {
+        styleOverrides: {
+          root: {
+            color: userData.theme.listItemColor,
+            paddingTop: "6px",
+            paddingBottom: "6px",
+          },
+        },
+      },
+    },
+    overrides: {
+      MuiCssBaseline: {
+        "@global": {
+          body: {
+            backgroundColor: userData.theme.backgroundColor,
+            //backgroundImage: "url(" + userData.theme.backgroundImage + ")",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center center",
+            backgroundSize: "cover",
+            backgroundAttachment: "fixed",
+            height: "100%",
+          },
+        },
+      },
+    },
+  });
+  return currTheme;
+};
 
 const CurrencyChecker = () => {
   const context = useContext(Context);
@@ -26,6 +98,17 @@ const GetCurrencySymbolLocale = () => {
     .trim();
 };
 
+const setToLocalStorage = (key, value) => {
+  localStorage.setItem(key, JSON.stringify(value));
+};
+
+const getFromLocalStorage = (key) => {
+  const value = localStorage.getItem(key);
+  if (value) {
+    return JSON.parse(value);
+  }
+};
+
 function getImagePaths(directory) {
   let images = [];
   directory.keys().map((item, index) => images.push(item.replace("./", "")));
@@ -40,4 +123,12 @@ const cleanUrl = (url) => {
   return cleanedUrl;
 };
 
-export { cleanUrl, CurrencyChecker, GetCurrencySymbolLocale, getImagePaths };
+export {
+  cleanUrl,
+  CreateTheme,
+  CurrencyChecker,
+  GetCurrencySymbolLocale,
+  getFromLocalStorage,
+  getImagePaths,
+  setToLocalStorage,
+};

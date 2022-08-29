@@ -39,7 +39,7 @@ function AddCollection() {
   };
 
   const handleImageClick = () => {
-    setPreview(require("../../../images/" + img));
+    setPreview(require("../../public/images/" + img));
     setImgGallerySelected(true);
   };
 

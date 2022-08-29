@@ -287,7 +287,7 @@ function DisplayCollection(props) {
             {item.image != null ? (
               <Avatar
                 variant="rounded"
-                src={require("../../../images/" + item.image.path)}
+                src={require("../../public/images/" + item.image.path)}
                 sx={{ width: 100, height: 35 }}
               />
             ) : (
@@ -535,7 +535,7 @@ function DisplayCollection(props) {
                                   component="img"
                                   width="500%"
                                   height="220"
-                                  image={require("../../../images/" +
+                                  image={require("../../public/images/" +
                                     item.image.path)}
                                   alt={item.name}
                                   className="card-collection"
@@ -625,7 +625,7 @@ function DisplayCollection(props) {
               height={350}
               src={
                 imageClicked !== ""
-                  ? require("../../../images/" + imageClicked)
+                  ? require("../../public/images/" + imageClicked)
                   : null
               }
               width="100%"

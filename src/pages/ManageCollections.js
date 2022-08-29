@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Tooltip } from "@mui/material";
+import {
+  Typography,
+  Tooltip,
+  RadioGroup,
+  Radio,
+  FormControlLabel,
+} from "@mui/material";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
@@ -16,10 +22,12 @@ import useBreadcrumbs from "use-react-router-breadcrumbs";
 import AddIcon from "@mui/icons-material/Add";
 import ConfirmDialog from "../components/ConfirmDialog";
 import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
+import PropTypes from "prop-types";
 
 function ManageCollections(props) {
   const [collectionsList, setCollectionsList] = useState([]);
@@ -27,6 +35,7 @@ function ManageCollections(props) {
   const [col, setCol] = useState([]);
   const breadcrumbs = useBreadcrumbs();
   const [open, setOpen] = useState(false);
+  const [openNew, setOpenNew] = useState(false);
   const intl = useIntl();
   const [value, setValue] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -34,9 +43,99 @@ function ManageCollections(props) {
   const [imageClicked, setImageClicked] = useState(null);
 
   if (localStorage.getItem("user")) {
-    var user = localStorage.getItem("user")
+    var user = localStorage.getItem("user");
     var userData = JSON.parse(user);
   }
+
+  function SimpleDialog(props) {
+    const { onClose, selectedValue, open } = props;
+    const [templateSelected, setTemplateSelected] = useState("new");
+
+    const handleClose = () => {
+      onClose(selectedValue);
+    };
+
+    const checkOptions = () => {
+      if (templateSelected === "new") {
+        navigate("/collections/add");
+      }
+      if (templateSelected === "file") {
+        navigate("/collections/import-file");
+      }
+    };
+
+    return (
+      <Dialog onClose={handleClose} open={open}>
+        <DialogTitle>
+          <FormattedMessage id="app.collection.select_option"></FormattedMessage>
+        </DialogTitle>
+        <Grid container>
+          <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue={templateSelected}
+            name="radio-buttons-group"
+            value={templateSelected}
+            onChange={(e) => {
+              setTemplateSelected(e.target.value);
+            }}
+          >
+            <Grid item ml={2}>
+              <FormControlLabel
+                value="new"
+                control={<Radio />}
+                label={intl.formatMessage({
+                  id: "app.collection.add_collection_empty",
+                })}
+              />
+            </Grid>
+            <Grid item ml={2}>
+              <FormControlLabel
+                value="file"
+                control={<Radio />}
+                label={intl.formatMessage({
+                  id: "app.collection.add_collection_import",
+                })}
+              />
+            </Grid>
+            <Grid item ml={2}>
+              <FormControlLabel
+                value="shop"
+                control={<Radio />}
+                label={intl.formatMessage({
+                  id: "app.collection.add_collection_import_shop",
+                })}
+              />
+            </Grid>
+            <Grid container style={{ justifyContent: "center" }}>
+              <Grid ml={2} mb={2}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={checkOptions}
+                >
+                  <FormattedMessage id="app.button.accept"></FormattedMessage>
+                </Button>
+              </Grid>
+              <Grid ml={2}>
+                <Button variant="contained" color="error" onClick={onClose}>
+                  <FormattedMessage id="app.button.cancel"></FormattedMessage>
+                </Button>
+              </Grid>
+            </Grid>
+          </RadioGroup>
+        </Grid>
+      </Dialog>
+    );
+  }
+
+  SimpleDialog.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+  };
+
+  const handleCloseNewCol = () => {
+    setOpenNew(false);
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -96,7 +195,7 @@ function ManageCollections(props) {
   }, [collectionsList]);
 
   const handleDeleteClick = () => {
-    console.log(cascade)
+    console.log(cascade);
     const deleteColl = ConfigService.deleteCollection(value, cascade).then(
       (response) => {
         if (response.data === true) {
@@ -122,9 +221,9 @@ function ManageCollections(props) {
       (f) => f.value === template
     );
     if (tempArray !== undefined) {
-      return (tempArray.label.props.id)
+      return tempArray.label.props.id;
     }
-  }
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -155,7 +254,10 @@ function ManageCollections(props) {
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => navigate("/collections/add")}
+                onClick={() => {
+                  setOpenNew(true);
+                }}
+                /*onClick={() => navigate("/collections/add")}*/
               >
                 <AddIcon></AddIcon>
               </Button>
@@ -193,12 +295,18 @@ function ManageCollections(props) {
                       className="button-wish"
                     >
                       {item.ambit ? (
-                        <VisibilityIcon  color="success" fontSize="large"></VisibilityIcon>
+                        <VisibilityIcon
+                          color="success"
+                          fontSize="large"
+                        ></VisibilityIcon>
                       ) : (
-                        <VisibilityOffIcon htmlColor="red" fontSize="large"></VisibilityOffIcon>
+                        <VisibilityOffIcon
+                          htmlColor="red"
+                          fontSize="large"
+                        ></VisibilityOffIcon>
                       )}
                     </IconButton>
-                  </Tooltip>               
+                  </Tooltip>
                 </Box>
                 <CardContent>
                   {item.logo ? null : (
@@ -216,7 +324,7 @@ function ManageCollections(props) {
                     <CardMedia
                       component="img"
                       width="100%"
-                      image={require("../../../images/" + item.logo.path)}
+                      image={require("../../public/images/" + item.logo.path)}
                       alt={item.name}
                       className="card-collection"
                       onClick={() => {
@@ -230,10 +338,13 @@ function ManageCollections(props) {
                     align="center"
                     color="text.secondary"
                     style={{ fontWeight: 100 }}
-                  >{getTemplateLabel(item.template) !== undefined ? intl.formatMessage({
-                    id: getTemplateLabel(item.template),
-                  }) : null}</Typography>
-
+                  >
+                    {getTemplateLabel(item.template) !== undefined
+                      ? intl.formatMessage({
+                          id: getTemplateLabel(item.template),
+                        })
+                      : null}
+                  </Typography>
 
                   <Typography
                     align="center"
@@ -246,8 +357,8 @@ function ManageCollections(props) {
                   <Typography align="center" color="text.secondary">
                     {col[col.findIndex((e) => e.id === item.id)]
                       ? col[col.findIndex((e) => e.id === item.id)].collected +
-                      "/" +
-                      col[col.findIndex((e) => e.id === item.id)].totalItems
+                        "/" +
+                        col[col.findIndex((e) => e.id === item.id)].totalItems
                       : null}
                   </Typography>
                   <BorderLinearProgressBar
@@ -255,12 +366,12 @@ function ManageCollections(props) {
                     value={
                       col[col.findIndex((e) => e.id === item.id)]
                         ? +Number.parseFloat(
-                          (col[col.findIndex((e) => e.id === item.id)]
-                            .collected /
-                            col[col.findIndex((e) => e.id === item.id)]
-                              .totalItems) *
-                          100
-                        ).toFixed(2)
+                            (col[col.findIndex((e) => e.id === item.id)]
+                              .collected /
+                              col[col.findIndex((e) => e.id === item.id)]
+                                .totalItems) *
+                              100
+                          ).toFixed(2)
                         : 0
                     }
                   ></BorderLinearProgressBar>
@@ -294,10 +405,7 @@ function ManageCollections(props) {
                   <Button
                     variant="contained"
                     color="success"
-                    onClick={() =>
-                      console.log("Exportar")
-
-                    }
+                    onClick={() => console.log("Exportar")}
                   >
                     <FormattedMessage id="app.button.export_module"></FormattedMessage>
                   </Button>
@@ -317,15 +425,16 @@ function ManageCollections(props) {
               height={350}
               src={
                 imageClicked !== ""
-                  ? require("../../../images/" + imageClicked)
+                  ? require("../../public/images/" + imageClicked)
                   : null
               }
               width="100%"
             />
           </Dialog>
         )}
+        <SimpleDialog open={openNew} onClose={handleCloseNewCol} />
       </Grid>
-    </Box >
+    </Box>
   );
 }
 

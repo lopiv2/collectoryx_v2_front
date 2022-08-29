@@ -26,7 +26,7 @@ const LicenseTypes = [
   {
     label: "Lifetime",
     value: "Lifetime",
-    price: 150
+    price: 250
   },
 ]
 

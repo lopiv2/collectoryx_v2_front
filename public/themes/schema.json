@@ -1,0 +1,127 @@
+{
+  "data": {
+    "prueba": {
+      "palette": {
+        "primary": {
+          "main": "#e65100"
+        }
+      },
+      "typography": {
+        "fontFamily": ["Tinos", "Ubuntu"]
+      },
+      "overrides": {
+        "MuiCssBaseline": {
+          "@global": {
+            "body": {
+              "backgroundImage": "url(https://designshack.net/wp-content/uploads/gradient-background.jpg)"
+            }
+          }
+        }
+      }
+    },
+    "darkTheme": {
+      "palette": {
+        "mode": "dark",
+        "primary": {
+          "main": "#1976d2",
+          "light": "#42a5f5",
+          "contrastText": "#fff"
+        },
+        "secondary": {
+          "main": "#9c27b0",
+          "light": "#ba68c8",
+          "contrastText": "#fff"
+        },
+        "text": {
+          "primary": "#fff",
+          "secondary": "#ebebeb"
+        },
+        "background": {
+          "paper": "#000000"
+        }
+      },
+      "components": {
+        "MuiContainer": {
+          "styleOverrides": {
+            "root": {
+              "backgroundColor": "#1f262a",
+              "backgroundImage": "url(https://designshack.net/wp-content/uploads/gradient-background.jpg)",
+              "backgroundRepeat": "no-repeat",
+              "backgroundPosition": "center center",
+              "backgroundSize": "cover",
+              "backgroundAttachment": "fixed",
+              "height": "100%"
+            }
+          }
+        }
+      },
+      "overrides": {
+        "MuiCssBaseline": {
+          "@global": {
+            "body": {
+              "backgroundColor": "#1f262a",
+              "backgroundImage": "url(https://designshack.net/wp-content/uploads/gradient-background.jpg)",
+              "backgroundRepeat": "no-repeat",
+              "backgroundPosition": "center center",
+              "backgroundSize": "cover",
+              "backgroundAttachment": "fixed",
+              "height": "100%"
+            }
+          }
+        }
+      }
+    },
+    "lightTheme": {
+      "palette": {
+        "mode": "light",
+        "primary": {
+          "main": "#1976d2",
+          "light": "#42a5f5",
+          "contrastText": "#000000"
+        },
+        "secondary": {
+          "main": "#9c27b0",
+          "light": "#ba68c8",
+          "contrastText": "#fff"
+        },
+        "text": {
+          "primary": "#000000",
+          "secondary": "rgba(0,0,0,0.6)"
+        },
+        "background": {
+          "paper": "#fff"
+        }
+      },
+      "components": {
+        "MuiContainer": {
+          "styleOverrides": {
+            "root": {
+              "backgroundColor": "#1f262a",
+              "backgroundImage": "url(https://designshack.net/wp-content/uploads/gradient-background.jpg)",
+              "backgroundRepeat": "no-repeat",
+              "backgroundPosition": "center center",
+              "backgroundSize": "cover",
+              "backgroundAttachment": "fixed",
+              "height": "100%"
+            }
+          }
+        }
+      },
+      "overrides": {
+        "MuiCssBaseline": {
+          "@global": {
+            "body": {
+              "backgroundColor": "#1f262a",
+              "backgroundImage": "url(https://designshack.net/wp-content/uploads/gradient-background.jpg)",
+              "backgroundRepeat": "no-repeat",
+              "backgroundPosition": "center center",
+              "backgroundSize": "cover",
+              "backgroundAttachment": "fixed",
+              "height": "100%"
+            }
+          }
+        }
+      }
+    }
+  }
+}

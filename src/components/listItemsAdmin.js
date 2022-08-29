@@ -23,7 +23,7 @@ import "../styles/Dashboard.css";
 import { FormattedMessage } from "react-intl";
 import { NavLink } from "react-router-dom";
 
-export default function AdminListItems() {
+export default function AdminListItems(props) {
   const [open, setOpen] = useState(false);
   const [openCol, setOpenCol] = useState(false);
   const [openMarket, setOpenMarket] = useState(false);
@@ -49,7 +49,7 @@ export default function AdminListItems() {
       <NavLink
         className="nav-link"
         to="/"
-        style={{ textDecoration: "none", color: "black" }}
+        style={{ textDecoration: "none", color: props.theme.palette.text.primary }}
       >
         <ListItemButton>
           <ListItemIcon>
@@ -75,7 +75,7 @@ export default function AdminListItems() {
           <NavLink
             className="nav-link"
             to="/collections"
-            style={{ textDecoration: "none", color: "black" }}
+            style={{ textDecoration: "none", color: props.theme.palette.text.primary }}
           >
             <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
               <ListItemIcon>
@@ -90,7 +90,7 @@ export default function AdminListItems() {
           <NavLink
             className="nav-link"
             to="/collections/manage"
-            style={{ textDecoration: "none", color: "black" }}
+            style={{ textDecoration: "none", color: props.theme.palette.text.primary }}
           >
             <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
               <ListItemIcon>
@@ -102,7 +102,7 @@ export default function AdminListItems() {
           <NavLink
             className="nav-link"
             to="/collections/manage-series"
-            style={{ textDecoration: "none", color: "black" }}
+            style={{ textDecoration: "none", color: props.theme.palette.text.primary }}
           >
             <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
               <ListItemIcon>
@@ -122,7 +122,7 @@ export default function AdminListItems() {
       <NavLink
         className="nav-link"
         to="/admin/keygen"
-        style={{ textDecoration: "none", color: "black" }}
+        style={{ textDecoration: "none", color: props.theme.palette.text.primary }}
       >
         <ListItemButton sx={{ margin: "5px 0" }}>
           <ListItemIcon>
@@ -147,7 +147,7 @@ export default function AdminListItems() {
           <NavLink
             className="nav-link"
             to="/collections"
-            style={{ textDecoration: "none", color: "black" }}
+            style={{ textDecoration: "none", color: props.theme.palette.text.primary }}
           >
             <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
               <ListItemIcon>
@@ -162,25 +162,13 @@ export default function AdminListItems() {
           <NavLink
             className="nav-link"
             to="/collections/manage"
-            style={{ textDecoration: "none", color: "black" }}
+            style={{ textDecoration: "none", color: props.theme.palette.text.primary }}
           >
             <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
               <ListItemIcon>
                 <ConstructionIcon />
               </ListItemIcon>
               <FormattedMessage id="app.sidemenu.collections.admin"></FormattedMessage>
-            </ListItemButton>
-          </NavLink>
-          <NavLink
-            className="nav-link"
-            to="/collections/manage-series"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <ListItemButton sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}>
-              <ListItemIcon>
-                <BallotIcon />
-              </ListItemIcon>
-              <FormattedMessage id="app.sidemenu.collections.lists"></FormattedMessage>
             </ListItemButton>
           </NavLink>
         </List>
@@ -203,7 +191,7 @@ export default function AdminListItems() {
           <NavLink
             className="nav-link"
             to="/config/general"
-            style={{ textDecoration: "none", color: "black" }}
+            style={{ textDecoration: "none", color: props.theme.palette.text.primary }}
           >
             <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>
               <ListItemIcon>

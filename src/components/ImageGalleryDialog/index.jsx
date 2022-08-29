@@ -21,7 +21,7 @@ const ImageGalleryDialog = (props) => {
   useEffect(() => {
     if (open === true) {
       const directory = require.context(
-        "../../../../images/",
+        "../../../public/images/",
         false,
         /\.(png|jpe?g|svg)$/
       );
@@ -87,7 +87,7 @@ const ImageGalleryDialog = (props) => {
                             ? avatarStyleClicked
                             : avatarStyleHover
                         }
-                        src={require("../../../../images/" + i)} // use normal <img> attributes as props
+                        src={require("../../../public/images/" + i)} // use normal <img> attributes as props
                         width="100%"
                         onClick={(e) => {
                           setImageClicked(i);

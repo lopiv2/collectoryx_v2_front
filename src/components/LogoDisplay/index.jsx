@@ -9,7 +9,7 @@ export default function LogoDisplay(image) {
         <LazyLoadImage
             alt=""
             height={150}
-            src={require('../../../../images/' + image)} // use normal <img> attributes as props
+            src={require('../../../public/images/' + image)} // use normal <img> attributes as props
             width="100%" />
     )
 }

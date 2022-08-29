@@ -12,17 +12,16 @@ const CREATE_COLLECTION_URL = `${API_URL}/create-collection`;
 const CREATE_ITEM_URL = `${API_URL}/create-item`;
 const CREATE_SERIE_URL = `${API_URL}/create-serie`;
 const CREATE_FEED_URL = `${API_URL}/feeds/create-feed`;
-const DELETE_FEED_ID_URL = (id) =>
-  `${API_URL}/feeds/delete-feed/${id}`;
-  const DELETE_SERIE_ID_URL = (id) =>
-  `${API_URL}/delete-serie/${id}`;
+const DELETE_FEED_ID_URL = (id) => `${API_URL}/feeds/delete-feed/${id}`;
+const DELETE_SERIE_ID_URL = (id) => `${API_URL}/delete-serie/${id}`;
 const DELETE_COLLECTION_ITEM_ID_URL = (id) =>
   `${API_URL}/delete-collection-item/${id}`;
 const DELETE_COLLECTION_ID_URL = (id) => `${API_URL}/delete-collection/${id}`;
 const DELETE_COLLECTION_ID_URL_CASCADE = (id) =>
   `${API_URL}/delete-collection-cascade/${id}`;
 const GET_COLLECTION_ITEM_ID_URL = (id) => `${API_URL}/get-item/${id}`;
-const GET_COLLECTION_ITEMS_YEAR_ID_URL = (id) => `${API_URL}/get-items-per-year/${id}`;
+const GET_COLLECTION_ITEMS_YEAR_ID_URL = (id) =>
+  `${API_URL}/get-items-per-year/${id}`;
 const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
@@ -33,6 +32,10 @@ const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
 const UPDATE_ITEM_URL = `${API_URL}/update-item`;
 const VIEW_COLLECTIONS_URL = (id) => `${API_URL}/view-collections/${id}`;
 const VIEW_SERIES_URL = (id) => `${API_URL}/view-series/${id}`;
+const CREATE_THEMES_URL = `${API_URL}/config/create-theme/`;
+const VIEW_THEMES_URL = `${API_URL}/config/get-themes/`;
+const CONFIG_URL = (id) => `${API_URL}/config/get-config/${id}`;
+const POST_APPEARANCE_CONFIG = `${API_URL}/config/save`;
 const VIEW_FEEDS_URL = (id) => `${API_URL}/feeds/view/${id}`;
 const VIEW_FEEDS_READ_URL = (id) => `${API_URL}/feeds/get-all/${id}`;
 const VIEW_FEEDS_READ_URL_ID = (id, title) =>
@@ -126,7 +129,7 @@ const createFeed = (userId, name, url, cleanUrl) => {
     userId: userId,
     name: name,
     url: url,
-    cleanUrl: cleanUrl
+    cleanUrl: cleanUrl,
   };
   //console.log(data)
   return axios
@@ -165,6 +168,27 @@ const createSerie = (name, collection, file) => {
         console.log(error.response.status);
         return error.response;
       }
+    });
+};
+
+const createTheme = (id, values) => {
+  const data = {
+    userId: id,
+    name: values.name,
+    mode: "light",
+    topBarColor: values.topbar.css.backgroundColor,
+    primaryTextColor: values.primary.css.backgroundColor,
+    secondaryTextColor: values.secondary.css.backgroundColor,
+    listItemColor: values.listItem.css.backgroundColor,
+    sideBarColor: values.sidebar.css.backgroundColor,
+    backgroundImage: values.image,
+    backgroundColor: values.backColor.css.backgroundColor,
+  };
+  return axios
+    .post(CREATE_THEMES_URL, data, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
     });
 };
 
@@ -226,6 +250,15 @@ const getAllUserReadFeeds = (id) => {
     });
 };
 
+const getAllThemes = () => {
+  return axios
+    .get(VIEW_THEMES_URL, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
 //Obtiene todos los Feeds por titulo clickado y usuario
 const getUserFeedsIDTitle = (id, title) => {
   return axios
@@ -273,7 +306,7 @@ const getCollectionLists = (id) => {
 
 const getCollectionItemsPerYear = (id) => {
   return axios
-    .get(GET_COLLECTION_ITEMS_YEAR_ID_URL(id), { headers: authHeader() }) 
+    .get(GET_COLLECTION_ITEMS_YEAR_ID_URL(id), { headers: authHeader() })
     .then((response) => {
       return response;
     });
@@ -306,6 +339,24 @@ const getImages = (query) => {
     });
 };
 
+const getUserConfig = (id) => {
+  var userData = JSON.parse(localStorage.getItem("user"));
+  return axios
+    .get(CONFIG_URL(id), { headers: authHeader() })
+    .then((response) => {
+      buildUserConfig(response, userData.userName);
+      return response;
+    });
+};
+
+const buildUserConfig = (response, userName) => {
+  const userConfig = {
+    userName: userName,
+    darkTheme: response.data.darkTheme,
+  };
+  localStorage.setItem("userConfig", JSON.stringify(userConfig));
+};
+
 const putImage = (name, image) => {
   var formData = new FormData();
   formData.append("name", name);
@@ -322,6 +373,21 @@ const putImage = (name, image) => {
       if (error.response) {
         return error.response;
       }
+    });
+};
+
+const saveConfigAppearance = (id, theme, dark, config) => {
+  const data = {
+    id: id,
+    theme: theme,
+    dark: dark,
+    config: config,
+  };
+  return axios
+    .post(POST_APPEARANCE_CONFIG, data, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
     });
 };
 
@@ -397,7 +463,7 @@ const updateItem = (values, collection, file, metadata) => {
     });
 };
 
-const viewFeed = (url) => { };
+const viewFeed = (url) => {};
 
 const ConfigService = {
   countCollections,
@@ -407,14 +473,17 @@ const ConfigService = {
   createFeed,
   createItem,
   createSerie,
+  createTheme,
   deleteCollectionItem,
   deleteCollection,
   deleteFeed,
   deleteSerie,
   getAllSeries,
+  getAllThemes,
   getAllUserFeeds,
   getUserFeedsIDTitle,
   getAllUserReadFeeds,
+  getUserConfig,
   getCollectionItemsById,
   getCollectionById,
   getCollectionItem,
@@ -423,6 +492,7 @@ const ConfigService = {
   getCollectionSeries,
   getImages,
   putImage,
+  saveConfigAppearance,
   toggleCollectionAmbit,
   toggleItemOwn,
   toggleItemWish,

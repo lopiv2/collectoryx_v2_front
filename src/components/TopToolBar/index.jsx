@@ -55,128 +55,135 @@ export default function TopToolBar(props) {
   };
 
   //const navigate = useNavigate();
-  const { userName, setUserName } = React.useContext(AppContext);
+  const { userData } = React.useContext(AppContext);
   const [expiringDate, setExpiringDate] = useState();
 
   useEffect(() => {
-    user = JSON.parse(localStorage.getItem("user"));
-    const { userName: userName } = user;
-    const { expiringDate: expiringDate } = user;
-    setUserName(userName);
-    setExpiringDate(expiringDate);
-  }, []);
+    setExpiringDate(userData.expiringDate);
+  }, [userData]);
 
   return (
-    <AppBar position="absolute" open={props.open}>
-      <Toolbar
-        sx={{
-          pr: "24px", // keep right padding when drawer closed
-        }}
-      >
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="open drawer"
-          onClick={props.toggleDrawer}
+    userData && (
+      <AppBar position="absolute" open={props.open}>
+        <Toolbar
           sx={{
-            marginRight: "36px",
-            ...(props.open && { display: "none" }),
+            pr: "24px", // keep right padding when drawer closed
           }}
         >
-          <MenuIcon />
-        </IconButton>
-        <Typography
-          component="h1"
-          variant="h6"
-          color="inherit"
-          noWrap
-          sx={{ flexGrow: 1 }}
-        >
-          <Grid container>
-            <Grid item xs={2}>
-              <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={props.toggleDrawer}
+            sx={{
+              marginRight: "36px",
+              ...(props.open && { display: "none" }),
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 1 }}
+          >
+            <Grid container>
+              <Grid item xs={2}>
+                <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
+              </Grid>
+              {AuthService.checkUserLogged() === "USER_ROLE" ? (
+                <Grid item xs={2} ml={50}>
+                  <FormattedMessage
+                    id={
+                      userData.expiringDate > 0
+                        ? "app.dashboard.license_days"
+                        : userData.license === "Free"
+                        ? "app.license.free"
+                        : "app.license.lifetime"
+                    }
+                    values={{
+                      days: expiringDate ?? expiringDate,
+                    }}
+                  ></FormattedMessage>
+                </Grid>
+              ) : (
+                <Grid item xs={2} ml={50}>
+                  <Typography
+                    component="h1"
+                    variant="h6"
+                    color="yellow"
+                    noWrap
+                    sx={{ flexGrow: 1 }}
+                  >
+                    <FormattedMessage id="app.dashboard.admin_panel"></FormattedMessage>
+                  </Typography>
+                </Grid>
+              )}
             </Grid>
-            {AuthService.checkUserLogged() === "USER_ROLE" ? (
-              <Grid item xs={2} ml={50}>
-                <FormattedMessage
-                  id="app.dashboard.license_days"
-                  values={{
-                    days: expiringDate ?? expiringDate,
-                  }}
-                ></FormattedMessage>
-              </Grid>
-            ) : (
-              <Grid item xs={2} ml={50}>
-                <Typography
-                  component="h1"
-                  variant="h6"
-                  color="yellow"
-                  noWrap
-                  sx={{ flexGrow: 1 }}
-                >
-                  <FormattedMessage id="app.dashboard.admin_panel"></FormattedMessage>
-                </Typography>
-              </Grid>
-            )}
-          </Grid>
-        </Typography>
-        <LanguageSwitcher></LanguageSwitcher>
-        <IconButton color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <IconButton
-          onClick={handleClick}
-          size="small"
-          sx={{ ml: 1 }}
-          aria-controls={props.openAnch ? "account-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={props.openAnch ? "true" : undefined}
-          color="inherit"
-        >
-          <Avatar name={userName} size={35} round="200px" />
-        </IconButton>
-        <Menu
-          id="account-menu"
-          anchorEl={props.anchorEl}
-          open={props.openAnch}
-          onClose={handleClose}
-          onClick={handleClose}
-          PaperProps={{
-            elevation: 0,
-            sx: {
-              overflow: "visible",
-              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-              mt: 1.5,
-              "& .MuiAvatar-root": {
-                width: 32,
-                height: 32,
-                ml: -0.5,
-                mr: 1,
+          </Typography>
+          <LanguageSwitcher></LanguageSwitcher>
+          <IconButton
+            color="inherit"
+            sx={{ color: props.theme.palette.secondary.contrastText }}
+          >
+            <Badge badgeContent={4} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          <IconButton
+            onClick={handleClick}
+            size="small"
+            sx={{ ml: 1 }}
+            aria-controls={props.openAnch ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={props.openAnch ? "true" : undefined}
+            color="inherit"
+          >
+            <Avatar name={userData.userName} size={35} round="200px" />
+          </IconButton>
+          <Menu
+            id="account-menu"
+            anchorEl={props.anchorEl}
+            open={props.openAnch}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
               },
-              "&:before": {
-                content: '""',
-                display: "block",
-                position: "absolute",
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: "background.paper",
-                transform: "translateY(-50%) rotate(45deg)",
-                zIndex: 0,
-              },
-            },
-          }}
-          transformOrigin={{ horizontal: "right", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={onClickLogout}>Logout</MenuItem>
-        </Menu>
-      </Toolbar>
-    </AppBar>
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={onClickLogout}>Logout</MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+    )
   );
 }

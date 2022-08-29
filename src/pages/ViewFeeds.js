@@ -56,7 +56,7 @@ export default function ViewFeeds(props) {
         if (hoursDif > 0 && hoursDif < 24) {
             return hoursDif + "h"
         }
-        if (hoursDif == 0) {
+        if (hoursDif === 0) {
 
             return minDif + "m"
         }

@@ -38,6 +38,7 @@ function EditItem(props) {
   const [preview, setPreview] = useState();
   const navigate = useNavigate();
   const intl = useIntl();
+  const [formValues, setFormValues] = useState(null);
   const [fields, setFields] = useState([]);
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
   const [collectionId, setCollectionId] = useState(location.state.id);
@@ -51,7 +52,7 @@ function EditItem(props) {
   };
 
   const handleImageClick = () => {
-    setPreview(require("../../../images/" + img));
+    setPreview(require("../../public/images/" + img));
     setImgGallerySelected(true);
   };
 
@@ -65,8 +66,24 @@ function EditItem(props) {
       });
   }, [location.state.id]);
 
+  useEffect(() => {
+    const data = {
+      id: location.state.item.id,
+      name: location.state.item.name,
+      serie: location.state.item.serie.id,
+      price: location.state.item.price,
+      year: location.state.item.year,
+      adquiringDate: date,
+      own: location.state.item.own,
+      image: "",
+      notes: location.state.item.notes,
+      metadata: [],
+    };
+    setFormValues(data);
+  }, [location.state.item]);
+
   const submitForm = (values) => {
-    console.log(values);
+    //console.log(values);
     //Tiene imagen seteada ya en la BBDD y la actualizamos desde galeria de imagenes sin subir nada
     if (preview !== undefined && imgGallerySelected === true) {
       ConfigService.updateItem(
@@ -171,7 +188,9 @@ function EditItem(props) {
 
   useEffect(() => {
     if (location.state.item.image) {
-      setPreview(require("../../../images/" + location.state.item.image.path));
+      setPreview(
+        require("../../public/images/" + location.state.item.image.path)
+      );
     }
     setOwn(location.state.item.own);
     const dateFormatPickup = new Date(location.state.item.adquiringDate);
@@ -226,300 +245,298 @@ function EditItem(props) {
           </Typography>
         </Grid>
         <Grid>
-          <Formik
-            initialValues={{
-              id: location.state.item.id,
-              name: location.state.item.name,
-              serie: location.state.item.serie.id,
-              price: location.state.item.price,
-              year: location.state.item.year,
-              adquiringDate: date,
-              own: location.state.item.own,
-              image: "",
-              notes: location.state.item.notes,
-              metadata: [],
-            }}
-            validationSchema={newItemSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              values.own = own;
-              const d = format(new Date(date), "yyyy-MM-dd");
-              values.adquiringDate = d;
-              submitForm(values);
-              setSubmitting(false);
-            }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              setFieldValue,
-              isSubmitting,
-            }) => (
-              <Form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSubmit();
-                }}
-                id="form"
-              >
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Box
-                      pt={0}
-                      ml={0}
-                      mt={2}
-                      component="img"
-                      sx={{
-                        height: "auto",
-                        width: "auto",
-                        maxHeight: 300,
-                        maxWidth: 400,
-                      }}
-                      alt="Logo"
-                      src={preview ? preview : NoImage}
-                    ></Box>
+          {formValues && (
+            <Formik
+              initialValues={formValues}
+              enableReinitialize={true}
+              validationSchema={newItemSchema}
+              onSubmit={(values, { setSubmitting }) => {
+                values.own = own;
+                const d = format(new Date(date), "yyyy-MM-dd");
+                values.adquiringDate = d;
+                submitForm(values);
+                setSubmitting(false);
+              }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                setFieldValue,
+                isSubmitting,
+              }) => (
+                <Form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                  }}
+                  id="form"
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Box
+                        pt={0}
+                        ml={0}
+                        mt={2}
+                        component="img"
+                        sx={{
+                          height: "auto",
+                          width: "auto",
+                          maxHeight: 300,
+                          maxWidth: 400,
+                        }}
+                        alt="Logo"
+                        src={preview ? preview : NoImage}
+                      ></Box>
+                    </Grid>
+                    <Box ml={2}>
+                      <Grid container spacing={2}>
+                        <Grid item>
+                          <Button variant="contained" component="label">
+                            {
+                              <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
+                            }
+                            <input
+                              type="file"
+                              hidden
+                              name="file"
+                              accept="image/png, image/jpeg"
+                              onChange={(e) => {
+                                setFieldValue("file", e.currentTarget.files[0]);
+                                setSelectedFile(e.currentTarget.files[0]);
+                              }}
+                            />
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          <Tooltip
+                            title={intl.formatMessage({
+                              id: "app.tooltip.search_gallery",
+                            })}
+                            placement="bottom"
+                            arrow
+                          >
+                            <Button
+                              color="primary"
+                              variant="contained"
+                              onClick={(e) => {
+                                setConfirmOpenGallery(true);
+                              }}
+                            >
+                              {
+                                <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
+                              }
+                            </Button>
+                          </Tooltip>
+                        </Grid>
+                        <Grid item>
+                          <Tooltip
+                            title={intl.formatMessage({
+                              id: "app.tooltip.search_google",
+                            })}
+                            placement="right"
+                            arrow
+                          >
+                            <Button
+                              color="primary"
+                              variant="contained"
+                              onClick={(e) => {
+                                console.log(e);
+                              }}
+                            >
+                              <GoogleIcon></GoogleIcon>
+                            </Button>
+                          </Tooltip>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                    <Grid container spacing={40}>
+                      <Grid item xs={2}>
+                        <Box pt={2} ml={2}>
+                          <Typography variant="body1">
+                            <FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>
+                          </Typography>
+                          <TextField
+                            sx={{ minWidth: 300 }}
+                            size="small"
+                            id="name"
+                            name="name"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.name && Boolean(errors.name)}
+                            helperText={touched.name && errors.name}
+                            variant="outlined"
+                            value={values.name}
+                          />
+                        </Box>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Box pt={2}>
+                          <Typography variant="body1">
+                            <FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>
+                          </Typography>
+                          <TextField
+                            id="serie"
+                            name="serie"
+                            select
+                            size="small"
+                            defaultValue=""
+                            sx={{ minWidth: 300 }}
+                            value={values.serie}
+                            error={touched.serie && Boolean(errors.serie)}
+                            helperText={touched.serie && errors.serie}
+                            onChange={(selectedOption) => {
+                              let event = {
+                                target: {
+                                  name: "serie",
+                                  value: selectedOption,
+                                },
+                              };
+                              handleChange(event.target.value);
+                            }}
+                          >
+                            {collectionSeriesList?.map((option) => {
+                              return (
+                                <MenuItem key={option.id} value={option.id}>
+                                  {option.name}
+                                </MenuItem>
+                              );
+                            })}
+                          </TextField>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Box pt={2}>
+                        <Typography variant="body1">
+                          <FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>
+                        </Typography>
+                        <TextField
+                          sx={{ minWidth: 300 }}
+                          size="small"
+                          id="price"
+                          name="price"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={touched.price && Boolean(errors.price)}
+                          helperText={touched.price && errors.price}
+                          variant="outlined"
+                          value={values.price}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                {currency}
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Box pt={2} ml={4.7}>
+                        <Typography variant="body1">
+                          <FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>
+                        </Typography>
+                        <TextField
+                          sx={{ minWidth: 300 }}
+                          size="small"
+                          id="year"
+                          name="year"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={touched.year && Boolean(errors.year)}
+                          helperText={touched.year && errors.year}
+                          variant="outlined"
+                          value={values.year}
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item xs={2}>
+                        <Box pt={2} ml={2}>
+                          <Typography variant="body1">
+                            <FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>
+                          </Typography>
+                          <Checkbox
+                            value={own}
+                            checked={own}
+                            onChange={handleChangeOwn}
+                          ></Checkbox>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Box pt={2} pl={6.5}>
+                          <Typography variant="body1">
+                            <FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>
+                          </Typography>
+                          <BasicDatePicker
+                            id="date"
+                            name="date"
+                            label=""
+                            size="small"
+                            value={date}
+                            error={touched.year && Boolean(errors.year)}
+                            helperText={touched.year && errors.year}
+                            onChange={(newValue) => {
+                              setDate(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} />}
+                          />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                    <Grid container>
+                      <Grid item xs={4.65}>
+                        <Box pt={2} ml={2}>
+                          <Typography variant="body1">
+                            <FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>
+                          </Typography>
+                          <TextField
+                            fullWidth
+                            sx={{ minWidth: 300 }}
+                            size="small"
+                            id="notes"
+                            name="notes"
+                            multiline
+                            maxRows={4}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            variant="outlined"
+                            value={values.notes}
+                          />
+                        </Box>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Box ml={2}>
+                  <Box pt={2}>
                     <Grid container spacing={2}>
                       <Grid item>
-                        <Button variant="contained" component="label">
-                          {
-                            <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
-                          }
-                          <input
-                            type="file"
-                            hidden
-                            name="file"
-                            accept="image/png, image/jpeg"
-                            onChange={(e) => {
-                              setFieldValue("file", e.currentTarget.files[0]);
-                              setSelectedFile(e.currentTarget.files[0]);
-                            }}
-                          />
+                        <Button
+                          variant="contained"
+                          type="submit"
+                          disabled={isSubmitting}
+                          form="form"
+                        >
+                          <FormattedMessage id="app.button.accept"></FormattedMessage>
                         </Button>
                       </Grid>
                       <Grid item>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.search_gallery",
-                          })}
-                          placement="bottom"
-                          arrow
+                        <Button
+                          variant="contained"
+                          onClick={() => navigate(-1)}
                         >
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={(e) => {
-                              setConfirmOpenGallery(true);
-                            }}
-                          >
-                            {
-                              <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
-                            }
-                          </Button>
-                        </Tooltip>
-                      </Grid>
-                      <Grid item>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.search_google",
-                          })}
-                          placement="right"
-                          arrow
-                        >
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={(e) => {
-                              console.log(e);
-                            }}
-                          >
-                            <GoogleIcon></GoogleIcon>
-                          </Button>
-                        </Tooltip>
+                          <FormattedMessage id="app.button.cancel"></FormattedMessage>
+                        </Button>
                       </Grid>
                     </Grid>
                   </Box>
-                  <Grid container spacing={40}>
-                    <Grid item xs={2}>
-                      <Box pt={2} ml={2}>
-                        <Typography variant="body1">
-                          <FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>
-                        </Typography>
-                        <TextField
-                          sx={{ minWidth: 300 }}
-                          size="small"
-                          id="name"
-                          name="name"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={touched.name && Boolean(errors.name)}
-                          helperText={touched.name && errors.name}
-                          variant="outlined"
-                          value={values.name}
-                        />
-                      </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Box pt={2}>
-                        <Typography variant="body1">
-                          <FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>
-                        </Typography>
-                        <TextField
-                          id="serie"
-                          name="serie"
-                          select
-                          size="small"
-                          defaultValue=""
-                          sx={{ minWidth: 300 }}
-                          value={values.serie}
-                          error={touched.serie && Boolean(errors.serie)}
-                          helperText={touched.serie && errors.serie}
-                          onChange={(selectedOption) => {
-                            let event = {
-                              target: { name: "serie", value: selectedOption },
-                            };
-                            handleChange(event.target.value);
-                          }}
-                        >
-                          {collectionSeriesList?.map((option) => {
-                            return (
-                              <MenuItem key={option.id} value={option.id}>
-                                {option.name}
-                              </MenuItem>
-                            );
-                          })}
-                        </TextField>
-                      </Box>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Box pt={2}>
-                      <Typography variant="body1">
-                        <FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>
-                      </Typography>
-                      <TextField
-                        sx={{ minWidth: 300 }}
-                        size="small"
-                        id="price"
-                        name="price"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={touched.price && Boolean(errors.price)}
-                        helperText={touched.price && errors.price}
-                        variant="outlined"
-                        value={values.price}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              {currency}
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Box>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Box pt={2} ml={4.7}>
-                      <Typography variant="body1">
-                        <FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>
-                      </Typography>
-                      <TextField
-                        sx={{ minWidth: 300 }}
-                        size="small"
-                        id="year"
-                        name="year"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={touched.year && Boolean(errors.year)}
-                        helperText={touched.year && errors.year}
-                        variant="outlined"
-                        value={values.year}
-                      />
-                    </Box>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={2}>
-                      <Box pt={2} ml={2}>
-                        <Typography variant="body1">
-                          <FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>
-                        </Typography>
-                        <Checkbox
-                          value={own}
-                          checked={own}
-                          onChange={handleChangeOwn}
-                        ></Checkbox>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Box pt={2} pl={6.5}>
-                        <Typography variant="body1">
-                          <FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>
-                        </Typography>
-                        <BasicDatePicker
-                          id="date"
-                          name="date"
-                          label=""
-                          size="small"
-                          value={date}
-                          error={touched.year && Boolean(errors.year)}
-                          helperText={touched.year && errors.year}
-                          onChange={(newValue) => {
-                            setDate(newValue);
-                          }}
-                          renderInput={(params) => <TextField {...params} />}
-                        />
-                      </Box>
-                    </Grid>
-                  </Grid>
-                  <Grid container>
-                    <Grid item xs={4.65}>
-                      <Box pt={2} ml={2}>
-                        <Typography variant="body1">
-                          <FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          sx={{ minWidth: 300 }}
-                          size="small"
-                          id="notes"
-                          name="notes"
-                          multiline
-                          maxRows={4}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          variant="outlined"
-                          value={values.notes}
-                        />
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Box pt={2}>
-                  <Grid container spacing={2}>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        type="submit"
-                        disabled={isSubmitting}
-                        form="form"
-                      >
-                        <FormattedMessage id="app.button.accept"></FormattedMessage>
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button variant="contained" onClick={() => navigate(-1)}>
-                        <FormattedMessage id="app.button.cancel"></FormattedMessage>
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Form>
-            )}
-          </Formik>
+                </Form>
+              )}
+            </Formik>
+          )}
         </Grid>
       </Grid>
       <ImageGalleryDialog

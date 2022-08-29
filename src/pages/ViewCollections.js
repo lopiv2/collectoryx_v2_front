@@ -116,7 +116,7 @@ function ViewCollection(props) {
                     <CardMedia
                       component="img"
                       width="100%"
-                      image={require("../../../images/" + item.logo.path)}
+                      image={require("../../public/images/" + item.logo.path)}
                       alt={item.name}
                       className="card-collection"
                       style={styles}
