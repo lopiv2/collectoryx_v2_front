@@ -22,6 +22,7 @@ import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
 import { AppContext } from "../AppContext";
 import { CreateTheme } from "../../utils/generic";
 
+
 function SelectThemeTab() {
   const { userData, setUserData, userConfig, setUserConfig } =
     React.useContext(AppContext);
@@ -95,7 +96,7 @@ function SelectThemeTab() {
           pagination={{
             clickable: true,
           }}
-          navigation={true}
+          navigation
           modules={[Pagination, Navigation]}
           className="mySwiper"
         >

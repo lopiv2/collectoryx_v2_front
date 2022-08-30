@@ -68,8 +68,7 @@ function ImportCollectionFile() {
     },
     {
       label: "Link fields",
-      content:
-        "An ad group contains one or more ads which target a shared set of keywords.",
+      content: selectedFile !== "" ?? handleFileUpload
     },
     {
       label: "Start importing",
@@ -79,6 +78,13 @@ function ImportCollectionFile() {
                 they're running and how to resolve approval issues.`,
     },
   ];
+
+  const handleFileUpload = () => {
+    const file = ConfigService.putFile(selectedFile, selectedFile)
+      .then((resp) => {
+        console.log(resp.data)
+      })
+  };
 
   const totalSteps = () => {
     return steps.length;
@@ -100,8 +106,8 @@ function ImportCollectionFile() {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
+        // find the first step that has been completed
+        steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
