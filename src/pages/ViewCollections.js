@@ -71,7 +71,7 @@ function ViewCollection(props) {
   }, [collectionsList]);
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box >
       <ToastContainer autoClose={2000} />
       <Grid>
         {/*breadcrumbs.map(({

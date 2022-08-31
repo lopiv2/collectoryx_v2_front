@@ -26,7 +26,7 @@ const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
 const IMAGES_URL = `${API_URL}/images`;
-const FILE_URL = `${API_URL}/put-file`;
+const FILE_URL = `${API_URL}/parse-file`;
 const TOGGLE_COLLECTION_AMBIT_URL = `${API_URL}/toggle-collection-ambit`;
 const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
@@ -358,9 +358,9 @@ const buildUserConfig = (response, userName) => {
   localStorage.setItem("userConfig", JSON.stringify(userConfig));
 };
 
-const putFile = (name, file) => {
+const putFile = (file) => {
   var formData = new FormData();
-  formData.append("name", name);
+  formData.append("name", file);
   formData.append("file", file);
   return axios
     .put(FILE_URL, formData, {

@@ -23,13 +23,31 @@ import OptionsService from "../components/DropDownOptions";
 import AddIcon from "@mui/icons-material/Add";
 import TableCustomFields from "../components/TableCustomFields";
 import { Tooltip } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function ImportCollectionFile() {
   const [selectedFile, setSelectedFile] = useState("");
+  const [isLoading, setLoading] = useState(true);
+  const [records, setRecords] = useState(0);
   const navigate = useNavigate();
   const intl = useIntl();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
+
+  function handleFileUpload() {
+    const file = ConfigService.putFile(selectedFile)
+      .then((response) => {
+        setLoading(false);
+        setRecords(response.data)
+      })
+  };
+
+  useEffect(() => {
+    if (activeStep === 1 && selectedFile !== null && isLoading === true) {
+      handleFileUpload()
+      handleCompleteNoNext()
+    }
+  }, [selectedFile, activeStep])
 
   const steps = [
     {
@@ -68,7 +86,21 @@ function ImportCollectionFile() {
     },
     {
       label: "Link fields",
-      content: selectedFile !== "" ?? handleFileUpload
+      content: (selectedFile !== "" && activeStep === 1) ?
+        (<Box>
+          {isLoading === true ? (
+            <CircularProgress />) : (
+            <Grid pt={2} pl={2}>
+              <FormattedMessage
+                id="app.collection.add_collection_import_records_numbers"
+                values={{
+                  records: records ?? records,
+                }}
+              ></FormattedMessage>
+            </Grid>
+
+          )}
+        </Box>) : "hola"
     },
     {
       label: "Start importing",
@@ -78,13 +110,6 @@ function ImportCollectionFile() {
                 they're running and how to resolve approval issues.`,
     },
   ];
-
-  const handleFileUpload = () => {
-    const file = ConfigService.putFile(selectedFile, selectedFile)
-      .then((resp) => {
-        console.log(resp.data)
-      })
-  };
 
   const totalSteps = () => {
     return steps.length;
@@ -146,6 +171,9 @@ function ImportCollectionFile() {
 
   return (
     <Box sx={{ width: "60%" }}>
+      <Typography variant="h4" component="h4">
+        <FormattedMessage id="app.collection.import_collection_title"></FormattedMessage>
+      </Typography>
       <Stepper nonLinear activeStep={activeStep}>
         {steps.map((step, index) => (
           <Step key={step.label} completed={completed[index]}>
@@ -179,7 +207,10 @@ function ImportCollectionFile() {
                 <FormattedMessage id="app.collection.import_collection_back"></FormattedMessage>
               </Button>
               <Box sx={{ flex: "1 1 auto" }} />
-              <Button onClick={handleNext} sx={{ mr: 1 }}>
+              <Button
+                onClick={handleNext}
+                sx={{ mr: 1 }}
+                disabled={activeStep === 0 && selectedFile === ""}>
                 <FormattedMessage id="app.collection.import_collection_next"></FormattedMessage>
               </Button>
               {activeStep !== steps.length &&
@@ -188,12 +219,12 @@ function ImportCollectionFile() {
                     variant="caption"
                     sx={{ display: "inline-block" }}
                   >
-                    Step {activeStep + 1} already completed
+                    {/*Step {activeStep + 1} already completed*/}
                   </Typography>
                 ) : (
                   <Button onClick={handleComplete}>
                     {completedSteps() === totalSteps() - 1
-                      ? "Finish"
+                      ? <FormattedMessage id="app.collection.import_collection_start"></FormattedMessage>
                       : "Complete Step"}
                   </Button>
                 ))}
