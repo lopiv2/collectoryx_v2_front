@@ -30,8 +30,9 @@ function ViewCollection(props) {
   useEffect(() => {
     const collections = ConfigService.getCollectionLists(userData.id)
       .then((response) => {
+        setCollectionsList(response.data);
         if (userData.license.includes("Free")) {
-          setCollectionsList(response.data.slice(0, 5));
+          //setCollectionsList(response.data.slice(0, 5));
         } else {
           if (isMounted) {
             setCollectionsList(response.data);
@@ -87,11 +88,11 @@ function ViewCollection(props) {
           <Typography display="inline" variant="h4" component="h4">
             <FormattedMessage id="app.collection.view_collections_title"></FormattedMessage>
           </Typography>
-          {userData.license.includes("Free") && (
+          {/*userData.license.includes("Free") && (
             <Typography display="inline" variant="h4" component="h4">
               {" (" + collectionsList.length + "/3)"}
             </Typography>
-          )}
+          )*/}
         </Grid>
         <Grid container spacing={5} className="container" pt={3}>
           {collectionsList.map((item, index) => (

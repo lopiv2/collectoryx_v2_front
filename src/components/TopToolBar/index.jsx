@@ -95,7 +95,7 @@ export default function TopToolBar(props) {
               </Grid>
               {AuthService.checkUserLogged() === "USER_ROLE" ? (
                 <Grid item xs={2} ml={50}>
-                  <FormattedMessage
+                  {/*<FormattedMessage
                     id={
                       userData.expiringDate > 0
                         ? "app.dashboard.license_days"
@@ -106,7 +106,7 @@ export default function TopToolBar(props) {
                     values={{
                       days: expiringDate ?? expiringDate,
                     }}
-                  ></FormattedMessage>
+                  ></FormattedMessage>*/}
                 </Grid>
               ) : (
                 <Grid item xs={2} ml={50}>

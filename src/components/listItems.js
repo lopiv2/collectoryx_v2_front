@@ -199,7 +199,7 @@ export default function MainListItems(props) {
             </NavLink>
           </List>
         </Collapse>
-        <ListItemButton sx={{ margin: "5px 0" }} onClick={handleClickMarket}>
+        {/*<ListItemButton sx={{ margin: "5px 0" }} onClick={handleClickMarket}>
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
@@ -209,7 +209,7 @@ export default function MainListItems(props) {
           ) : (
             <ExpandMore sx={{ ml: 2 }} />
           )}
-        </ListItemButton>
+          </ListItemButton>
         <Collapse in={openMarket} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <NavLink
@@ -267,7 +267,7 @@ export default function MainListItems(props) {
               </ListItemButton>
             </NavLink>
           </List>
-        </Collapse>
+            </Collapse>*/}
         <ListItemButton sx={{ margin: "5px 0" }}>
           <ListItemIcon>
             <BarChartIcon />

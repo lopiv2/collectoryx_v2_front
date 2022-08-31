@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -10,7 +10,7 @@ import {
   StepContent,
   StepLabel,
 } from "@mui/material";
-import { Box } from "@mui/material";
+import { Box, ListItem } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
@@ -28,26 +28,74 @@ import CircularProgress from "@mui/material/CircularProgress";
 function ImportCollectionFile() {
   const [selectedFile, setSelectedFile] = useState("");
   const [isLoading, setLoading] = useState(true);
-  const [records, setRecords] = useState(0);
+  const [records, setRecords] = useState([]); //Trae los campos del Header del CSV de la API
   const navigate = useNavigate();
   const intl = useIntl();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
+  const [fields, setFields] = useState([]); //Campos por defecto en coleccion
+  const [mappings, setMappings] = useState([]); //Mapeos
+  const effectTriggeredRef = React.useRef(false);
+
+  const checkValue = (item) => {
+    const result = records.find((record) => record.name === "item");
+    return result;
+  };
+
+  const setValue = (event, field) => {
+    const fieldId = intl.formatMessage({
+      id: field.props.id,
+    });
+    var index = mappings.findIndex((mapping) => mapping.original === fieldId);
+    const updatedMappings = [...mappings];
+    updatedMappings[index].new = event;
+    setMappings(updatedMappings);
+  };
 
   function handleFileUpload() {
-    const file = ConfigService.putFile(selectedFile)
-      .then((response) => {
-        setLoading(false);
-        setRecords(response.data)
-      })
-  };
+    const file = ConfigService.putFile(selectedFile).then((response) => {
+      setLoading(false);
+      setRecords(response.data);
+    });
+  }
+
+  /*useEffect(() => {
+    console.log(mappings);
+  }, [mappings]);*/
+
+  useEffect(() => {
+    if (
+      !effectTriggeredRef.current &&
+      records.length > 0 &&
+      fields.length > 0
+    ) {
+      for (let i = 0; i < fields.length; i++) {
+        const field = intl.formatMessage({
+          id: fields[i].props.id,
+        });
+        const data = {
+          original: field,
+          new: records[i].name,
+        };
+        setMappings((mappings) => [...mappings, data]);
+      }
+      effectTriggeredRef.current = true;
+    }
+  }, [records, fields]);
+
+  useEffect(() => {
+    setFields(
+      OptionsService.createCollectionOptions.find((f) => f.value === "New")
+        .fields
+    );
+  }, []);
 
   useEffect(() => {
     if (activeStep === 1 && selectedFile !== null && isLoading === true) {
-      handleFileUpload()
-      handleCompleteNoNext()
+      handleFileUpload();
+      handleCompleteNoNext();
     }
-  }, [selectedFile, activeStep])
+  }, [selectedFile, activeStep]);
 
   const steps = [
     {
@@ -86,28 +134,94 @@ function ImportCollectionFile() {
     },
     {
       label: "Link fields",
-      content: (selectedFile !== "" && activeStep === 1) ?
-        (<Box>
-          {isLoading === true ? (
-            <CircularProgress />) : (
-            <Grid pt={2} pl={2}>
-              <FormattedMessage
-                id="app.collection.add_collection_import_records_numbers"
-                values={{
-                  records: records ?? records,
-                }}
-              ></FormattedMessage>
-            </Grid>
-
-          )}
-        </Box>) : "hola"
+      content:
+        selectedFile !== "" && activeStep === 1 ? (
+          <Box>
+            {isLoading === true ? (
+              <CircularProgress />
+            ) : (
+              <Grid container pt={2}>
+                <Grid
+                  item
+                  xs={10}
+                  pb={2}
+                  pt={2}
+                  pl={2}
+                  style={{ border: "1px solid grey" }}
+                >
+                  Conecte cada campo de la derecha con el de la izda para
+                  importar correctamente cada columna
+                </Grid>
+                <Grid item xs={4} pb={2} pt={2} pl={10}>
+                  <Typography style={{ fontWeight: 600 }}>
+                    <FormattedMessage id="app.collection.add_collection_import_columns"></FormattedMessage>
+                  </Typography>
+                </Grid>
+                {fields.map((item, index) => (
+                  <ListItem divider key={index}>
+                    <Grid item xs={4}>
+                      <TextField
+                        id="outlined-basic"
+                        size="small"
+                        label={item.name}
+                        value={intl.formatMessage({
+                          id: fields[index].props.id,
+                        })}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item xs={2}>
+                      {"->"}
+                    </Grid>
+                    <Grid item xs={2}>
+                      {records.length > 0 && mappings.length > 0 && (
+                        <TextField
+                          defaultValue={checkValue(item.name)}
+                          value={mappings[index].new}
+                          select
+                          id="demo-simple-select"
+                          size="small"
+                          onChange={(e) =>
+                            setValue(e.target.value, fields[index])
+                          }
+                        >
+                          {records?.map((option) => {
+                            return (
+                              <MenuItem key={option.name} value={option.name}>
+                                {option.name ?? option.name}
+                              </MenuItem>
+                            );
+                          })}
+                        </TextField>
+                      )}
+                    </Grid>
+                  </ListItem>
+                ))}
+              </Grid>
+            )}
+          </Box>
+        ) : (
+          "hola"
+        ),
     },
     {
       label: "Start importing",
-      content: `Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.`,
+      content: (
+        <Box>
+          <Grid container pt={2}>
+            <Grid
+              item
+              xs={10}
+              pb={2}
+              pt={2}
+              pl={2}
+              style={{ border: "1px solid grey" }}
+            >
+              <FormattedMessage id="app.collection.add_collection_import_start"></FormattedMessage>
+            </Grid>
+          </Grid>
+        </Box>
+      ),
     },
   ];
 
@@ -131,8 +245,8 @@ function ImportCollectionFile() {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
-        // find the first step that has been completed
-        steps.findIndex((step, i) => !(i in completed))
+          // find the first step that has been completed
+          steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
@@ -149,7 +263,8 @@ function ImportCollectionFile() {
     const newCompleted = completed;
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
-    handleNext();
+    console.log("empiezo")
+    //handleNext();
   };
 
   const handleCompleteNoNext = () => {
@@ -187,7 +302,7 @@ function ImportCollectionFile() {
         {allStepsCompleted() ? (
           <Box>
             <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
+              <CircularProgress />
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
               <Box sx={{ flex: "1 1 auto" }} />
@@ -210,7 +325,8 @@ function ImportCollectionFile() {
               <Button
                 onClick={handleNext}
                 sx={{ mr: 1 }}
-                disabled={activeStep === 0 && selectedFile === ""}>
+                disabled={activeStep === 0 && selectedFile === ""}
+              >
                 <FormattedMessage id="app.collection.import_collection_next"></FormattedMessage>
               </Button>
               {activeStep !== steps.length &&
@@ -223,9 +339,11 @@ function ImportCollectionFile() {
                   </Typography>
                 ) : (
                   <Button onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1
-                      ? <FormattedMessage id="app.collection.import_collection_start"></FormattedMessage>
-                      : "Complete Step"}
+                    {completedSteps() === totalSteps() - 1 ? (
+                      <FormattedMessage id="app.collection.import_collection_start"></FormattedMessage>
+                    ) : (
+                      "Complete Step"
+                    )}
                   </Button>
                 ))}
             </Box>

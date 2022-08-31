@@ -133,18 +133,28 @@ function AddCollection() {
   };
 
   useEffect(() => {
-    if (userData.license.includes("Free")) {
+    setTemplate("New");
+    setLicenseCollections(OptionsService.createCollectionOptions);
+    /*if (userData.license.includes("Free")) {
       setTemplate("Action_Figures")
       setLicenseCollections(OptionsService.createCollectionOptions.slice(1));
     } else {
-      setTemplate("New")
+      setTemplate("New");
       setLicenseCollections(OptionsService.createCollectionOptions);
-    }
+    }*/
   }, []);
 
   useEffect(() => {
     var tempArray = [];
-    if (userData.license.includes("Free")) {
+    tempArray = OptionsService.createCollectionOptions.find(
+      (f) => f.value === template
+    );
+    if (tempArray && template) {
+      setFields(tempArray.fields);
+    } else {
+      setFields("");
+    }
+    /*if (userData.license.includes("Free")) {
       tempArray = OptionsService.createCollectionOptions
         .slice(1)
         .find((f) => f.value === template);
@@ -162,7 +172,7 @@ function AddCollection() {
       } else {
         setFields("");
       }
-    }
+    }*/
   }, [template]);
 
   useEffect(() => {
