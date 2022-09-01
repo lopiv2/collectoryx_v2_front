@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
-import {
-  TextField,
-  Stepper,
-  Step,
-  StepButton,
-} from "@mui/material";
+import { TextField, Stepper, Step, StepButton } from "@mui/material";
 import { Box, ListItem } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { Grid } from "@mui/material";
@@ -26,16 +21,18 @@ function ImportCollectionFile() {
   const [isLoading, setLoading] = useState(true);
   const [records, setRecords] = useState([]); //Trae los campos del Header del CSV de la API
   const navigate = useNavigate();
+  const [recordsImported, setRecordsImported] = React.useState(0);
   const intl = useIntl();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
+  const [finished, setFinished] = React.useState(false); //Acabada la importacion o no
   const [fields, setFields] = useState([]); //Campos por defecto en coleccion
   const [mappings, setMappings] = useState([]); //Mapeos
   const effectTriggeredRef = React.useRef(false);
   const [collectionList, setCollectionList] = useState([]);
   const [collection, setCollection] = useState();
-  const { userData, setUserData } =
-    React.useContext(AppContext);
+  const { userData, setUserData } = React.useContext(AppContext);
+  const [stopParse, setStopParse] = useState(false);
 
   useEffect(() => {
     const collections = ConfigService.getCollectionLists(userData.id)
@@ -74,22 +71,19 @@ function ImportCollectionFile() {
   }
 
   const parseFile = () => {
-    const file = ConfigService.parseFile(mappings)
-      .then((response) => {
-        console.log(response.data)
-        if (response.status === 200) {
-          navigate(0);
-          toast.success(
-            <FormattedMessage id="app.collection.created"></FormattedMessage>,
-            { theme: "colored" }
-          );
-        }
+    if (finished === false) {
+      const file = ConfigService.parseFile(mappings).then((response) => {
+        setRecordsImported(response.data);
+        setStopParse(true);
+        setFinished(true);
+        console.log(response.data);
+        toast.success(
+          <FormattedMessage id="app.collection.created"></FormattedMessage>,
+          { theme: "colored" }
+        );
       });
-  }
-
-  useEffect(() => {
-    console.log(mappings)
-  }, [mappings]);
+    }
+  };
 
   useEffect(() => {
     if (
@@ -108,8 +102,8 @@ function ImportCollectionFile() {
         setMappings((mappings) => [...mappings, data]);
       }
       const col = {
-        collection: collectionList[0].id
-      }
+        collection: collectionList[0].id,
+      };
       setMappings((mappings) => [...mappings, col]);
       effectTriggeredRef.current = true;
     }
@@ -124,8 +118,8 @@ function ImportCollectionFile() {
       for (let i = 0; i < tempArray.fields.length; i++) {
         const field = {
           key: tempArray.fields[i].key,
-          value: tempArray.fields[i].value.props.id
-        }
+          value: tempArray.fields[i].value.props.id,
+        };
         setFields((fields) => [...fields, field]);
       }
     } else {
@@ -316,8 +310,8 @@ function ImportCollectionFile() {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
-        // find the first step that has been completed
-        steps.findIndex((step, i) => !(i in completed))
+          // find the first step that has been completed
+          steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
@@ -371,16 +365,24 @@ function ImportCollectionFile() {
       <div>
         {allStepsCompleted() ? (
           <Box>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-            </Typography>
-            <CircularProgress />
-            <Box>
-              {parseFile()}
-            </Box>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button onClick={handleReset}>Reset</Button>
-            </Box>
+            {stopParse === false && finished === false ? (
+              <Grid>{parseFile()}</Grid>
+            ) : finished === false ? (
+              <CircularProgress />
+            ) : (
+              <Box>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <FormattedMessage
+                    id="app.collection.add_collection_import_records_numbers"
+                    values={{
+                      records: recordsImported ?? recordsImported,
+                    }}
+                  ></FormattedMessage>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button onClick={handleReset}>Reset</Button>
+                </Box>
+              </Box>
+            )}
           </Box>
         ) : (
           <Box>

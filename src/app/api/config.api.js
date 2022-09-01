@@ -363,10 +363,7 @@ const parseFile = (fileJSON) => {
   return axios
     .post(FILE_PARSE_URL, fileJSON, { headers: authHeader() })
     .then((response) => {
-      if (response.status === 200 || response.status === 201) {
-        return response;
-      }
-      return Promise.reject(response);
+      return response;
     })
     .catch((error) => {
       if (error.response) {
@@ -501,7 +498,7 @@ const updateItem = (values, collection, file, metadata) => {
     });
 };
 
-const viewFeed = (url) => { };
+const viewFeed = (url) => {};
 
 const ConfigService = {
   countCollections,
