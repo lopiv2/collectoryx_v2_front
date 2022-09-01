@@ -146,11 +146,17 @@ function AddCollection() {
 
   useEffect(() => {
     var tempArray = [];
+    setFields("");
     tempArray = OptionsService.createCollectionOptions.find(
       (f) => f.value === template
     );
     if (tempArray && template) {
-      setFields(tempArray.fields);
+      for (let i = 0; i < tempArray.fields.length; i++) {
+        const field = intl.formatMessage({
+          id: tempArray.fields[i].value.props.id,
+        });
+        setFields((fields) => [...fields, field]);
+      }
     } else {
       setFields("");
     }

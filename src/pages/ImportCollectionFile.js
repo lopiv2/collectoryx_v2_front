@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import {
@@ -7,8 +6,6 @@ import {
   Stepper,
   Step,
   StepButton,
-  StepContent,
-  StepLabel,
 } from "@mui/material";
 import { Box, ListItem } from "@mui/material";
 import { MenuItem } from "@mui/material";
@@ -20,10 +17,9 @@ import NoImage from "../images/no-photo-available.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import OptionsService from "../components/DropDownOptions";
-import AddIcon from "@mui/icons-material/Add";
-import TableCustomFields from "../components/TableCustomFields";
 import { Tooltip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import { AppContext } from "../components/AppContext";
 
 function ImportCollectionFile() {
   const [selectedFile, setSelectedFile] = useState("");
@@ -36,17 +32,35 @@ function ImportCollectionFile() {
   const [fields, setFields] = useState([]); //Campos por defecto en coleccion
   const [mappings, setMappings] = useState([]); //Mapeos
   const effectTriggeredRef = React.useRef(false);
+  const [collectionList, setCollectionList] = useState([]);
+  const [collection, setCollection] = useState();
+  const { userData, setUserData } =
+    React.useContext(AppContext);
+
+  useEffect(() => {
+    const collections = ConfigService.getCollectionLists(userData.id)
+      .then((response) => {
+        setCollectionList(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const checkValue = (item) => {
     const result = records.find((record) => record.name === "item");
     return result;
   };
 
+  const handleChangeCollection = (event) => {
+    setCollection(event.target.value);
+  };
+
   const setValue = (event, field) => {
     const fieldId = intl.formatMessage({
-      id: field.props.id,
+      id: field.value,
     });
-    var index = mappings.findIndex((mapping) => mapping.original === fieldId);
+    var index = mappings.findIndex((mapping) => mapping.original === field.key);
     const updatedMappings = [...mappings];
     updatedMappings[index].new = event;
     setMappings(updatedMappings);
@@ -59,9 +73,23 @@ function ImportCollectionFile() {
     });
   }
 
-  /*useEffect(() => {
-    console.log(mappings);
-  }, [mappings]);*/
+  const parseFile = () => {
+    const file = ConfigService.parseFile(mappings)
+      .then((response) => {
+        console.log(response.data)
+        if (response.status === 200) {
+          navigate(0);
+          toast.success(
+            <FormattedMessage id="app.collection.created"></FormattedMessage>,
+            { theme: "colored" }
+          );
+        }
+      });
+  }
+
+  useEffect(() => {
+    console.log(mappings)
+  }, [mappings]);
 
   useEffect(() => {
     if (
@@ -71,23 +99,38 @@ function ImportCollectionFile() {
     ) {
       for (let i = 0; i < fields.length; i++) {
         const field = intl.formatMessage({
-          id: fields[i].props.id,
+          id: fields[i].value,
         });
         const data = {
-          original: field,
+          original: fields[i].key,
           new: records[i].name,
         };
         setMappings((mappings) => [...mappings, data]);
       }
+      const col = {
+        collection: collectionList[0].id
+      }
+      setMappings((mappings) => [...mappings, col]);
       effectTriggeredRef.current = true;
     }
-  }, [records, fields]);
+  }, [records, fields, collectionList]);
 
   useEffect(() => {
-    setFields(
-      OptionsService.createCollectionOptions.find((f) => f.value === "New")
-        .fields
+    var tempArray = [];
+    tempArray = OptionsService.createCollectionOptions.find(
+      (f) => f.value === "New"
     );
+    if (tempArray) {
+      for (let i = 0; i < tempArray.fields.length; i++) {
+        const field = {
+          key: tempArray.fields[i].key,
+          value: tempArray.fields[i].value.props.id
+        }
+        setFields((fields) => [...fields, field]);
+      }
+    } else {
+      setFields("");
+    }
   }, []);
 
   useEffect(() => {
@@ -141,6 +184,34 @@ function ImportCollectionFile() {
               <CircularProgress />
             ) : (
               <Grid container pt={2}>
+                <Grid item xs={12} pb={2}>
+                  <Typography variant="h5" component="h4">
+                    <FormattedMessage id="app.collection.add_collection_import_select_option"></FormattedMessage>
+                  </Typography>
+                </Grid>
+                <Grid item xs={9} pb={2}>
+                  <TextField
+                    id="demo-simple-select"
+                    name="collection"
+                    select
+                    size="small"
+                    sx={{ minWidth: 300 }}
+                    defaultValue=""
+                    value={collection ?? collectionList[0].id}
+                    label={
+                      <FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>
+                    }
+                    onChange={handleChangeCollection}
+                  >
+                    {collectionList?.map((option) => {
+                      return (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </TextField>
+                </Grid>
                 <Grid
                   item
                   xs={10}
@@ -165,7 +236,7 @@ function ImportCollectionFile() {
                         size="small"
                         label={item.name}
                         value={intl.formatMessage({
-                          id: fields[index].props.id,
+                          id: fields[index].value,
                         })}
                         variant="outlined"
                       />
@@ -245,8 +316,8 @@ function ImportCollectionFile() {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
+        // find the first step that has been completed
+        steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
@@ -263,8 +334,7 @@ function ImportCollectionFile() {
     const newCompleted = completed;
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
-    console.log("empiezo")
-    //handleNext();
+    handleNext();
   };
 
   const handleCompleteNoNext = () => {
@@ -302,8 +372,11 @@ function ImportCollectionFile() {
         {allStepsCompleted() ? (
           <Box>
             <Typography sx={{ mt: 2, mb: 1 }}>
-              <CircularProgress />
             </Typography>
+            <CircularProgress />
+            <Box>
+              {parseFile()}
+            </Box>
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
               <Box sx={{ flex: "1 1 auto" }} />
               <Button onClick={handleReset}>Reset</Button>

@@ -84,6 +84,7 @@
   "app.collection.add_collection_import_shop": "Importar desde Mis Compras...",
   "app.collection.add_collection_import_start": "Pulse Comenzar para importar los registros del archivo",
   "app.collection.add_collection_import_records_numbers": "Se importaron {records} registros",
+  "app.collection.add_collection_import_select_option": "Seleccione colección",
   "app.collection.add_collection_import_columns": "Columnas",
   "app.collection.select_option": "Seleccione opción",
   "app.collection.import_collection_upload": "Subir archivo...",

@@ -9,14 +9,38 @@ const createCollectionOptions = [
     ),
     value: "New",
     fields: [
-      (<FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_image"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>)]
+      {
+        key: "name",
+        value: (<FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>),
+      },
+      {
+        key: "serie",
+        value: (<FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>),
+      },
+      {
+        key: "price",
+        value: (<FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>),
+      },
+      {
+        key: "year",
+        value: (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
+      },
+      {
+        key: "own",
+        value: (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
+      },
+      {
+        key: "wanted",
+        value: (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
+      },
+      {
+        key: "image",
+        value: (<FormattedMessage id="app.collection.view_collections_item_image"></FormattedMessage>),
+      },
+      {
+        key: "notes",
+        value: (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>),
+      }]
   },
   {
     label: (
@@ -24,14 +48,38 @@ const createCollectionOptions = [
     ),
     value: "Action_Figures",
     fields: [
-      (<FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_image"></FormattedMessage>),
-      (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>)]
+      {
+        key: "name",
+        value: (<FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>),
+      },
+      {
+        key: "serie",
+        value: (<FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>),
+      },
+      {
+        key: "price",
+        value: (<FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>),
+      },
+      {
+        key: "year",
+        value: (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
+      },
+      {
+        key: "own",
+        value: (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
+      },
+      {
+        key: "wanted",
+        value: (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
+      },
+      {
+        key: "image",
+        value: (<FormattedMessage id="app.collection.view_collections_item_image"></FormattedMessage>),
+      },
+      {
+        key: "notes",
+        value: (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>),
+      }]
   },
   {
     label: <FormattedMessage id="app.collection.coins"></FormattedMessage>,
