@@ -149,6 +149,7 @@ function ManageSeries(props) {
   const options = {
     sorting: true,
     exportButton: true,
+    headerStyle: { fontWeight: "bold" },
     actionsColumnIndex: -1,
   };
 

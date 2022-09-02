@@ -81,6 +81,7 @@
   "app.dashboard.admin_panel": "App management",
   "app.collection.add_collection_empty": "Empty template",
   "app.collection.add_collection_import": "Import from file...",
+  "app.collection.add_collection_import_scrapper": "Import from external web...",
   "app.collection.add_collection_import_shop": "Import from My Purchases...",
   "app.collection.add_collection_import_start": "Press Start to import the file records",
   "app.collection.add_collection_import_records_numbers": "{records} records were imported",

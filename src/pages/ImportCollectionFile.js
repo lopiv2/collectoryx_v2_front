@@ -21,7 +21,6 @@ function ImportCollectionFile() {
   const [isLoading, setLoading] = useState(true);
   const [records, setRecords] = useState([]); //Trae los campos del Header del CSV de la API
   const navigate = useNavigate();
-  const [recordsImported, setRecordsImported] = React.useState(0);
   const intl = useIntl();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
@@ -29,10 +28,11 @@ function ImportCollectionFile() {
   const [fields, setFields] = useState([]); //Campos por defecto en coleccion
   const [mappings, setMappings] = useState([]); //Mapeos
   const effectTriggeredRef = React.useRef(false);
+  const parseTriggeredRef = useRef(false);
   const [collectionList, setCollectionList] = useState([]);
   const [collection, setCollection] = useState();
+  const [recordsImported, setRecordsImported] = useState(0);
   const { userData, setUserData } = React.useContext(AppContext);
-  const [stopParse, setStopParse] = useState(false);
 
   useEffect(() => {
     const collections = ConfigService.getCollectionLists(userData.id)
@@ -70,18 +70,20 @@ function ImportCollectionFile() {
     });
   }
 
-  const parseFile = () => {
-    if (finished === false) {
-      const file = ConfigService.parseFile(mappings).then((response) => {
-        setRecordsImported(response.data);
-        setStopParse(true);
-        setFinished(true);
-        console.log(response.data);
-        toast.success(
-          <FormattedMessage id="app.collection.created"></FormattedMessage>,
-          { theme: "colored" }
-        );
-      });
+  function parseFile() {
+    var res=0;
+    if (!parseTriggeredRef.current) {
+      const file = ConfigService.parseFile(mappings)
+        .then((response) => {
+          //console.log(response.data)
+          res=response.data
+          parseTriggeredRef.current = true;
+          toast.success(
+            <FormattedMessage id="app.collection.created"></FormattedMessage>,
+            { theme: "colored" }
+          );
+          setRecordsImported(res)
+        });
     }
   };
 
@@ -310,8 +312,8 @@ function ImportCollectionFile() {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
+        // find the first step that has been completed
+        steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
@@ -365,24 +367,23 @@ function ImportCollectionFile() {
       <div>
         {allStepsCompleted() ? (
           <Box>
-            {stopParse === false && finished === false ? (
-              <Grid>{parseFile()}</Grid>
-            ) : finished === false ? (
-              <CircularProgress />
-            ) : (
-              <Box>
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <FormattedMessage
-                    id="app.collection.add_collection_import_records_numbers"
-                    values={{
-                      records: recordsImported ?? recordsImported,
-                    }}
-                  ></FormattedMessage>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  <Button onClick={handleReset}>Reset</Button>
+            {parseFile()}
+            {parseTriggeredRef === false
+              ? (<CircularProgress />)
+              : (
+                <Box>
+                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <FormattedMessage
+                      id="app.collection.add_collection_import_records_numbers"
+                      values={{
+                        records: recordsImported ?? recordsImported,
+                      }}
+                    ></FormattedMessage>
+                    <Box sx={{ flex: "1 1 auto" }} />
+                    <Button onClick={handleReset}>Reset</Button>
+                  </Box>
                 </Box>
-              </Box>
-            )}
+              )}
           </Box>
         ) : (
           <Box>

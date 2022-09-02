@@ -19,6 +19,7 @@ import KeyGeneration from "../pages/KeyGeneration";
 import BuyLicense from "../pages/BuyLicense";
 import ViewFeeds from "../pages/ViewFeeds";
 import ImportCollectionFile from "../pages/ImportCollectionFile";
+import ImportScrapper from "../pages/ImportScrapper";
 
 export const Router = (props) => {
   let { colId } = useParams();
@@ -56,6 +57,14 @@ export const Router = (props) => {
           element={
             <ProtectedRoutes>
               <ImportCollectionFile />
+            </ProtectedRoutes>
+          }
+        ></Route>
+        <Route
+          path="/collections/import-scrapper"
+          element={
+            <ProtectedRoutes>
+              <ImportScrapper />
             </ProtectedRoutes>
           }
         ></Route>

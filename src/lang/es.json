@@ -81,6 +81,7 @@
   "app.dashboard.admin_panel": "Gestion de la aplicación",
   "app.collection.add_collection_empty": "Nueva plantilla",
   "app.collection.add_collection_import": "Importar desde archivo...",
+  "app.collection.add_collection_import_scrapper": "Importar desde web externa...",
   "app.collection.add_collection_import_shop": "Importar desde Mis Compras...",
   "app.collection.add_collection_import_start": "Pulse Comenzar para importar los registros del archivo",
   "app.collection.add_collection_import_records_numbers": "Se importaron {records} registros",

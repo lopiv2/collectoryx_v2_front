@@ -383,7 +383,6 @@ function EditItem(props) {
                             name="serie"
                             select
                             size="small"
-                            defaultValue=""
                             sx={{ minWidth: 300 }}
                             value={values.serie}
                             error={touched.serie && Boolean(errors.serie)}

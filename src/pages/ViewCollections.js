@@ -14,29 +14,22 @@ import styles from "../styles/Collections.css";
 import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
 import { NavLink } from "react-router-dom";
 import useBreadcrumbs from "use-react-router-breadcrumbs";
+import { AppContext } from "../components/AppContext";
 
 function ViewCollection(props) {
   const [collectionsList, setCollectionsList] = useState([]);
   const navigate = useNavigate();
   const [col, setCol] = useState([]);
   const breadcrumbs = useBreadcrumbs();
+  const { userData, setUserData } = React.useContext(AppContext);
   let isMounted = useRef(false);
-  //var userData=null;
-  if (localStorage.getItem("user")) {
-    var user = localStorage.getItem("user");
-    var userData = JSON.parse(user);
-  }
 
   useEffect(() => {
     const collections = ConfigService.getCollectionLists(userData.id)
       .then((response) => {
         setCollectionsList(response.data);
-        if (userData.license.includes("Free")) {
-          //setCollectionsList(response.data.slice(0, 5));
-        } else {
-          if (isMounted) {
-            setCollectionsList(response.data);
-          }
+        if (isMounted) {
+          setCollectionsList(response.data);
         }
       })
       .catch((err) => {
