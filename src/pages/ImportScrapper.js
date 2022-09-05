@@ -32,6 +32,16 @@ function ImportScrapper() {
     //console.log(collectionList);
   }, [collectionList])
 
+  const handleTextInputChange = (event) => {
+    setSearchString(event.target.value);
+  };
+
+  const searchWebClick = () => {
+    const collectionSeries = ConfigService.getImages(searchString).then((response) => {
+      console.log(response.data);
+    });
+  };
+
   const avatarStyleClicked = {
     border: "2px solid green",
     width: 80,
@@ -56,22 +66,21 @@ function ImportScrapper() {
           </Typography>
         </Grid>
       </Grid>
+      <Grid item>
+        <TextField
+          sx={{ minWidth: 300 }}
+          size="small"
+          id="outlined-basic"
+          name="logo"
+          label={
+            <FormattedMessage id="app.collection.import_collection_file"></FormattedMessage>
+          }
+          variant="outlined"
+          value={searchString}
+          onChange={handleTextInputChange}
+        />
+      </Grid>
       <Grid container sx={{ border: 2 }}>
-        <Grid item>
-          <TextField
-            sx={{ minWidth: 300 }}
-            size="small"
-            id="outlined-basic"
-            name="logo"
-            label={
-              <FormattedMessage id="app.collection.import_collection_file"></FormattedMessage>
-            }
-            variant="outlined"
-            value={searchString}
-            onChange={(e) => setSearchString(e)}
-          />
-        </Grid>
-
         {collectionList.map((item, index) => (
           <Card key={index}>
             <CardContent>
@@ -83,15 +92,17 @@ function ImportScrapper() {
                 >
                   <Avatar
                     variant="rounded"
+                    key={item.label}
                     sx={
-                      imageClicked === item
+                      imageClicked === index
                         ? avatarStyleClicked
                         : avatarStyleHover
                     }
                     src={item.logo} // use normal <img> attributes as props
                     width="100%"
                     onClick={(e) => {
-                      console.log(e.target.value);
+                      setImageClicked(index)
+                      console.log(item.label);
                     }}
                   />
                 </Tooltip>
@@ -100,6 +111,9 @@ function ImportScrapper() {
           </Card>
         ))}
       </Grid>
+      <Button variant="contained" onClick={() => { searchWebClick() }}>
+        <FormattedMessage id="app.button.accept"></FormattedMessage>
+      </Button>
     </Box>
   );
 }
