@@ -104,7 +104,7 @@ const register = (firstName, lastName, email, userName, password) => {
       password,
     })
     .then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       if (response.status === 200 || response.status === 201) {
         return response;
       }

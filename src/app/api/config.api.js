@@ -36,6 +36,7 @@ const VIEW_COLLECTIONS_URL = (id) => `${API_URL}/view-collections/${id}`;
 const VIEW_SERIES_URL = (id) => `${API_URL}/view-series/${id}`;
 const CREATE_THEMES_URL = `${API_URL}/config/create-theme/`;
 const VIEW_THEMES_URL = `${API_URL}/config/get-themes/`;
+const VIEW_APIS_URL = (id) => `${API_URL}/config/get-api-list/${id}`;
 const CONFIG_URL = (id) => `${API_URL}/config/get-config/${id}`;
 const POST_APPEARANCE_CONFIG = `${API_URL}/config/save`;
 const VIEW_FEEDS_URL = (id) => `${API_URL}/feeds/view/${id}`;
@@ -230,6 +231,15 @@ const deleteSerie = (id) => {
   return axios
     .delete(DELETE_SERIE_ID_URL(id), { headers: authHeader() })
     .then((response) => {
+      return response;
+    });
+};
+
+const getAllApis = (id) => {
+  return axios
+    .get(VIEW_APIS_URL(id), { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
       return response;
     });
 };
@@ -513,6 +523,7 @@ const ConfigService = {
   deleteCollection,
   deleteFeed,
   deleteSerie,
+  getAllApis,
   getAllSeries,
   getAllThemes,
   getAllUserFeeds,
