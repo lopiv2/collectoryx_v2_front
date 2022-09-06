@@ -5,6 +5,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { green, blue, grey } from "@mui/material/colors";
 //import axios from "axios";
 
+const cleanUrl = (url) => {
+  let cleanedUrl = url.includes("https")
+    ? url.slice(8)
+    : url.includes("http") && url.slice(7);
+  cleanedUrl = cleanedUrl.includes("/") ? cleanedUrl.split("/")[0] : cleanedUrl;
+  return cleanedUrl;
+};
+
 const CreateTheme = (userData) => {
   const currTheme = createTheme({
     palette: {
@@ -83,6 +91,27 @@ const CurrencyChecker = () => {
   return res;
 };
 
+const FilterResultsByApiProvider = (results, selectedApi) => {
+  var items = [];
+  if (selectedApi.name.includes("Pokemon")) {
+    if (results.data) {
+      console.log(results.data);
+      results.data.map((item, index) =>
+        items.push({
+          id: item.id,
+          name: item.name,
+          image: item.images.large,
+          serie: item.set.series,
+          price: item.tcgplayer.prices.normal,
+        })
+      );
+      return items;
+    }
+    return null;
+  }
+  return null;
+};
+
 const GetCurrencySymbolLocale = () => {
   const res = CurrencyChecker();
   const currency = res.currency;
@@ -98,10 +127,6 @@ const GetCurrencySymbolLocale = () => {
     .trim();
 };
 
-const setToLocalStorage = (key, value) => {
-  localStorage.setItem(key, JSON.stringify(value));
-};
-
 const getFromLocalStorage = (key) => {
   const value = localStorage.getItem(key);
   if (value) {
@@ -115,18 +140,15 @@ function getImagePaths(directory) {
   return images;
 }
 
-const cleanUrl = (url) => {
-  let cleanedUrl = url.includes("https")
-    ? url.slice(8)
-    : url.includes("http") && url.slice(7);
-  cleanedUrl = cleanedUrl.includes("/") ? cleanedUrl.split("/")[0] : cleanedUrl;
-  return cleanedUrl;
+const setToLocalStorage = (key, value) => {
+  localStorage.setItem(key, JSON.stringify(value));
 };
 
 export {
   cleanUrl,
   CreateTheme,
   CurrencyChecker,
+  FilterResultsByApiProvider,
   GetCurrencySymbolLocale,
   getFromLocalStorage,
   getImagePaths,

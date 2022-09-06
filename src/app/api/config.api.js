@@ -25,8 +25,7 @@ const GET_COLLECTION_ITEMS_YEAR_ID_URL = (id) =>
 const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
-  const GET_ITEM_WEB_QUERY_URL = (query) =>
-  `${API_URL}/scrapper/get-item-from-api/${query}`;
+const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
 const IMAGES_URL = `${API_URL}/images`;
 const FILE_URL = `${API_URL}/import-file`;
 const FILE_PARSE_URL = `${API_URL}/parse-file`;
@@ -82,7 +81,7 @@ const createApi = (userId, name, apiLink, keyCode, logo) => {
     name: name,
     apiLink: apiLink,
     keyCode: keyCode,
-    logo: logo
+    logo: logo,
   };
   //console.log(data)
   return axios
@@ -383,16 +382,23 @@ const getImages = (query) => {
   return axios
     .get(GET_IMAGES_QUERY_URL(query), { headers: authHeader() })
     .then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       return response;
     });
 };
 
-const getItemFromWeb = (query) => {
+const getItemFromWeb = (searchQuery, apiSelected) => {
+  const data = {
+    searchQuery: searchQuery,
+    url: apiSelected.apiLink,
+    header: apiSelected.header,
+    keyCode: apiSelected.keyCode,
+  };
+  //console.log(data);
   return axios
-    .get(GET_ITEM_WEB_QUERY_URL(query), { headers: authHeader() })
+    .post(GET_ITEM_WEB_QUERY_URL, data, { headers: authHeader() })
     .then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       return response;
     });
 };
