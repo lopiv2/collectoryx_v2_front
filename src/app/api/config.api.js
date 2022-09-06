@@ -25,6 +25,8 @@ const GET_COLLECTION_ITEMS_YEAR_ID_URL = (id) =>
 const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
+  const GET_ITEM_WEB_QUERY_URL = (query) =>
+  `${API_URL}/scrapper/get-item-from-api/${query}`;
 const IMAGES_URL = `${API_URL}/images`;
 const FILE_URL = `${API_URL}/import-file`;
 const FILE_PARSE_URL = `${API_URL}/parse-file`;
@@ -37,6 +39,8 @@ const VIEW_SERIES_URL = (id) => `${API_URL}/view-series/${id}`;
 const CREATE_THEMES_URL = `${API_URL}/config/create-theme/`;
 const VIEW_THEMES_URL = `${API_URL}/config/get-themes/`;
 const VIEW_APIS_URL = (id) => `${API_URL}/config/get-api-list/${id}`;
+const CREATE_API_URL = `${API_URL}/config/create-api`;
+const DELETE_API_ID_URL = (id) => `${API_URL}/config/delete-api/${id}`;
 const CONFIG_URL = (id) => `${API_URL}/config/get-config/${id}`;
 const POST_APPEARANCE_CONFIG = `${API_URL}/config/save`;
 const VIEW_FEEDS_URL = (id) => `${API_URL}/feeds/view/${id}`;
@@ -69,6 +73,31 @@ const countCollectionsItems = (id) => {
     .then((response) => {
       //console.log(response.data);
       return response.data;
+    });
+};
+
+const createApi = (userId, name, apiLink, keyCode, logo) => {
+  const data = {
+    userId: userId,
+    name: name,
+    apiLink: apiLink,
+    keyCode: keyCode,
+    logo: logo
+  };
+  //console.log(data)
+  return axios
+    .post(CREATE_API_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
     });
 };
 
@@ -191,6 +220,14 @@ const createTheme = (id, values) => {
     .post(CREATE_THEMES_URL, data, { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
+      return response;
+    });
+};
+
+const deleteApi = (id) => {
+  return axios
+    .delete(DELETE_API_ID_URL(id), { headers: authHeader() })
+    .then((response) => {
       return response;
     });
 };
@@ -345,6 +382,15 @@ const getCollectionById = (id) => {
 const getImages = (query) => {
   return axios
     .get(GET_IMAGES_QUERY_URL(query), { headers: authHeader() })
+    .then((response) => {
+      console.log(response.data);
+      return response;
+    });
+};
+
+const getItemFromWeb = (query) => {
+  return axios
+    .get(GET_ITEM_WEB_QUERY_URL(query), { headers: authHeader() })
     .then((response) => {
       console.log(response.data);
       return response;
@@ -515,10 +561,12 @@ const ConfigService = {
   countCollectionsItems,
   countCollectionsMoney,
   createCollection,
+  createApi,
   createFeed,
   createItem,
   createSerie,
   createTheme,
+  deleteApi,
   deleteCollectionItem,
   deleteCollection,
   deleteFeed,
@@ -527,9 +575,7 @@ const ConfigService = {
   getAllSeries,
   getAllThemes,
   getAllUserFeeds,
-  getUserFeedsIDTitle,
   getAllUserReadFeeds,
-  getUserConfig,
   getCollectionItemsById,
   getCollectionById,
   getCollectionItem,
@@ -537,6 +583,9 @@ const ConfigService = {
   getCollectionLists,
   getCollectionSeries,
   getImages,
+  getItemFromWeb,
+  getUserConfig,
+  getUserFeedsIDTitle,
   parseFile,
   putFile,
   putImage,

@@ -11,22 +11,12 @@ import Tab from "@mui/material/Tab";
 import { TabContext } from "@material-ui/lab";
 import { TabList } from "@material-ui/lab";
 import { TabPanel } from "@material-ui/lab";
-import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
-import styles from "../styles/Collections.css";
-import { ColorPicker, createColor } from "material-ui-color";
-import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import ThemeTemplate from "../components/ThemeFiller";
 import ManageApiTab from "../components/ManageApiTab";
 import SelectThemeTab from "../components/SelectThemeTab";
 
 function ConfigInterface() {
-  const [primaryColor, setPrimaryColor] = useState(createColor("#000"));
-  const [secondaryColor, setSecondaryColor] = useState(createColor("#000"));
-  const [sidebarColor, setSidebarColor] = useState(createColor("#fff"));
-  const [topbarColor, setTopbarColor] = useState(createColor("#2f7cffff"));
-  const [listItemColor, setListItemColor] = useState(createColor("#000"));
-  const [backColor, setBackColor] = useState(createColor("#fff"));
   const intl = useIntl();
   const [value, setValue] = useState("1");
 

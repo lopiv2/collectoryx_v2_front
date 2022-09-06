@@ -139,24 +139,10 @@ const countriesOptions = [
   },
 ];
 
-const scrappingWebs = [
-  {
-    value: "marvel",
-    label: "Marvel",
-    logo: "",
-  },
-  {
-    value: "dc",
-    label: "DC",
-    logo: "",
-  },
-];
-
 const OptionsService = {
   createCollectionOptions,
   countriesOptions,
   fieldTypes,
-  scrappingWebs
 };
 
 export default OptionsService;

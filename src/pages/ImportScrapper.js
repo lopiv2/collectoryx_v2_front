@@ -19,25 +19,31 @@ import { AppContext } from "../components/AppContext";
 function ImportScrapper() {
   const navigate = useNavigate();
   const intl = useIntl();
-  const [collectionList, setCollectionList] = useState([]);
+  const [apisList, setApisList] = useState([]);
   const { userData, setUserData } = React.useContext(AppContext);
   const [imageClicked, setImageClicked] = useState();
   const [searchString, setSearchString] = useState("");
 
   useEffect(() => {
-    setCollectionList(OptionsService.scrappingWebs)
+    const apiList = ConfigService.getAllApis(userData.id)
+      .then((response) => {
+        setApisList(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   useEffect(() => {
-    //console.log(collectionList);
-  }, [collectionList])
+    console.log(apisList);
+  }, [apisList])
 
   const handleTextInputChange = (event) => {
     setSearchString(event.target.value);
   };
 
   const searchWebClick = () => {
-    const collectionSeries = ConfigService.getImages(searchString).then((response) => {
+    const collectionSeries = ConfigService.getItemFromWeb(searchString).then((response) => {
       console.log(response.data);
     });
   };
@@ -81,18 +87,18 @@ function ImportScrapper() {
         />
       </Grid>
       <Grid container sx={{ border: 2 }}>
-        {collectionList.map((item, index) => (
+        {apisList.map((item, index) => (
           <Card key={index}>
             <CardContent>
               <Grid item xs={2}>
                 <Tooltip
-                  title={item.label}
+                  title={item.name}
                   placement="bottom"
                   arrow
                 >
                   <Avatar
                     variant="rounded"
-                    key={item.label}
+                    key={item.name}
                     sx={
                       imageClicked === index
                         ? avatarStyleClicked
@@ -102,7 +108,7 @@ function ImportScrapper() {
                     width="100%"
                     onClick={(e) => {
                       setImageClicked(index)
-                      console.log(item.label);
+                      console.log(item.name);
                     }}
                   />
                 </Tooltip>

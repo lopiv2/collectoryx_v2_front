@@ -17,6 +17,7 @@ import * as Yup from "yup";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ConfirmDialog from "../ConfirmDialog";
+import { AppContext } from "../../components/AppContext";
 
 function ManageApiTab(props) {
   const [apisList, setApisList] = useState([]);
@@ -28,14 +29,10 @@ function ManageApiTab(props) {
   const intl = useIntl();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [value, setValue] = useState(null);
-
-  if (localStorage.getItem("user")) {
-    var user = localStorage.getItem("user");
-    var userData = JSON.parse(user);
-  }
+  const { userData, setUserData } = React.useContext(AppContext);
 
   const handleDeleteClick = () => {
-    const deleteItem = ConfigService.deleteSerie(value).then((response) => {
+    const deleteItem = ConfigService.deleteApi(value).then((response) => {
       if (response.data === true) {
         toast.success(
           <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
@@ -53,74 +50,30 @@ function ManageApiTab(props) {
   };
 
   useEffect(() => {
-    const collectionSeries = ConfigService.getAllApis(userData.id)
+    const apiList = ConfigService.getAllApis(userData.id)
       .then((response) => {
         setApisList(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    const collections = ConfigService.getCollectionLists(userData.id)
-      .then((response) => {
-        setCollectionList(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }, []);
 
-  useEffect(() => {
-    if (!selectedFile) {
-      setPreview(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreview(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile]);
-
   const submitForm = (values) => {
-    if (values.file === undefined) {
-      ConfigService.createSerie(values.name, values.collection, null).then(
-        (response) => {
-          if (response.status === 200) {
-            toast.success(
-              <FormattedMessage id="app.collection.serie-created"></FormattedMessage>,
-              { theme: "colored" }
-            );
-            setApisList((apisList) => [
-              ...apisList,
-              response.data,
-            ]);
-          }
-        }
-      );
-    } else {
-      ConfigService.putImage(values.name, values.file).then((response) => {
-        ConfigService.createSerie(
-          values.name,
-          values.collection,
-          response.data.path
-        );
+    ConfigService.createApi(userData.id, values.name, values.url, values.key, values.logo).then(
+      (response) => {
         if (response.status === 200) {
           toast.success(
-            <FormattedMessage id="app.collection.serie-created"></FormattedMessage>,
+            <FormattedMessage id="app.config.general.api-created"></FormattedMessage>,
             { theme: "colored" }
           );
+          setApisList((apisList) => [
+            ...apisList,
+            response.data,
+          ]);
         }
-        setApisList((apisList) => [
-          ...apisList,
-          response.data,
-        ]);
-      });
-    }
-  };
-
-  const handleChangeCollection = (event) => {
-    setCollection(event.target.value);
+      }
+    );
   };
 
   const newSerieSchema = Yup.object().shape({
@@ -175,7 +128,7 @@ function ManageApiTab(props) {
     let cols = {
       name: item.name,
       url: item.apiLink,
-      url: item.keyCode,
+      key: item.keyCode,
       logo:
         item.logo === null ? (
           <Avatar
@@ -191,7 +144,7 @@ function ManageApiTab(props) {
           ></Avatar>
         ),
     };
-    console.log(apisList)
+    //console.log(apisList)
     return cols;
   });
 
@@ -204,15 +157,14 @@ function ManageApiTab(props) {
             <FormattedMessage id="app.config.general_apis_tab_add_title"></FormattedMessage>
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Formik
-            initialValues={{ name: "", logo: "" }}
+            initialValues={{ name: "", key: "", url: "", logo: "" }}
             validate={(values) => {
               const errors = {};
             }}
             validationSchema={newSerieSchema}
             onSubmit={(values, { setSubmitting }) => {
-              values.collection = collection;
               submitForm(values);
               setSubmitting(false);
             }}
@@ -239,7 +191,7 @@ function ManageApiTab(props) {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         label={
-                          <FormattedMessage id="app.collection.add_collection_serie"></FormattedMessage>
+                          <FormattedMessage id="app.config.general_apis_tab_list_name"></FormattedMessage>
                         }
                         error={touched.name && Boolean(errors.name)}
                         helperText={touched.name && errors.name}
@@ -251,74 +203,47 @@ function ManageApiTab(props) {
                   <Grid item xs={9}>
                     <TextField
                       id="demo-simple-select"
-                      name="collection"
-                      select
+                      name="key"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       size="small"
                       sx={{ minWidth: 300 }}
-                      defaultValue=""
-                      value={collection ?? ""}
-                      error={touched.collection && Boolean(errors.collection)}
-                      helperText={touched.collection && errors.collection}
+                      value={values.key}
                       label={
-                        <FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>
+                        <FormattedMessage id="app.config.general_apis_tab_list_key"></FormattedMessage>
                       }
-                      onChange={handleChangeCollection}
                     >
-                      {collectionList?.map((option) => {
-                        return (
-                          <MenuItem key={option.id} value={option.id}>
-                            {option.name}
-                          </MenuItem>
-                        );
-                      })}
                     </TextField>
                   </Grid>
-                  <Grid item xs={4} pt={1}>
+                  <Grid item xs={9}>
                     <TextField
-                      sx={{ minWidth: 300 }}
+                      id="demo-simple-select"
+                      name="url"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       size="small"
-                      id="outlined-basic"
+                      sx={{ minWidth: 300 }}
+                      value={values.url}
+                      label={
+                        <FormattedMessage id="app.config.general_apis_tab_list_url"></FormattedMessage>
+                      }
+                    >
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <TextField
+                      id="demo-simple-select"
                       name="logo"
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      size="small"
+                      sx={{ minWidth: 300 }}
+                      value={values.logo}
                       label={
-                        <FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>
+                        <FormattedMessage id="app.config.general_apis_tab_list_logo"></FormattedMessage>
                       }
-                      variant="outlined"
-                      value={selectedFile.name || ""}
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Box pt={0.3} ml={5}>
-                      <Button variant="contained" component="label">
-                        {
-                          <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
-                        }
-                        <input
-                          type="file"
-                          hidden
-                          name="file"
-                          accept="image/png, image/jpeg"
-                          onChange={(e) => {
-                            setFieldValue("file", e.currentTarget.files[0]);
-                            setSelectedFile(e.currentTarget.files[0]);
-                          }}
-                        />
-                      </Button>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} pt={1}>
-                    <Box
-                      pt={0}
-                      ml={0}
-                      component="img"
-                      sx={{
-                        height: 150,
-                        width: 200,
-                      }}
-                      alt="Logo"
-                      src={preview ? preview : NoImage}
-                    ></Box>
+                    >
+                    </TextField>
                   </Grid>
                   <Grid item xs={8}>
                     <Button
@@ -335,7 +260,7 @@ function ManageApiTab(props) {
             )}
           </Formik>
         </Grid>
-        <Grid item xs={5} mr={2}>
+        <Grid item xs={6} mr={2}>
           <MaterialTable
             title={
               <FormattedMessage id="app.config.general_apis_tab_list_title"></FormattedMessage>
