@@ -77,6 +77,8 @@
   "app.money_spent": "Total money spent",
   "app.total_items": "Total items",
   "app.total_collections": "Total collections",
+  "app.most_valuable_item": "Most Expensive Item",
+  "app.most_valuable_item_collection": "{col} collection ",
   "app.dashboard.license_days": "License valid for {days} days",
   "app.dashboard.admin_panel": "App management",
   "app.collection.add_collection_empty": "Empty template",

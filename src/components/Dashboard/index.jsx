@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CollectionsSpentCard from '../CollectionsSpendCard';
 import TotalItemsCard from '../TotalItemsCard';
 import TotalCollectionsCard from "../TotalCollectionsCard";
+import MostValuableItem from "../MostValuableItem";
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { Box } from "@mui/material";
@@ -26,6 +27,9 @@ export default function Dashboard(props) {
                 </Grid>
                 <Grid item xs={10} md={8} lg={4}>
                     <TotalCollectionsCard item xs={12} md={8} lg={9}></TotalCollectionsCard>
+                </Grid>
+                <Grid item xs={10} md={8} lg={4}>
+                    <MostValuableItem item xs={12} md={8} lg={9}></MostValuableItem>
                 </Grid>
             </Grid>
             {/*Charts*/}

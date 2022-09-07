@@ -8,6 +8,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { Grid, Box, Avatar, TextField, Typography } from "@mui/material";
 import { getImagePaths } from "../../utils/generic";
 import { Tooltip } from "@mui/material";
+import ConfigService from "../../app/api/config.api";
 
 const ImageGalleryDialog = (props) => {
   const { title, open, setOpen, onConfirm, setImageSelected } = props;
@@ -16,17 +17,14 @@ const ImageGalleryDialog = (props) => {
   var listOfImages = [];
   const intl = useIntl();
 
-  useEffect(() => { }, []);
-
   useEffect(() => {
     if (open === true) {
-      const directory = require.context(
-        "../../../public/images/",
-        false,
-        /\.(png|jpe?g|svg)$/
-      );
-      listOfImages = getImagePaths(directory);
-      setImages(listOfImages);
+      const imagesList = ConfigService.getLocalImages().then((response) => {
+        var filteredResponse=[]
+        filteredResponse=response.data.filter(image=>!image.path.includes("http"))
+        filteredResponse.map((i) => 
+            setImages((images) => [...images, i.path]));    
+      });
     }
   }, [open]);
 
@@ -71,14 +69,11 @@ const ImageGalleryDialog = (props) => {
               <Grid
                 container
                 spacing={{ xs: 5, md: 15 }}
-                columns={{ xs: 4, sm: 8, md: 12 }}>
+                columns={{ xs: 4, sm: 8, md: 12 }}
+              >
                 {images.map((i) => (
                   <Grid item xs={2} key={i}>
-                    <Tooltip
-                      title={i}
-                      placement="bottom"
-                      arrow
-                    >
+                    <Tooltip title={i} placement="bottom" arrow>
                       <Avatar
                         key={i}
                         variant="rounded"

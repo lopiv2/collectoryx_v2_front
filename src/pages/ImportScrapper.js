@@ -46,7 +46,7 @@ function ImportScrapper() {
   }, [results]);
 
   const importSelectedItem = () => {
-    console.log(selectedItem)
+    //console.log(selectedItem)
     const item = ConfigService.importItemFromWeb(selectedItem)
       .then((response) => {
         if(response.status===200){
@@ -54,7 +54,7 @@ function ImportScrapper() {
             <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
             { theme: "colored" }
           );
-          console.log(response.data)
+          //console.log(response.data)
         }    
       })
   }

@@ -77,6 +77,8 @@
   "app.money_spent": "Dinero gastado en total",
   "app.total_items": "Articulos totales",
   "app.total_collections": "Colecciones totales",
+  "app.most_valuable_item": "Objeto más caro",
+  "app.most_valuable_item_collection": "Colección {col}",
   "app.dashboard.license_days": "Quedan {days} dias de licencia",
   "app.dashboard.admin_panel": "Gestion de la aplicación",
   "app.collection.add_collection_empty": "Nueva plantilla",

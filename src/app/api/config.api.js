@@ -23,11 +23,13 @@ const GET_COLLECTION_ITEM_ID_URL = (id) => `${API_URL}/get-item/${id}`;
 const GET_COLLECTION_ITEMS_YEAR_ID_URL = (id) =>
   `${API_URL}/get-items-per-year/${id}`;
 const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
+const MOST_VALUABLE_ITEM_URL = (id) => `${API_URL}/most-valuable-item/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
 const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
 const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
+const GET_LOCAL_IMAGES_URL = `${API_URL}/images/get-images-local`;
 const FILE_URL = `${API_URL}/import-file`;
 const FILE_PARSE_URL = `${API_URL}/parse-file`;
 const TOGGLE_COLLECTION_AMBIT_URL = `${API_URL}/toggle-collection-ambit`;
@@ -379,9 +381,27 @@ const getCollectionById = (id) => {
     });
 };
 
-const getImages = (query) => {
+const getImages = (query) => { 
   return axios
     .get(GET_IMAGES_QUERY_URL(query), { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
+const getLocalImages = () => {
+  return axios
+    .get(GET_LOCAL_IMAGES_URL, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
+const getMostValuableItem = (id) => {
+  return axios
+    .get(MOST_VALUABLE_ITEM_URL(id), { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
       return response;
@@ -600,6 +620,8 @@ const ConfigService = {
   getCollectionSeries,
   getImages,
   getItemFromWeb,
+  getLocalImages,
+  getMostValuableItem,
   getUserConfig,
   getUserFeedsIDTitle,
   importItemFromWeb,

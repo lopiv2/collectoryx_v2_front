@@ -691,7 +691,7 @@ function DisplayCollection(props) {
                           align="center"
                           sx={{ mb: 0.5 }}
                           mt={1}
-                          color="text.secondary"
+                          color="text.primary"
                         >
                           {item.image === null && (
                             <CardMedia
@@ -769,7 +769,7 @@ function DisplayCollection(props) {
               height={350}
               src={
                 imageClicked !== ""
-                  ? require("../../public/images/" + imageClicked)
+                  ? checkImage(imageClicked)
                   : null
               }
               width="100%"

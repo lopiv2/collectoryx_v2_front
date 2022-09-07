@@ -198,7 +198,7 @@ function AddItem(props) {
   });
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       <Grid container>
         <Grid item xs={6}>
           <Typography variant="h5" component="h5">
@@ -258,8 +258,8 @@ function AddItem(props) {
                       src={preview ? preview : NoImage}
                     ></Box>
                   </Grid>
-                  <Box ml={2}>
-                    <Grid container spacing={2}>
+
+                    <Grid container spacing={2} ml={0}>
                       <Grid item>
                         <Button variant="contained" component="label">
                           {
@@ -318,7 +318,7 @@ function AddItem(props) {
                         </Tooltip>
                       </Grid>
                     </Grid>
-                  </Box>
+                  
                   <Grid container spacing={40}>
                     <Grid item xs={2}>
                       <Box pt={2} ml={2}>

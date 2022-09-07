@@ -117,6 +117,7 @@ function ManageApiTab(props) {
     {
       title: intl.formatMessage({ id: "app.config.general_apis_tab_list_key" }),
       field: "key",
+      render: rowData => <p>{rowData.key.split('').map(() => '*')}</p>,
     },
     {
       title: intl.formatMessage({ id: "app.collection.add_collection_logo" }),
@@ -157,7 +158,7 @@ function ManageApiTab(props) {
             <FormattedMessage id="app.config.general_apis_tab_add_title"></FormattedMessage>
           </Typography>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Formik
             initialValues={{ name: "", key: "", url: "", logo: "" }}
             validate={(values) => {
@@ -260,7 +261,7 @@ function ManageApiTab(props) {
             )}
           </Formik>
         </Grid>
-        <Grid item xs={6} mr={2}>
+        <Grid item xs={8} mr={2}>
           <MaterialTable
             title={
               <FormattedMessage id="app.config.general_apis_tab_list_title"></FormattedMessage>
