@@ -26,6 +26,7 @@ const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
 const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
+const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
 const FILE_URL = `${API_URL}/import-file`;
 const FILE_PARSE_URL = `${API_URL}/parse-file`;
@@ -413,6 +414,15 @@ const getUserConfig = (id) => {
     });
 };
 
+const importItemFromWeb = (item) => {
+  return axios
+    .post(IMPORT_ITEM_WEB_URL, item, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
 const buildUserConfig = (response, userName) => {
   const userConfig = {
     userName: userName,
@@ -592,6 +602,7 @@ const ConfigService = {
   getItemFromWeb,
   getUserConfig,
   getUserFeedsIDTitle,
+  importItemFromWeb,
   parseFile,
   putFile,
   putImage,

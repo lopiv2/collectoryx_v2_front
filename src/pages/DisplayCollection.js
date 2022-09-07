@@ -57,6 +57,7 @@ function DisplayCollection(props) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [imageClicked, setImageClicked] = useState(null);
+  const [cardHover, setCardHover] = useState(null);
   const [toggleView, setToggleView] = useState("grid");
   const breadcrumbs = useBreadcrumbs();
   const [collectionId, setCollectionId] = useState();
@@ -77,9 +78,11 @@ function DisplayCollection(props) {
         })
       }
       if (templateSelected === "file") {
-        navigate("/collections/import-scrapper");
-      }
-    };
+        navigate("/collections/import-scrapper", {
+          state: { id: collectionId, name: location.state.name },
+        })
+      };
+    }
 
     return (
       <Dialog onClose={handleClose} open={open}>
@@ -248,6 +251,16 @@ function DisplayCollection(props) {
     );
   };
 
+  const checkImage = (item) => {
+    if (!item.image.path.includes("http")) {
+      return require("../../public/images/" +
+        item.image.path)
+    }
+    else {
+      return item.image.path
+    }
+  }
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -329,6 +342,14 @@ function DisplayCollection(props) {
     },
   ];
 
+  const cardStyleHover = {
+    cursor: "pointer",
+    height: 400,
+    minWidth: 250,
+    maxWidth: 250,
+    boxShadow: 15,
+  };
+
   const data = collectionItems.map((item) => {
     let rows = {
       id: item.id,
@@ -376,7 +397,7 @@ function DisplayCollection(props) {
         >
           <IconButton
             onClick={() => {
-              setImageClicked(item.image.path);
+              setImageClicked(item);
               handleOpen();
             }}
             size="small"
@@ -389,7 +410,7 @@ function DisplayCollection(props) {
             {item.image != null ? (
               <Avatar
                 variant="rounded"
-                src={require("../../public/images/" + item.image.path)}
+                src={checkImage(item)}
                 sx={{ width: 100, height: 35 }}
               />
             ) : (
@@ -542,15 +563,24 @@ function DisplayCollection(props) {
             <Grid container spacing={5} className="container" pt={3}>
               {collectionItems !== undefined
                 ? collectionItems.map((item) => (
-                  <Grid item key={item.id}>
+                  <Grid item key={item.id} >
                     <Card
-                      sx={{
-                        height: 350,
-                        minWidth: 250,
-                        maxWidth: 250,
-                        boxShadow: 5,
-                      }}
+                      sx={
+                        cardHover === item ? cardStyleHover :
+                          {
+                            height: 400,
+                            minWidth: 250,
+                            maxWidth: 250,
+                            boxShadow: 3,
+                          }
+                      }
                       ml={200}
+                      onMouseOver={() => {
+                        setCardHover(item)
+                      }}
+                      onMouseOut={() => {
+                        setCardHover(null)
+                      }}
                     >
                       <Box ml={23.1} mb={-10}>
                         <Tooltip
@@ -640,23 +670,21 @@ function DisplayCollection(props) {
                             arrow
                             followCursor
                           >
-                            {item.image != null && (
-                              <CardMedia
+                            {item.image != null &&
+                              (<CardMedia
                                 component="img"
                                 width="500%"
                                 height="220"
-                                image={require("../../public/images/" +
-                                  item.image.path)}
+                                image={checkImage(item)}
                                 alt={item.name}
                                 className="card-collection"
                                 value={item.image.path}
                                 onClick={() => {
-                                  setImageClicked(item.image.path);
+                                  setImageClicked(item);
                                   handleOpen();
                                 }}
                                 style={styles}
-                              />
-                            )}
+                              />)}
                           </Tooltip>
                         )}
                         <Typography
@@ -675,6 +703,12 @@ function DisplayCollection(props) {
                             />
                           )}
                           {item.name}
+                        </Typography>
+                        <Typography
+                          align="center"
+                          color="text.secondary"
+                        >
+                          {item.year}
                         </Typography>
                       </CardContent>
                       <CardActions style={{ justifyContent: "center" }}>
@@ -744,7 +778,7 @@ function DisplayCollection(props) {
         )}
         <SimpleDialog open={openNew} onClose={handleCloseNewCol} />
       </Grid>
-    </Box>
+    </Box >
   );
 }
 

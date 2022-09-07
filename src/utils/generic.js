@@ -91,18 +91,18 @@ const CurrencyChecker = () => {
   return res;
 };
 
-const FilterResultsByApiProvider = (results, selectedApi) => {
+const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   var items = [];
   if (selectedApi.name.includes("Pokemon")) {
     if (results.data) {
       console.log(results.data);
       results.data.map((item, index) =>
         items.push({
-          id: item.id,
           name: item.name,
           image: item.images.large,
+          collection: collection,
           serie: item.set.series,
-          price: item.tcgplayer.prices.normal,
+          price: item.tcgplayer.prices.normal ? item.tcgplayer.prices.normal.mid : 0.0,
         })
       );
       return items;

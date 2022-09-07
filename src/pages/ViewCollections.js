@@ -20,6 +20,7 @@ function ViewCollection(props) {
   const [collectionsList, setCollectionsList] = useState([]);
   const navigate = useNavigate();
   const [col, setCol] = useState([]);
+  const [cardHover, setCardHover] = useState(null);
   const breadcrumbs = useBreadcrumbs();
   const { userData, setUserData } = React.useContext(AppContext);
   let isMounted = useRef(false);
@@ -64,6 +65,14 @@ function ViewCollection(props) {
     }
   }, [collectionsList]);
 
+  const cardStyleHover = {
+    cursor: "pointer",
+    height: 400,
+    minWidth: 250,
+    maxWidth: 250,
+    boxShadow: 15,
+  };
+
   return (
     <Box >
       <ToastContainer autoClose={2000} />
@@ -91,8 +100,22 @@ function ViewCollection(props) {
           {collectionsList.map((item, index) => (
             <Grid item key={item.id}>
               <Card
-                sx={{ height: 400, minWidth: 250, maxWidth: 250, boxShadow: 5 }}
+                sx={
+                  cardHover === item ? cardStyleHover :
+                    {
+                      height: 400,
+                      minWidth: 250,
+                      maxWidth: 250,
+                      boxShadow: 3,
+                    }
+                }
                 ml={200}
+                onMouseOver={() => {
+                  setCardHover(item)
+                }}
+                onMouseOut={() => {
+                  setCardHover(null)
+                }}
               >
                 <CardContent>
                   {item.logo ? null : (

@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import { TextField } from "@mui/material";
-import { Box, ListItem } from "@mui/material";
-import { MenuItem } from "@mui/material";
+import { Box } from "@mui/material";
+import { useLocation } from "react-router-dom";
 import { Grid, Card, CardContent, Avatar } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
@@ -11,7 +11,6 @@ import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import styles from "../styles/Collections.css";
 import { Tooltip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AppContext } from "../components/AppContext";
@@ -29,6 +28,8 @@ function ImportScrapper() {
   const [searching, setSearching] = useState(true);
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
+  const [cardHover, setCardHover] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
     const apiList = ConfigService.getAllApis(userData.id)
@@ -41,8 +42,22 @@ function ImportScrapper() {
   }, []);
 
   useEffect(() => {
-    console.log(results);
+    //console.log(results);
   }, [results]);
+
+  const importSelectedItem = () => {
+    console.log(selectedItem)
+    const item = ConfigService.importItemFromWeb(selectedItem)
+      .then((response) => {
+        if(response.status===200){
+          toast.success(
+            <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
+            { theme: "colored" }
+          );
+          console.log(response.data)
+        }    
+      })
+  }
 
   const handleTextInputChange = (event) => {
     setSearchString(event.target.value);
@@ -54,7 +69,8 @@ function ImportScrapper() {
       searchString,
       selectedApi
     ).then((response) => {
-      setResults(FilterResultsByApiProvider(response.data, selectedApi));
+      //console.log(response.data)
+      setResults(FilterResultsByApiProvider(response.data, selectedApi, location.state.id));
       setSearching(false);
       setStartSearch(false);
       setShowResults(true);
@@ -71,6 +87,22 @@ function ImportScrapper() {
     cursor: "pointer",
     width: 80,
     height: 80,
+  };
+
+  const cardStyle = {
+    display: 'block',
+    width: 150,
+  }
+
+  const avatarCardStyle = {
+    display: 'block',
+    width: '120%',
+    height: 200
+  }
+
+  const cardStyleHover = {
+    cursor: "pointer",
+    boxShadow: 15,
   };
 
   return (
@@ -111,8 +143,8 @@ function ImportScrapper() {
       <Grid container sx={{ border: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {showResults === false &&
           apisList.map((item, index) => (
-            <Grid item pl={2} pt={2} pb={2} >
-              <Card key={index}>
+            <Grid item pl={2} pt={2} pb={2} key={index} >
+              <Card>
                 <Tooltip title={item.name} placement="bottom" arrow>
                   <Avatar
                     variant="rounded"
@@ -133,16 +165,27 @@ function ImportScrapper() {
             </Grid>
           ))}
       </Grid>
-      {startSearch === true ? (
-        <CircularProgress />
-      ) : (
-        <Grid container spacing={5} sx={{ border: 2 }}>
-          {results.map((item, index) => (
-            <Grid item xs={2}>
-              <Card key={index}>
-                <CardContent>
+      <Grid container sx={{ border: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+        {startSearch === true ? (
+          <CircularProgress />
+        ) : (
+          results.map((item, index) => (
+            <Grid item key={index} pl={2} pt={2} pb={2}>
+              <Card style={cardStyle} sx={
+                cardHover === item ? cardStyleHover :
+                  {
+                    boxShadow: 3,
+                  }
+              }
+                onMouseOver={() => {
+                  setCardHover(item)
+                }}
+                onMouseOut={() => {
+                  setCardHover(null)
+                }}>
+                <CardContent style={{ display: 'flex', justifyContent: 'center' }} >
                   <Tooltip title={item.name} placement="bottom" arrow>
-                    <Avatar
+                    <Avatar style={avatarCardStyle}
                       variant="rounded"
                       key={item.name}
                       sx={
@@ -154,17 +197,18 @@ function ImportScrapper() {
                       width="100%"
                       onClick={(e) => {
                         setSelectedItem(item);
-                        console.log(item.name);
                       }}
                     />
                   </Tooltip>
                 </CardContent>
+                {item.name}
               </Card>
             </Grid>
-          ))}
-        </Grid>
-      )}
-      <Grid container>
+          ))
+
+        )}
+      </Grid>
+      <Grid container pt={2}>
         {showResults === false && (
           <Button
             variant="contained"
@@ -183,7 +227,7 @@ function ImportScrapper() {
                 disabled={selectedItem ? false : true}
                 color="success"
                 onClick={() => {
-                  console.log(selectedItem);
+                  importSelectedItem();
                 }}
               >
                 <FormattedMessage id="app.collection.add_collection_import_scrapper_item"></FormattedMessage>
