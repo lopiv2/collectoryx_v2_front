@@ -97,15 +97,6 @@ function ManageCollections(props) {
                 })}
               />
             </Grid>
-            <Grid item ml={2}>
-              <FormControlLabel
-                value="shop"
-                control={<Radio />}
-                label={intl.formatMessage({
-                  id: "app.collection.add_collection_import_shop",
-                })}
-              />
-            </Grid>
             <Grid container style={{ justifyContent: "center" }}>
               <Grid ml={2} mb={2}>
                 <Button
@@ -116,7 +107,7 @@ function ManageCollections(props) {
                   <FormattedMessage id="app.button.accept"></FormattedMessage>
                 </Button>
               </Grid>
-              <Grid ml={2}>
+              <Grid ml={3} mr={2}>
                 <Button variant="contained" color="error" onClick={onClose}>
                   <FormattedMessage id="app.button.cancel"></FormattedMessage>
                 </Button>

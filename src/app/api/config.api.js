@@ -26,6 +26,8 @@ const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const MOST_VALUABLE_ITEM_URL = (id) => `${API_URL}/most-valuable-item/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
+const GET_COLLECTION_METADATAS_URL = (id) =>
+  `${API_URL}/get-metadata-fields/${id}`;
 const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
 const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
@@ -381,7 +383,7 @@ const getCollectionById = (id) => {
     });
 };
 
-const getImages = (query) => { 
+const getImages = (query) => {
   return axios
     .get(GET_IMAGES_QUERY_URL(query), { headers: authHeader() })
     .then((response) => {
@@ -393,6 +395,15 @@ const getImages = (query) => {
 const getLocalImages = () => {
   return axios
     .get(GET_LOCAL_IMAGES_URL, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
+const getMetadataFields = (id) => {
+  return axios
+    .get(GET_COLLECTION_METADATAS_URL(id), { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
       return response;
@@ -590,7 +601,7 @@ const updateItem = (values, collection, file, metadata) => {
     });
 };
 
-const viewFeed = (url) => {};
+const viewFeed = (url) => { };
 
 const ConfigService = {
   countCollections,
@@ -621,6 +632,7 @@ const ConfigService = {
   getImages,
   getItemFromWeb,
   getLocalImages,
+  getMetadataFields,
   getMostValuableItem,
   getUserConfig,
   getUserFeedsIDTitle,

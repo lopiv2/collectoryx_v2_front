@@ -92,7 +92,7 @@ const DraggableListItem = (props) => {
                                 style={{ maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px' }}
                                 variant="contained"
                                 classes={{ startIcon: classes.startICon }}
-                                color="error"
+                                color="secondary"
                                 startIcon={<RemoveIcon style={{ float: 'right' }} classes={{ startIcon: classes.startICon }} />}
                                 onClick={handleClickDelete}>
                             </Button>

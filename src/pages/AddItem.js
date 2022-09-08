@@ -37,8 +37,8 @@ function AddItem(props) {
   const [preview, setPreview] = useState();
   const navigate = useNavigate();
   const intl = useIntl();
-  const [fields, setFields] = useState([]);
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
+  const [metadataFields, setMetadataFields] = useState([]);
   const location = useLocation();
   const currency = GetCurrencySymbolLocale();
   const [locale, setLocale] = React.useState("es");
@@ -57,9 +57,9 @@ function AddItem(props) {
 
   const searchWebClick = (query) => {
     console.log(query);
-    const collectionSeries = ConfigService.getImages(query).then((response) => {
+    /*const collectionSeries = ConfigService.getImages(query).then((response) => {
       console.log(response.data);
-    });
+    });*/
   };
 
   useEffect(() => {
@@ -68,6 +68,25 @@ function AddItem(props) {
     )
       .then((response) => {
         setCollectionSeriesList(response.data);
+        console.log(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (metadataFields.length > 0) {
+      //console.log(metadataFields)
+    }
+  }, [metadataFields]);
+
+  useEffect(() => {
+    const metadata = ConfigService.getMetadataFields(
+      location.state.id
+    )
+      .then((response) => {
+        setMetadataFields(response.data);
         //console.log(response.data);
       })
       .catch((err) => {
@@ -75,9 +94,50 @@ function AddItem(props) {
       });
   }, []);
 
+  const handleChangeMetadataValue = (item, val) => {
+    var index = metadataFields.findIndex(x => x.name == item.name);
+    let newItems = [...metadataFields];
+    metadataFields[index].value = val;
+    setMetadataFields(newItems);
+  }
+
+  const checkFieldType = (field) => {
+    switch (field.type) {
+      case "BOOLEAN":
+        return <Checkbox
+          value={field.value}
+          onChange={(e) => handleChangeMetadataValue(field, e.target.checked)}
+        ></Checkbox>
+      case "INTEGER":
+        return <TextField
+          inputProps={{ type: 'number' }}
+          sx={{ minWidth: 300 }}
+          size="small"
+          id="name"
+          name="name"
+          onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
+          variant="outlined"
+          value={field.value}
+        />
+      default:
+        return <TextField
+          sx={{ minWidth: 300 }}
+          size="small"
+          id="name"
+          name="name"
+          error={true}
+          onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
+          variant="outlined"
+          value={field.value}
+        />
+    }
+  }
+
   const submitForm = (values) => {
     //console.log(values)
     //Si se sube imagen desde la galeria
+    values.metadata = metadataFields
+    console.log(values);
     if (imgGallerySelected === true) {
       ConfigService.createItem(
         values,
@@ -259,66 +319,66 @@ function AddItem(props) {
                     ></Box>
                   </Grid>
 
-                    <Grid container spacing={2} ml={0}>
-                      <Grid item>
-                        <Button variant="contained" component="label">
-                          {
-                            <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
-                          }
-                          <input
-                            type="file"
-                            hidden
-                            name="file"
-                            accept="image/png, image/jpeg"
-                            onChange={(e) => {
-                              setFieldValue("file", e.currentTarget.files[0]);
-                              setSelectedFile(e.currentTarget.files[0]);
-                            }}
-                          />
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.search_gallery",
-                          })}
-                          placement="bottom"
-                          arrow
-                        >
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={(e) => {
-                              setConfirmOpenGallery(true);
-                            }}
-                          >
-                            {
-                              <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
-                            }
-                          </Button>
-                        </Tooltip>
-                      </Grid>
-                      <Grid item>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.search_google",
-                          })}
-                          placement="right"
-                          arrow
-                        >
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={(e) => {
-                              searchWebClick(values.name);
-                            }}
-                          >
-                            <GoogleIcon></GoogleIcon>
-                          </Button>
-                        </Tooltip>
-                      </Grid>
+                  <Grid container spacing={2} ml={0}>
+                    <Grid item>
+                      <Button variant="contained" component="label">
+                        {
+                          <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
+                        }
+                        <input
+                          type="file"
+                          hidden
+                          name="file"
+                          accept="image/png, image/jpeg"
+                          onChange={(e) => {
+                            setFieldValue("file", e.currentTarget.files[0]);
+                            setSelectedFile(e.currentTarget.files[0]);
+                          }}
+                        />
+                      </Button>
                     </Grid>
-                  
+                    <Grid item>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.tooltip.search_gallery",
+                        })}
+                        placement="bottom"
+                        arrow
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={(e) => {
+                            setConfirmOpenGallery(true);
+                          }}
+                        >
+                          {
+                            <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
+                          }
+                        </Button>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.tooltip.search_google",
+                        })}
+                        placement="right"
+                        arrow
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={(e) => {
+                            searchWebClick(values.name);
+                          }}
+                        >
+                          <GoogleIcon></GoogleIcon>
+                        </Button>
+                      </Tooltip>
+                    </Grid>
+                  </Grid>
+
                   <Grid container spacing={40}>
                     <Grid item xs={2}>
                       <Box pt={2} ml={2}>
@@ -472,6 +532,26 @@ function AddItem(props) {
                     </Grid>
                   </Grid>
                 </Grid>
+                <Grid item xs={2}>
+                  <Box pt={2}>
+                    <Typography variant="body1">
+                      <FormattedMessage id="app.collection.view_collections_item_metadata"></FormattedMessage>
+                    </Typography>
+                  </Box>
+                </Grid>
+                {metadataFields.length > 0 && (
+                  <Grid container sx={{ border: 2 }} mt={2} style={{ maxWidth: "38%" }}>
+                    {metadataFields.map((item, index) => (
+                      <Grid item xs={2} key={index} pl={2}>
+                        <Box pt={2} pb={2}>
+                          <Typography variant="body1">
+                            {item.name}
+                          </Typography>
+                          {checkFieldType(item)}
+                        </Box>
+                      </Grid>
+                    ))}
+                  </Grid>)}
                 <Box pt={2}>
                   <Grid container spacing={2}>
                     <Grid item>
