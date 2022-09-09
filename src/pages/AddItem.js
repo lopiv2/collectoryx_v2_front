@@ -69,7 +69,6 @@ function AddItem(props) {
     )
       .then((response) => {
         setCollectionSeriesList(response.data);
-        console.log(response.data);
       })
       .catch((err) => {
         console.log(err);
@@ -83,16 +82,14 @@ function AddItem(props) {
           id: metadataFields[i].id,
           name: metadataFields[i].name,
           value: "",
-        }
-        setMetadataValues((metadataValues => [...metadataValues, data]))
+        };
+        setMetadataValues((metadataValues) => [...metadataValues, data]);
       }
     }
   }, [metadataFields]);
 
   useEffect(() => {
-    const metadata = ConfigService.getMetadataFields(
-      location.state.id
-    )
+    const metadata = ConfigService.getMetadataFields(location.state.id)
       .then((response) => {
         setMetadataFields(response.data);
         //console.log(response.data);
@@ -103,55 +100,61 @@ function AddItem(props) {
   }, []);
 
   const handleChangeMetadataValue = (item, val) => {
-    if (val === true) {
-      val = 1;
+    if (typeof val === "boolean") {
+      if (val === true) {
+        val = 1;
+      } else {
+        val = 0;
+      }
     }
-    else {
-      val = 0;
-    }
-    var index = metadataValues.findIndex(x => x.id == item.id);
+    var index = metadataValues.findIndex((x) => x.id == item.id);
     let newItems = [...metadataValues];
     metadataValues[index].value = val;
     setMetadataValues(newItems);
-  }
+  };
 
   const checkFieldType = (field) => {
     switch (field.type) {
       case "BOOLEAN":
-        return <Checkbox
-          value={field.value}
-          onChange={(e) => handleChangeMetadataValue(field, e.target.checked)}
-        ></Checkbox>
+        return (
+          <Checkbox
+            value={field.value}
+            onChange={(e) => handleChangeMetadataValue(field, e.target.checked)}
+          ></Checkbox>
+        );
       case "INTEGER":
-        return <TextField
-          inputProps={{ type: 'number' }}
-          sx={{ minWidth: 300 }}
-          size="small"
-          id="name"
-          name="name"
-          onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
-          variant="outlined"
-          value={field.value}
-        />
+        return (
+          <TextField
+            inputProps={{ type: "number" }}
+            sx={{ minWidth: 300 }}
+            size="small"
+            id="name"
+            name="name"
+            onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
+            variant="outlined"
+            value={field.value}
+          />
+        );
       default:
-        return <TextField
-          sx={{ minWidth: 300 }}
-          size="small"
-          id="name"
-          name="name"
-          error={true}
-          onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
-          variant="outlined"
-          value={field.value}
-        />
+        return (
+          <TextField
+            sx={{ minWidth: 300 }}
+            size="small"
+            id="name"
+            name="name"
+            error={true}
+            onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
+            variant="outlined"
+            value={field.value}
+          />
+        );
     }
-  }
+  };
 
   const submitForm = (values) => {
     //console.log(values)
     //Si se sube imagen desde la galeria
-    values.metadata = metadataValues
-    console.log(values);
+    values.metadata = metadataValues;
     if (imgGallerySelected === true) {
       ConfigService.createItem(
         values,
@@ -554,18 +557,22 @@ function AddItem(props) {
                   </Box>
                 </Grid>
                 {metadataFields.length > 0 && (
-                  <Grid container sx={{ border: 2 }} mt={2} style={{ maxWidth: "38%" }}>
+                  <Grid
+                    container
+                    sx={{ border: 2 }}
+                    mt={2}
+                    style={{ maxWidth: "38%" }}
+                  >
                     {metadataFields.map((item, index) => (
                       <Grid item xs={12} key={index} pl={2}>
                         <Box pt={2} pb={2}>
-                          <Typography variant="body1">
-                            {item.name}
-                          </Typography>
+                          <Typography variant="body1">{item.name}</Typography>
                           {checkFieldType(item)}
                         </Box>
                       </Grid>
                     ))}
-                  </Grid>)}
+                  </Grid>
+                )}
                 <Box pt={2}>
                   <Grid container spacing={2}>
                     <Grid item>

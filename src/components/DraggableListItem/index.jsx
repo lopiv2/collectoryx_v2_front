@@ -45,11 +45,15 @@ const DraggableListItem = (props) => {
     }
 
     useEffect(() => {
+        //console.log(props.itemsList) 
+    }, [props.itemsList])
+
+    useEffect(() => {
         if (props.operation === "add") {
             props.itemsList[props.index].name = field;
             props.itemsList[props.index].type = fieldType;
         }
-    }, [props.itemsList])
+    }, [fieldType,field])
 
     return (
         <Draggable key={props.item} draggableId={props.item.id} index={props.index}>

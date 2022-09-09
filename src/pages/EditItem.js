@@ -57,51 +57,63 @@ function EditItem(props) {
   };
 
   const handleChangeMetadataValue = (item, val) => {
-    var index = metadataValues.findIndex(x => x.id == item.id);
+    if (typeof val === "boolean") {
+      if (val === true) {
+        val = 1;
+      } else {
+        val = 0;
+      }
+    }
+    var index = metadataValues.findIndex((x) => x.id == item.id);
     let newItems = [...metadataValues];
     metadataValues[index].value = val;
     setMetadataValues(newItems);
-  }
+  };
 
   const checkFieldType = (field) => {
     switch (field.type) {
       case "BOOLEAN":
-        var check=true;
-        if(field.value==1 || field.value===true){
-          check=true;
+        var check = true;
+        if (field.value == 1 || field.value === true) {
+          check = true;
+        } else {
+          check = false;
         }
-        else{
-          check=false
-        }
-        return <Checkbox
-          value={field.value}
-          checked={check}
-          onChange={(e) => handleChangeMetadataValue(field, e.target.checked)}
-        ></Checkbox>
+        return (
+          <Checkbox
+            value={field.value}
+            checked={check}
+            onChange={(e) => handleChangeMetadataValue(field, e.target.checked)}
+          ></Checkbox>
+        );
       case "INTEGER":
-        return <TextField
-          inputProps={{ type: 'number' }}
-          sx={{ minWidth: 300 }}
-          size="small"
-          id="name"
-          name="name"
-          onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
-          variant="outlined"
-          value={field.value}
-        />
+        return (
+          <TextField
+            inputProps={{ type: "number" }}
+            sx={{ minWidth: 300 }}
+            size="small"
+            id="name"
+            name="name"
+            onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
+            variant="outlined"
+            value={field.value}
+          />
+        );
       default:
-        return <TextField
-          sx={{ minWidth: 300 }}
-          size="small"
-          id="name"
-          name="name"
-          error={true}
-          onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
-          variant="outlined"
-          value={field.value}
-        />
+        return (
+          <TextField
+            sx={{ minWidth: 300 }}
+            size="small"
+            id="name"
+            name="name"
+            error={true}
+            onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
+            variant="outlined"
+            value={field.value}
+          />
+        );
     }
-  }
+  };
 
   useEffect(() => {
     const collectionSeries = ConfigService.getCollectionSeries(collectionId)
@@ -126,8 +138,8 @@ function EditItem(props) {
       notes: location.state.item.notes,
       metadata: location.state.item.metadata,
     };
-    console.log(data)
-    setMetadataValues(location.state.item.metadata)
+    console.log(data);
+    setMetadataValues(location.state.item.metadata);
     setFormValues(data);
   }, [location.state.item]);
 
@@ -566,18 +578,22 @@ function EditItem(props) {
                     </Box>
                   </Grid>
                   {formValues.metadata.length > 0 && (
-                    <Grid container sx={{ border: 2 }} mt={2} style={{ maxWidth: "38%" }}>
+                    <Grid
+                      container
+                      sx={{ border: 2 }}
+                      mt={2}
+                      style={{ maxWidth: "38%" }}
+                    >
                       {formValues.metadata.map((item, index) => (
                         <Grid item xs={12} key={index} pl={2}>
                           <Box pt={2} pb={2}>
-                            <Typography variant="body1">
-                              {item.name}
-                            </Typography>
+                            <Typography variant="body1">{item.name}</Typography>
                             {checkFieldType(item)}
                           </Box>
                         </Grid>
                       ))}
-                    </Grid>)}
+                    </Grid>
+                  )}
                   <Box pt={2}>
                     <Grid container spacing={2}>
                       <Grid item>
