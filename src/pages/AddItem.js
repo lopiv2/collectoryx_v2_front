@@ -39,6 +39,7 @@ function AddItem(props) {
   const intl = useIntl();
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
   const [metadataFields, setMetadataFields] = useState([]);
+  const [metadataValues, setMetadataValues] = useState([]);
   const location = useLocation();
   const currency = GetCurrencySymbolLocale();
   const [locale, setLocale] = React.useState("es");
@@ -77,7 +78,14 @@ function AddItem(props) {
 
   useEffect(() => {
     if (metadataFields.length > 0) {
-      //console.log(metadataFields)
+      for (let i = 0; i < metadataFields.length; i++) {
+        const data = {
+          id: metadataFields[i].id,
+          name: metadataFields[i].name,
+          value: "",
+        }
+        setMetadataValues((metadataValues => [...metadataValues, data]))
+      }
     }
   }, [metadataFields]);
 
@@ -95,10 +103,16 @@ function AddItem(props) {
   }, []);
 
   const handleChangeMetadataValue = (item, val) => {
-    var index = metadataFields.findIndex(x => x.name == item.name);
-    let newItems = [...metadataFields];
-    metadataFields[index].value = val;
-    setMetadataFields(newItems);
+    if (val === true) {
+      val = 1;
+    }
+    else {
+      val = 0;
+    }
+    var index = metadataValues.findIndex(x => x.id == item.id);
+    let newItems = [...metadataValues];
+    metadataValues[index].value = val;
+    setMetadataValues(newItems);
   }
 
   const checkFieldType = (field) => {
@@ -136,7 +150,7 @@ function AddItem(props) {
   const submitForm = (values) => {
     //console.log(values)
     //Si se sube imagen desde la galeria
-    values.metadata = metadataFields
+    values.metadata = metadataValues
     console.log(values);
     if (imgGallerySelected === true) {
       ConfigService.createItem(
@@ -542,7 +556,7 @@ function AddItem(props) {
                 {metadataFields.length > 0 && (
                   <Grid container sx={{ border: 2 }} mt={2} style={{ maxWidth: "38%" }}>
                     {metadataFields.map((item, index) => (
-                      <Grid item xs={2} key={index} pl={2}>
+                      <Grid item xs={12} key={index} pl={2}>
                         <Box pt={2} pb={2}>
                           <Typography variant="body1">
                             {item.name}

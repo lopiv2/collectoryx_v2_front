@@ -39,9 +39,9 @@ function EditItem(props) {
   const navigate = useNavigate();
   const intl = useIntl();
   const [formValues, setFormValues] = useState(null);
-  const [fields, setFields] = useState([]);
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
   const [collectionId, setCollectionId] = useState(location.state.id);
+  const [metadataValues, setMetadataValues] = useState([]);
   const currency = GetCurrencySymbolLocale();
   const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
   const [img, setImg] = useState();
@@ -55,6 +55,53 @@ function EditItem(props) {
     setPreview(require("../../public/images/" + img));
     setImgGallerySelected(true);
   };
+
+  const handleChangeMetadataValue = (item, val) => {
+    var index = metadataValues.findIndex(x => x.id == item.id);
+    let newItems = [...metadataValues];
+    metadataValues[index].value = val;
+    setMetadataValues(newItems);
+  }
+
+  const checkFieldType = (field) => {
+    switch (field.type) {
+      case "BOOLEAN":
+        var check=true;
+        if(field.value==1 || field.value===true){
+          check=true;
+        }
+        else{
+          check=false
+        }
+        return <Checkbox
+          value={field.value}
+          checked={check}
+          onChange={(e) => handleChangeMetadataValue(field, e.target.checked)}
+        ></Checkbox>
+      case "INTEGER":
+        return <TextField
+          inputProps={{ type: 'number' }}
+          sx={{ minWidth: 300 }}
+          size="small"
+          id="name"
+          name="name"
+          onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
+          variant="outlined"
+          value={field.value}
+        />
+      default:
+        return <TextField
+          sx={{ minWidth: 300 }}
+          size="small"
+          id="name"
+          name="name"
+          error={true}
+          onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
+          variant="outlined"
+          value={field.value}
+        />
+    }
+  }
 
   useEffect(() => {
     const collectionSeries = ConfigService.getCollectionSeries(collectionId)
@@ -77,8 +124,10 @@ function EditItem(props) {
       own: location.state.item.own,
       image: "",
       notes: location.state.item.notes,
-      metadata: [],
+      metadata: location.state.item.metadata,
     };
+    console.log(data)
+    setMetadataValues(location.state.item.metadata)
     setFormValues(data);
   }, [location.state.item]);
 
@@ -128,7 +177,6 @@ function EditItem(props) {
     }
     //Si no tiene imagen seteada y no actualizamos dicha imagen
     if (preview === undefined && values.file === undefined) {
-      console.log("unset");
       ConfigService.updateItem(
         values,
         location.state.id,
@@ -510,6 +558,26 @@ function EditItem(props) {
                       </Grid>
                     </Grid>
                   </Grid>
+                  <Grid item xs={2}>
+                    <Box pt={2}>
+                      <Typography variant="body1">
+                        <FormattedMessage id="app.collection.view_collections_item_metadata"></FormattedMessage>
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  {formValues.metadata.length > 0 && (
+                    <Grid container sx={{ border: 2 }} mt={2} style={{ maxWidth: "38%" }}>
+                      {formValues.metadata.map((item, index) => (
+                        <Grid item xs={12} key={index} pl={2}>
+                          <Box pt={2} pb={2}>
+                            <Typography variant="body1">
+                              {item.name}
+                            </Typography>
+                            {checkFieldType(item)}
+                          </Box>
+                        </Grid>
+                      ))}
+                    </Grid>)}
                   <Box pt={2}>
                     <Grid container spacing={2}>
                       <Grid item>
