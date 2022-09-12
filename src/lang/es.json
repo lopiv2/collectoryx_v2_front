@@ -192,6 +192,7 @@
   "app.chart.year_paid_title": "Gastos mensuales año",
   "app.chart.purchases": "Gastos",
   "app.chart.acquisitions": "Adquisiciones",
+  "app.dialog.edit_item": "Editar {item}",
   "app.dialog.search_image": "Buscar imagen",
   "app.dialog.confirm_delete": "¿Está seguro que desea borrar este elemento?",
   "app.dialog.delete_title": "¿Borrar elemento?",

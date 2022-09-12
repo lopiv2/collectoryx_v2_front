@@ -64,7 +64,7 @@ function EditItem(props) {
         val = 0;
       }
     }
-    var index = metadataValues.findIndex((x) => x.id == item.id);
+    var index = metadataValues.findIndex((x) => x.id === item.id);
     let newItems = [...metadataValues];
     metadataValues[index].value = val;
     setMetadataValues(newItems);
@@ -74,7 +74,7 @@ function EditItem(props) {
     switch (field.type) {
       case "BOOLEAN":
         var check = true;
-        if (field.value == 1 || field.value === true) {
+        if (field.value === 1 || field.value === true) {
           check = true;
         } else {
           check = false;

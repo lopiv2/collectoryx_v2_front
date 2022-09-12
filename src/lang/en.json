@@ -192,6 +192,7 @@
   "app.chart.year_paid_title": "Monthly purchases year",
   "app.chart.purchases": "Expenses",
   "app.chart.acquisitions": "Purchases",
+  "app.dialog.edit_item": "Edit {item}",
   "app.dialog.search_image": "Search image",
   "app.dialog.confirm_delete": "Are you sure you want to delete this element?",
   "app.dialog.delete_title": "Delete element?",

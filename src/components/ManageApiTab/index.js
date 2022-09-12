@@ -17,15 +17,14 @@ import * as Yup from "yup";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ConfirmDialog from "../ConfirmDialog";
+import EditApiDialog from "../EditApiDialog";
 import { AppContext } from "../../components/AppContext";
 
 function ManageApiTab(props) {
   const [apisList, setApisList] = useState([]);
-  const [collectionList, setCollectionList] = useState([]);
+  const [apiEdited, setApiEdited] = useState();
   const navigate = useNavigate();
-  const [selectedFile, setSelectedFile] = useState("");
-  const [preview, setPreview] = useState();
-  const [collection, setCollection] = useState();
+  const [openEdit, setOpenEdit] = useState(false);
   const intl = useIntl();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -47,6 +46,10 @@ function ManageApiTab(props) {
         }
       }
     });
+  };
+
+  const handleUpdateClick = (rowData) => {
+    console.log(apiEdited)
   };
 
   useEffect(() => {
@@ -86,7 +89,12 @@ function ManageApiTab(props) {
     {
       icon: EditIcon,
       tooltip: intl.formatMessage({ id: "app.button.edit" }),
-      onClick: (event, rowData) => alert("You saved " + rowData.name),
+      onClick: (event, rowData) => {
+        const data = apisList.find(api=>api.id===rowData.id)
+          
+        setApiEdited(rowData)
+        setOpenEdit(true);
+      },
     },
     (rowData) => ({
       icon: DeleteIcon,
@@ -108,6 +116,11 @@ function ManageApiTab(props) {
   const columns = [
     {
       title: intl.formatMessage({ id: "app.config.general_apis_tab_list_name" }),
+      field: "id_api",
+      hidden: true
+    },
+    {
+      title: intl.formatMessage({ id: "app.config.general_apis_tab_list_name" }),
       field: "name",
     },
     {
@@ -127,6 +140,7 @@ function ManageApiTab(props) {
 
   const data = apisList.map((item) => {
     let cols = {
+      id_api: item.id,
       name: item.name,
       url: item.apiLink,
       key: item.keyCode,
@@ -283,6 +297,14 @@ function ManageApiTab(props) {
       >
         <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
       </ConfirmDialog>
+      <EditApiDialog
+        items={apiEdited}
+        open={openEdit}
+        setOpen={setOpenEdit}
+        onConfirm={handleUpdateClick}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </EditApiDialog>
     </Box>
   );
 }

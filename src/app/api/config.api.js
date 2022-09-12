@@ -44,6 +44,7 @@ const CREATE_THEMES_URL = `${API_URL}/config/create-theme/`;
 const VIEW_THEMES_URL = `${API_URL}/config/get-themes/`;
 const VIEW_APIS_URL = (id) => `${API_URL}/config/get-api-list/${id}`;
 const CREATE_API_URL = `${API_URL}/config/create-api`;
+const UPDATE_API_URL = `${API_URL}/config/update-api`;
 const DELETE_API_ID_URL = (id) => `${API_URL}/config/delete-api/${id}`;
 const CONFIG_URL = (id) => `${API_URL}/config/get-config/${id}`;
 const POST_APPEARANCE_CONFIG = `${API_URL}/config/save`;
@@ -570,6 +571,31 @@ const toggleItemWish = (id, own, wanted) => {
     });
 };
 
+const updateApi = (values) => {
+  const data = {
+    id: values.id_api,
+    name: values.name,
+    url: values.url,
+    key: values.key,
+    logo: values.logo,
+  };
+  return axios
+    .put(UPDATE_API_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        //console.log(response.data)
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const updateItem = (values, collection, file, metadata) => {
   const data = {
     id: values.id,
@@ -644,6 +670,7 @@ const ConfigService = {
   toggleCollectionAmbit,
   toggleItemOwn,
   toggleItemWish,
+  updateApi,
   updateItem,
   viewFeed,
 };
