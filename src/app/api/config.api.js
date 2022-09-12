@@ -81,9 +81,10 @@ const countCollectionsItems = (id) => {
     });
 };
 
-const createApi = (userId, name, apiLink, keyCode, logo) => {
+const createApi = (userId, header, name, apiLink, keyCode, logo) => {
   const data = {
     userId: userId,
+    header: header,
     name: name,
     apiLink: apiLink,
     keyCode: keyCode,
@@ -573,10 +574,11 @@ const toggleItemWish = (id, own, wanted) => {
 
 const updateApi = (values) => {
   const data = {
-    id: values.id_api,
+    id: values.id,
     name: values.name,
-    url: values.url,
-    key: values.key,
+    header: values.header,
+    apiLink: values.apiLink,
+    keyCode: values.keyCode,
     logo: values.logo,
   };
   return axios

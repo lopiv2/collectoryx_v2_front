@@ -64,17 +64,25 @@ function ImportScrapper() {
   };
 
   const searchWebClick = () => {
-    setStartSearch(true);
-    const collectionSeries = ConfigService.getItemFromWeb(
-      searchString,
-      selectedApi
-    ).then((response) => {
-      //console.log(response.data)
-      setResults(FilterResultsByApiProvider(response.data, selectedApi, location.state.id));
-      setSearching(false);
-      setStartSearch(false);
-      setShowResults(true);
-    });
+    if(selectedApi.apiLink!==""){
+      setStartSearch(true);
+      const collectionSeries = ConfigService.getItemFromWeb(
+        searchString,
+        selectedApi
+      ).then((response) => {
+        //console.log(response.data)
+        setResults(FilterResultsByApiProvider(response.data, selectedApi, location.state.id));
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
+    }
+    else{
+      toast.error(
+        <FormattedMessage id="app.config.general.api-no_url"></FormattedMessage>,
+        { theme: "colored" }
+      );
+    }
   };
 
   const avatarStyleClicked = {
@@ -131,7 +139,7 @@ function ImportScrapper() {
           <Typography variant="h6" component="h4">
             <FormattedMessage
               id={
-                showResults == false
+                showResults === false
                   ? "app.collection.select_option"
                   : "app.collection.add_collection_import_scrapper_search_results"
               }

@@ -185,7 +185,7 @@ export default function BarChartYearly(props) {
                     })
                     var index = collectionItemsGroup.findIndex(x => x.label == month);
                     let newItems = [...collectionItemsGroup];
-                    collectionItemsGroup[index].value = priceCount;
+                    newItems[index].value = priceCount;
                     setCollectionItemsGroup(newItems);
                     priceCount = 0;
                 }

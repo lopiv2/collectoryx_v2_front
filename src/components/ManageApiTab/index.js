@@ -19,10 +19,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import ConfirmDialog from "../ConfirmDialog";
 import EditApiDialog from "../EditApiDialog";
 import { AppContext } from "../../components/AppContext";
+import { isUndefined } from "lodash";
 
 function ManageApiTab(props) {
   const [apisList, setApisList] = useState([]);
   const [apiEdited, setApiEdited] = useState();
+  const [newApiEdited, setNewApiEdited] = useState();
   const navigate = useNavigate();
   const [openEdit, setOpenEdit] = useState(false);
   const intl = useIntl();
@@ -37,9 +39,7 @@ function ManageApiTab(props) {
           <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
           { theme: "colored" }
         );
-        var index = apisList.findIndex(
-          (apisList) => apisList.id === value
-        );
+        var index = apisList.findIndex((apisList) => apisList.id === value);
         if (index > -1) {
           apisList.splice(index, 1);
           setApisList([...apisList]);
@@ -48,9 +48,15 @@ function ManageApiTab(props) {
     });
   };
 
-  const handleUpdateClick = (rowData) => {
-    console.log(apiEdited)
-  };
+  useEffect(() => {
+    if (!isUndefined(newApiEdited)) {
+      var index = apisList.findIndex((x) => x.id == newApiEdited.id);
+      let newItems = [...apisList];
+      newItems[index] = newApiEdited;
+      setApisList(newItems);
+      setNewApiEdited(undefined);
+    }
+  }, [newApiEdited]);
 
   useEffect(() => {
     const apiList = ConfigService.getAllApis(userData.id)
@@ -63,20 +69,22 @@ function ManageApiTab(props) {
   }, []);
 
   const submitForm = (values) => {
-    ConfigService.createApi(userData.id, values.name, values.url, values.key, values.logo).then(
-      (response) => {
-        if (response.status === 200) {
-          toast.success(
-            <FormattedMessage id="app.config.general.api-created"></FormattedMessage>,
-            { theme: "colored" }
-          );
-          setApisList((apisList) => [
-            ...apisList,
-            response.data,
-          ]);
-        }
+    ConfigService.createApi(
+      userData.id,
+      values.name,
+      values.header,
+      values.url,
+      values.key,
+      values.logo
+    ).then((response) => {
+      if (response.status === 200) {
+        toast.success(
+          <FormattedMessage id="app.config.general.api-created"></FormattedMessage>,
+          { theme: "colored" }
+        );
+        setApisList((apisList) => [...apisList, response.data]);
       }
-    );
+    });
   };
 
   const newSerieSchema = Yup.object().shape({
@@ -90,9 +98,8 @@ function ManageApiTab(props) {
       icon: EditIcon,
       tooltip: intl.formatMessage({ id: "app.button.edit" }),
       onClick: (event, rowData) => {
-        const data = apisList.find(api=>api.id===rowData.id)
-          
-        setApiEdited(rowData)
+        const data = apisList.find((api) => api.id === rowData.id_api);
+        setApiEdited(data);
         setOpenEdit(true);
       },
     },
@@ -100,7 +107,7 @@ function ManageApiTab(props) {
       icon: DeleteIcon,
       tooltip: intl.formatMessage({ id: "app.button.delete" }),
       onClick: (event, rowData) => {
-        setValue(rowData.id);
+        setValue(rowData.id_api);
         setConfirmOpen(true);
       },
     }),
@@ -115,12 +122,16 @@ function ManageApiTab(props) {
 
   const columns = [
     {
-      title: intl.formatMessage({ id: "app.config.general_apis_tab_list_name" }),
+      title: intl.formatMessage({
+        id: "app.config.general_apis_tab_list_name",
+      }),
       field: "id_api",
-      hidden: true
+      hidden: true,
     },
     {
-      title: intl.formatMessage({ id: "app.config.general_apis_tab_list_name" }),
+      title: intl.formatMessage({
+        id: "app.config.general_apis_tab_list_name",
+      }),
       field: "name",
     },
     {
@@ -130,7 +141,7 @@ function ManageApiTab(props) {
     {
       title: intl.formatMessage({ id: "app.config.general_apis_tab_list_key" }),
       field: "key",
-      render: rowData => <p>{rowData.key.split('').map(() => '*')}</p>,
+      render: (rowData) => <p>{rowData.key.split("").map(() => "*")}</p>,
     },
     {
       title: intl.formatMessage({ id: "app.collection.add_collection_logo" }),
@@ -142,6 +153,7 @@ function ManageApiTab(props) {
     let cols = {
       id_api: item.id,
       name: item.name,
+      header: item.header,
       url: item.apiLink,
       key: item.keyCode,
       logo:
@@ -174,7 +186,7 @@ function ManageApiTab(props) {
         </Grid>
         <Grid item xs={3}>
           <Formik
-            initialValues={{ name: "", key: "", url: "", logo: "" }}
+            initialValues={{ name: "", key: "", url: "", logo: "", header: "" }}
             validate={(values) => {
               const errors = {};
             }}
@@ -227,8 +239,21 @@ function ManageApiTab(props) {
                       label={
                         <FormattedMessage id="app.config.general_apis_tab_list_key"></FormattedMessage>
                       }
-                    >
-                    </TextField>
+                    ></TextField>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <TextField
+                      id="demo-simple-select"
+                      name="key"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      size="small"
+                      sx={{ minWidth: 300 }}
+                      value={values.header}
+                      label={
+                        <FormattedMessage id="app.config.general_apis_tab_list_header"></FormattedMessage>
+                      }
+                    ></TextField>
                   </Grid>
                   <Grid item xs={9}>
                     <TextField
@@ -242,8 +267,7 @@ function ManageApiTab(props) {
                       label={
                         <FormattedMessage id="app.config.general_apis_tab_list_url"></FormattedMessage>
                       }
-                    >
-                    </TextField>
+                    ></TextField>
                   </Grid>
                   <Grid item xs={9}>
                     <TextField
@@ -257,8 +281,7 @@ function ManageApiTab(props) {
                       label={
                         <FormattedMessage id="app.config.general_apis_tab_list_logo"></FormattedMessage>
                       }
-                    >
-                    </TextField>
+                    ></TextField>
                   </Grid>
                   <Grid item xs={8}>
                     <Button
@@ -299,9 +322,11 @@ function ManageApiTab(props) {
       </ConfirmDialog>
       <EditApiDialog
         items={apiEdited}
+        setItem={setApiEdited}
+        newItem={newApiEdited}
+        setNewItem={setNewApiEdited}
         open={openEdit}
         setOpen={setOpenEdit}
-        onConfirm={handleUpdateClick}
       >
         <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
       </EditApiDialog>
