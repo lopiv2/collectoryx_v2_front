@@ -20,10 +20,10 @@ const ImageGalleryDialog = (props) => {
   useEffect(() => {
     if (open === true) {
       const imagesList = ConfigService.getLocalImages().then((response) => {
-        var filteredResponse=[]
-        filteredResponse=response.data.filter(image=>!image.path.includes("http"))
-        filteredResponse.map((i) => 
-            setImages((images) => [...images, i.path]));    
+        var filteredResponse = []
+        filteredResponse = response.data.filter(image => !image.path.includes("http"))
+        filteredResponse.map((i) =>
+          setImages((images) => [...images, i.path]));
       });
     }
   }, [open]);
@@ -102,12 +102,17 @@ const ImageGalleryDialog = (props) => {
           variant="contained"
           onClick={() => {
             setOpen(false);
+            setImages([])
             onConfirm();
           }}
         >
           <FormattedMessage id="app.button.accept"></FormattedMessage>
         </Button>
-        <Button variant="contained" onClick={() => setOpen(false)}>
+        <Button variant="contained" onClick={() => {
+          setOpen(false)
+          setImages([])
+        }
+        }>
           <FormattedMessage id="app.button.cancel"></FormattedMessage>
         </Button>
       </DialogActions>

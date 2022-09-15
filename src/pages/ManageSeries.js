@@ -18,10 +18,14 @@ import * as Yup from "yup";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ConfirmDialog from "../components/ConfirmDialog";
+import EditSerieDialog from "../components/EditSerieDialog";
+import { isUndefined } from "lodash";
 
 function ManageSeries(props) {
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
   const [collectionList, setCollectionList] = useState([]);
+  const [serieEdited, setSerieEdited] = useState();
+  const [newSerieEdited, setNewSerieEdited] = useState();
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState("");
   const [preview, setPreview] = useState();
@@ -29,6 +33,7 @@ function ManageSeries(props) {
   const intl = useIntl();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
 
   if (localStorage.getItem("user")) {
     var user = localStorage.getItem("user");
@@ -52,6 +57,16 @@ function ManageSeries(props) {
       }
     });
   };
+
+  useEffect(() => {
+    if (!isUndefined(newSerieEdited)) {
+      var index = collectionSeriesList.findIndex((x) => x.id == newSerieEdited.id);
+      let newItems = [...collectionSeriesList];
+      newItems[index] = newSerieEdited;
+      setCollectionSeriesList(newItems);
+      setNewSerieEdited(undefined);
+    }
+  }, [newSerieEdited]);
 
   useEffect(() => {
     const collectionSeries = ConfigService.getAllSeries(userData.id)
@@ -134,7 +149,11 @@ function ManageSeries(props) {
     {
       icon: EditIcon,
       tooltip: intl.formatMessage({ id: "app.button.edit" }),
-      onClick: (event, rowData) => alert("You saved " + rowData.name),
+      onClick: (event, rowData) => {
+        const data = collectionSeriesList.find((serie) => serie.id === rowData.id);
+        setSerieEdited(data);
+        setOpenEdit(true);
+      },
     },
     (rowData) => ({
       icon: DeleteIcon,
@@ -164,15 +183,21 @@ function ManageSeries(props) {
       field: "name",
     },
     {
+      title: intl.formatMessage({ id: "app.collection.add_collection_name" }),
+      field: "collection",
+    },
+    {
       title: intl.formatMessage({ id: "app.collection.add_collection_logo" }),
       field: "logo",
     },
   ];
 
   const data = collectionSeriesList.map((item) => {
+    //console.log(item)
     let cols = {
       id: item.id,
       name: item.name,
+      collection: item.collection.collection,
       logo:
         item.logo === null ? (
           <Avatar
@@ -200,7 +225,7 @@ function ManageSeries(props) {
             <FormattedMessage id="app.collection.view_collections_series_add"></FormattedMessage>
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Formik
             initialValues={{ name: "", logo: "" }}
             validate={(values) => {
@@ -289,7 +314,7 @@ function ManageSeries(props) {
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <Box pt={0.3} ml={5}>
+                    <Box ml={20}>
                       <Button variant="contained" component="label">
                         {
                           <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
@@ -335,7 +360,7 @@ function ManageSeries(props) {
             )}
           </Formik>
         </Grid>
-        <Grid item xs={5} mr={2}>
+        <Grid item xs={7} mr={2}>
           <MaterialTable
             title={
               <FormattedMessage id="app.collection.view_collections_series"></FormattedMessage>
@@ -357,6 +382,17 @@ function ManageSeries(props) {
       >
         <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
       </ConfirmDialog>
+      <EditSerieDialog
+        items={serieEdited}
+        collectionList={collectionList}
+        setItem={setSerieEdited}
+        newItem={newSerieEdited}
+        setNewItem={setNewSerieEdited}
+        open={openEdit}
+        setOpen={setOpenEdit}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </EditSerieDialog>
     </Box>
   );
 }

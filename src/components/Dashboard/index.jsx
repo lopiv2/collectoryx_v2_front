@@ -11,8 +11,11 @@ import BarChartYearly from "../BarChartYearly";
 import Deposits from '../Deposits';
 import Orders from '../Orders';
 import AuthService from "../../app/api/auth.api";
+import { AppContext } from "../AppContext";
 
 export default function Dashboard(props) {
+    const { userData, setUserData, userConfig, setUserConfig } =
+        React.useContext(AppContext);
 
     return AuthService.checkUserLogged() === "USER_ROLE" && (
         <Grid container spacing={3} mt={2}>
@@ -29,7 +32,7 @@ export default function Dashboard(props) {
                     <TotalCollectionsCard item xs={12} md={8} lg={9}></TotalCollectionsCard>
                 </Grid>
                 <Grid item xs={10} md={8} lg={4}>
-                    <MostValuableItem item xs={12} md={8} lg={9}></MostValuableItem>
+                    {userConfig.expensivePanel===true && <MostValuableItem item xs={12} md={8} lg={9}></MostValuableItem>}
                 </Grid>
             </Grid>
             {/*Charts*/}

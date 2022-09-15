@@ -38,6 +38,7 @@ const TOGGLE_COLLECTION_AMBIT_URL = `${API_URL}/toggle-collection-ambit`;
 const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
 const UPDATE_ITEM_URL = `${API_URL}/update-item`;
+const UPDATE_SERIE_URL = `${API_URL}/update-serie`;
 const VIEW_COLLECTIONS_URL = (id) => `${API_URL}/view-collections/${id}`;
 const VIEW_SERIES_URL = (id) => `${API_URL}/view-series/${id}`;
 const CREATE_THEMES_URL = `${API_URL}/config/create-theme/`;
@@ -531,6 +532,20 @@ const saveConfigAppearance = (id, theme, dark, config) => {
     });
 };
 
+const saveConfigDashboard = (id, expensivePanel, config) => {
+  const data = {
+    id: id,
+    expensivePanel: expensivePanel,
+    config: config,
+  };
+  return axios
+    .post(POST_APPEARANCE_CONFIG, data, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
 const toggleCollectionAmbit = (id, ambit) => {
   const data = {
     id: id,
@@ -629,6 +644,30 @@ const updateItem = (values, collection, file, metadata) => {
     });
 };
 
+const updateSerie= (values, image) => {
+  const data = {
+    id: values.id,
+    name: values.name,
+    collection: values.collection,
+    path: image,
+  };
+  return axios
+    .put(UPDATE_SERIE_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        //console.log(response.data)
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const viewFeed = (url) => { };
 
 const ConfigService = {
@@ -669,11 +708,13 @@ const ConfigService = {
   putFile,
   putImage,
   saveConfigAppearance,
+  saveConfigDashboard,
   toggleCollectionAmbit,
   toggleItemOwn,
   toggleItemWish,
   updateApi,
   updateItem,
+  updateSerie,
   viewFeed,
 };
 

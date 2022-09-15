@@ -40,12 +40,20 @@ function Copyright(props) {
   );
 }
 
+function importAll(r) {
+  return r.keys().map(r);
+}
+
+const images = importAll(require.context('../../../public/images/home/', false, /\.(png|jpe?g|svg)$/));
 const theme = createTheme();
 
 export default function SignInSide() {
   const { userName, setUserName, isLogged, setIsLogged, role, setRole } = useContext(AppContext);
   const navigate = useNavigate();
   const context = useContext(Context);
+  const selectedImage = images[Math.floor(Math.random() * images.length)];
+
+  //console.log(selectedImage)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -65,108 +73,126 @@ export default function SignInSide() {
   };
 
   const onClickSignUp = () => {
-
     navigate('/signup')
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: "url(https://source.unsplash.com/random/:topic=arts-culture)",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-
-        <Grid item xs={12} sm={8} md={5} p={2} component={Paper} elevation={6} square>
-          <Grid container justifyContent="flex-end" m={-3} p={2}>
-            <LanguageSwitcher></LanguageSwitcher>
-          </Grid>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              <FormattedMessage id="app.signin"></FormattedMessage>
-            </Typography>
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ backgroundImage: `url(${selectedImage})`, minHeight: '100vh' }}
+        sx={{
+          backgroundRepeat: "no-repeat",
+          backgroundColor: (t) =>
+            t.palette.mode === "light"
+              ? t.palette.grey[50]
+              : t.palette.grey[900],
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+      >
+        <Grid item pt={-10}>
+          <Grid item component={Paper}
+            elevation={6}
+            style={{
+              background: 'linear-gradient(to right bottom, #57abdb, #ffffff69)'
+            }}>
+            <Grid container justifyContent="flex-end" m={0} p={4}>
+              <LanguageSwitcher></LanguageSwitcher>
+            </Grid>
             <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
+              sx={{
+                my: 0,
+                mx: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
             >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="userName"
-                label={<FormattedMessage id="app.signup.fields.name"></FormattedMessage>}
-                name="userName"
-                autoComplete="userName"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label={<FormattedMessage id="app.signin.password"></FormattedMessage>}
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
+              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
                 <FormattedMessage id="app.signin"></FormattedMessage>
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
+              </Typography>
+              <Box
+                component="form"
+                noValidate
+                onSubmit={handleSubmit}
+                sx={{ mt: 1 }}
+              >
+                <TextField
+                  sx={{
+                    input: {
+                      color: "black",
+                      background: "white",
+                      opacity: .75
+                    }
+                  }}
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="userName"
+                  label={<FormattedMessage id="app.signup.fields.name"></FormattedMessage>}
+                  name="userName"
+                  autoComplete="userName"
+                  autoFocus
+                />
+                <TextField
+                  sx={{
+                    input: {
+                      color: "black",
+                      background: "white",
+                      opacity: .75
+                    }
+                  }}
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label={<FormattedMessage id="app.signin.password"></FormattedMessage>}
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+                <FormControlLabel
+                  control={<Checkbox value="remember" color="primary" />}
+                  label="Remember me"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2, opacity: 1 }}
+                >
+                  <FormattedMessage id="app.signin"></FormattedMessage>
+                </Button>
+                <Grid container>
+                  <Grid item xs>
+                    <Link href="#" variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link
+                      href="#"
+                      variant="body2"
+                      onClick={onClickSignUp}>
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Link
-                    href="#"
-                    variant="body2"
-                    onClick={onClickSignUp}>
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
-              <Copyright sx={{ mt: 5 }} />
+                <Copyright sx={{ mt: 5 }} />
+              </Box>
             </Box>
-          </Box>
+          </Grid>
         </Grid>
       </Grid>
-    </ThemeProvider>
+      <CssBaseline />
+    </ThemeProvider >
   );
 }

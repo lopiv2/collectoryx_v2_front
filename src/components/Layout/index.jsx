@@ -10,8 +10,6 @@ import "../../styles/Dashboard.css";
 import Copyright from "../Copyright";
 import { Outlet } from "react-router-dom";
 import ConfigService from "../../app/api/config.api";
-import { setToLocalStorage } from "../../utils/generic";
-import { useTheme } from "../../utils/useTheme";
 import WebFont from "webfontloader";
 import { AppContext } from "../AppContext";
 import { green, blue, grey } from "@mui/material/colors";
@@ -24,7 +22,6 @@ function Layout(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openAnch = Boolean(anchorEl);
   const [open, setOpen] = React.useState(true);
-  //const [themes, setThemes] = useState([]);
   //const { theme, themeLoaded, getFonts } = useTheme();
   const [themeLoaded, setThemeLoaded] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("");
@@ -38,6 +35,7 @@ function Layout(props) {
       setThemeLoaded(true);
       const userConf = ConfigService.getUserConfig(user.id)
         .then((response) => {
+          //console.log(response.data)
           setUserConfig(response.data);
         })
         .catch((err) => {

@@ -24,6 +24,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { Tooltip } from "@mui/material";
 import { format, set } from "date-fns";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
+import { isUndefined } from "lodash";
 
 const localeMap = {
   en: enLocale,
@@ -40,12 +41,23 @@ function EditItem(props) {
   const intl = useIntl();
   const [formValues, setFormValues] = useState(null);
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
-  const [collectionId, setCollectionId] = useState(location.state.id);
+  const [collectionId, setCollectionId] = useState();
   const [metadataValues, setMetadataValues] = useState([]);
   const currency = GetCurrencySymbolLocale();
   const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
   const [img, setImg] = useState();
   const [imgGallerySelected, setImgGallerySelected] = useState(false);
+
+  useEffect(() => {
+    if (location.state !== null) {
+      setCollectionId(location.state.id)
+    }
+    else{
+      console.log(location.state)
+    }
+    //setCollectionId(location.state.id)
+    
+  }, [location])
 
   const handleChangeOwn = (event) => {
     setOwn(event.target.checked);
@@ -116,32 +128,35 @@ function EditItem(props) {
   };
 
   useEffect(() => {
-    const collectionSeries = ConfigService.getCollectionSeries(collectionId)
-      .then((response) => {
-        setCollectionSeriesList(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [location.state.id]);
+    if (!isUndefined(collectionId)) {
+      const collectionSeries = ConfigService.getCollectionSeries(collectionId)
+        .then((response) => {
+          setCollectionSeriesList(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [collectionId]);
 
   useEffect(() => {
-    const data = {
-      id: location.state.item.id,
-      name: location.state.item.name,
-      serie: location.state.item.serie.id,
-      price: location.state.item.price,
-      year: location.state.item.year,
-      adquiringDate: date,
-      own: location.state.item.own,
-      image: "",
-      notes: location.state.item.notes,
-      metadata: location.state.item.metadata,
-    };
-    console.log(data);
-    setMetadataValues(location.state.item.metadata);
-    setFormValues(data);
-  }, [location.state.item]);
+    if (location.state != null) {
+      const data = {
+        id: location.state.item.id,
+        name: location.state.item.name,
+        serie: location.state.item.serie.id,
+        price: location.state.item.price,
+        year: location.state.item.year,
+        adquiringDate: date,
+        own: location.state.item.own,
+        image: "",
+        notes: location.state.item.notes,
+        metadata: location.state.item.metadata,
+      };
+      setMetadataValues(location.state.item.metadata);
+      setFormValues(data);
+    }
+  }, [location.state]);
 
   const submitForm = (values) => {
     //console.log(values);
@@ -247,15 +262,18 @@ function EditItem(props) {
   }, [selectedFile]);
 
   useEffect(() => {
-    if (location.state.item.image) {
-      setPreview(
-        require("../../public/images/" + location.state.item.image.path)
-      );
+    if (location.state != null) {
+      if (location.state.item.image) {
+        setPreview(
+          require("../../public/images/" + location.state.item.image.path)
+        );
+      }
+      setOwn(location.state.item.own);
+      const dateFormatPickup = new Date(location.state.item.adquiringDate);
+      setDate(dateFormatPickup);
     }
-    setOwn(location.state.item.own);
-    const dateFormatPickup = new Date(location.state.item.adquiringDate);
-    setDate(dateFormatPickup);
-  }, [location.state.item]);
+
+  }, [location.state]);
 
   const newItemSchema = Yup.object().shape({
     name: Yup.string()
@@ -294,7 +312,7 @@ function EditItem(props) {
             .required(<FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>),*/
   });
   //console.log(location.state.item)
-  return (
+  return location.state !== null && (
     <Box sx={{ display: "flex" }}>
       <ToastContainer autoClose={2000} />
       <Grid container>

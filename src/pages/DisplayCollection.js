@@ -21,10 +21,11 @@ import Tick from "../images/Tick.png";
 import Cross from "../images/Cross.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
+import { Card, CardContent, CardActions, CardMedia, Paper } from "@mui/material";
+import { Stack } from "@mui/material";
 import styles from "../styles/Collections.css";
 import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import LogoDisplay from "../components/LogoDisplay";
 import { CurrencyChecker } from "../utils/generic";
 import Dialog from "@material-ui/core/Dialog";
@@ -61,6 +62,7 @@ function DisplayCollection(props) {
   const [toggleView, setToggleView] = useState("grid");
   const breadcrumbs = useBreadcrumbs();
   const [collectionId, setCollectionId] = useState();
+  const [itemSelected, setItemSelected] = useState(null);
   let isMounted = useRef(false);
 
   function SimpleDialog(props) {
@@ -117,7 +119,7 @@ function DisplayCollection(props) {
                 })}
               />
             </Grid>
-            <Grid item ml={2}>
+            {/*<Grid item ml={2}>
               <FormControlLabel
                 value="shop"
                 control={<Radio />}
@@ -125,7 +127,7 @@ function DisplayCollection(props) {
                   id: "app.collection.add_collection_import_shop",
                 })}
               />
-            </Grid>
+              </Grid>*/}
             <Grid container style={{ justifyContent: "center" }}>
               <Grid ml={2} mb={2}>
                 <Button
@@ -266,13 +268,33 @@ function DisplayCollection(props) {
   };
   const handleClose = () => {
     setOpen(false);
+    setItemSelected(null)
   };
+
+  const editRoute = () => {
+    navigate("/collections/edit-item", {
+      state: {
+        id: collectionId,
+        item: itemSelected,
+        name: location.state.name,
+      },
+    })
+  }
+
+  useEffect(() => {
+    if (itemSelected !== null && open === false) {
+      editRoute();
+    }
+  }, [itemSelected])
 
   const actions = [
     {
       icon: EditIcon,
       tooltip: intl.formatMessage({ id: "app.button.edit" }),
-      onClick: (event, rowData) => alert("You saved " + rowData.name),
+      onClick: (event, rowData) => {
+        const it = collectionItems.find((item) => item.id === rowData.id)
+        setItemSelected(it)
+      }
     },
     (rowData) => ({
       icon: DeleteIcon,
@@ -344,7 +366,7 @@ function DisplayCollection(props) {
 
   const cardStyleHover = {
     cursor: "pointer",
-    height: 400,
+    height: 380,
     minWidth: 250,
     maxWidth: 250,
     boxShadow: 15,
@@ -568,7 +590,7 @@ function DisplayCollection(props) {
                       sx={
                         cardHover === item ? cardStyleHover :
                           {
-                            height: 400,
+                            height: 380,
                             minWidth: 250,
                             maxWidth: 250,
                             boxShadow: 3,
@@ -681,6 +703,7 @@ function DisplayCollection(props) {
                                 value={item.image.path}
                                 onClick={() => {
                                   setImageClicked(item);
+                                  setItemSelected(item)
                                   handleOpen();
                                 }}
                                 style={styles}
@@ -729,13 +752,7 @@ function DisplayCollection(props) {
                           variant="contained"
                           color="success"
                           onClick={() =>
-                            navigate("/collections/edit-item", {
-                              state: {
-                                id: collectionId,
-                                item: item,
-                                name: location.state.name,
-                              },
-                            })
+                            setItemSelected(item)
                           }
                         >
                           <FormattedMessage id="app.button.edit"></FormattedMessage>
@@ -762,18 +779,42 @@ function DisplayCollection(props) {
           <Dialog
             open={open}
             onClose={handleClose}
-            style={{ maxWidth: "100%", maxHeight: "100%" }}
+            style={{ maxWidth: false, maxHeight: "100%", minHeight: "350px" }}
           >
-            <LazyLoadImage
-              alt=""
-              height={350}
-              src={
-                imageClicked !== ""
-                  ? checkImage(imageClicked)
-                  : null
-              }
-              width="100%"
-            />
+            <Grid container >
+              <Grid container item xs={6} style={{ border: "1px solid grey" }}>
+                <LazyLoadImage
+                  alt=""
+                  height="100%"
+                  src={
+                    imageClicked !== ""
+                      ? checkImage(imageClicked)
+                      : null
+                  }
+                  width="100%"
+                />
+              </Grid>
+              <Grid container item xs={6}>
+                <Grid item xs={12}>
+                  <Typography display="inline" variant="h4" component="h4">{itemSelected.name}</Typography>
+                </Grid>
+                <Grid container>
+                  <Paper style={{ backgroundColor: "#aaa" }}>
+                    <Stack direction="column"
+                      justifyContent="center"
+                      alignItems="center"
+                      spacing={2} >
+                      <Grid item>
+                        <Typography display="inline" variant="h4" component="h4">{itemSelected.name}</Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography display="inline" variant="h4" component="h4">{itemSelected.name}</Typography>
+                      </Grid>
+                    </Stack>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Grid>
           </Dialog>
         )}
         <SimpleDialog open={openNew} onClose={handleCloseNewCol} />

@@ -44,9 +44,19 @@ function SelectThemeTab() {
       "appearance"
     )
       .then((response) => {
+        if (response.status === 200) {
+          toast.success(
+            <FormattedMessage id="app.config.saved"></FormattedMessage>,
+            { theme: "colored" }
+          );
+        }
         setUserData((previous) => ({
           ...previous,
           theme: response.data.theme,
+        }));
+        setUserConfig((previous) => ({
+          ...previous,
+          darkTheme: response.data.darkTheme,
         }));
       })
       .catch((err) => {
@@ -86,7 +96,7 @@ function SelectThemeTab() {
         <FormGroup>
           <FormControlLabel
             control={<Switch checked={darkTheme} onChange={handleChangeDark} />}
-            label="Usar modo oscuro en tema"
+            label={<FormattedMessage id="app.config.appearance_dark_mode"></FormattedMessage>}
           />
         </FormGroup>
         <Swiper

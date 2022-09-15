@@ -19,6 +19,7 @@ import * as Yup from "yup";
 import ThemeTemplate from "../components/ThemeFiller";
 import CreateThemeTab from "../components/CreateThemeTab";
 import SelectThemeTab from "../components/SelectThemeTab";
+import DashboardDesignTab from "../components/DashboardDesignTab";
 
 function ConfigInterface() {
   const [primaryColor, setPrimaryColor] = useState(createColor("#000"));
@@ -111,7 +112,9 @@ function ConfigInterface() {
         <TabPanel value="3">
           <SelectThemeTab />
         </TabPanel>
-        <TabPanel value="4">Item Three</TabPanel>
+        <TabPanel value="4">
+          <DashboardDesignTab />
+        </TabPanel>
       </TabContext>
     </Box>
   );

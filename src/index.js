@@ -9,7 +9,7 @@ import Wrapper from "./components/Wrapper";
 
 ReactDOM.render(
   <Wrapper>
-    <ContextProvider><App /></ContextProvider>,
+    <ContextProvider><App /></ContextProvider>
   </Wrapper>,
   document.getElementById('root')
 );
