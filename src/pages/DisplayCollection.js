@@ -8,6 +8,7 @@ import {
   Radio,
   FormControlLabel,
 } from "@mui/material";
+import NoImage from "../images/no-photo-available.png";
 import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
 import { Box } from "@mui/material";
@@ -21,7 +22,13 @@ import Tick from "../images/Tick.png";
 import Cross from "../images/Cross.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardActions, CardMedia, Paper } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  CardMedia,
+  Paper,
+} from "@mui/material";
 import { Stack } from "@mui/material";
 import styles from "../styles/Collections.css";
 import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
@@ -77,14 +84,14 @@ function DisplayCollection(props) {
       if (templateSelected === "new") {
         navigate("/collections/add-item", {
           state: { id: collectionId, name: location.state.name },
-        })
+        });
       }
       if (templateSelected === "file") {
         navigate("/collections/import-scrapper", {
           state: { id: collectionId, name: location.state.name },
-        })
-      };
-    }
+        });
+      }
+    };
 
     return (
       <Dialog onClose={handleClose} open={open}>
@@ -254,21 +261,27 @@ function DisplayCollection(props) {
   };
 
   const checkImage = (item) => {
-    if (!item.image.path.includes("http")) {
-      return require("../../public/images/" +
-        item.image.path)
+    if (item.image) {
+      if (item.image.path) {
+        if (!item.image.path.includes("http")) {
+          return require("../../public/images/" + item.image.path);
+        } else {
+          return item.image.path;
+        }
+      }
     }
-    else {
-      return item.image.path
-    }
-  }
+  };
+
+  const checkImageSerie = (item) => {
+    return require("../../public/images/" + item.logo.path);
+  };
 
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
-    setItemSelected(null)
+    setItemSelected(null);
   };
 
   const editRoute = () => {
@@ -278,23 +291,23 @@ function DisplayCollection(props) {
         item: itemSelected,
         name: location.state.name,
       },
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     if (itemSelected !== null && open === false) {
       editRoute();
     }
-  }, [itemSelected])
+  }, [itemSelected]);
 
   const actions = [
     {
       icon: EditIcon,
       tooltip: intl.formatMessage({ id: "app.button.edit" }),
       onClick: (event, rowData) => {
-        const it = collectionItems.find((item) => item.id === rowData.id)
-        setItemSelected(it)
-      }
+        const it = collectionItems.find((item) => item.id === rowData.id);
+        setItemSelected(it);
+      },
     },
     (rowData) => ({
       icon: DeleteIcon,
@@ -472,7 +485,7 @@ function DisplayCollection(props) {
                 onClick={() => {
                   setOpenNew(true);
                 }}
-              /*onClick={() => navigate("/collections/add")}*/
+                /*onClick={() => navigate("/collections/add")}*/
               >
                 {/*</Button><Button
                 variant="contained"
@@ -585,182 +598,179 @@ function DisplayCollection(props) {
             <Grid container spacing={5} className="container" pt={3}>
               {collectionItems !== undefined
                 ? collectionItems.map((item) => (
-                  <Grid item key={item.id} >
-                    <Card
-                      sx={
-                        cardHover === item ? cardStyleHover :
-                          {
-                            height: 380,
-                            minWidth: 250,
-                            maxWidth: 250,
-                            boxShadow: 3,
-                          }
-                      }
-                      ml={200}
-                      onMouseOver={() => {
-                        setCardHover(item)
-                      }}
-                      onMouseOut={() => {
-                        setCardHover(null)
-                      }}
-                    >
-                      <Box ml={23.1} mb={-10}>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.click_wish",
-                          })}
-                          placement="right"
-                          arrow
-                        >
-                          <IconButton
-                            id={item.id}
-                            color="primary"
-                            sx={{
-                              position: "relative",
-                              height: 25,
-                              width: 25,
-                              ml: -23.5,
-                              mb: 6,
-                            }}
-                            onClick={(e) => {
-                              handleWishClick(e, item.own, item.wanted);
-                            }}
-                            className="button-wish"
-                          >
-                            {item.wanted ? (
-                              <BookmarkIcon fontSize="large"></BookmarkIcon>
-                            ) : (
-                              <BookmarkBorderIcon fontSize="large"></BookmarkBorderIcon>
-                            )}
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.click_own",
-                          })}
-                          placement="right"
-                          arrow
-                        >
-                          <Button
-                            id={item.id}
-                            sx={{
-                              position: "relative",
-                              height: 75,
-                              width: 75,
-                              ml: 19.153,
-                              mt: -0.5,
-                            }}
-                            onClick={(e) => {
-                              handleOwnClick(e, item.own, item.wanted);
-                            }}
-                            className="button-own"
-                            startIcon={
-                              <Avatar
-                                variant="square"
-                                sx={{ width: 75, height: 75, ml: 1, mt: 1 }}
-                                src={item.own ? OwnImage : NotOwnImage}
-                              />
-                            }
-                          >
-                            <Typography
-                              className="own-text"
-                              sx={{ position: "absolute", ml: 2.5 }}
-                            >
-                              {item.own ? (
-                                <FormattedMessage id="app.button.own"></FormattedMessage>
-                              ) : (
-                                <FormattedMessage id="app.button.not_own"></FormattedMessage>
-                              )}
-                            </Typography>
-                          </Button>
-                        </Tooltip>
-                      </Box>
-                      <CardContent>
-                        {item.logo ? null : (
-                          <Typography
-                            align="center"
-                            sx={{ fontSize: 20 }}
-                            color="text.primary"
-                            gutterBottom
-                          ></Typography>
-                        )}
-                        {item.image != null && (
+                    <Grid item key={item.id}>
+                      <Card
+                        sx={
+                          cardHover === item
+                            ? cardStyleHover
+                            : {
+                                height: 380,
+                                minWidth: 250,
+                                maxWidth: 250,
+                                boxShadow: 3,
+                              }
+                        }
+                        ml={200}
+                        onMouseOver={() => {
+                          setCardHover(item);
+                        }}
+                        onMouseOut={() => {
+                          setCardHover(null);
+                        }}
+                      >
+                        <Box ml={23.1} mb={-10}>
                           <Tooltip
                             title={intl.formatMessage({
-                              id: "app.tooltip.click_image",
+                              id: "app.tooltip.click_wish",
                             })}
+                            placement="right"
                             arrow
-                            followCursor
                           >
-                            {item.image != null &&
-                              (<CardMedia
-                                component="img"
-                                width="500%"
-                                height="220"
-                                image={checkImage(item)}
-                                alt={item.name}
-                                className="card-collection"
-                                value={item.image.path}
-                                onClick={() => {
-                                  setImageClicked(item);
-                                  setItemSelected(item)
-                                  handleOpen();
-                                }}
-                                style={styles}
-                              />)}
+                            <IconButton
+                              id={item.id}
+                              color="primary"
+                              sx={{
+                                position: "relative",
+                                height: 25,
+                                width: 25,
+                                ml: -23.5,
+                                mb: 6,
+                              }}
+                              onClick={(e) => {
+                                handleWishClick(e, item.own, item.wanted);
+                              }}
+                              className="button-wish"
+                            >
+                              {item.wanted ? (
+                                <BookmarkIcon fontSize="large"></BookmarkIcon>
+                              ) : (
+                                <BookmarkBorderIcon fontSize="large"></BookmarkBorderIcon>
+                              )}
+                            </IconButton>
                           </Tooltip>
-                        )}
-                        <Typography
-                          align="center"
-                          sx={{ mb: 0.5 }}
-                          mt={1}
-                          color="text.primary"
-                        >
-                          {item.image === null && (
-                            <CardMedia
-                              component="img"
-                              width="100%"
-                              image={require("../images/no-photo-available.png")}
-                              alt={item.name}
-                              style={styles}
-                            />
+                          <Tooltip
+                            title={intl.formatMessage({
+                              id: "app.tooltip.click_own",
+                            })}
+                            placement="right"
+                            arrow
+                          >
+                            <Button
+                              id={item.id}
+                              sx={{
+                                position: "relative",
+                                height: 75,
+                                width: 75,
+                                ml: 19.153,
+                                mt: -0.5,
+                              }}
+                              onClick={(e) => {
+                                handleOwnClick(e, item.own, item.wanted);
+                              }}
+                              className="button-own"
+                              startIcon={
+                                <Avatar
+                                  variant="square"
+                                  sx={{ width: 75, height: 75, ml: 1, mt: 1 }}
+                                  src={item.own ? OwnImage : NotOwnImage}
+                                />
+                              }
+                            >
+                              <Typography
+                                className="own-text"
+                                sx={{ position: "absolute", ml: 2.5 }}
+                              >
+                                {item.own ? (
+                                  <FormattedMessage id="app.button.own"></FormattedMessage>
+                                ) : (
+                                  <FormattedMessage id="app.button.not_own"></FormattedMessage>
+                                )}
+                              </Typography>
+                            </Button>
+                          </Tooltip>
+                        </Box>
+                        <CardContent>
+                          {item.logo ? null : (
+                            <Typography
+                              align="center"
+                              sx={{ fontSize: 20 }}
+                              color="text.primary"
+                              gutterBottom
+                            ></Typography>
                           )}
-                          {item.name}
-                        </Typography>
-                        <Typography
-                          align="center"
-                          color="text.secondary"
-                        >
-                          {item.year}
-                        </Typography>
-                      </CardContent>
-                      <CardActions style={{ justifyContent: "center" }}>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          type="submit"
-                          form="form"
-                          value={item.id}
-                          onClick={() => {
-                            setValue(item.id);
-                            setConfirmOpen(true);
-                          }}
-                        >
-                          <FormattedMessage id="app.button.delete"></FormattedMessage>
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          onClick={() =>
-                            setItemSelected(item)
-                          }
-                        >
-                          <FormattedMessage id="app.button.edit"></FormattedMessage>
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))
+                          {item.image != null && (
+                            <Tooltip
+                              title={intl.formatMessage({
+                                id: "app.tooltip.click_image",
+                              })}
+                              arrow
+                              followCursor
+                            >
+                              {item.image != null && (
+                                <CardMedia
+                                  component="img"
+                                  width="500%"
+                                  height="220"
+                                  image={checkImage(item)}
+                                  alt={item.name}
+                                  className="card-collection"
+                                  value={item.image.path}
+                                  onClick={() => {
+                                    setImageClicked(item);
+                                    setItemSelected(item);
+                                    handleOpen();
+                                  }}
+                                  style={styles}
+                                />
+                              )}
+                            </Tooltip>
+                          )}
+                          <Typography
+                            align="center"
+                            sx={{ mb: 0.5 }}
+                            mt={1}
+                            color="text.primary"
+                          >
+                            {item.image === null && (
+                              <CardMedia
+                                component="img"
+                                width="100%"
+                                image={require("../images/no-photo-available.png")}
+                                alt={item.name}
+                                style={styles}
+                              />
+                            )}
+                            {item.name}
+                          </Typography>
+                          <Typography align="center" color="text.secondary">
+                            {item.year}
+                          </Typography>
+                        </CardContent>
+                        <CardActions style={{ justifyContent: "center" }}>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            type="submit"
+                            form="form"
+                            value={item.id}
+                            onClick={() => {
+                              setValue(item.id);
+                              setConfirmOpen(true);
+                            }}
+                          >
+                            <FormattedMessage id="app.button.delete"></FormattedMessage>
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => setItemSelected(item)}
+                          >
+                            <FormattedMessage id="app.button.edit"></FormattedMessage>
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))
                 : null}
             </Grid>
           )}
@@ -777,40 +787,91 @@ function DisplayCollection(props) {
         </ConfirmDialog>
         {open && (
           <Dialog
+            PaperProps={{
+              sx: {
+                width: "50%",
+                maxHeight: 300,
+              },
+              style: {
+                backgroundColor: "rgba(255, 255, 255)",
+                boxShadow: "none",
+              },
+            }}
             open={open}
             onClose={handleClose}
             style={{ maxWidth: false, maxHeight: "100%", minHeight: "350px" }}
           >
-            <Grid container >
-              <Grid container item xs={6} style={{ border: "1px solid grey" }}>
-                <LazyLoadImage
-                  alt=""
-                  height="100%"
-                  src={
-                    imageClicked !== ""
-                      ? checkImage(imageClicked)
-                      : null
-                  }
-                  width="100%"
-                />
-              </Grid>
+            <Grid container>
               <Grid container item xs={6}>
+                <Grid item ml={2} mt={2} mr={2} mb={2}>
+                  <LazyLoadImage
+                    alt=""
+                    height="100%"
+                    src={imageClicked !== "" ? checkImage(imageClicked) : null}
+                    width="100%"
+                  />
+                </Grid>
+              </Grid>
+              <Grid container item xs={6} pb={2}>
                 <Grid item xs={12}>
-                  <Typography display="inline" variant="h4" component="h4">{itemSelected.name}</Typography>
+                  <Typography display="inline" variant="h4" component="h4">
+                    {itemSelected.name}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6} justifyContent="flex-end">
+                  <LazyLoadImage
+                    alt=""
+                    height="50%"
+                    src={
+                      itemSelected.serie.logo !== null
+                        ? checkImageSerie(itemSelected.serie)
+                        : NoImage
+                    }
+                    width="50%"
+                  />
+                </Grid>
+                <Grid item xs={6} pr={3}>
+                  <Typography variant="body1">
+                    <FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>
+                    : {itemSelected.serie.name}
+                  </Typography>
                 </Grid>
                 <Grid container>
-                  <Paper style={{ backgroundColor: "#aaa" }}>
-                    <Stack direction="column"
-                      justifyContent="center"
-                      alignItems="center"
-                      spacing={2} >
-                      <Grid item>
-                        <Typography display="inline" variant="h4" component="h4">{itemSelected.name}</Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography display="inline" variant="h4" component="h4">{itemSelected.name}</Typography>
-                      </Grid>
-                    </Stack>
+                  <Paper
+                    style={{ backgroundColor: "rgba(0, 0, 0, 0.16)" }}
+                    xs={12}
+                    width="100%"
+                  >
+                    <Grid item>
+                      <Typography variant="body1">
+                        <FormattedMessage id="app.collection.view_collections_item_collection"></FormattedMessage>
+                        : {itemSelected.collection.name}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1">
+                        <FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>
+                        : {itemSelected.year}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1">
+                        <FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>
+                        : {itemSelected.wanted}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1">
+                        <FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>
+                        : {itemSelected.own}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1">
+                        <FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>
+                        : {itemSelected.date}
+                      </Typography>
+                    </Grid>
                   </Paper>
                 </Grid>
               </Grid>
@@ -819,7 +880,7 @@ function DisplayCollection(props) {
         )}
         <SimpleDialog open={openNew} onClose={handleCloseNewCol} />
       </Grid>
-    </Box >
+    </Box>
   );
 }
 

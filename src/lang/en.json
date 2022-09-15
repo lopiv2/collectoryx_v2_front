@@ -119,6 +119,7 @@
   "app.collection.view_collections_series": "List of series",
   "app.collection.view_collections_items": "List of items",
   "app.collection.view_collections_item_name": "Name",
+  "app.collection.view_collections_item_collection": "Collection",
   "app.collection.view_collections_item_serie": "Serie",
   "app.collection.view_collections_item_price": "Price",
   "app.collection.view_collections_item_year": "Year",
