@@ -131,6 +131,7 @@ function EditItem(props) {
     if (!isUndefined(collectionId)) {
       const collectionSeries = ConfigService.getCollectionSeries(collectionId)
         .then((response) => {
+          //console.log(response.data)
           setCollectionSeriesList(response.data);
         })
         .catch((err) => {
@@ -144,7 +145,7 @@ function EditItem(props) {
       const data = {
         id: location.state.item.id,
         name: location.state.item.name,
-        serie: location.state.item.serie.id,
+        serie: location.state.item.serie ? location.state.item.serie.id : null,
         price: location.state.item.price,
         year: location.state.item.year,
         adquiringDate: date,
@@ -462,7 +463,7 @@ function EditItem(props) {
                             select
                             size="small"
                             sx={{ minWidth: 300 }}
-                            value={values.serie}
+                            value={values.serie!=null ? values.serie : ""}
                             error={touched.serie && Boolean(errors.serie)}
                             helperText={touched.serie && errors.serie}
                             onChange={(selectedOption) => {
@@ -588,13 +589,13 @@ function EditItem(props) {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={2}>
+                  {formValues.metadata.length > 0 && (<Grid item xs={2}>
                     <Box pt={2}>
                       <Typography variant="body1">
                         <FormattedMessage id="app.collection.view_collections_item_metadata"></FormattedMessage>
                       </Typography>
                     </Box>
-                  </Grid>
+                  </Grid>)}
                   {formValues.metadata.length > 0 && (
                     <Grid
                       container

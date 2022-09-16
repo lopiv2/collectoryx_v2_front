@@ -3,6 +3,8 @@ import { useContext } from "react";
 import OptionsService from "../components/DropDownOptions";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { green, blue, grey } from "@mui/material/colors";
+import esLocale from "date-fns/locale/es";
+import enLocale from "date-fns/locale/en-US";
 //import axios from "axios";
 
 const cleanUrl = (url) => {
@@ -85,11 +87,24 @@ const CreateTheme = (userData) => {
 
 const CurrencyChecker = () => {
   const context = useContext(Context);
+  //console.log(context.locale)
   const res = OptionsService.countriesOptions.find(
     (locale) => locale.value === context.locale
   );
   return res;
 };
+
+const SetLocaleDateTime = () => {
+  const context = useContext(Context);
+  switch (context.locale) {
+    case "es-ES":
+      return esLocale
+    case "en-EN":
+      return enLocale
+    default:
+      return enLocale
+  }
+}
 
 const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   var items = [];
@@ -152,5 +167,6 @@ export {
   GetCurrencySymbolLocale,
   getFromLocalStorage,
   getImagePaths,
+  SetLocaleDateTime,
   setToLocalStorage,
 };
