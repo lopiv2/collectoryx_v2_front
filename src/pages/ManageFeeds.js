@@ -5,12 +5,13 @@ import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
+import NoImage from "../images/no-photo-available.png";
 import "../styles/Dashboard.css";
 import MaterialTable from "@material-table/core";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import { TextField, MenuItem } from "@mui/material";
+import { TextField, Avatar } from "@mui/material";
 import { useIntl } from "react-intl";
 import { cleanUrl } from "../utils/generic";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,19 +19,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import * as Yup from "yup";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { AppContext } from "../components/AppContext";
+import EditFeedDialog from "../components/EditFeedDialog";
+import { isUndefined } from "lodash";
 
 function ManageFeeds(props) {
-  //const [feedsList, setFeedsList] = useState([]);
+  const [feedEdited, setFeedEdited] = useState();
+  const [newFeedEdited, setNewFeedEdited] = useState();
   const { feedsList, setFeedsList } = useContext(AppContext);
   const navigate = useNavigate();
   const intl = useIntl();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [value, setValue] = useState(null);
-
-  if (localStorage.getItem("user")) {
-    var user = localStorage.getItem("user");
-    var userData = JSON.parse(user);
-  }
+  const [openEdit, setOpenEdit] = useState(false);
+  const { userData, setUserData } = React.useContext(AppContext);
 
   const handleDeleteClick = () => {
     const deleteColl = ConfigService.deleteFeed(value).then(
@@ -52,15 +53,15 @@ function ManageFeeds(props) {
     );
   };
 
-  /*useEffect(() => {
-    const feeds = ConfigService.getAllUserFeeds(userData.id)
-      .then((response) => {
-        setFeedsList(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);*/
+  useEffect(() => {
+    if (!isUndefined(newFeedEdited)) {
+      var index = feedsList.findIndex((x) => x.id == newFeedEdited.id);
+      let newItems = [...feedsList];
+      newItems[index] = newFeedEdited;
+      setFeedsList(newItems);
+      setNewFeedEdited(undefined);
+    }
+  }, [newFeedEdited]);
 
   const submitForm = (values) => {
     ConfigService.createFeed(userData.id, values.name, values.url, cleanUrl(values.url)).then(
@@ -89,7 +90,11 @@ function ManageFeeds(props) {
     {
       icon: EditIcon,
       tooltip: intl.formatMessage({ id: "app.button.edit" }),
-      onClick: (event, rowData) => alert("You saved " + rowData.name)
+      onClick: (event, rowData) => {
+        const data = feedsList.find((feed) => feed.id === rowData.id);
+        setFeedEdited(data);
+        setOpenEdit(true);
+      },
     },
     rowData => ({
       icon: DeleteIcon,
@@ -122,6 +127,10 @@ function ManageFeeds(props) {
       title: intl.formatMessage({ id: "app.feed.add_feed_url" }),
       field: "url",
     },
+    {
+      title: intl.formatMessage({ id: "app.collection.add_collection_logo" }),
+      field: "logo",
+    },
   ];
 
   const data = feedsList.map((item) => {
@@ -129,6 +138,13 @@ function ManageFeeds(props) {
       id: item.id,
       name: item.name,
       url: item.rssUrl,
+      logo:
+        <Avatar
+          variant="rounded"
+          src={item.logo ? item.logo : NoImage}
+          sx={{ width: 50, height: 50 }}
+        ></Avatar>
+
     };
     return rows;
   });
@@ -241,6 +257,17 @@ function ManageFeeds(props) {
           >
             <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
           </ConfirmDialog>
+          <EditFeedDialog
+            items={feedEdited}
+            collectionList={feedsList}
+            setItem={setFeedEdited}
+            newItem={newFeedEdited}
+            setNewItem={setNewFeedEdited}
+            open={openEdit}
+            setOpen={setOpenEdit}
+          >
+            <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+          </EditFeedDialog>
         </Grid>
       </Grid>
     </Box>

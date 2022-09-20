@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import usePagination from "../components/Pagination";
-import {Pagination} from "@mui/material";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Pagination } from "@mui/material";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import {
   Avatar,
@@ -17,7 +16,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
-import { Button } from "@mui/material";
+import { Button, MenuItem, TextField } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import OwnImage from "../images/Own.png";
@@ -45,6 +44,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import ConfirmDialog from "../components/ConfirmDialog";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import SearchIcon from '@mui/icons-material/Search';
 import MaterialTable from "@material-table/core";
 import IconButton from "@mui/material/IconButton";
 import useBreadcrumbs from "use-react-router-breadcrumbs";
@@ -56,11 +56,13 @@ import EditIcon from "@mui/icons-material/Edit";
 
 function DisplayCollection(props) {
   const [collectionItems, setCollectionItems] = useState([]);
+  const [allCollectionItems, setAllCollectionItems] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const [collected, setCollected] = useState(0);
   const [wished, setWished] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [moneySpent, setMoneySpent] = useState(0);
   const currency = CurrencyChecker();
   const [open, setOpen] = useState(false);
@@ -77,16 +79,28 @@ function DisplayCollection(props) {
   const [collectionId, setCollectionId] = useState();
   const [itemSelected, setItemSelected] = useState(null);
   let isMounted = useRef(false);
-  let [page, setPage] = useState(1);
-  const PER_PAGE = 5;
-  const count = Math.ceil(collectionItems.length / PER_PAGE);
-  console.log(collectionItems.length)
-  const _DATA = usePagination(collectionItems, PER_PAGE);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsOrder, setRowsOrder] = useState("name");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleChange = (e, p) => {
     setPage(p);
-    _DATA.jump(p);
+    fetchData(p - 1, rowsPerPage, rowsOrder, searchQuery);
   };
+
+  const handleChangeShowItems = (event) => {
+    setRowsPerPage(event);
+    setPage(0)
+    fetchData(0, event, rowsOrder, searchQuery);
+  };
+
+  const handleChangeRowOrder = (event) => {
+    setRowsOrder(event);
+    setPage(0)
+    fetchData(0, rowsPerPage, event, searchQuery)
+  };
+
 
   function SimpleDialog(props) {
     const { onClose, selectedValue, open } = props;
@@ -182,27 +196,48 @@ function DisplayCollection(props) {
     setOpenNew(false);
   };
 
-  useEffect(() => {
-    ConfigService.getCollectionItemsById(location.state.id)
+  const getOwnedItems = () => {
+    const query = {
+      id: location.state.id,
+      orderField: "id",
+      search: ""
+    };
+    let col = 0;
+    let money = 0;
+    let want = 0;
+    ConfigService.getCollectionItemsById(query)
       .then((response) => {
-        let col = 0;
-        let money = 0;
-        let want = 0;
+        setAllCollectionItems(response.data.content)
+        response.data.content.map((item) => {
+          if (item.own) {
+            col = col + 1;
+            money = money + item.price;
+          }
+          if (item.wanted) {
+            want = want + 1;
+          }
+        });
+        setMoneySpent(money);
+        setCollected(col);
+        setTotalItems(response.data.totalElements);
+        setWished(want);
+      })
+  }
+
+  const fetchData = async (page, rowsPerPage, orderField, search) => {
+    const query = {
+      id: location.state.id,
+      page: page,
+      size: rowsPerPage,
+      search: search,
+      orderField: orderField
+    };
+    ConfigService.getCollectionItemsById(query)
+      .then((response) => {
         if (isMounted) {
-          setCollectionItems(response.data);
-          setTotalItems(response.data.length);
-          response.data.map((item) => {
-            if (item.own) {
-              col = col + 1;
-              money = money + item.price;
-            }
-            if (item.wanted) {
-              want = want + 1;
-            }
-          });
-          setMoneySpent(money);
-          setCollected(col);
-          setWished(want);
+          //console.log(response.data)
+          setTotalPages(response.data.totalPages)
+          setCollectionItems(response.data.content);
           setCollectionId(location.state.id);
         }
       })
@@ -212,6 +247,22 @@ function DisplayCollection(props) {
     return () => {
       isMounted = false;
     };
+  };
+
+  const searchQueryInApi = () => {
+    if (searchQuery.length > 0) {
+      fetchData(page, rowsPerPage, rowsOrder, searchQuery);
+    }
+    else {
+      setRowsOrder("name")
+      setPage(0)
+      fetchData(page, rowsPerPage, "name");
+    }
+  }
+
+  useEffect(() => {
+    fetchData(page, rowsPerPage, "name");
+    getOwnedItems()
   }, []);
 
   const handleWishClick = (event, own, wanted) => {
@@ -457,6 +508,7 @@ function DisplayCollection(props) {
         >
           <IconButton
             onClick={() => {
+              setItemSelected(item);
               setImageClicked(item);
               handleOpen();
             }}
@@ -549,7 +601,7 @@ function DisplayCollection(props) {
               <Button
                 variant="contained"
                 color="success"
-                onClick={() => setToggleView("list")}
+                onClick={() => { fetchData(null, null, "name"); setToggleView("list") }}
               >
                 <ViewListIcon></ViewListIcon>
               </Button>
@@ -604,6 +656,71 @@ function DisplayCollection(props) {
               }
             </Typography>
           </Grid>
+          {toggleView === "grid" && (
+            <Grid container>
+              <Grid item xs={3} pt={1}>
+                <Typography variant="h6" display="inline" component="div">
+                  <FormattedMessage id="app.license.show_code"></FormattedMessage>:
+                </Typography>
+                <TextField
+                  id="items-show"
+                  name="items-show"
+                  select
+                  size="small"
+                  sx={{ minWidth: 100 }}
+                  value={rowsPerPage}
+                  onChange={(event) => {
+                    handleChangeShowItems(event.target.value);
+                  }}
+                >
+                  <MenuItem value="5">5</MenuItem>
+                  <MenuItem value="10">10</MenuItem>
+                  <MenuItem value="20">20</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={3} pt={1}>
+                <Typography variant="h6" display="inline" component="div">
+                  <FormattedMessage id="app.collection.view_collections_order_by"></FormattedMessage>
+                </Typography>
+                <TextField
+                  id="items-show"
+                  name="items-show"
+                  select
+                  size="small"
+                  sx={{ minWidth: 100 }}
+                  value={rowsOrder}
+                  onChange={(event) => {
+                    handleChangeRowOrder(event.target.value);
+                  }}
+                >
+                  <MenuItem value="name"><FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage></MenuItem>
+                  <MenuItem value="serie"><FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage></MenuItem>
+                  <MenuItem value="own"><FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage></MenuItem>
+                  <MenuItem value="wanted"><FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage></MenuItem>
+                  <MenuItem value="year"><FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage></MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={3} pt={1}>
+                <TextField
+                  id="search-bar"
+                  className="text"
+                  value={searchQuery}
+                  onInput={(e) => {
+                    setSearchQuery(e.target.value);
+                  }}
+                  variant="outlined"
+                  placeholder={intl.formatMessage({
+                    id: "app.button.search",
+                  })}
+                  size="small"
+                />
+                <IconButton type="submit" aria-label="search" onClick={(e) => {
+                  searchQueryInApi(searchQuery);
+                }}>
+                  <SearchIcon style={{ fill: "blue" }} />
+                </IconButton>
+              </Grid>
+            </Grid>)}
           {toggleView === "list" && (
             <Grid container pt={3}>
               <Grid item xs={12}>
@@ -621,14 +738,6 @@ function DisplayCollection(props) {
           )}
           {toggleView === "grid" && (
             <Grid container spacing={5} className="container" pt={3}>
-              <Pagination
-                count={count}
-                size="large"
-                page={page}
-                variant="outlined"
-                shape="rounded"
-                onChange={handleChange}
-              />
               {collectionItems !== undefined
                 ? collectionItems.map((item) => (
                   <Grid item key={item.id}>
@@ -792,14 +901,6 @@ function DisplayCollection(props) {
                   </Grid>
                 ))
                 : null}
-              <Pagination
-                count={count}
-                size="large"
-                page={page}
-                variant="outlined"
-                shape="rounded"
-                onChange={handleChange}
-              />
             </Grid>
           )}
         </Grid>
@@ -849,7 +950,7 @@ function DisplayCollection(props) {
                     component={Paper} elevation={2}
                     variant="rounded"
                     sx={{ width: 65, height: 65 }}
-                    src={itemSelected.serie !== null
+                    src={itemSelected !== null
                       ? checkImageSerie(itemSelected.serie)
                       : NoImage}
                   />
@@ -941,6 +1042,15 @@ function DisplayCollection(props) {
           </Dialog>
         )}
         <SimpleDialog open={openNew} onClose={handleCloseNewCol} />
+        {toggleView === "grid" && (
+          <Grid container
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="10vh"
+          >
+            <Pagination count={totalPages} showFirstButton showLastButton page={page} variant="outlined" shape="rounded" onChange={handleChange} />
+          </Grid>)}
       </Grid>
     </Box >
   );

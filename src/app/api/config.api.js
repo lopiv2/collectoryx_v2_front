@@ -2,7 +2,7 @@ import axios from "axios";
 import authHeader from "./auth-header";
 
 const API_URL = process.env.REACT_APP_API_URL;
-const GET_COLLECTION_ITEMS_ID_URL = (id) => `${API_URL}/collections/${id}`;
+const GET_COLLECTION_ITEMS_ID_URL = `${API_URL}/collections`;
 const COUNT_COLLECTIONS_URL = (id) => `${API_URL}/count-collections/${id}`;
 const COUNT_COLLECTIONS_ITEMS_URL = (id) =>
   `${API_URL}/count-collections-items/${id}`;
@@ -50,6 +50,7 @@ const DELETE_API_ID_URL = (id) => `${API_URL}/config/delete-api/${id}`;
 const CONFIG_URL = (id) => `${API_URL}/config/get-config/${id}`;
 const POST_APPEARANCE_CONFIG = `${API_URL}/config/save`;
 const VIEW_FEEDS_URL = (id) => `${API_URL}/feeds/view/${id}`;
+const UPDATE_FEED_URL = `${API_URL}/feeds/update`;
 const VIEW_FEEDS_READ_URL = (id) => `${API_URL}/feeds/get-all/${id}`;
 const VIEW_FEEDS_READ_URL_ID = (id, title) =>
   `${API_URL}/feeds/get-feeds/${id}/${title}`;
@@ -334,9 +335,9 @@ const getAllSeries = (id) => {
     });
 };
 
-const getCollectionItemsById = (id) => {
+const getCollectionItemsById = (query) => {
   return axios
-    .get(GET_COLLECTION_ITEMS_ID_URL(id), { headers: authHeader() })
+    .post(GET_COLLECTION_ITEMS_ID_URL, query, { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
       return response;
@@ -613,6 +614,30 @@ const updateApi = (values) => {
     });
 };
 
+const updateFeed = (values) => {
+  const data = {
+    id: values.id,
+    name: values.name,
+    url: values.rssUrl,
+    logo: values.logo
+  };
+  return axios
+    .put(UPDATE_FEED_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        //console.log(response.data)
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const updateItem = (values, collection, file, metadata) => {
   const data = {
     id: values.id,
@@ -644,7 +669,7 @@ const updateItem = (values, collection, file, metadata) => {
     });
 };
 
-const updateSerie= (values, image) => {
+const updateSerie = (values, image) => {
   const data = {
     id: values.id,
     name: values.name,
@@ -713,6 +738,7 @@ const ConfigService = {
   toggleItemOwn,
   toggleItemWish,
   updateApi,
+  updateFeed,
   updateItem,
   updateSerie,
   viewFeed,

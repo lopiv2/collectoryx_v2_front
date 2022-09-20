@@ -193,7 +193,6 @@ function ManageSeries(props) {
   ];
 
   const data = collectionSeriesList.map((item) => {
-    //console.log(item)
     let cols = {
       id: item.id,
       name: item.name,
