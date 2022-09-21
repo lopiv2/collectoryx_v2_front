@@ -44,7 +44,8 @@ function ViewCollection(props) {
       collectionsList.map((item) => {
         const query = {
           id: item.id,
-          orderField: "id"
+          orderField: "id",
+          search: "",
           //page: 1,
           //size: 5,
         };

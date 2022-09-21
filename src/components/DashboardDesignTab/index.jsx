@@ -1,42 +1,51 @@
 import React, { useState, useEffect } from "react";
-import { CardHeader, Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
-import { Paper } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
-import { ColorPicker, createColor } from "material-ui-color";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
-import { Pagination, Navigation, EffectCoverflow } from "swiper";
 import { FormGroup } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
 import { Switch } from "@mui/material";
-import ThemeTemplate from "../ThemeFiller";
 import { toast } from "react-toastify";
-import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
 import { AppContext } from "../AppContext";
-import { CreateTheme } from "../../utils/generic";
 
 
 function DashboardDesignTab() {
   const { userData, setUserData, userConfig, setUserConfig } =
     React.useContext(AppContext);
   const [expensivePanel, setExpensivePanel] = useState(userConfig.expensivePanel);
+  const [wishlistPanel, setWishlistPanel] = useState(userConfig.wishlistPanel);
+  const [recentPurchasePanel, setRecentPurchasePanel] = useState(userConfig.recentPurchasePanel);
+  const [completedCollectionsPanel, setCompletedCollectionsPanel] = useState(userConfig.completedCollectionsPanel);
   const intl = useIntl();
 
   const handleChangeExpensiveItem = (event) => {
     setExpensivePanel(event.target.checked);
   };
 
+  const handleChangeWishlistItem = (event) => {
+    setWishlistPanel(event.target.checked);
+  };
+
+  const handleChangeRecentPurchaseItem = (event) => {
+    setRecentPurchasePanel(event.target.checked);
+  };
+
+  const handleChangeCompletedCollectionItem = (event) => {
+    setCompletedCollectionsPanel(event.target.checked);
+  };
+
   const submitChanges = () => {
     const save = ConfigService.saveConfigDashboard(
       userData.id,
       expensivePanel,
+      wishlistPanel,
+      recentPurchasePanel,
+      completedCollectionsPanel,
       "dashboard"
     )
       .then((response) => {
@@ -49,6 +58,9 @@ function DashboardDesignTab() {
         setUserConfig((previous) => ({
           ...previous,
           expensivePanel: response.data.expensivePanel,
+          wishlistPanel: response.data.wishlistPanel,
+          recentPurchasePanel: response.data.recentPurchasePanel,
+          completedCollectionsPanel: response.data.completedCollectionsPanel,
         }));
       })
       .catch((err) => {
@@ -69,6 +81,18 @@ function DashboardDesignTab() {
           <FormControlLabel
             control={<Switch checked={expensivePanel} onChange={handleChangeExpensiveItem} />}
             label={<FormattedMessage id="app.config.appearance_expensive_tab_visible"></FormattedMessage>}
+          />
+          <FormControlLabel
+            control={<Switch checked={wishlistPanel} onChange={handleChangeWishlistItem} />}
+            label={<FormattedMessage id="app.config.appearance_wishlist_tab_visible"></FormattedMessage>}
+          />
+          <FormControlLabel
+            control={<Switch checked={recentPurchasePanel} onChange={handleChangeRecentPurchaseItem} />}
+            label={<FormattedMessage id="app.config.appearance_recent_purchase_tab_visible"></FormattedMessage>}
+          />
+          <FormControlLabel
+            control={<Switch checked={completedCollectionsPanel} onChange={handleChangeCompletedCollectionItem} />}
+            label={<FormattedMessage id="app.config.appearance_collection_tab_visible"></FormattedMessage>}
           />
         </FormGroup>
         <Grid item mt={1}>

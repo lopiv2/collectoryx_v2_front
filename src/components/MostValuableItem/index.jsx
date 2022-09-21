@@ -54,7 +54,7 @@ export default function MostValuableItem() {
 
   return (
     itemMax && (
-      <Card sx={{ minWidth: 200 }}>
+      <Card sx={{ minWidth: 200, maxHeight: 138 }} elevation={6}>
         <CardContent>
           <Grid
             container
@@ -73,7 +73,7 @@ export default function MostValuableItem() {
               <Box display="flex" justifyContent="center">
                 <Grid item>
                   <Typography
-                    sx={{ fontSize: 18 }}
+                    sx={{ fontSize: 16 }}
                     color="text.secondary"
                     gutterBottom
                     style={{ fontWeight: 600 }}

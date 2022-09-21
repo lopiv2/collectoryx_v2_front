@@ -80,18 +80,6 @@ function ConfigInterface() {
               })}
               value="2"
             />
-            <Tab
-              label={intl.formatMessage({
-                id: "app.config.appearance_select_theme_tab",
-              })}
-              value="3"
-            />
-            <Tab
-              label={intl.formatMessage({
-                id: "app.config.appearance_design_tab",
-              })}
-              value="4"
-            />
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -99,10 +87,6 @@ function ConfigInterface() {
         <TabPanel value="2">
           <ManageApiTab />
         </TabPanel>
-        <TabPanel value="3">
-          <SelectThemeTab />
-        </TabPanel>
-        <TabPanel value="4">Item Three</TabPanel>
       </TabContext>
     </Box>
   );

@@ -44,7 +44,7 @@ export default function CollectionsSpentCard() {
   }, []);
 
   return (
-    <Card sx={{ minWidth: 200 }} style={{ backgroundColor: "#217dbf" }}>
+    <Card sx={{ minWidth: 200 }} style={{ backgroundColor: "#217dbf" }} elevation={6}>
       <CardContent>
         <Grid container rowSpacing={2} columnSpacing={{ xs: 0, sm: 1, md: 1 }}>
           <Grid item xs={2}>
@@ -53,14 +53,7 @@ export default function CollectionsSpentCard() {
           <Grid item xs={10}>
             <Item style={{ backgroundColor: "#3f9de0" }}>
               <Typography
-                sx={{ fontSize: 18 }}
-                color="text.primary"
-                gutterBottom
-              >
-                <FormattedMessage id="app.money_spent"></FormattedMessage>
-              </Typography>
-              <Typography
-                sx={{ fontSize: 15 }}
+                sx={{ fontSize: 30, fontWeight: 600 }}
                 color="text.secondary"
                 gutterBottom
               >
@@ -72,6 +65,14 @@ export default function CollectionsSpentCard() {
                   />
                 }
               </Typography>
+              <Typography
+                sx={{ fontSize: 14 }}
+                color="text.primary"
+                gutterBottom
+              >
+                <FormattedMessage id="app.money_spent"></FormattedMessage>
+              </Typography>
+
             </Item>
           </Grid>
         </Grid>

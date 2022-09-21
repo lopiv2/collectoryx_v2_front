@@ -8,6 +8,9 @@ const COUNT_COLLECTIONS_ITEMS_URL = (id) =>
   `${API_URL}/count-collections-items/${id}`;
 const COUNT_COLLECTIONS_MONEY_URL = (id) =>
   `${API_URL}/count-collections-money/${id}`;
+const COUNT_COLLECTIONS_WISHLIST_URL = (id) =>
+  `${API_URL}/count-collections-wishlist/${id}`;
+const COUNT_COMPLETED_COLLECTIONS_URL = (id) => `${API_URL}/count-completed-collections/${id}`;
 const CREATE_COLLECTION_URL = `${API_URL}/create-collection`;
 const CREATE_ITEM_URL = `${API_URL}/create-item`;
 const CREATE_SERIE_URL = `${API_URL}/create-serie`;
@@ -65,6 +68,14 @@ const countCollectionsMoney = (id) => {
     });
 };
 
+const countCollectionsWishlist = (id) => {
+  return axios
+    .get(COUNT_COLLECTIONS_WISHLIST_URL(id), { headers: authHeader() })
+    .then((response) => {
+      return response;
+    });
+};
+
 const countCollections = (id) => {
   return axios
     .get(COUNT_COLLECTIONS_URL(id), { headers: authHeader() })
@@ -77,6 +88,15 @@ const countCollections = (id) => {
 const countCollectionsItems = (id) => {
   return axios
     .get(COUNT_COLLECTIONS_ITEMS_URL(id), { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response.data;
+    });
+};
+
+const countCompletedCollections = (id) => {
+  return axios
+    .get(COUNT_COMPLETED_COLLECTIONS_URL(id), { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
       return response.data;
@@ -533,10 +553,13 @@ const saveConfigAppearance = (id, theme, dark, config) => {
     });
 };
 
-const saveConfigDashboard = (id, expensivePanel, config) => {
+const saveConfigDashboard = (id, expensivePanel, wishlistPanel, recentPurchasePanel, completedCollectionsPanel, config) => {
   const data = {
     id: id,
     expensivePanel: expensivePanel,
+    wishlistPanel: wishlistPanel,
+    recentPurchasePanel: recentPurchasePanel,
+    completedCollectionsPanel: completedCollectionsPanel,
     config: config,
   };
   return axios
@@ -699,6 +722,8 @@ const ConfigService = {
   countCollections,
   countCollectionsItems,
   countCollectionsMoney,
+  countCollectionsWishlist,
+  countCompletedCollections,
   createCollection,
   createApi,
   createFeed,

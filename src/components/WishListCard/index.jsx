@@ -1,11 +1,12 @@
-import { Card, CardContent, CardActions, Typography } from "@mui/material";
+import React, { useState, useEffect, useContext } from "react";
+import { Card, CardContent, Typography } from "@mui/material";
+import ConfigService from "../../app/api/config.api";
 import { FormattedMessage } from "react-intl";
-import AppsIcon from "@mui/icons-material/Apps";
+import StarIcon from '@mui/icons-material/Star';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-import React, { useState, useEffect } from "react";
-import ConfigService from "../../app/api/config.api";
+import { AppContext } from "../../components/AppContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -15,17 +16,14 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function TotalItemsCard() {
-  const [collectionTotalCount, setCollectionTotalCount] = useState(0);
+export default function WishlistCard() {
+  const [wishElements, setWishElements] = useState(0);
+  const { userData, setUserData } = React.useContext(AppContext);
 
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      var user = localStorage.getItem("user");
-      var userData = JSON.parse(user);
-    }
-    const collections = ConfigService.countCollectionsItems(userData.id)
+    const collections = ConfigService.countCollectionsWishlist(userData.id)
       .then((response) => {
-        setCollectionTotalCount(response);
+        setWishElements(response.data);
       })
       .catch((err) => {
         console.log(err);
@@ -37,7 +35,7 @@ export default function TotalItemsCard() {
       <CardContent>
         <Grid container rowSpacing={2} columnSpacing={{ xs: 0, sm: 1, md: 1 }}>
           <Grid item xs={2}>
-            <AppsIcon sx={{ fontSize: 80 }}></AppsIcon>
+            <StarIcon sx={{ fontSize: 80 }}></StarIcon>
           </Grid>
           <Grid item xs={10}>
             <Item>
@@ -46,14 +44,14 @@ export default function TotalItemsCard() {
                 color="text.secondary"
                 gutterBottom
               >
-                {collectionTotalCount}
+                {wishElements}
               </Typography>
               <Typography
                 sx={{ fontSize: 13 }}
                 color="text.primary"
                 gutterBottom
               >
-                <FormattedMessage id="app.total_items"></FormattedMessage>
+                <FormattedMessage id="app.wishlist_size"></FormattedMessage>
               </Typography>
             </Item>
           </Grid>

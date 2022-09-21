@@ -3,6 +3,8 @@ import CollectionsSpentCard from '../CollectionsSpendCard';
 import TotalItemsCard from '../TotalItemsCard';
 import TotalCollectionsCard from "../TotalCollectionsCard";
 import MostValuableItem from "../MostValuableItem";
+import WishlistCard from "../WishListCard";
+import CompletedCollectionsCard from "../CompletedCollectionsCard";
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { Box } from "@mui/material";
@@ -34,6 +36,12 @@ export default function Dashboard(props) {
                 <Grid item xs={10} md={8} lg={4}>
                     {userConfig.expensivePanel===true && <MostValuableItem item xs={12} md={8} lg={9}></MostValuableItem>}
                 </Grid>
+                <Grid item xs={10} md={8} lg={4}>
+                    {userConfig.wishlistPanel===true && <WishlistCard item xs={12} md={8} lg={9}></WishlistCard>}
+                </Grid>
+                <Grid item xs={10} md={8} lg={4}>
+                    {userConfig.completedCollectionsPanel===true && <CompletedCollectionsCard item xs={12} md={8} lg={9}></CompletedCollectionsCard>}
+                </Grid>
             </Grid>
             {/*Charts*/}
             <Grid container spacing={3} ml={0} mt={1}>
@@ -44,6 +52,7 @@ export default function Dashboard(props) {
                             display: 'flex',
                             flexDirection: 'column',
                         }}
+                        elevation={6}
                     >
                         <Box>
                             <LinearChartYearly />
@@ -57,6 +66,7 @@ export default function Dashboard(props) {
                             display: 'flex',
                             flexDirection: 'column',
                         }}
+                        elevation={6}
                     >
                         <Box>
                             <BarChartYearly />
