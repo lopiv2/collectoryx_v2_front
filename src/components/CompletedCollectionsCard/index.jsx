@@ -28,7 +28,7 @@ export default function CompletedCollectionsCard() {
             .catch(err => {
                 console.log(err);
             });
-    }, [])
+    }, [])  
 
     return (
         <Card sx={{ minWidth: 200 }} elevation={6}>

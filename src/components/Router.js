@@ -20,6 +20,7 @@ import BuyLicense from "../pages/BuyLicense";
 import ViewFeeds from "../pages/ViewFeeds";
 import ImportCollectionFile from "../pages/ImportCollectionFile";
 import ImportScrapper from "../pages/ImportScrapper";
+import CalendarScheduler from "../pages/CalendarScheduler";
 
 export const Router = (props) => {
   let { colId } = useParams();
@@ -161,6 +162,14 @@ export const Router = (props) => {
           element={
             <ProtectedRoutes>
               <BuyLicense />
+            </ProtectedRoutes>
+          }
+        ></Route>
+        <Route
+          path="/calendar"
+          element={
+            <ProtectedRoutes>
+              <CalendarScheduler />
             </ProtectedRoutes>
           }
         ></Route>

@@ -20,6 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import ConfirmDialog from "../components/ConfirmDialog";
 import EditSerieDialog from "../components/EditSerieDialog";
 import { isUndefined } from "lodash";
+import { AppContext } from "../components/AppContext";
 
 function ManageSeries(props) {
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
@@ -34,11 +35,7 @@ function ManageSeries(props) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
-
-  if (localStorage.getItem("user")) {
-    var user = localStorage.getItem("user");
-    var userData = JSON.parse(user);
-  }
+  const { userData, setUserData } = React.useContext(AppContext);
 
   const handleDeleteClick = () => {
     const deleteItem = ConfigService.deleteSerie(value).then((response) => {

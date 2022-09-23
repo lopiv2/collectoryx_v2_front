@@ -17,6 +17,7 @@ import ConstructionIcon from "@mui/icons-material/Construction";
 import TuneIcon from "@mui/icons-material/Tune";
 import BallotIcon from "@mui/icons-material/Ballot";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedIcon from "@mui/icons-material/Feed";
 import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
@@ -274,6 +275,21 @@ export default function MainListItems(props) {
           </ListItemIcon>
           <FormattedMessage id="app.sidemenu.reports"></FormattedMessage>
         </ListItemButton>
+        <NavLink
+          className="nav-link"
+          to="/calendar"
+          style={{
+            textDecoration: "none",
+            color: props.theme.palette.text.primary,
+          }}
+        >
+          <ListItemButton sx={{ margin: "5px 0" }}>
+            <ListItemIcon>
+              <CalendarMonthIcon />
+            </ListItemIcon>
+            <FormattedMessage id="app.sidemenu.calendar"></FormattedMessage>
+          </ListItemButton>
+        </NavLink>
         <ListItemButton sx={{ margin: "5px 0" }} onClick={handleClickSettings}>
           <ListItemIcon>
             <SettingsIcon />

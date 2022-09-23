@@ -3,31 +3,19 @@ import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
-import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
-import NoImage from "../images/no-photo-available.png";
 import { ToastContainer, toast } from "react-toastify";
 import Tab from "@mui/material/Tab";
 import { TabContext } from "@material-ui/lab";
 import { TabList } from "@material-ui/lab";
 import { TabPanel } from "@material-ui/lab";
-import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
-import styles from "../styles/Collections.css";
 import { ColorPicker, createColor } from "material-ui-color";
-import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import ThemeTemplate from "../components/ThemeFiller";
 import CreateThemeTab from "../components/CreateThemeTab";
 import SelectThemeTab from "../components/SelectThemeTab";
 import DashboardDesignTab from "../components/DashboardDesignTab";
 
 function ConfigInterface() {
-  const [primaryColor, setPrimaryColor] = useState(createColor("#000"));
-  const [secondaryColor, setSecondaryColor] = useState(createColor("#000"));
-  const [sidebarColor, setSidebarColor] = useState(createColor("#fff"));
-  const [topbarColor, setTopbarColor] = useState(createColor("#2f7cffff"));
-  const [listItemColor, setListItemColor] = useState(createColor("#000"));
-  const [backColor, setBackColor] = useState(createColor("#fff"));
   const intl = useIntl();
   const [value, setValue] = useState("1");
 

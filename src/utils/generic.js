@@ -94,6 +94,11 @@ const CurrencyChecker = () => {
   return res;
 };
 
+const GetLocaleDateTime = () => {
+  const context = useContext(Context);
+  return context;
+}
+
 const SetLocaleDateTime = () => {
   const context = useContext(Context);
   switch (context.locale) {
@@ -167,6 +172,7 @@ export {
   GetCurrencySymbolLocale,
   getFromLocalStorage,
   getImagePaths,
+  GetLocaleDateTime,
   SetLocaleDateTime,
   setToLocalStorage,
 };

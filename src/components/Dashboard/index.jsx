@@ -10,8 +10,7 @@ import Paper from '@mui/material/Paper';
 import { Box } from "@mui/material";
 import LinearChartYearly from "../LinearChartYearly";
 import BarChartYearly from "../BarChartYearly";
-import Deposits from '../Deposits';
-import Orders from '../Orders';
+import RecentOrders from "../RecentOrders";
 import AuthService from "../../app/api/auth.api";
 import { AppContext } from "../AppContext";
 
@@ -34,13 +33,13 @@ export default function Dashboard(props) {
                     <TotalCollectionsCard item xs={12} md={8} lg={9}></TotalCollectionsCard>
                 </Grid>
                 <Grid item xs={10} md={8} lg={4}>
-                    {userConfig.expensivePanel===true && <MostValuableItem item xs={12} md={8} lg={9}></MostValuableItem>}
+                    {userConfig.expensivePanel === true && <MostValuableItem item xs={12} md={8} lg={9}></MostValuableItem>}
                 </Grid>
                 <Grid item xs={10} md={8} lg={4}>
-                    {userConfig.wishlistPanel===true && <WishlistCard item xs={12} md={8} lg={9}></WishlistCard>}
+                    {userConfig.wishlistPanel === true && <WishlistCard item xs={12} md={8} lg={9}></WishlistCard>}
                 </Grid>
                 <Grid item xs={10} md={8} lg={4}>
-                    {userConfig.completedCollectionsPanel===true && <CompletedCollectionsCard item xs={12} md={8} lg={9}></CompletedCollectionsCard>}
+                    {userConfig.completedCollectionsPanel === true && <CompletedCollectionsCard item xs={12} md={8} lg={9}></CompletedCollectionsCard>}
                 </Grid>
             </Grid>
             {/*Charts*/}
@@ -73,25 +72,24 @@ export default function Dashboard(props) {
                         </Box>
                     </Paper>
                 </Grid>
-                {/* Recent Deposits */}
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={8} lg={4}>
                     <Paper
                         sx={{
                             p: 2,
                             display: 'flex',
                             flexDirection: 'column',
-                            height: 274,
                         }}
+                        elevation={6}
                     >
-                        <Deposits />
+                        <Box>
+                            <BarChartYearly />
+                        </Box>
                     </Paper>
                 </Grid>
             </Grid>
-
-            {/* Recent Orders */}
             <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Orders />
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }} elevation={6}>
+                    <RecentOrders />
                 </Paper>
             </Grid>
         </Grid>

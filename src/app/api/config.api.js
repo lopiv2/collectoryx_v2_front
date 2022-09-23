@@ -3,6 +3,7 @@ import authHeader from "./auth-header";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const GET_COLLECTION_ITEMS_ID_URL = `${API_URL}/collections`;
+const GET_RECENT_COLLECTION_ITEMS_ID_URL = `${API_URL}/collections/recent`;
 const COUNT_COLLECTIONS_URL = (id) => `${API_URL}/count-collections/${id}`;
 const COUNT_COLLECTIONS_ITEMS_URL = (id) =>
   `${API_URL}/count-collections-items/${id}`;
@@ -416,6 +417,22 @@ const getImages = (query) => {
     });
 };
 
+const getItemFromWeb = (searchQuery, apiSelected) => {
+  const data = {
+    searchQuery: searchQuery,
+    url: apiSelected.apiLink,
+    header: apiSelected.header,
+    keyCode: apiSelected.keyCode,
+  };
+  //console.log(data);
+  return axios
+    .post(GET_ITEM_WEB_QUERY_URL, data, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
 const getLocalImages = () => {
   return axios
     .get(GET_LOCAL_IMAGES_URL, { headers: authHeader() })
@@ -443,16 +460,9 @@ const getMostValuableItem = (id) => {
     });
 };
 
-const getItemFromWeb = (searchQuery, apiSelected) => {
-  const data = {
-    searchQuery: searchQuery,
-    url: apiSelected.apiLink,
-    header: apiSelected.header,
-    keyCode: apiSelected.keyCode,
-  };
-  //console.log(data);
+const getRecentCollectionItemsById = (query) => {
   return axios
-    .post(GET_ITEM_WEB_QUERY_URL, data, { headers: authHeader() })
+    .post(GET_RECENT_COLLECTION_ITEMS_ID_URL, query, { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
       return response;
@@ -751,6 +761,7 @@ const ConfigService = {
   getLocalImages,
   getMetadataFields,
   getMostValuableItem,
+  getRecentCollectionItemsById,
   getUserConfig,
   getUserFeedsIDTitle,
   importItemFromWeb,
