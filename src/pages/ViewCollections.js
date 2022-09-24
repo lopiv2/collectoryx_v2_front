@@ -42,31 +42,14 @@ function ViewCollection(props) {
   useEffect(() => {
     if (collectionsList.length > 0) {
       collectionsList.map((item) => {
-        const query = {
-          id: item.id,
-          orderField: "id",
-          search: "",
-          //page: 1,
-          //size: 5,
-        };
-        const collections = ConfigService.getCollectionItemsById(query).then(
-          (response) => {
-            let collected = 0;
-            let totalItems = 0;
-            response.data.content.map((item) => {
-              if (item.own) {
-                collected = collected + 1;
-              }
-            });
-            totalItems = response.data.totalElements;
-            const items = {
-              id: item.id,
-              collected: collected,
-              totalItems: totalItems,
-            };
-            setCol((col) => [...col, items]);
-          }
-        );
+        ConfigService.getCollectionById(item.id).then((response) => {
+          const items = {
+            id: item.id,
+            collected: response.data.owned,
+            totalItems: response.data.totalItems,
+          };
+          setCol((col) => [...col, items]);
+        })
       });
     }
   }, [collectionsList]);

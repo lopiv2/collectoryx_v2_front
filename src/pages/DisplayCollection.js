@@ -56,7 +56,6 @@ import EditIcon from "@mui/icons-material/Edit";
 
 function DisplayCollection(props) {
   const [collectionItems, setCollectionItems] = useState([]);
-  const [allCollectionItems, setAllCollectionItems] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const [collected, setCollected] = useState(0);
@@ -197,32 +196,15 @@ function DisplayCollection(props) {
   };
 
   const getOwnedItems = () => {
-    const query = {
-      id: location.state.id,
-      orderField: "id",
-      search: ""
-    };
-    let col = 0;
-    let money = 0;
-    let want = 0;
-    ConfigService.getCollectionItemsById(query)
+    ConfigService.getCollectionById(location.state.id)
       .then((response) => {
-        setAllCollectionItems(response.data.content)
-        response.data.content.map((item) => {
-          if (item.own) {
-            col = col + 1;
-            money = money + item.price;
-          }
-          if (item.wanted) {
-            want = want + 1;
-          }
-        });
-        setMoneySpent(money);
-        setCollected(col);
-        setTotalItems(response.data.totalElements);
-        setWished(want);
+        setMoneySpent(response.data.totalPrice);
+        setCollected(response.data.owned);
+        setTotalItems(response.data.totalItems);
+        setWished(response.data.wanted);
       })
   }
+
 
   const fetchData = async (page, rowsPerPage, orderField, search) => {
     const query = {

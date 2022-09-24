@@ -28,6 +28,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
 import PropTypes from "prop-types";
+import { AppContext } from "../components/AppContext";
 
 function ManageCollections(props) {
   const [collectionsList, setCollectionsList] = useState([]);
@@ -40,12 +41,8 @@ function ManageCollections(props) {
   const [value, setValue] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [cascade, setCascade] = useState(false);
+  const { userData, setUserData } = React.useContext(AppContext);
   const [imageClicked, setImageClicked] = useState(null);
-
-  if (localStorage.getItem("user")) {
-    var user = localStorage.getItem("user");
-    var userData = JSON.parse(user);
-  }
 
   function SimpleDialog(props) {
     const { onClose, selectedValue, open } = props;
@@ -163,31 +160,14 @@ function ManageCollections(props) {
   useEffect(() => {
     if (collectionsList.length > 0) {
       collectionsList.map((item) => {
-        const query = {
-          id: item.id,
-          orderField: "id",
-          search: "",
-          //page: 1,
-          //size: 5,
-        };
-        const collections = ConfigService.getCollectionItemsById(query).then(
-          (response) => {
-            let collected = 0;
-            let totalItems = 0;
-            response.data.content.map((item) => {
-              if (item.own) {
-                collected = collected + 1;
-              }
-            });
-            totalItems = response.data.totalElements;
-            const items = {
-              id: item.id,
-              collected: collected,
-              totalItems: totalItems,
-            };
-            setCol((col) => [...col, items]);
-          }
-        );
+        ConfigService.getCollectionById(item.id).then((response) => {
+          const items = {
+            id: item.id,
+            collected: response.data.owned,
+            totalItems: response.data.totalItems,
+          };
+          setCol((col) => [...col, items]);
+        })
       });
     }
   }, [collectionsList]);

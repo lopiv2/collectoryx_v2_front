@@ -6,6 +6,7 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import React, { useState, useEffect } from "react";
 import ConfigService from "../../app/api/config.api";
+import { AppContext } from "../../components/AppContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -17,12 +18,9 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function TotalItemsCard() {
   const [collectionTotalCount, setCollectionTotalCount] = useState(0);
+  const { userData, setUserData } = React.useContext(AppContext);
 
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      var user = localStorage.getItem("user");
-      var userData = JSON.parse(user);
-    }
     const collections = ConfigService.countCollectionsItems(userData.id)
       .then((response) => {
         setCollectionTotalCount(response);
