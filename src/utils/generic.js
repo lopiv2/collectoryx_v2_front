@@ -5,7 +5,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { green, blue, grey } from "@mui/material/colors";
 import esLocale from "date-fns/locale/es";
 import enLocale from "date-fns/locale/en-US";
-//import axios from "axios";
+import { format } from "date-fns";
 
 const cleanUrl = (url) => {
   let cleanedUrl = url.includes("https")
@@ -97,32 +97,39 @@ const CurrencyChecker = () => {
 const GetLocaleDateTime = () => {
   const context = useContext(Context);
   return context;
-}
+};
 
 const SetLocaleDateTime = () => {
   const context = useContext(Context);
   switch (context.locale) {
     case "es-ES":
-      return esLocale
+      return esLocale;
     case "en-EN":
-      return enLocale
+      return enLocale;
     default:
-      return enLocale
+      return enLocale;
   }
-}
+};
 
 const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   var items = [];
   if (selectedApi.name.includes("Pokemon")) {
     if (results.data) {
-      console.log(results.data);
+      //console.log(results.data);
       results.data.map((item, index) =>
         items.push({
           name: item.name,
           image: item.images.large,
           collection: collection,
+          year: new Date(item.set.releaseDate).getFullYear(),//.getFullYear(),
           serie: item.set.series,
-          price: item.tcgplayer.prices.normal ? item.tcgplayer.prices.normal.mid : 0.0,
+          price: item.tcgplayer
+            ? item.tcgplayer.prices
+              ? item.tcgplayer.prices.normal
+                ? item.tcgplayer.prices.normal.mid
+                : 0.0
+              : 0.0
+            : 0.0,
         })
       );
       return items;
