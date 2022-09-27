@@ -4,7 +4,7 @@ import enLocale from 'date-fns/locale/en-US';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { CurrencyChecker } from '../../utils/generic';
 
 const localeMap = {
@@ -13,7 +13,7 @@ const localeMap = {
 };
 
 
-export default function BasicDatePicker(props) {
+export default function BasicDateTimePicker(props) {
   const [value, setValue] = React.useState(null);
   const [locale, setLocale] = React.useState('es');
   const c = CurrencyChecker();
@@ -28,7 +28,7 @@ export default function BasicDatePicker(props) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={localeMap[locale]}>
-      <DatePicker
+      <DateTimePicker
         type="datetime-local"
         disablePast
         id={props.id}

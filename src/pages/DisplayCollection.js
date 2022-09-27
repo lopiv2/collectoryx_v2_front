@@ -243,9 +243,11 @@ function DisplayCollection(props) {
   }
 
   useEffect(() => {
-    fetchData(page, rowsPerPage, "name");
-    getOwnedItems()
-  }, []);
+    if(toggleView=="grid"){
+      fetchData(page, rowsPerPage, "name");
+      getOwnedItems()
+    }
+  }, [toggleView]);
 
   const handleWishClick = (event, own, wanted) => {
     ConfigService.toggleItemWish(
@@ -323,6 +325,7 @@ function DisplayCollection(props) {
   };
 
   const checkImageSerie = (item) => {
+    console.log(item)
     if (item.logo) {
       if (!item.logo.path.includes("http")) {
         return require("../../public/images/" + item.logo.path);
@@ -423,6 +426,12 @@ function DisplayCollection(props) {
     },
     {
       title: intl.formatMessage({
+        id: "app.collection.view_collections_item_wanted",
+      }),
+      field: "wanted",
+    },
+    {
+      title: intl.formatMessage({
         id: "app.collection.view_collections_item_image",
       }),
       field: "image",
@@ -475,6 +484,30 @@ function DisplayCollection(props) {
                 variant="square"
                 sx={{ width: 35, height: 35, ml: 2 }}
                 src={item.own ? Tick : Cross}
+              />
+            }
+          ></Button>
+        </Tooltip>
+      ),
+      wanted: (
+        <Tooltip
+          title={intl.formatMessage({
+            id: "app.tooltip.click_wish",
+          })}
+          placement="right"
+          arrow
+        >
+          <Button
+            id={item.id}
+            onClick={(e) => {
+              handleWishClick(e, item.own, item.wanted);
+            }}
+            className="button-own"
+            startIcon={
+              <Avatar
+                variant="square"
+                sx={{ width: 35, height: 35, ml: 2 }}
+                src={item.wanted ? Tick : Cross}
               />
             }
           ></Button>
@@ -932,7 +965,7 @@ function DisplayCollection(props) {
                     component={Paper} elevation={2}
                     variant="rounded"
                     sx={{ width: 65, height: 65 }}
-                    src={itemSelected !== null
+                    src={itemSelected !== null && itemSelected.serie!==null
                       ? checkImageSerie(itemSelected.serie)
                       : NoImage}
                   />
@@ -1031,7 +1064,7 @@ function DisplayCollection(props) {
             alignItems="center"
             minHeight="10vh"
           >
-            <Pagination count={totalPages} showFirstButton showLastButton page={page} variant="outlined" shape="rounded" onChange={handleChange} />
+            <Pagination count={totalPages} color="primary" showFirstButton showLastButton page={page} variant="outlined" shape="rounded" onChange={handleChange} />
           </Grid>)}
       </Grid>
     </Box >

@@ -42,12 +42,8 @@ export default function MainListItems(props) {
   const [isLoading, setLoading] = useState(true);
   const [totalFeeds, setTotalFeeds] = useState(0);
   const { feedsList, setFeedsList } = useContext(AppContext);
+  const { userData, setUserData } = useContext(AppContext);
   let totalFeedsCount = 0;
-
-  if (localStorage.getItem("user")) {
-    var user = localStorage.getItem("user");
-    var userData = JSON.parse(user);
-  }
 
   const avatarStyle = {
     backgroundColor: "#71a9c9",
@@ -364,15 +360,13 @@ export default function MainListItems(props) {
             <ExpandMore sx={{ ml: 2 }} />
           )}
           {totalFeeds > 0 && (
-            <Grid container direction="row-reverse">
-              <Grid item>
-                <Avatar sx={{ mr: 5 }} style={avatarStyle}>
-                  <Typography display="inline" variant="subtitle1">
-                    {totalFeeds}
-                  </Typography>
-                </Avatar>
-              </Grid>
-            </Grid>
+            <Box ml={2} sx={{ justifyContent: 'flex-end' }}>
+              <Avatar sx={{ mr: 5 }} style={avatarStyle}>
+                <Typography display="inline" variant="subtitle1">
+                  {totalFeeds}
+                </Typography>
+              </Avatar>
+            </Box>
           )}
         </ListItemButton>
         <Collapse in={openFeeds} timeout="auto" unmountOnExit>

@@ -173,7 +173,6 @@ function ManageCollections(props) {
   }, [collectionsList]);
 
   const handleDeleteClick = () => {
-    console.log(cascade);
     const deleteColl = ConfigService.deleteCollection(value, cascade).then(
       (response) => {
         if (response.data === true) {

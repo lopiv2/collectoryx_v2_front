@@ -62,6 +62,10 @@ export default function TopToolBar(props) {
     setExpiringDate(userData.expiringDate);
   }, [userData]);
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   return (
     userData && (
       <AppBar position="absolute" open={props.open}>
@@ -89,9 +93,11 @@ export default function TopToolBar(props) {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            <Grid container>
-              <Grid item xs={2}>
-                <FormattedMessage id="app.sidemenu.dashboard"></FormattedMessage>
+            <Grid container justifyContent="center">
+              <Grid item xs={2} ml={65}>
+                <Typography variant="h5" color="white" weight="600">
+                  <FormattedMessage id="app.sidemenu.welcome" values={{ user: capitalizeFirstLetter(userData.userName) }}></FormattedMessage>
+                </Typography>
               </Grid>
               {AuthService.checkUserLogged() === "USER_ROLE" ? (
                 <Grid item xs={2} ml={50}>
@@ -117,7 +123,7 @@ export default function TopToolBar(props) {
                     noWrap
                     sx={{ flexGrow: 1 }}
                   >
-                    <FormattedMessage id="app.dashboard.admin_panel"></FormattedMessage>
+                    <FormattedMessage id="app.dashboard.admin_panel" ></FormattedMessage>
                   </Typography>
                 </Grid>
               )}
