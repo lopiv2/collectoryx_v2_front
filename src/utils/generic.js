@@ -1,11 +1,10 @@
 import { Context } from "../components/Wrapper";
 import { useContext } from "react";
 import OptionsService from "../components/DropDownOptions";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { green, blue, grey } from "@mui/material/colors";
+import { createTheme} from "@mui/material/styles";
+import { green, blue } from "@mui/material/colors";
 import esLocale from "date-fns/locale/es";
 import enLocale from "date-fns/locale/en-US";
-import { format } from "date-fns";
 
 const cleanUrl = (url) => {
   let cleanedUrl = url.includes("https")
@@ -121,7 +120,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           name: item.name,
           image: item.images.large,
           collection: collection,
-          year: new Date(item.set.releaseDate).getFullYear(),//.getFullYear(),
+          year: new Date(item.set.releaseDate).getFullYear(),
           serie: item.set.series,
           price: item.tcgplayer
             ? item.tcgplayer.prices

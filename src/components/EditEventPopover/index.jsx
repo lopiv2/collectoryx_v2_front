@@ -1,7 +1,15 @@
 import React, { useState, useEffect, lazy } from "react";
 import Button from "@material-ui/core/Button";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Grid, Box, Avatar, TextField, Typography, MenuItem, Checkbox } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Avatar,
+  TextField,
+  Typography,
+  MenuItem,
+  Checkbox,
+} from "@mui/material";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import ConfigService from "../../app/api/config.api";
@@ -9,9 +17,9 @@ import { isUndefined, mapValues } from "lodash";
 import { toast } from "react-toastify";
 import NoImage from "../../images/no-photo-available.png";
 import { Popover } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 import BasicDateTimePicker from "../../components/BasicDateTimePicker";
 import { IconButton } from "@mui/material";
 import { format } from "date-fns";
@@ -19,11 +27,20 @@ import { SetLocaleDateTime } from "../../utils/generic";
 import { CN } from "country-flag-icons/react/3x2";
 
 const EditEventPopover = (props) => {
-  const { id, open, anchorEl, setAnchorEl, onClose, event, setConfirmOpen, setOpen } =
-    props;
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [allDay, setAllDay] = useState(false);
+  const {
+    id,
+    open,
+    anchorEl,
+    setAnchorEl,
+    onClose,
+    event,
+    setEventClicked,
+    setConfirmOpen,
+    setOpen,
+  } = props;
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [allDay, setAllDay] = useState();
   const [editable, setEditable] = useState(false);
   const [arrowRef, setArrowRef] = useState(null);
   const loc = SetLocaleDateTime();
@@ -31,6 +48,14 @@ const EditEventPopover = (props) => {
   const handleChangeAllDay = (event) => {
     setAllDay(event.target.checked);
   };
+
+  useEffect(() => {
+    if (!isUndefined(event)) {
+      setStartDate(event.start);
+      setEndDate(event.end);
+      setAllDay(event.allDay);
+    }
+  }, [event]);
 
   const newEventSchema = Yup.object().shape({
     title: Yup.string().required(
@@ -45,6 +70,9 @@ const EditEventPopover = (props) => {
           <FormattedMessage id="app.event.edited"></FormattedMessage>,
           { theme: "colored" }
         );
+        setEditable(false);
+        setAnchorEl(null);
+        setOpen(true);
       }
     });
   };
@@ -57,19 +85,19 @@ const EditEventPopover = (props) => {
         anchorEl={anchorEl}
         onClose={onClose}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+          vertical: "bottom",
+          horizontal: "left",
         }}
         PaperProps={{
-          style: { width: '25%' },
+          style: { width: editable ? "25%" : "15%" },
         }}
         modifiers={[
           {
-            name: 'arrow',
+            name: "arrow",
             enabled: true,
             options: {
               element: arrowRef,
@@ -77,41 +105,48 @@ const EditEventPopover = (props) => {
           },
         ]}
       >
-        <Box sx={{
-          display: 'flex',
-          flexDirection: 'row-reverse',
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row-reverse",
+          }}
+        >
           <IconButton onClick={() => setAnchorEl(null)}>
             <CloseIcon />
           </IconButton>
-          {editable === false && (<IconButton onClick={() => {
-            setConfirmOpen(true);
-          }}>
-            <DeleteIcon />
-          </IconButton>)}
-          {editable === false && (<IconButton onClick={() => setEditable(true)}>
-            <EditIcon />
-          </IconButton>)}
+          {editable === false && (
+            <IconButton
+              onClick={() => {
+                setConfirmOpen(true);
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
+          {editable === false && (
+            <IconButton onClick={() => setEditable(true)}>
+              <EditIcon />
+            </IconButton>
+          )}
         </Box>
         <Grid item xs={3} ml={2}>
           <Formik
             initialValues={{
               id: event.id,
               title: event.title,
-              description: event.extendedProps ? event.extendedProps.description : null,
+              description: event.extendedProps
+                ? event.extendedProps.description
+                : null,
               allDay: event.allDay,
               start: event.start,
               end: event.end,
               type: event.extendedProps ? event.extendedProps.type : null,
             }}
-            validate={(values) => {
-              const errors = {};
-            }}
             validationSchema={newEventSchema}
             onSubmit={(values, { setSubmitting }) => {
               //const d = format(new Date(startDate), "yyyy-MM-dd");
-              values.start = startDate
-              values.end = endDate
+              values.start = startDate;
+              values.end = endDate;
               values.allDay = allDay;
               submitForm(values);
               setSubmitting(false);
@@ -131,8 +166,8 @@ const EditEventPopover = (props) => {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Box pt={2}>
-                      {editable ?
-                        (<TextField
+                      {editable ? (
+                        <TextField
                           sx={{ minWidth: 400 }}
                           size="small"
                           id="title"
@@ -146,110 +181,128 @@ const EditEventPopover = (props) => {
                           helperText={touched.title && errors.title}
                           variant="outlined"
                           value={values.title}
-                        />) : (<Box pl={3}>
-                          <Typography variant="h5">
-                            {values.title}
-                          </Typography>
-                        </Box>)}
+                        />
+                      ) : (
+                        <Box pl={3}>
+                          <Typography variant="h5">{values.title}</Typography>
+                        </Box>
+                      )}
                     </Box>
                   </Grid>
                   <Grid item xs={9}>
-                    {editable ? (<TextField
-                      id="description"
-                      name="description"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      size="small"
-                      sx={{ minWidth: 400 }}
-                      value={values.description}
-                      label={
-                        <FormattedMessage id="app.event.description"></FormattedMessage>
-                      }
-                    ></TextField>) : (<Box pl={5}>
-                      <Typography variant="h6">
-                        {values.description}
-                      </Typography>
-                    </Box>)}
+                    {editable ? (
+                      <TextField
+                        id="description"
+                        name="description"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        size="small"
+                        sx={{ minWidth: 400 }}
+                        value={values.description}
+                        label={
+                          <FormattedMessage id="app.event.description"></FormattedMessage>
+                        }
+                      ></TextField>
+                    ) : (
+                      <Box pl={3}>
+                        <Typography variant="h6">
+                          {values.description}
+                        </Typography>
+                      </Box>
+                    )}
                   </Grid>
                   <Grid item xs={12}>
-                    {editable ? (<Box ml={-1}>
-                      <Checkbox
-                        value={allDay}
-                        onChange={handleChangeAllDay}
-                      ></Checkbox>
-                      <Typography variant="body1" display="inline">
+                    {editable ? (
+                      <Box ml={-1}>
+                        <Checkbox
+                          value={allDay}
+                          checked={allDay}
+                          onChange={handleChangeAllDay}
+                        ></Checkbox>
+                        <Typography variant="body1" display="inline">
+                          <FormattedMessage id="app.event.all_day"></FormattedMessage>
+                        </Typography>
+                      </Box>
+                    ) : allDay ? (
+                      <Box pl={3}>
                         <FormattedMessage id="app.event.all_day"></FormattedMessage>
-                      </Typography>
-                    </Box>) : (allDay ?
-                      <Box pl={5}>
-                        <FormattedMessage id="app.event.all_day"></FormattedMessage>
-                      </Box> : null)}
+                      </Box>
+                    ) : null}
                   </Grid>
-                  {editable ? (<Grid item xs={12}>
-                    <Typography variant="body1">
-                      <FormattedMessage id="app.event.start_date"></FormattedMessage>
-                    </Typography>
-                    <BasicDateTimePicker
-                      disablePast
-                      id="dateStart"
-                      name="dateStart"
-                      label=""
-                      size="small"
-                      value={startDate}
-                      error={touched.start && Boolean(errors.start)}
-                      helperText={touched.start && errors.start}
-                      onChange={(newValue) => {
-                        setStartDate(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Grid>) : (
-                    <Box pl={5}>
-                      <Typography variant="h6">
-                        {format(new Date(startDate), 'cccc LLLL d, yyyy', { locale: loc })}
+                  {editable ? (
+                    <Grid item xs={12}>
+                      <Typography variant="body1">
+                        <FormattedMessage id="app.event.start_date"></FormattedMessage>
                       </Typography>
-                    </Box>)}
-                  {editable ? (<Grid item xs={12}>
-                    <Typography variant="body1">
-                      <FormattedMessage id="app.event.end_date"></FormattedMessage>
-                    </Typography>
-                    <BasicDateTimePicker
-                      id="dateEnd"
-                      name="dateEnd"
-                      label=""
-                      size="small"
-                      value={endDate}
-                      error={touched.end && Boolean(errors.end)}
-                      helperText={touched.end && errors.end}
-                      onChange={(newValue) => {
-                        setEndDate(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Grid>) : (null)}
-                  {editable ? (<Grid item xs={9} pb={2}>
-                    <TextField
-                      id="type"
-                      name="type"
-                      select
-                      size="small"
-                      sx={{ minWidth: 300 }}
-                      value={values.type}
-                      label={
-                        <FormattedMessage id="app.license.type"></FormattedMessage>
-                      }
-                      onChange={handleChange}
-                    >
-                      <MenuItem key="1" value="Event">
-                        <FormattedMessage id="app.event.event"></FormattedMessage>
-                      </MenuItem>
-                      <MenuItem key="2" value="Reminder">
-                        <FormattedMessage id="app.event.reminder"></FormattedMessage>
-                      </MenuItem>
-                    </TextField>
-                  </Grid>) : (null)}
-                  {editable ?
-                    (<Grid sx={{ p: 2 }}>
+                      <BasicDateTimePicker
+                        disablePast
+                        id="dateStart"
+                        name="dateStart"
+                        label=""
+                        size="small"
+                        value={startDate}
+                        error={touched.start && Boolean(errors.start)}
+                        helperText={touched.start && errors.start}
+                        onChange={(newValue) => {
+                          setStartDate(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </Grid>
+                  ) : (
+                    <Box pl={5} pb={2}>
+                      <Typography variant="body1">
+                        {format(new Date(startDate), "cccc LLLL d, yyyy", {
+                          locale: loc,
+                        })}
+                      </Typography>
+                    </Box>
+                  )}
+                  {editable ? (
+                    <Grid item xs={12}>
+                      <Typography variant="body1">
+                        <FormattedMessage id="app.event.end_date"></FormattedMessage>
+                      </Typography>
+                      <BasicDateTimePicker
+                        id="dateEnd"
+                        name="dateEnd"
+                        label=""
+                        size="small"
+                        value={endDate}
+                        error={touched.end && Boolean(errors.end)}
+                        helperText={touched.end && errors.end}
+                        onChange={(newValue) => {
+                          setEndDate(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </Grid>
+                  ) : null}
+                  {editable ? (
+                    <Grid item xs={9} pb={2}>
+                      <TextField
+                        id="type"
+                        name="type"
+                        select
+                        size="small"
+                        sx={{ minWidth: 300 }}
+                        value={values.type}
+                        label={
+                          <FormattedMessage id="app.license.type"></FormattedMessage>
+                        }
+                        onChange={handleChange}
+                      >
+                        <MenuItem key="1" value="Event">
+                          <FormattedMessage id="app.event.event"></FormattedMessage>
+                        </MenuItem>
+                        <MenuItem key="2" value="Reminder">
+                          <FormattedMessage id="app.event.reminder"></FormattedMessage>
+                        </MenuItem>
+                      </TextField>
+                    </Grid>
+                  ) : null}
+                  {editable ? (
+                    <Grid sx={{ p: 2 }}>
                       <Button
                         type="submit"
                         disabled={isSubmitting}
@@ -264,13 +317,14 @@ const EditEventPopover = (props) => {
                       >
                         <FormattedMessage id="app.button.cancel"></FormattedMessage>
                       </Button>
-                    </Grid>) : null}
+                    </Grid>
+                  ) : null}
                 </Grid>
               </Form>
             )}
           </Formik>
         </Grid>
-      </Popover >
+      </Popover>
     )
   );
 };
