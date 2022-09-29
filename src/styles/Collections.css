@@ -3,6 +3,11 @@
 	row-gap: 10rem;
 }
 
+.fc { /* the calendar root */
+  max-width: 1200px;
+  max-height: 750px;
+}
+
 .card-collection {
   height: 1;
   width: "5.25%";

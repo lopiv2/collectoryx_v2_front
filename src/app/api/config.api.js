@@ -15,8 +15,6 @@ const COUNT_COMPLETED_COLLECTIONS_URL = (id) => `${API_URL}/count-completed-coll
 const CREATE_COLLECTION_URL = `${API_URL}/create-collection`;
 const CREATE_ITEM_URL = `${API_URL}/create-item`;
 const CREATE_SERIE_URL = `${API_URL}/create-serie`;
-const CREATE_EVENT_URL = `${API_URL}/events/create-event`;
-const DELETE_EVENT_ID_URL = (id) => `${API_URL}/events/delete-event/${id}`;
 const CREATE_FEED_URL = `${API_URL}/feeds/create-feed`;
 const DELETE_FEED_ID_URL = (id) => `${API_URL}/feeds/delete-feed/${id}`;
 const DELETE_SERIE_ID_URL = (id) => `${API_URL}/delete-serie/${id}`;
@@ -31,6 +29,9 @@ const GET_COLLECTION_ITEMS_YEAR_ID_URL = (id) =>
 const GET_COLLECTION_ID_URL = (id) => `${API_URL}/get-collection/${id}`;
 const MOST_VALUABLE_ITEM_URL = (id) => `${API_URL}/most-valuable-item/${id}`;
 const GET_EVENTS_PERIOD_URL = `${API_URL}/events/get-period`;
+const UPDATE_EVENT_URL = `${API_URL}/events/update`;
+const CREATE_EVENT_URL = `${API_URL}/events/create-event`;
+const DELETE_EVENT_ID_URL = (id) => `${API_URL}/events/delete-event/${id}`;
 const GET_IMAGES_QUERY_URL = (query) =>
   `${API_URL}/marvel/item-images/${query}`;
 const GET_COLLECTION_METADATAS_URL = (id) =>
@@ -193,6 +194,7 @@ const createEvent = (values) => {
     userId: values.userId,
     title: values.title,
     description: values.description,
+    allDay: values.allDay,
     start: values.start,
     end: values.end,
     type: values.type
@@ -347,11 +349,11 @@ const getAllApis = (id) => {
     });
 };
 
-const getAllUserEventsPeriod = (id) => {
+const getAllUserEventsPeriod = (id, startDate, endDate) => {
   const data = {
     userId: id,
-    month: 9,
-    year: 2022,
+    start: startDate,
+    end: endDate,
   };
   return axios
     .post(GET_EVENTS_PERIOD_URL, data, { headers: authHeader() })
@@ -698,6 +700,34 @@ const updateApi = (values) => {
     });
 };
 
+const updateEvent = (values) => {
+  const data = {
+    id: values.id,
+    userId: values.userId,
+    title: values.title,
+    description: values.description,
+    start: values.start,
+    end: values.end,
+    allDay: values.allDay,
+    type: values.type
+  };
+  return axios
+    .put(UPDATE_EVENT_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        //console.log(response.data)
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const updateFeed = (values) => {
   const data = {
     id: values.id,
@@ -828,6 +858,7 @@ const ConfigService = {
   toggleItemOwn,
   toggleItemWish,
   updateApi,
+  updateEvent,
   updateFeed,
   updateItem,
   updateSerie,

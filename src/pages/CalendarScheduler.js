@@ -1,23 +1,29 @@
 import React, { useState, useCallback, useMemo, useEffect, useContext } from "react";
 import { Typography } from "@mui/material";
-import PropTypes from 'prop-types'
 import { FormattedMessage, useIntl } from "react-intl";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
-import { Calendar, Views, dateFnsLocalizer } from "react-big-calendar";
-import { format, parse, startOfWeek, getDay } from "date-fns";
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import { Popover } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { format, parse, startOfWeek, getDay, getHours, getMinutes } from "date-fns";
 import ConfigService from "../app/api/config.api";
 import styles from "../styles/Collections.css";
 import { ToastContainer, toast } from "react-toastify";
 import { GetLocaleDateTime } from "../utils/generic";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import { AppContext } from "../components/AppContext";
 import AddIcon from '@mui/icons-material/Add';
-import IconButton from '@mui/material/IconButton';
 import Button from "@mui/material/Button";
 import CreateEventDialog from "../components/CreateEventDialog";
+import FullCalendar from '@fullcalendar/react' // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import esLocale from '@fullcalendar/core/locales/es';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
+import ConfirmDialog from "../components/ConfirmDialog";
+import EditEventPopover from "../components/EditEventPopover";
 
 function CalendarScheduler() {
   const intl = useIntl();
@@ -25,153 +31,131 @@ function CalendarScheduler() {
   const [eventsList, setEventsList] = useState([]);
   const loc = GetLocaleDateTime()
   const [openCreate, setOpenCreate] = useState(false);
+  const [reloadCreated, setReloadCreated] = useState(false);
+  const [dateClickedEvent, setDateClickedEvent] = useState("");
+  const [eventClicked, setEventClicked] = useState("");
+  const [initialDateCalendar, setInitialDateCalendar] = useState("");
+  const [finalDateCalendar, setFinalDateCalendar] = useState("");
   const [openEdit, setOpenEdit] = useState(false);
   const { userData, setUserData } = React.useContext(AppContext);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
-  const events = [
-    {
-      id: 0,
-      title: 'Board meeting',
-      start: new Date(2018, 0, 29, 9, 0, 0),
-      end: new Date(2018, 0, 29, 13, 0, 0),
-      resourceId: 1,
-    },
-    {
-      id: 1,
-      title: 'MS training',
-      start: new Date(2018, 0, 29, 14, 0, 0),
-      end: new Date(2018, 0, 29, 16, 30, 0),
-      resourceId: 2,
-    },
-    {
-      id: 2,
-      title: 'Team lead meeting',
-      start: new Date(2018, 0, 29, 8, 30, 0),
-      end: new Date(2018, 0, 29, 12, 30, 0),
-      resourceId: 3,
-    },
-    {
-      id: 10,
-      title: 'Board meeting',
-      start: new Date(2018, 0, 30, 23, 0, 0),
-      end: new Date(2018, 0, 30, 23, 59, 0),
-      resourceId: 1,
-    },
-    {
-      id: 11,
-      title: 'Birthday Party',
-      start: new Date(2018, 0, 30, 7, 0, 0),
-      end: new Date(2018, 0, 30, 10, 30, 0),
-      resourceId: 4,
-    },
-    {
-      id: 12,
-      title: 'Board meeting',
-      start: new Date(2018, 0, 29, 23, 59, 0),
-      end: new Date(2018, 0, 30, 13, 0, 0),
-      resourceId: 1,
-    },
-    {
-      id: 13,
-      title: 'Board meeting',
-      start: new Date(2018, 0, 29, 23, 50, 0),
-      end: new Date(2018, 0, 30, 13, 0, 0),
-      resourceId: 2,
-    },
-    {
-      id: 14,
-      title: 'Board meeting',
-      start: new Date(2018, 0, 29, 23, 40, 0),
-      end: new Date(2018, 0, 30, 13, 0, 0),
-      resourceId: 4,
-    },
-  ]
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  useEffect(() => {
-    ConfigService.getAllUserEventsPeriod(userData.id)
+  const requestEvents = (startDate, endDate) => {
+    ConfigService.getAllUserEventsPeriod(userData.id, startDate, endDate)
       .then((response) => {
-        setEventsList(response.data);
-        console.log(response.data)
+        //console.log(response.data)
+        setEventsList([]);
+        response.data.map((i) => {
+          const data = {
+            id: i.id,
+            title: i.title,
+            start: i.start,
+            allDay: i.allDay,
+            end: i.end,
+            backgroundColor: i.type === "Event" ? "rgba(107, 181, 64, 1)" : "rgba(64, 177, 181, 1)",
+            extendedProps: {
+              description: i.description,
+              type: i.type
+            },
+          };
+          setEventsList((eventsList) => [...eventsList, data]);
+        })
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  };
 
-  const resourceMap = [
-    { resourceId: 1, resourceTitle: 'Board room' },
-    { resourceId: 2, resourceTitle: 'Training room' },
-    { resourceId: 3, resourceTitle: 'Meeting room 1' },
-    { resourceId: 4, resourceTitle: 'Meeting room 2' },
-  ]
-  const [myEvents, setMyEvents] = useState(eventsList)
-  const DragAndDropCalendar = withDragAndDrop(Calendar)
+
 
   useEffect(() => {
-    setMyEvents(eventsList)
-  }, [eventsList]);
+    if (reloadCreated === true) {
+      requestEvents(initialDateCalendar, finalDateCalendar)
+      setReloadCreated(false)
+    }
+  }, [reloadCreated]);
 
-  const moveEvent = useCallback(
-    ({
-      event,
-      start,
-      end,
-      resourceId,
-      isAllDay: droppedOnAllDaySlot = false,
-    }) => {
-      const { allDay } = event
-      if (!allDay && droppedOnAllDaySlot) {
-        event.allDay = true
-      }
-
-      setMyEvents((prev) => {
-        const existing = prev.find((ev) => ev.id === event.id) ?? {}
-        const filtered = prev.filter((ev) => ev.id !== event.id)
-        return [...filtered, { ...existing, start, end, resourceId, allDay }]
-      })
-    },
-    [setMyEvents]
-  )
-
-  const resizeEvent = useCallback(
-    ({ event, start, end }) => {
-      setMyEvents((prev) => {
-        const existing = prev.find((ev) => ev.id === event.id) ?? {}
-        const filtered = prev.filter((ev) => ev.id !== event.id)
-        return [...filtered, { ...existing, start, end }]
-      })
-    },
-    [setMyEvents]
-  )
+  useEffect(() => {
+    requestEvents(initialDateCalendar, finalDateCalendar)
+  }, [initialDateCalendar, finalDateCalendar]);
 
   useEffect(() => {
     setLocal(loc.locale)
-  }, []);
+  }, [loc]);
 
   const handleOpenCreateEventDialog = () => {
     setOpenCreate(true);
   };
 
-  const locales = {
-    "es-ES": require("date-fns/locale/es")
+  function renderEventContent(eventContent) {
+    //console.log(eventContent.event.start)
+    return (
+      <Box>
+        <Box>{eventContent.event.title}</Box>
+        {!eventContent.event.allDay
+          ? (
+            <Box>{getHours(eventContent.event.start) + ":" + getMinutes(eventContent.event.start)
+              + " - "
+              + getHours(eventContent.event.end) + ":" + getMinutes(eventContent.event.end)}</Box>)
+          : (<Box>
+            <FormattedMessage id="app.event.all_day"></FormattedMessage>
+          </Box>)}
+      </Box>
+    )
+  }
+
+  const handleEventClick = (clickInfo) => {
+    setEventClicked(clickInfo.event)
+    setAnchorEl(clickInfo.jsEvent.target);
+  }
+
+  const handleEventResize = (clickInfo) => {
+    const values = {
+      id: clickInfo.event.id,
+      title: clickInfo.event.title,
+      start: clickInfo.event.start,
+      end: clickInfo.event.end,
+      allDay: clickInfo.event.allDay,
+      type: clickInfo.event.extendedProps.type,
+      description: clickInfo.event.extendedProps.description
+    };
+    ConfigService.updateEvent(values).then((response) => {
+      if (response.status === 200) {
+        toast.success(
+          <FormattedMessage id="app.feed.edited"></FormattedMessage>,
+          { theme: "colored" }
+        );
+      }
+    });
+  }
+
+  const handleDeleteClick = () => {
+    //console.log(eventClicked.id)
+    ConfigService.deleteEvent(eventClicked.id).then(
+      (response) => {
+        if (response.data === true) {
+          toast.success(
+            <FormattedMessage id="app.event.deleted"></FormattedMessage>,
+            { theme: "colored" }
+          );
+          handleClose()
+          requestEvents(initialDateCalendar, finalDateCalendar)
+        }
+      }
+    );
   };
 
-  const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales
-  });
-
-  const { defaultDate, scrollToTime } = useMemo(
-    () => ({
-      defaultDate: new Date(2018, 0, 29),
-      scrollToTime: new Date(1972, 0, 1, 8),
-    }),
-    []
-  )
-
+  const dateClickHandler = (clickInfo) => {
+    setDateClickedEvent(clickInfo.date)
+    handleOpenCreateEventDialog()
+  }
 
   return (
     <Box>
@@ -196,46 +180,72 @@ function CalendarScheduler() {
           <FormattedMessage id="app.button.create"></FormattedMessage>
         </Button>
       </Grid>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }} className="calendars">
-        <DragAndDropCalendar
-          events={myEvents}
-          localizer={localizer}
-          defaultView={Views.MONTH}
-          onEventDrop={moveEvent}
-          onEventResize={resizeEvent}
-          style={{ height: 700 }}
-          culture={"en-US"}
-          resizable
-          resourceIdAccessor="resourceId"
-          resources={resourceMap}
-          resourceTitleAccessor="resourceTitle"
-          selectable
-          showMultiDayTimes={true}
-          step={15}
-          messages={{
-            next: "sig",
-            previous: "ant",
-            today: "Hoy",
-            month: "Mes",
-            week: "Semana",
-            day: "Día"
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }} className="fc">
+        <FullCalendar
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
           }}
+          customButtons={{
+            newAppointment: {
+              text: 'Nueva cita',
+              click: () => {
+                dateClickHandler();
+              },
+            },
+          }}
+          dateClick={e => dateClickHandler(e)}
+          locale={local === 'es-ES' ? esLocale : ""}
+          events={eventsList}
+          initialView='dayGridMonth'
+          editable={true}
+          selectable={true}
+          selectMirror={true}
+          dayMaxEvents={true}
+          datesSet={(dateInfo) => {
+            setInitialDateCalendar(dateInfo.startStr.split('T')[0])
+            setFinalDateCalendar(dateInfo.endStr.split('T')[0])
+            requestEvents(initialDateCalendar, finalDateCalendar);
+          }}
+          eventContent={renderEventContent}
+          eventClick={handleEventClick}
+          eventResize={handleEventResize}
+          eventDrop={handleEventResize}
         />
       </Box>
       <CreateEventDialog
         open={openCreate}
         setOpen={setOpenCreate}
-        eventsList={eventsList}
-        setEventsList={setEventsList}
+        dateClickedEvent={dateClickedEvent}
+        reloadCreated={reloadCreated}
+        setReloadCreated={setReloadCreated}
       >
         <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
       </CreateEventDialog>
-    </Box>
+      <ConfirmDialog
+        title={intl.formatMessage({
+          id: "app.dialog.delete_title",
+        })}
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onConfirm={handleDeleteClick}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </ConfirmDialog>
+      <EditEventPopover
+        id={id}
+        open={open}
+        event={eventClicked}
+        anchorEl={anchorEl}
+        setAnchorEl={setAnchorEl}
+        setConfirmOpen={setConfirmOpen}
+        setOpen={setOpenEdit}
+        onClose={handleClose}>
+      </EditEventPopover>
+    </Box >
   );
-}
-
-CalendarScheduler.propTypes = {
-  localizer: PropTypes.instanceOf(dateFnsLocalizer),
 }
 
 export default CalendarScheduler;

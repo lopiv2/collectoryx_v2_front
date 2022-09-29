@@ -20,6 +20,7 @@ const ConfirmDialog = (props) => {
 
   return (
     <Dialog
+      disableEnforceFocus
       open={open}
       onClose={() => { setOpen(false); props.setCascade(false) }}
       aria-labelledby="confirm-dialog"

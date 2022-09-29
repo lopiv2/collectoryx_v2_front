@@ -5,37 +5,47 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Grid, Box, TextField, Typography } from "@mui/material";
+import { Grid, Box, TextField, Typography, Checkbox } from "@mui/material";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import ConfigService from "../../app/api/config.api";
 import { isUndefined } from "lodash";
 import { toast } from "react-toastify";
-import { format, isBefore, parse } from "date-fns";
+import { format, isValid, parse } from "date-fns";
 import { MenuItem } from "@mui/material";
 import BasicDateTimePicker from "../../components/BasicDateTimePicker";
 import { AppContext } from "../../components/AppContext";
 
 const CreateEventDialog = (props) => {
-  const { items, open, setOpen, onConfirm, setEventsList, eventsList } =
+  const { items, open, setOpen, onConfirm, setEventsList, dateClickedEvent, reloadCreated, setReloadCreated } =
     props;
   const intl = useIntl();
-  const [updatedValues, setUpdatedValues] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [allDay, setAllDay] = useState(false);
   const { userData, setUserData } = useContext(AppContext);
 
   useEffect(() => {
-    if (open === true) {
-
+    if (open === false) {
+      setStartDate(new Date())
     }
   }, [open]);
+
+  useEffect(() => {
+    if (isValid(dateClickedEvent)) {
+      setStartDate(dateClickedEvent)
+    }
+  }, [dateClickedEvent]);
 
   const newEventSchema = Yup.object().shape({
     title: Yup.string().required(
       <FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>
     ),
   });
+
+  const handleChangeAllDay = (event) => {
+    setAllDay(event.target.checked);
+  };
 
   const submitForm = (values) => {
     //console.log(values)
@@ -45,7 +55,7 @@ const CreateEventDialog = (props) => {
           <FormattedMessage id="app.event.created"></FormattedMessage>,
           { theme: "colored" }
         );
-        setEventsList((eventsList) => [...eventsList, response.data]);
+        setReloadCreated(true)
         setOpen(false);
       }
     });
@@ -74,6 +84,7 @@ const CreateEventDialog = (props) => {
               id: "",
               title: "",
               description: "",
+              allDay: "",
               start: startDate,
               end: "",
               type: "Event",
@@ -83,6 +94,7 @@ const CreateEventDialog = (props) => {
               //const d = format(new Date(startDate), "yyyy-MM-dd");
               values.start = startDate
               values.end = endDate
+              values.allDay = allDay;
               submitForm(values);
               setSubmitting(false);
             }}
@@ -131,6 +143,17 @@ const CreateEventDialog = (props) => {
                         <FormattedMessage id="app.event.description"></FormattedMessage>
                       }
                     ></TextField>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box ml={-1}>
+                      <Checkbox
+                        value={allDay}
+                        onChange={handleChangeAllDay}
+                      ></Checkbox>
+                      <Typography variant="body1" display="inline">
+                        <FormattedMessage id="app.event.all_day"></FormattedMessage>
+                      </Typography>
+                    </Box>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="body1">

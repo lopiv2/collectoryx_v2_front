@@ -360,7 +360,7 @@ export default function MainListItems(props) {
             <ExpandMore sx={{ ml: 2 }} />
           )}
           {totalFeeds > 0 && (
-            <Box ml={2} sx={{ justifyContent: 'flex-end' }}>
+            <Box ml={5.2} sx={{ justifyContent: 'flex-end' }}>
               <Avatar sx={{ mr: 5 }} style={avatarStyle}>
                 <Typography display="inline" variant="subtitle1">
                   {totalFeeds}
