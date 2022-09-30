@@ -9,14 +9,22 @@ import {
   Radio,
   FormControlLabel,
   List,
-  ListItem
+  ListItem,
+  Card,
+  CardContent,
+  CardActions,
+  CardMedia,
+  Paper,
+  Divider,
+  Button,
+  MenuItem,
+  TextField,
+  Grid,
+  Box,
+  DialogTitle,
 } from "@mui/material";
 import NoImage from "../images/no-photo-available.png";
-import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
-import { Box } from "@mui/material";
-import { Grid } from "@mui/material";
-import { Button, MenuItem, TextField } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import OwnImage from "../images/Own.png";
@@ -26,33 +34,31 @@ import Cross from "../images/Cross.png";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardActions,
-  CardMedia,
-  Paper,
-  Divider
-} from "@mui/material";
 import styles from "../styles/Collections.css";
 import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
 import { useLocation } from "react-router-dom";
 import LogoDisplay from "../components/LogoDisplay";
-import { GetCurrencySymbolLocale, CurrencyChecker, SetLocaleDateTime } from "../utils/generic";
+import {
+  GetCurrencySymbolLocale,
+  CurrencyChecker,
+  SetLocaleDateTime,
+} from "../utils/generic";
 import Dialog from "@material-ui/core/Dialog";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import ConfirmDialog from "../components/ConfirmDialog";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ViewListIcon from "@mui/icons-material/ViewList";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import MaterialTable from "@material-table/core";
 import IconButton from "@mui/material/IconButton";
 import useBreadcrumbs from "use-react-router-breadcrumbs";
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 
 function DisplayCollection(props) {
   const [collectionItems, setCollectionItems] = useState([]);
@@ -82,6 +88,24 @@ function DisplayCollection(props) {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsOrder, setRowsOrder] = useState("name");
   const [searchQuery, setSearchQuery] = useState("");
+  const [orderDirection, setOrderDirection] = useState("down");
+
+  const toggleOrderDirection = () => {
+    if (orderDirection.includes("down")) {
+      setOrderDirection("up");
+    } else {
+      setOrderDirection("down");
+    }
+  };
+
+  useEffect(() => {
+    setPage(0);
+    fetchData(0, rowsPerPage, rowsOrder, searchQuery);
+  }, [orderDirection]);
+
+  const handleChangeOrderDirection = () => {
+    toggleOrderDirection();
+  };
 
   const handleChange = (e, p) => {
     setPage(p);
@@ -90,16 +114,15 @@ function DisplayCollection(props) {
 
   const handleChangeShowItems = (event) => {
     setRowsPerPage(event);
-    setPage(0)
+    setPage(0);
     fetchData(0, event, rowsOrder, searchQuery);
   };
 
   const handleChangeRowOrder = (event) => {
     setRowsOrder(event);
-    setPage(0)
-    fetchData(0, rowsPerPage, event, searchQuery)
+    setPage(0);
+    fetchData(0, rowsPerPage, event, searchQuery);
   };
-
 
   function SimpleDialog(props) {
     const { onClose, selectedValue, open } = props;
@@ -196,15 +219,13 @@ function DisplayCollection(props) {
   };
 
   const getOwnedItems = () => {
-    ConfigService.getCollectionById(location.state.id)
-      .then((response) => {
-        setMoneySpent(response.data.totalPrice);
-        setCollected(response.data.owned);
-        setTotalItems(response.data.totalItems);
-        setWished(response.data.wanted);
-      })
-  }
-
+    ConfigService.getCollectionById(location.state.id).then((response) => {
+      setMoneySpent(response.data.totalPrice);
+      setCollected(response.data.owned);
+      setTotalItems(response.data.totalItems);
+      setWished(response.data.wanted);
+    });
+  };
 
   const fetchData = async (page, rowsPerPage, orderField, search) => {
     const query = {
@@ -212,13 +233,14 @@ function DisplayCollection(props) {
       page: page,
       size: rowsPerPage,
       search: search,
-      orderField: orderField
+      orderField: orderField,
+      orderDirection: orderDirection,
     };
     ConfigService.getCollectionItemsById(query)
       .then((response) => {
         if (isMounted) {
           //console.log(response.data)
-          setTotalPages(response.data.totalPages)
+          setTotalPages(response.data.totalPages);
           setCollectionItems(response.data.content);
           setCollectionId(location.state.id);
         }
@@ -234,39 +256,37 @@ function DisplayCollection(props) {
   const searchQueryInApi = () => {
     if (searchQuery.length > 0) {
       fetchData(page, rowsPerPage, rowsOrder, searchQuery);
-    }
-    else {
-      setRowsOrder("name")
-      setPage(0)
+    } else {
+      setRowsOrder("name");
+      setPage(0);
       fetchData(page, rowsPerPage, "name");
     }
-  }
+  };
 
   useEffect(() => {
-    if(toggleView=="grid"){
+    if (toggleView == "grid") {
       fetchData(page, rowsPerPage, "name");
-      getOwnedItems()
+      setOrderDirection("down");
+      getOwnedItems();
     }
   }, [toggleView]);
 
   const handleWishClick = (event, own, wanted) => {
-    ConfigService.toggleItemWish(
-      event.currentTarget.id,
-      own,
-      wanted
-    ).then((response) => {
-      var index = collectionItems.findIndex(
-        (collectionItems) => collectionItems.id === response.data.id
-      );
-      let newItems = [...collectionItems];
-      newItems[index].wanted = response.data.wanted;
-      if (response.data.wanted) {
-        setWished(wished + 1);
-      } else {
-        setWished(wished - 1);
+    ConfigService.toggleItemWish(event.currentTarget.id, own, wanted).then(
+      (response) => {
+        var index = collectionItems.findIndex(
+          (collectionItems) => collectionItems.id === response.data.id
+        );
+        let newItems = [...collectionItems];
+        newItems[index].wanted = response.data.wanted;
+        if (response.data.wanted) {
+          setWished(wished + 1);
+        } else {
+          setWished(wished - 1);
+        }
+        setCollectionItems(newItems);
       }
-      setCollectionItems(newItems);
-    });
+    );
   };
 
   const handleOwnClick = (event, own, wanted) => {
@@ -292,23 +312,21 @@ function DisplayCollection(props) {
   };
 
   const handleDeleteClick = () => {
-    ConfigService.deleteCollectionItem(value).then(
-      (response) => {
-        if (response.data === true) {
-          toast.success(
-            <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
-            { theme: "colored" }
-          );
-          var index = collectionItems.findIndex(
-            (collectionItems) => collectionItems.id === value
-          );
-          if (index > -1) {
-            collectionItems.splice(index, 1);
-            setCollectionItems([...collectionItems]);
-          }
+    ConfigService.deleteCollectionItem(value).then((response) => {
+      if (response.data === true) {
+        toast.success(
+          <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
+          { theme: "colored" }
+        );
+        var index = collectionItems.findIndex(
+          (collectionItems) => collectionItems.id === value
+        );
+        if (index > -1) {
+          collectionItems.splice(index, 1);
+          setCollectionItems([...collectionItems]);
         }
       }
-    );
+    });
   };
 
   const checkImage = (item) => {
@@ -321,20 +339,19 @@ function DisplayCollection(props) {
         }
       }
     }
-    return require("../images/no-photo-available.png")
+    return require("../images/no-photo-available.png");
   };
 
   const checkImageSerie = (item) => {
-    console.log(item)
+    console.log(item);
     if (item.logo) {
       if (!item.logo.path.includes("http")) {
         return require("../../public/images/" + item.logo.path);
-      }
-      else {
+      } else {
         return item.logo.path;
       }
     }
-    return require("../images/no-photo-available.png")
+    return require("../images/no-photo-available.png");
   };
 
   const handleOpen = () => {
@@ -577,7 +594,7 @@ function DisplayCollection(props) {
                 onClick={() => {
                   setOpenNew(true);
                 }}
-              /*onClick={() => navigate("/collections/add")}*/
+                /*onClick={() => navigate("/collections/add")}*/
               >
                 {/*</Button><Button
                 variant="contained"
@@ -616,7 +633,10 @@ function DisplayCollection(props) {
               <Button
                 variant="contained"
                 color="success"
-                onClick={() => { fetchData(null, null, "name"); setToggleView("list") }}
+                onClick={() => {
+                  fetchData(null, null, "name");
+                  setToggleView("list");
+                }}
               >
                 <ViewListIcon></ViewListIcon>
               </Button>
@@ -675,7 +695,8 @@ function DisplayCollection(props) {
             <Grid container>
               <Grid item xs={3} pt={1}>
                 <Typography variant="h6" display="inline" component="div">
-                  <FormattedMessage id="app.license.show_code"></FormattedMessage>:
+                  <FormattedMessage id="app.license.show_code"></FormattedMessage>
+                  :
                 </Typography>
                 <TextField
                   id="items-show"
@@ -708,12 +729,45 @@ function DisplayCollection(props) {
                     handleChangeRowOrder(event.target.value);
                   }}
                 >
-                  <MenuItem value="name"><FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage></MenuItem>
-                  <MenuItem value="serie"><FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage></MenuItem>
-                  <MenuItem value="own"><FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage></MenuItem>
-                  <MenuItem value="wanted"><FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage></MenuItem>
-                  <MenuItem value="year"><FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage></MenuItem>
+                  <MenuItem value="name">
+                    <FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>
+                  </MenuItem>
+                  <MenuItem value="serie">
+                    <FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>
+                  </MenuItem>
+                  <MenuItem value="own">
+                    <FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>
+                  </MenuItem>
+                  <MenuItem value="wanted">
+                    <FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>
+                  </MenuItem>
+                  <MenuItem value="year">
+                    <FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>
+                  </MenuItem>
                 </TextField>
+                <Tooltip
+                  title={intl.formatMessage({
+                    id: orderDirection.includes("up")
+                      ? "app.tooltip.sort_order_asc"
+                      : "app.tooltip.sort_order_desc",
+                  })}
+                  arrow
+                  followCursor
+                >
+                  <IconButton
+                    type="submit"
+                    aria-label="search"
+                    onClick={() => {
+                      handleChangeOrderDirection();
+                    }}
+                  >
+                    {orderDirection.includes("up") ? (
+                      <ArrowUpwardIcon />
+                    ) : (
+                      <ArrowDownwardIcon />
+                    )}
+                  </IconButton>
+                </Tooltip>
               </Grid>
               <Grid item xs={3} pt={1}>
                 <TextField
@@ -729,13 +783,18 @@ function DisplayCollection(props) {
                   })}
                   size="small"
                 />
-                <IconButton type="submit" aria-label="search" onClick={(e) => {
-                  searchQueryInApi(searchQuery);
-                }}>
+                <IconButton
+                  type="submit"
+                  aria-label="search"
+                  onClick={(e) => {
+                    searchQueryInApi(searchQuery);
+                  }}
+                >
                   <SearchIcon style={{ fill: "blue" }} />
                 </IconButton>
               </Grid>
-            </Grid>)}
+            </Grid>
+          )}
           {toggleView === "list" && (
             <Grid container pt={3}>
               <Grid item xs={12}>
@@ -755,166 +814,166 @@ function DisplayCollection(props) {
             <Grid container spacing={5} className="container" pt={3}>
               {collectionItems !== undefined
                 ? collectionItems.map((item) => (
-                  <Grid item key={item.id}>
-                    <Card
-                      sx={
-                        cardHover === item
-                          ? cardStyleHover
-                          : {
-                            height: 380,
-                            minWidth: 250,
-                            maxWidth: 250,
-                            boxShadow: 3,
-                          }
-                      }
-                      ml={200}
-                      onMouseOver={() => {
-                        setCardHover(item);
-                      }}
-                      onMouseOut={() => {
-                        setCardHover(null);
-                      }}
-                    >
-                      <Box ml={23.1} mb={-10}>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.click_wish",
-                          })}
-                          placement="right"
-                          arrow
-                        >
-                          <IconButton
-                            id={item.id}
-                            style={{ color: 'rgba(240, 216, 0, 1)' }}
-                            sx={{
-                              position: "relative",
-                              height: 25,
-                              width: 25,
-                              ml: -22.5,
-                              mb: 6,
-                              mt: 1,
-                            }}
-                            onClick={(e) => {
-                              handleWishClick(e, item.own, item.wanted);
-                            }}
-                            className="button-wish"
+                    <Grid item key={item.id}>
+                      <Card
+                        sx={
+                          cardHover === item
+                            ? cardStyleHover
+                            : {
+                                height: 380,
+                                minWidth: 250,
+                                maxWidth: 250,
+                                boxShadow: 3,
+                              }
+                        }
+                        ml={200}
+                        onMouseOver={() => {
+                          setCardHover(item);
+                        }}
+                        onMouseOut={() => {
+                          setCardHover(null);
+                        }}
+                      >
+                        <Box ml={23.1} mb={-10}>
+                          <Tooltip
+                            title={intl.formatMessage({
+                              id: "app.tooltip.click_wish",
+                            })}
+                            placement="right"
+                            arrow
                           >
-                            {item.wanted ? (
-                              <StarIcon fontSize="large"></StarIcon>
-                            ) : (
-                              <StarBorderIcon fontSize="large"></StarBorderIcon>
-                            )}
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.click_own",
-                          })}
-                          placement="right"
-                          arrow
-                        >
-                          <Button
-                            id={item.id}
-                            sx={{
-                              position: "relative",
-                              height: 75,
-                              width: 75,
-                              ml: 18.153,
-                              mt: -1.5,
-                            }}
-                            onClick={(e) => {
-                              handleOwnClick(e, item.own, item.wanted);
-                            }}
-                            className="button-own"
-                            startIcon={
-                              <Avatar
-                                variant="square"
-                                sx={{ width: 75, height: 75, ml: 1, mt: 1 }}
-                                src={item.own ? OwnImage : NotOwnImage}
-                              />
-                            }
-                          >
-                            <Typography
-                              className="own-text"
-                              sx={{ position: "absolute", ml: 2.5 }}
+                            <IconButton
+                              id={item.id}
+                              style={{ color: "rgba(240, 216, 0, 1)" }}
+                              sx={{
+                                position: "relative",
+                                height: 25,
+                                width: 25,
+                                ml: -22.5,
+                                mb: 6,
+                                mt: 1,
+                              }}
+                              onClick={(e) => {
+                                handleWishClick(e, item.own, item.wanted);
+                              }}
+                              className="button-wish"
                             >
-                              {item.own ? (
-                                <FormattedMessage id="app.button.own"></FormattedMessage>
+                              {item.wanted ? (
+                                <StarIcon fontSize="large"></StarIcon>
                               ) : (
-                                <FormattedMessage id="app.button.not_own"></FormattedMessage>
+                                <StarBorderIcon fontSize="large"></StarBorderIcon>
                               )}
-                            </Typography>
-                          </Button>
-                        </Tooltip>
-                      </Box>
-                      <CardContent>
-                        {item.logo ? null : (
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip
+                            title={intl.formatMessage({
+                              id: "app.tooltip.click_own",
+                            })}
+                            placement="right"
+                            arrow
+                          >
+                            <Button
+                              id={item.id}
+                              sx={{
+                                position: "relative",
+                                height: 75,
+                                width: 75,
+                                ml: 18.153,
+                                mt: -1.5,
+                              }}
+                              onClick={(e) => {
+                                handleOwnClick(e, item.own, item.wanted);
+                              }}
+                              className="button-own"
+                              startIcon={
+                                <Avatar
+                                  variant="square"
+                                  sx={{ width: 75, height: 75, ml: 1, mt: 1 }}
+                                  src={item.own ? OwnImage : NotOwnImage}
+                                />
+                              }
+                            >
+                              <Typography
+                                className="own-text"
+                                sx={{ position: "absolute", ml: 2.5 }}
+                              >
+                                {item.own ? (
+                                  <FormattedMessage id="app.button.own"></FormattedMessage>
+                                ) : (
+                                  <FormattedMessage id="app.button.not_own"></FormattedMessage>
+                                )}
+                              </Typography>
+                            </Button>
+                          </Tooltip>
+                        </Box>
+                        <CardContent>
+                          {item.logo ? null : (
+                            <Typography
+                              align="center"
+                              sx={{ fontSize: 20 }}
+                              color="text.primary"
+                              gutterBottom
+                            ></Typography>
+                          )}
+                          <Tooltip
+                            title={intl.formatMessage({
+                              id: "app.tooltip.click_image",
+                            })}
+                            arrow
+                            followCursor
+                          >
+                            <CardMedia
+                              component="img"
+                              width="500%"
+                              height="220"
+                              image={checkImage(item)}
+                              alt={item.name}
+                              className="card-collection"
+                              onClick={() => {
+                                setImageClicked(item);
+                                setItemSelected(item);
+                                handleOpen();
+                              }}
+                              style={styles}
+                            />
+                          </Tooltip>
                           <Typography
                             align="center"
-                            sx={{ fontSize: 20 }}
+                            sx={{ mb: 0.5 }}
+                            mt={1}
                             color="text.primary"
-                            gutterBottom
-                          ></Typography>
-                        )}
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.click_image",
-                          })}
-                          arrow
-                          followCursor
-                        >
-                          <CardMedia
-                            component="img"
-                            width="500%"
-                            height="220"
-                            image={checkImage(item)}
-                            alt={item.name}
-                            className="card-collection"
+                          >
+                            {item.name}
+                          </Typography>
+                          <Typography align="center" color="text.secondary">
+                            {item.year}
+                          </Typography>
+                        </CardContent>
+                        <CardActions style={{ justifyContent: "center" }}>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            type="submit"
+                            form="form"
+                            value={item.id}
                             onClick={() => {
-                              setImageClicked(item);
-                              setItemSelected(item);
-                              handleOpen();
+                              setValue(item.id);
+                              setConfirmOpen(true);
                             }}
-                            style={styles}
-                          />
-                        </Tooltip>
-                        <Typography
-                          align="center"
-                          sx={{ mb: 0.5 }}
-                          mt={1}
-                          color="text.primary"
-                        >
-                          {item.name}
-                        </Typography>
-                        <Typography align="center" color="text.secondary">
-                          {item.year}
-                        </Typography>
-                      </CardContent>
-                      <CardActions style={{ justifyContent: "center" }}>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          type="submit"
-                          form="form"
-                          value={item.id}
-                          onClick={() => {
-                            setValue(item.id);
-                            setConfirmOpen(true);
-                          }}
-                        >
-                          <FormattedMessage id="app.button.delete"></FormattedMessage>
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          onClick={() => setItemSelected(item)}
-                        >
-                          <FormattedMessage id="app.button.edit"></FormattedMessage>
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))
+                          >
+                            <FormattedMessage id="app.button.delete"></FormattedMessage>
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => setItemSelected(item)}
+                          >
+                            <FormattedMessage id="app.button.edit"></FormattedMessage>
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))
                 : null}
             </Grid>
           )}
@@ -945,11 +1004,27 @@ function DisplayCollection(props) {
             onClose={handleClose}
             style={{ maxWidth: false, maxHeight: "100%", minHeight: "350px" }}
           >
-            <Grid container style={{ backgroundColor: "rgba(245, 245, 245, 1)" }}
-              width="100%">
-              <Grid container item xs={6} alignItems="center"
-                justifyContent="center">
-                <Grid item ml={2} mt={2} mr={2} mb={2} component={Paper} elevation={2}>
+            <Grid
+              container
+              style={{ backgroundColor: "rgba(245, 245, 245, 1)" }}
+              width="100%"
+            >
+              <Grid
+                container
+                item
+                xs={6}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Grid
+                  item
+                  ml={2}
+                  mt={2}
+                  mr={2}
+                  mb={2}
+                  component={Paper}
+                  elevation={2}
+                >
                   <LazyLoadImage
                     alt=""
                     height="auto"
@@ -960,14 +1035,17 @@ function DisplayCollection(props) {
                 </Grid>
               </Grid>
               <Grid container item xs={6} pb={2}>
-                <Grid item pt={2} pb={2} >
+                <Grid item pt={2} pb={2}>
                   <Avatar
-                    component={Paper} elevation={2}
+                    component={Paper}
+                    elevation={2}
                     variant="rounded"
                     sx={{ width: 65, height: 65 }}
-                    src={itemSelected !== null && itemSelected.serie!==null
-                      ? checkImageSerie(itemSelected.serie)
-                      : NoImage}
+                    src={
+                      itemSelected !== null && itemSelected.serie !== null
+                        ? checkImageSerie(itemSelected.serie)
+                        : NoImage
+                    }
                   />
                 </Grid>
                 <Grid item pt={4} pl={2}>
@@ -985,7 +1063,10 @@ function DisplayCollection(props) {
                       <ListItem>
                         <Typography variant="body1">
                           <FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>
-                          : {itemSelected.serie != null ? itemSelected.serie.name : null}
+                          :{" "}
+                          {itemSelected.serie != null
+                            ? itemSelected.serie.name
+                            : null}
                         </Typography>
                       </ListItem>
                       <Divider />
@@ -1015,11 +1096,13 @@ function DisplayCollection(props) {
                           <FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>
                           :
                         </Typography>
-                        {<Avatar
-                          variant="square"
-                          sx={{ width: 25, height: 25 }}
-                          src={itemSelected.wanted ? Tick : Cross}
-                        />}
+                        {
+                          <Avatar
+                            variant="square"
+                            sx={{ width: 25, height: 25 }}
+                            src={itemSelected.wanted ? Tick : Cross}
+                          />
+                        }
                       </ListItem>
                       <Divider />
                       <ListItem>
@@ -1027,27 +1110,30 @@ function DisplayCollection(props) {
                           <FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>
                           :
                         </Typography>
-                        {<Avatar
-                          variant="square"
-                          sx={{ width: 25, height: 25, ml: 2 }}
-                          src={itemSelected.own ? Tick : Cross}
-                        />}
+                        {
+                          <Avatar
+                            variant="square"
+                            sx={{ width: 25, height: 25, ml: 2 }}
+                            src={itemSelected.own ? Tick : Cross}
+                          />
+                        }
                       </ListItem>
                       <Divider />
                       <ListItem>
                         <Typography variant="body1">
                           <FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>
-                          : {format(new Date(), 'P', { locale: loc })}
+                          : {format(new Date(), "P", { locale: loc })}
                         </Typography>
                       </ListItem>
                       {itemSelected.metadata.length > 0 ? <Divider /> : null}
                       {itemSelected.metadata.map((item, index) => {
                         return (
-                          <ListItem key={index} >
+                          <ListItem key={index}>
                             <Typography variant="body1" display="inline">
                               {item.name} : {item.value}
                             </Typography>
-                          </ListItem>)
+                          </ListItem>
+                        );
                       })}
                     </List>
                   </Paper>
@@ -1058,16 +1144,27 @@ function DisplayCollection(props) {
         )}
         <SimpleDialog open={openNew} onClose={handleCloseNewCol} />
         {toggleView === "grid" && (
-          <Grid container
+          <Grid
+            container
             display="flex"
             justifyContent="center"
             alignItems="center"
             minHeight="10vh"
           >
-            <Pagination count={totalPages} color="primary" showFirstButton showLastButton page={page} variant="outlined" shape="rounded" onChange={handleChange} />
-          </Grid>)}
+            <Pagination
+              count={totalPages}
+              color="primary"
+              showFirstButton
+              showLastButton
+              page={page}
+              variant="outlined"
+              shape="rounded"
+              onChange={handleChange}
+            />
+          </Grid>
+        )}
       </Grid>
-    </Box >
+    </Box>
   );
 }
 

@@ -248,5 +248,7 @@
   "app.tooltip.search_gallery": "Buscar imagen en galeria",
   "app.tooltip.add_new_item": "Añadir nuevo elemento para colección ",
   "app.tooltip.add_new_collection": "Añadir nueva colección",
-  "app.tooltip.generate_license": "Generar código licencia"
+  "app.tooltip.generate_license": "Generar código licencia",
+  "app.tooltip.sort_order_asc": "Orden ascendente",
+  "app.tooltip.sort_order_desc": "Orden descendente"
 }

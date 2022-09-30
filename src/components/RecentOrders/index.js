@@ -27,7 +27,8 @@ export default function RecentOrders() {
       id: userData.id,
       size: 5,
       orderField: "id",
-      search: ""
+      search: "",
+      orderDirection: "up",
     };
     ConfigService.getRecentCollectionItemsById(query)
       .then((response) => {

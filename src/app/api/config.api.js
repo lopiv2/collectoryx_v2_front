@@ -11,7 +11,7 @@ const COUNT_COLLECTIONS_MONEY_URL = (id) =>
   `${API_URL}/count-collections-money/${id}`;
 const COUNT_COLLECTIONS_WISHLIST_URL = (id) =>
   `${API_URL}/count-collections-wishlist/${id}`;
-const COUNT_COMPLETED_COLLECTIONS_URL = (id) => `${API_URL}/count-completed-collections/${id}`;
+const COUNT_COMPLETED_COLLECTIONS_URL = `${API_URL}/count-completed-collections`;
 const CREATE_COLLECTION_URL = `${API_URL}/create-collection`;
 const CREATE_ITEM_URL = `${API_URL}/create-item`;
 const CREATE_SERIE_URL = `${API_URL}/create-serie`;
@@ -47,7 +47,7 @@ const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
 const UPDATE_ITEM_URL = `${API_URL}/update-item`;
 const UPDATE_SERIE_URL = `${API_URL}/update-serie`;
-const VIEW_COLLECTIONS_URL = (id) => `${API_URL}/view-collections/${id}`;
+const VIEW_COLLECTIONS_URL = `${API_URL}/view-collections`;
 const VIEW_SERIES_URL = (id) => `${API_URL}/view-series/${id}`;
 const CREATE_THEMES_URL = `${API_URL}/config/create-theme/`;
 const VIEW_THEMES_URL = `${API_URL}/config/get-themes/`;
@@ -101,9 +101,9 @@ const countCollectionsItems = (id) => {
     });
 };
 
-const countCompletedCollections = (id) => {
+const countCompletedCollections = (query) => {
   return axios
-    .get(COUNT_COMPLETED_COLLECTIONS_URL(id), { headers: authHeader() })
+    .post(COUNT_COMPLETED_COLLECTIONS_URL, query, { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
       return response.data;
@@ -199,7 +199,7 @@ const createEvent = (values) => {
     allDay: values.allDay,
     start: values.start,
     end: values.end,
-    type: values.type
+    type: values.type,
   };
   //console.log(data)
   return axios
@@ -428,9 +428,9 @@ const getCollectionItem = (id) => {
     });
 };
 
-const getCollectionLists = (id) => {
+const getCollectionLists = (query) => {
   return axios
-    .get(VIEW_COLLECTIONS_URL(id), { headers: authHeader() })
+    .post(VIEW_COLLECTIONS_URL, query, { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
       return response;
@@ -626,7 +626,14 @@ const saveConfigAppearance = (id, theme, dark, config) => {
     });
 };
 
-const saveConfigDashboard = (id, expensivePanel, wishlistPanel, recentPurchasePanel, completedCollectionsPanel, config) => {
+const saveConfigDashboard = (
+  id,
+  expensivePanel,
+  wishlistPanel,
+  recentPurchasePanel,
+  completedCollectionsPanel,
+  config
+) => {
   const data = {
     id: id,
     expensivePanel: expensivePanel,
@@ -719,7 +726,7 @@ const updateEvent = (values) => {
     start: values.start,
     end: values.end,
     allDay: values.allDay,
-    type: values.type
+    type: values.type,
   };
   return axios
     .put(UPDATE_EVENT_URL, data, { headers: authHeader() })
@@ -743,7 +750,7 @@ const updateFeed = (values) => {
     id: values.id,
     name: values.name,
     url: values.rssUrl,
-    logo: values.logo
+    logo: values.logo,
   };
   return axios
     .put(UPDATE_FEED_URL, data, { headers: authHeader() })
@@ -843,7 +850,7 @@ const updateSerie = (values, image) => {
     });
 };
 
-const viewFeed = (url) => { };
+const viewFeed = (url) => {};
 
 const ConfigService = {
   countCollections,
