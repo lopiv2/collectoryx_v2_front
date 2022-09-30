@@ -101,10 +101,6 @@ export default function LinearChartYearly(props) {
         },
     };
 
-    if (localStorage.getItem("user")) {
-        var user = localStorage.getItem("user");
-        var userData = JSON.parse(user);
-    }
 
     function getAllMonths({ locale = context.locale, format = "long" } = {}) {
         const applyFormat = new Intl.DateTimeFormat(locale, { month: format }).format;
@@ -128,7 +124,7 @@ export default function LinearChartYearly(props) {
     };
 
     useEffect(() => {
-        const collections = ConfigService.getCollectionItemsPerYear(userData.id)
+        ConfigService.getCollectionItemsPerYear(props.userData.id)
             .then((response) => {
                 setCollectionItems(response.data);
                 for (var month = 1; month < 13; month++) {

@@ -21,6 +21,7 @@ import ViewFeeds from "../pages/ViewFeeds";
 import ImportCollectionFile from "../pages/ImportCollectionFile";
 import ImportScrapper from "../pages/ImportScrapper";
 import CalendarScheduler from "../pages/CalendarScheduler";
+import Profile from "../pages/Profile";
 
 export const Router = (props) => {
   let { colId } = useParams();
@@ -42,6 +43,14 @@ export const Router = (props) => {
           element={
             <ProtectedRoutes>
               <Dashboard></Dashboard>
+            </ProtectedRoutes>
+          }
+        ></Route>
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoutes>
+              <Profile />
             </ProtectedRoutes>
           }
         ></Route>

@@ -54,7 +54,7 @@ export default function Dashboard(props) {
                         elevation={6}
                     >
                         <Box>
-                            <LinearChartYearly />
+                            <LinearChartYearly userData={userData}/>
                         </Box>
                     </Paper>
                 </Grid>
@@ -68,11 +68,11 @@ export default function Dashboard(props) {
                         elevation={6}
                     >
                         <Box>
-                            <BarChartYearly />
+                            <BarChartYearly userData={userData} />
                         </Box>
                     </Paper>
                 </Grid>
-                <Grid item xs={12} md={8} lg={4}>
+                {/*<Grid item xs={12} md={8} lg={4}>
                     <Paper
                         sx={{
                             p: 2,
@@ -85,7 +85,7 @@ export default function Dashboard(props) {
                             <BarChartYearly />
                         </Box>
                     </Paper>
-                </Grid>
+                    </Grid>*/}
             </Grid>
             <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }} elevation={6}>

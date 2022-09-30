@@ -18,6 +18,7 @@ import {
   getDay,
   getHours,
   getMinutes,
+  isAfter,
 } from "date-fns";
 import ConfigService from "../app/api/config.api";
 import styles from "../styles/Collections.css";
@@ -55,6 +56,7 @@ function CalendarScheduler() {
   const { userData, setUserData } = React.useContext(AppContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const today = new Date();
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
@@ -76,13 +78,18 @@ function CalendarScheduler() {
             end: i.end,
             backgroundColor:
               i.type === "Event"
-                ? "rgba(107, 181, 64, 1)"
-                : "rgba(64, 177, 181, 1)",
+                ? isAfter(today,new Date(i.end))
+                  ? "rgba(195, 227, 176, 1)"
+                  : "rgba(107, 181, 64, 1)"
+                : isAfter(today,new Date(i.end))
+                  ? "rgba(64, 177, 181, 1)"
+                  : "rgba(161, 220, 222, 1)",
             extendedProps: {
               description: i.description,
               type: i.type,
             },
           };
+          //console.log(data)
           setEventsList((eventsList) => [...eventsList, data]);
         });
       })
@@ -163,6 +170,7 @@ function CalendarScheduler() {
             <FormattedMessage id="app.event.edited"></FormattedMessage>,
             { theme: "colored" }
           );
+          requestEvents(initialDateCalendar, finalDateCalendar);
         }
       });
     }

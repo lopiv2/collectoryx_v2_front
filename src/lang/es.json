@@ -1,5 +1,7 @@
 {
   "app.sidemenu.dashboard": "Panel de control",
+  "app.sidemenu.my_account": "Mi cuenta",
+  "app.sidemenu.logout": "Desconectarse",
   "app.sidemenu.welcome": "Bienvenido/a {user}",
   "app.sidemenu.admin.license_server": "Servidor Licencias",
   "app.sidemenu.admin.sales": "Ventas",

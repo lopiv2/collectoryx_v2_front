@@ -62,6 +62,8 @@ const UPDATE_FEED_URL = `${API_URL}/feeds/update`;
 const VIEW_FEEDS_READ_URL = (id) => `${API_URL}/feeds/get-all/${id}`;
 const VIEW_FEEDS_READ_URL_ID = (id, title) =>
   `${API_URL}/feeds/get-feeds/${id}/${title}`;
+const USER_DETAILS_URL = (id) => `${API_URL}/user/profile/${id}`;
+const UPDATE_USER_PROFILE_URL = `${API_URL}/user/profile/update`;
 const VIEW_COLLECTION_SERIES_URL = (id) =>
   `${API_URL}/view-collection-series/${id}`;
 
@@ -532,6 +534,14 @@ const getUserConfig = (id) => {
     });
 };
 
+const getUserDetails = (id) => {
+  return axios
+    .get(USER_DETAILS_URL(id), { headers: authHeader() })
+    .then((response) => {
+      return response;
+    });
+};
+
 const importItemFromWeb = (item) => {
   return axios
     .post(IMPORT_ITEM_WEB_URL, item, { headers: authHeader() })
@@ -783,6 +793,32 @@ const updateItem = (values, collection, file, metadata) => {
     });
 };
 
+const updateProfile = (values) => {
+  const data = {
+    id: values.id,
+    userName: values.userName,
+    email: values.email,
+    firstName: values.firstName,
+    lastName: values.lastName,
+    password: values.password,
+  };
+  return axios
+    .put(UPDATE_USER_PROFILE_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        //console.log(response.data)
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const updateSerie = (values, image) => {
   const data = {
     id: values.id,
@@ -847,6 +883,7 @@ const ConfigService = {
   getMostValuableItem,
   getRecentCollectionItemsById,
   getUserConfig,
+  getUserDetails,
   getUserFeedsIDTitle,
   importItemFromWeb,
   parseFile,
@@ -861,6 +898,7 @@ const ConfigService = {
   updateEvent,
   updateFeed,
   updateItem,
+  updateProfile,
   updateSerie,
   viewFeed,
 };

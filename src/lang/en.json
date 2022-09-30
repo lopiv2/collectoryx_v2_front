@@ -1,5 +1,7 @@
 {
   "app.sidemenu.dashboard": "Dashboard",
+  "app.sidemenu.my_account": "My account",
+  "app.sidemenu.logout": "Logout",
   "app.sidemenu.welcome": "Welcome {user}",
   "app.sidemenu.admin.license_server": "License Server",
   "app.sidemenu.admin.sales": "Sales",

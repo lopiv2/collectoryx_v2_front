@@ -126,10 +126,6 @@ export default function BarChartYearly(props) {
         },
     };
 
-    if (localStorage.getItem("user")) {
-        var user = localStorage.getItem("user");
-        var userData = JSON.parse(user);
-    }
 
     function getAllMonths({ locale = context.locale, format = "long" } = {}) {
         const applyFormat = new Intl.DateTimeFormat(locale, { month: format }).format;
@@ -171,7 +167,7 @@ export default function BarChartYearly(props) {
 
     useEffect(() => {
         var priceCount = 0;
-        const collections = ConfigService.getCollectionItemsPerYear(userData.id)
+        ConfigService.getCollectionItemsPerYear(props.userData.id)
             .then((response) => {
                 setCollectionItems(response.data);
                 //console.log(response.data)

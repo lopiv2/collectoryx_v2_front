@@ -47,6 +47,10 @@ export default function TopToolBar(props) {
     //console.log(AuthService.isLogged());
   };
 
+  const onClickProfile = () => {
+    navigate("/profile");
+  };
+
   const handleClick = (event) => {
     props.setAnchorEl(event.currentTarget);
   };
@@ -184,9 +188,12 @@ export default function TopToolBar(props) {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={onClickLogout}>Logout</MenuItem>
+            <MenuItem onClick={onClickProfile}>
+              <FormattedMessage id="app.sidemenu.my_account" ></FormattedMessage>
+            </MenuItem>
+            <MenuItem onClick={onClickLogout}>
+              <FormattedMessage id="app.sidemenu.logout" ></FormattedMessage>
+            </MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>

@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { useIntl, FormattedMessage } from 'react-intl';
 const Signup = () => {
     const paperStyle = { padding: 20, width: 300, margin: "0 auto" }
+    const intl = useIntl();
     const headerStyle = { margin: 0 }
     const avatarStyle = { backgroundColor: '#1bbd7e' }
     const marginTop = { marginTop: 5 }
@@ -25,8 +26,7 @@ const Signup = () => {
         confirmPassword: '',
         termsAndConditions: false
     }
-    const translate = useIntl();
-    const required = translate.formatMessage({ id: 'app.signin.required' });
+    const required = intl.formatMessage({ id: 'app.signin.required' });
     const validationSchema = Yup.object().shape({
         userName: Yup.string().min(3, "It's too short").required(required),
         email: Yup.string().email("Enter valid email").required(required),
@@ -34,7 +34,7 @@ const Signup = () => {
         lastName: Yup.string().min(3, "It's too short").required(required),
         password: Yup.string().min(8, "Password minimum length should be 8").required(required),
         confirmPassword: Yup.string().oneOf([Yup.ref('password')], "Password not matched").required(required),
-        termsAndConditions: Yup.string().oneOf(["true"], translate.formatMessage({ id: 'app.signup.fields.terms' }))
+        termsAndConditions: Yup.string().oneOf(["true"], intl.formatMessage({ id: 'app.signup.fields.terms' }))
     })
     const onSubmit = async (values, props) => {
         //console.log(values)
@@ -60,7 +60,7 @@ const Signup = () => {
         navigate('/login')
     }
     return (
-        <Grid>
+        <Grid p={2}>
             <Paper style={paperStyle}>
                 <Grid align='center'>
                     <Avatar style={avatarStyle}>
