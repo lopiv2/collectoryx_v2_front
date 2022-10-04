@@ -68,6 +68,7 @@ export default function MainListItems(props) {
   useEffect(() => {
     const feeds = ConfigService.getAllUserFeeds(userData.id)
       .then((response) => {
+        //console.log(response.data)
         setFeedsList(response.data);
         setLoading(false);
       })
@@ -265,12 +266,12 @@ export default function MainListItems(props) {
             </NavLink>
           </List>
             </Collapse>*/}
-        <ListItemButton sx={{ margin: "5px 0" }}>
+        {/*<ListItemButton sx={{ margin: "5px 0" }}>
           <ListItemIcon>
             <BarChartIcon />
           </ListItemIcon>
           <FormattedMessage id="app.sidemenu.reports"></FormattedMessage>
-        </ListItemButton>
+          </ListItemButton>*/}
         <NavLink
           className="nav-link"
           to="/calendar"

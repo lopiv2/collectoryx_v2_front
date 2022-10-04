@@ -14,12 +14,14 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthService from "../../app/api/auth.api";
 import { AppContext } from "../../components/AppContext";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import { Context } from "../../components/Wrapper";
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import LanguageSwitcher from '../../components/LanguageSelector';
+import Logo from "../../assets/Collectoryx_Logo.png";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function Copyright(props) {
 
@@ -31,9 +33,7 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
+      Collectoryx
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -52,6 +52,7 @@ export default function SignInSide() {
   const navigate = useNavigate();
   const context = useContext(Context);
   const selectedImage = images[Math.floor(Math.random() * images.length)];
+  const intl = useIntl();
 
   //console.log(selectedImage)
 
@@ -63,18 +64,20 @@ export default function SignInSide() {
       setUserName(data.get("userName"));
       setRole(response.data.role)
       if (response.data.error === true) {
-        toast.error(response.data.message, { theme: "colored" });
-        //console.log(response.data.error);
+        if (response.status === 500) {
+          toast.error(<FormattedMessage id="app.signin_wrong_user"></FormattedMessage>, { theme: "colored" });
+        }
+        if (response.status === 401) {
+          toast.error(<FormattedMessage id="app.signin_wrong_credentials"></FormattedMessage>, { theme: "colored" });
+        }
+        if (response.status !== 500 && response.status !== 401)
+          toast.error(response.data.message, { theme: "colored" });
       }
       else {
         navigate("/");
       }
     });
   };
-
-  const onClickSignUp = () => {
-    navigate('/signup')
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -101,8 +104,10 @@ export default function SignInSide() {
             style={{
               background: 'linear-gradient(to right bottom, #57abdb, #ffffff69)'
             }}>
-            <Grid container justifyContent="flex-end" m={0} p={4}>
-              <LanguageSwitcher></LanguageSwitcher>
+            <Grid container >
+              <Grid container justifyContent="flex-end" m={0} p={2}>
+                <LanguageSwitcher></LanguageSwitcher>
+              </Grid>
             </Grid>
             <Box
               sx={{
@@ -113,12 +118,18 @@ export default function SignInSide() {
                 alignItems: "center"
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                <FormattedMessage id="app.signin"></FormattedMessage>
-              </Typography>
+              <Avatar
+                src={Logo} // use normal <img> attributes as props
+                width="100%"
+                variant="rounded"
+                sx={{ width: 100, height: 100 }}
+              />
+              <Grid pt={2}>
+                <Typography component="h1" variant="h5">
+                  <FormattedMessage id="app.signin"></FormattedMessage>
+                </Typography>
+              </Grid>
+
               <Box
                 component="form"
                 noValidate
@@ -161,7 +172,7 @@ export default function SignInSide() {
                 />
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
+                  label={intl.formatMessage({ id: "app.signin_remember" })}
                 />
                 <Button
                   type="submit"
@@ -173,17 +184,19 @@ export default function SignInSide() {
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link href="#" variant="body2">
+                    {/*<Link href="#" variant="body2">
                       Forgot password?
-                    </Link>
+                </Link>*/}
                   </Grid>
                   <Grid item>
-                    <Link
-                      href="#"
-                      variant="body2"
-                      onClick={onClickSignUp}>
-                      {"Don't have an account? Sign Up"}
-                    </Link>
+                    <NavLink
+                      className="nav-link"
+                      to="/signup"
+                      style={{
+                        color: "black",
+                      }}
+                    > <FormattedMessage id="app.signin_not_account"></FormattedMessage>
+                    </NavLink>
                   </Grid>
                 </Grid>
                 <Copyright sx={{ mt: 5 }} />

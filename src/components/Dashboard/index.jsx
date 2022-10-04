@@ -54,7 +54,7 @@ export default function Dashboard(props) {
                         elevation={6}
                     >
                         <Box>
-                            <LinearChartYearly userData={userData}/>
+                            <LinearChartYearly userData={userData} />
                         </Box>
                     </Paper>
                 </Grid>
@@ -86,11 +86,11 @@ export default function Dashboard(props) {
                         </Box>
                     </Paper>
                     </Grid>*/}
-            </Grid>
-            <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }} elevation={6}>
-                    <RecentOrders />
-                </Paper>
+                <Grid item xs={12}>
+                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }} elevation={6}>
+                        <RecentOrders />
+                    </Paper>
+                </Grid>
             </Grid>
         </Grid>
     )

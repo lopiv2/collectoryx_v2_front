@@ -1,7 +1,7 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { toast } from "react-toastify";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage,useIntl } from "react-intl";
 import { useEffect, useState, useContext } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -24,7 +24,6 @@ const login = (userName, password) => {
     })
     .catch((error) => {
       if (error.response) {
-        //console.log(error.response.status);
         return error.response;
       }
     });

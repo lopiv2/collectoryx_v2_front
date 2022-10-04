@@ -46,7 +46,7 @@ function SelectThemeTab() {
       .then((response) => {
         if (response.status === 200) {
           toast.success(
-            <FormattedMessage id="app.config.saved"></FormattedMessage>,
+            <FormattedMessage id="app.config.saved"></FormattedMessage>, 
             { theme: "colored" }
           );
         }

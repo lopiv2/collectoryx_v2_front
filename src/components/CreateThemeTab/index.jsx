@@ -32,7 +32,7 @@ function CreateThemeTab() {
   };
 
   const submitForm = (values) => {
-    console.log(values);
+    //console.log(values);
     ConfigService.createTheme(userData.id, values).then((response) => {
       if (response.status === 200) {
         toast.success(

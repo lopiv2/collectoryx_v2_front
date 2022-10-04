@@ -3,18 +3,15 @@ import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
-import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
-import NoImage from "../images/no-photo-available.png";
 import { ToastContainer, toast } from "react-toastify";
 import Tab from "@mui/material/Tab";
 import { TabContext } from "@material-ui/lab";
 import { TabList } from "@material-ui/lab";
 import { TabPanel } from "@material-ui/lab";
 import * as Yup from "yup";
-import ThemeTemplate from "../components/ThemeFiller";
 import ManageApiTab from "../components/ManageApiTab";
-import SelectThemeTab from "../components/SelectThemeTab";
+import ManageApplicationTab from "../components/ManageApplicationTab";
 
 function ConfigInterface() {
   const intl = useIntl();
@@ -83,6 +80,7 @@ function ConfigInterface() {
           </TabList>
         </Box>
         <TabPanel value="1">
+          <ManageApplicationTab></ManageApplicationTab>
         </TabPanel>
         <TabPanel value="2">
           <ManageApiTab />
