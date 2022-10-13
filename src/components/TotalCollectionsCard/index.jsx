@@ -1,5 +1,5 @@
 
-import { Card, CardContent, CardActions, Typography } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import Grid from '@mui/material/Grid';
@@ -24,7 +24,7 @@ export default function TotalCollectionsCard() {
             var user = localStorage.getItem("user");
             var userData = JSON.parse(user);
         }
-        const collections = ConfigService.countCollections(userData.id).then((response) => {
+        ConfigService.countCollections(userData.id).then((response) => {
             setCollectionTotalCount(response);
         })
             .catch(err => {

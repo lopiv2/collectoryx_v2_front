@@ -1,10 +1,12 @@
 import { Context } from "../components/Wrapper";
 import { useContext } from "react";
 import OptionsService from "../components/DropDownOptions";
-import { createTheme} from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import { green, blue } from "@mui/material/colors";
 import esLocale from "date-fns/locale/es";
 import enLocale from "date-fns/locale/en-US";
+import { toast } from "react-toastify";
+import { FormattedMessage } from "react-intl";
 
 const cleanUrl = (url) => {
   let cleanedUrl = url.includes("https")
@@ -93,6 +95,13 @@ const CurrencyChecker = () => {
   return res;
 };
 
+const FeatureForImplement = () => {
+  toast.error(
+    <FormattedMessage id="app.feature_for_implement"></FormattedMessage>,
+    { theme: "colored" }
+  );
+}
+
 const GetLocaleDateTime = () => {
   const context = useContext(Context);
   return context;
@@ -174,6 +183,7 @@ export {
   cleanUrl,
   CreateTheme,
   CurrencyChecker,
+  FeatureForImplement,
   FilterResultsByApiProvider,
   GetCurrencySymbolLocale,
   getFromLocalStorage,

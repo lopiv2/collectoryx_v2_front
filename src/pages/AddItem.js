@@ -22,7 +22,7 @@ import esLocale from "date-fns/locale/es";
 import enLocale from "date-fns/locale/en-US";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Tooltip } from "@mui/material";
-import { parseISO, format } from "date-fns";
+import { format } from "date-fns";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
 
 const localeMap = {
@@ -64,7 +64,7 @@ function AddItem(props) {
   };
 
   useEffect(() => {
-    const collectionSeries = ConfigService.getCollectionSeries(
+    ConfigService.getCollectionSeries(
       location.state.id
     )
       .then((response) => {
@@ -89,7 +89,7 @@ function AddItem(props) {
   }, [metadataFields]);
 
   useEffect(() => {
-    const metadata = ConfigService.getMetadataFields(location.state.id)
+    ConfigService.getMetadataFields(location.state.id)
       .then((response) => {
         setMetadataFields(response.data);
         //console.log(response.data);
@@ -107,7 +107,7 @@ function AddItem(props) {
         val = 0;
       }
     }
-    var index = metadataValues.findIndex((x) => x.id == item.id);
+    var index = metadataValues.findIndex((x) => x.id === item.id);
     let newItems = [...metadataValues];
     metadataValues[index].value = val;
     setMetadataValues(newItems);

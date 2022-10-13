@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 function ManageApplicationTab(props) {
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Box } from "@mui/material";
@@ -24,8 +24,8 @@ function CreateThemeTab() {
   const [backColor, setBackColor] = useState(createColor("#fff"));
   const navigate = useNavigate();
   const intl = useIntl();
-  const { userData, setUserData, userConfig, setUserConfig } =
-    React.useContext(AppContext);
+  const { userData} =
+    React.useContext(AppContext); 
 
   const handleChangeColor = (value, set) => {
     set(value);
@@ -106,8 +106,6 @@ function CreateThemeTab() {
             }}
             validationSchema={newItemSchema}
             onSubmit={(values, { setSubmitting }) => {
-              {
-              }
               values.primary = primaryColor;
               values.secondary = secondaryColor;
               values.sidebar = sidebarColor;

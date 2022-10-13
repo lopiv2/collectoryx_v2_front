@@ -5,12 +5,10 @@ import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
-import NoImage from "../../images/no-photo-available.png";
 import MaterialTable from "@material-table/core";
 import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import { TextField, MenuItem } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useIntl } from "react-intl";
 import { Avatar } from "@mui/material";
 import * as Yup from "yup";
@@ -25,7 +23,6 @@ function ManageApiTab(props) {
   const [apisList, setApisList] = useState([]);
   const [apiEdited, setApiEdited] = useState();
   const [newApiEdited, setNewApiEdited] = useState();
-  const navigate = useNavigate();
   const [openEdit, setOpenEdit] = useState(false);
   const intl = useIntl();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -33,7 +30,7 @@ function ManageApiTab(props) {
   const { userData, setUserData } = React.useContext(AppContext);
 
   const handleDeleteClick = () => {
-    const deleteItem = ConfigService.deleteApi(value).then((response) => {
+    ConfigService.deleteApi(value).then((response) => {
       if (response.data === true) {
         toast.success(
           <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
@@ -50,7 +47,7 @@ function ManageApiTab(props) {
 
   useEffect(() => {
     if (!isUndefined(newApiEdited)) {
-      var index = apisList.findIndex((x) => x.id == newApiEdited.id);
+      var index = apisList.findIndex((x) => x.id === newApiEdited.id);
       let newItems = [...apisList];
       newItems[index] = newApiEdited;
       setApisList(newItems);
@@ -59,7 +56,7 @@ function ManageApiTab(props) {
   }, [newApiEdited]);
 
   useEffect(() => {
-    const apiList = ConfigService.getAllApis(userData.id)
+    ConfigService.getAllApis(userData.id)
       .then((response) => {
         setApisList(response.data);
       })

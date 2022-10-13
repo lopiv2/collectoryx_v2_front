@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CollectionsSpentCard from '../CollectionsSpendCard';
 import TotalItemsCard from '../TotalItemsCard';
 import TotalCollectionsCard from "../TotalCollectionsCard";
@@ -15,7 +15,7 @@ import AuthService from "../../app/api/auth.api";
 import { AppContext } from "../AppContext";
 
 export default function Dashboard(props) {
-    const { userData, setUserData, userConfig, setUserConfig } =
+    const { userData, userConfig } =
         React.useContext(AppContext);
 
     return AuthService.checkUserLogged() === "USER_ROLE" && (

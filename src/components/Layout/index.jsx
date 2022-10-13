@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import TopToolBar from "../TopToolBar";
 import SideBar from "../SideBar";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -10,13 +10,12 @@ import "../../styles/Dashboard.css";
 import Copyright from "../Copyright";
 import { Outlet } from "react-router-dom";
 import ConfigService from "../../app/api/config.api";
-import WebFont from "webfontloader";
 import { AppContext } from "../AppContext";
-import { green, blue, grey } from "@mui/material/colors";
+import { green, blue } from "@mui/material/colors";
 import { CreateTheme } from "../../utils/generic";
 
 const drawerWidth = 240;
-const mdTheme = createTheme();
+//const mdTheme = createTheme();
 
 function Layout(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -25,7 +24,7 @@ function Layout(props) {
   //const { theme, themeLoaded, getFonts } = useTheme();
   const [themeLoaded, setThemeLoaded] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("");
-  const { userData, setUserData, userConfig, setUserConfig } =
+  const { userData, setUserData, setUserConfig } =
     React.useContext(AppContext);
 
   useEffect(() => {
@@ -33,7 +32,7 @@ function Layout(props) {
       var user = JSON.parse(localStorage.getItem("user"));
       setUserData(user);
       setThemeLoaded(true);
-      const userConf = ConfigService.getUserConfig(user.id)
+      ConfigService.getUserConfig(user.id)
         .then((response) => {
           //console.log(response.data)
           setUserConfig(response.data);

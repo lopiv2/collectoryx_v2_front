@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useTheme } from '@mui/material/styles';
 import { Bar } from 'react-chartjs-2';
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import { Context } from "../Wrapper";
 import { CurrencyChecker } from "../../utils/generic";
 import {
@@ -172,9 +172,9 @@ export default function BarChartYearly(props) {
                 setCollectionItems(response.data);
                 //console.log(response.data)
                 for (var month = 1; month < 13; month++) {
-                    var countfiltered = response.data.filter(function (element) {
+                    response.data.filter(function (element) {
                         var date = new Date(element.adquiringDate)
-                        if (date.getMonth() + 1 == month) {
+                        if (date.getMonth() + 1 === month) {
                             priceCount += element.price;
                         }
                         return date.getMonth() + 1 == month;

@@ -1,27 +1,17 @@
 import React, {
   useState,
-  useCallback,
-  useMemo,
   useEffect,
-  useContext,
 } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
-import { Popover } from "@mui/material";
-import { IconButton } from "@mui/material";
 import {
-  format,
-  parse,
-  startOfWeek,
-  getDay,
   getHours,
   getMinutes,
   isAfter,
 } from "date-fns";
 import ConfigService from "../app/api/config.api";
-import styles from "../styles/Collections.css";
 import { ToastContainer, toast } from "react-toastify";
 import { GetLocaleDateTime } from "../utils/generic";
 import { AppContext } from "../components/AppContext";
@@ -33,9 +23,6 @@ import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import esLocale from "@fullcalendar/core/locales/es";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CloseIcon from "@mui/icons-material/Close";
 import ConfirmDialog from "../components/ConfirmDialog";
 import EditEventPopover from "../components/EditEventPopover";
 import { isUndefined } from "lodash";
@@ -47,7 +34,6 @@ function CalendarScheduler() {
   const loc = GetLocaleDateTime();
   const [openCreate, setOpenCreate] = useState(false);
   const [reloadCreated, setReloadCreated] = useState(false);
-  const [startDragging, setStartDragging] = useState(false);
   const [dateClickedEvent, setDateClickedEvent] = useState("");
   const [eventClicked, setEventClicked] = useState("");
   const [initialDateCalendar, setInitialDateCalendar] = useState("");
@@ -250,7 +236,6 @@ function CalendarScheduler() {
           eventContent={renderEventContent}
           eventClick={handleEventClick}
           eventResize={handleEventResize}
-          //eventDragStart={setStartDragging(true)}
           eventDrop={handleEventResize}
         />
       </Box>

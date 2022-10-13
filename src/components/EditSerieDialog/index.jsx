@@ -1,11 +1,11 @@
-import React, { useState, useEffect, lazy } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Grid, Box, Avatar, TextField, Typography, MenuItem, Tooltip } from "@mui/material";
+import { Grid, Box, TextField, Typography, Tooltip } from "@mui/material";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import ConfigService from "../../app/api/config.api";
@@ -15,7 +15,7 @@ import ImageGalleryDialog from "../ImageGalleryDialog";
 import NoImage from "../../images/no-photo-available.png";
 
 const EditSerieDialog = (props) => {
-  const { items, open, setOpen, onConfirm, setItem, collectionList, newItem, setNewItem } =
+  const { items, open, setOpen, setNewItem } =
     props;
   const [images, setImages] = useState([]);
   const intl = useIntl();
@@ -38,7 +38,7 @@ const EditSerieDialog = (props) => {
 
   useEffect(() => {
     if (open === true) {
-      const imagesList = ConfigService.getLocalImages().then((response) => {
+      ConfigService.getLocalImages().then((response) => {
         var filteredResponse = [];
         filteredResponse = response.data.filter(
           (image) => !image.path.includes("http")
@@ -60,7 +60,7 @@ const EditSerieDialog = (props) => {
     setPreview(img)
   };
 
-  const avatarStyleClicked = {
+  /*const avatarStyleClicked = {
     border: "2px solid green",
     width: 80,
     height: 80,
@@ -70,11 +70,11 @@ const EditSerieDialog = (props) => {
     cursor: "pointer",
     width: 80,
     height: 80,
-  };
+  };*/
 
-  const handleChangeCollection = (event) => {
+  /*const handleChangeCollection = (event) => {
     setCollection(event.target.value);
-  };
+  };*/
 
   const newSerieSchema = Yup.object().shape({
     name: Yup.string().required(

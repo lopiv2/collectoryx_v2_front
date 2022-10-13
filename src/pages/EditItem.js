@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import { Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -22,7 +22,7 @@ import esLocale from "date-fns/locale/es";
 import enLocale from "date-fns/locale/en-US";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Tooltip } from "@mui/material";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
 import { isUndefined } from "lodash";
 
@@ -127,7 +127,7 @@ function EditItem(props) {
 
   useEffect(() => {
     if (!isUndefined(collectionId)) {
-      const collectionSeries = ConfigService.getCollectionSeries(collectionId)
+      ConfigService.getCollectionSeries(collectionId)
         .then((response) => {
           //console.log(response.data)
           setCollectionSeriesList(response.data);
@@ -261,7 +261,7 @@ function EditItem(props) {
   }, [selectedFile]);
 
   useEffect(() => {
-    console.log(location.state.item);
+    //console.log(location.state.item);
     if (location.state != null) {
       if (location.state.item.image) {
         if (!location.state.item.image.path.includes("http")) {

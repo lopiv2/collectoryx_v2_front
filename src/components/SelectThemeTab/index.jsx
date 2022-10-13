@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { CardHeader, Typography } from "@mui/material";
-import { FormattedMessage, useIntl } from "react-intl";
-import { Box } from "@mui/material";
+import { FormattedMessage } from "react-intl";
 import { Grid } from "@mui/material";
-import { Paper } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
-import { ColorPicker, createColor } from "material-ui-color";
+import { createColor } from "material-ui-color";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
-import { Pagination, Navigation, EffectCoverflow } from "swiper";
+import { Pagination, Navigation } from "swiper";
 import { FormGroup } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
 import { Switch } from "@mui/material";
 import ThemeTemplate from "../ThemeFiller";
 import { toast } from "react-toastify";
-import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
+import { Card } from "@mui/material";
 import { AppContext } from "../AppContext";
-import { CreateTheme } from "../../utils/generic";
 
 
 function SelectThemeTab() {
@@ -30,14 +27,13 @@ function SelectThemeTab() {
   //const [userStorage, setUserStorage] = useState(user);
   const [darkTheme, setDarkTheme] = useState(userConfig.darkTheme);
   const [themeClicked, setThemeClicked] = useState(userData.theme.id);
-  const intl = useIntl();
 
   const handleChangeDark = (event) => {
     setDarkTheme(event.target.checked);
   };
 
   const submitChanges = () => {
-    const save = ConfigService.saveConfigAppearance(
+    ConfigService.saveConfigAppearance(
       userData.id,
       themeClicked,
       darkTheme,
@@ -78,7 +74,7 @@ function SelectThemeTab() {
   };
 
   useEffect(() => {
-    const collections = ConfigService.getAllThemes()
+    ConfigService.getAllThemes()
       .then((response) => {
         setThemes(response.data);
       })

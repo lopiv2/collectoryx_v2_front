@@ -4,9 +4,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { Grid, Box, Avatar, TextField, Typography } from "@mui/material";
-import { getImagePaths } from "../../utils/generic";
 import { Tooltip } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
 
@@ -14,12 +13,10 @@ const ImageGalleryDialog = (props) => {
   const { title, open, setOpen, onConfirm, setImageSelected } = props;
   const [images, setImages] = useState([]);
   const [imageClicked, setImageClicked] = useState();
-  var listOfImages = [];
-  const intl = useIntl();
 
   useEffect(() => {
     if (open === true) {
-      const imagesList = ConfigService.getLocalImages().then((response) => {
+      ConfigService.getLocalImages().then((response) => {
         var filteredResponse = []
         filteredResponse = response.data.filter(image => !image.path.includes("http"))
         filteredResponse.map((i) =>

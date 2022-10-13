@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import { TextField } from "@mui/material";
@@ -9,7 +9,7 @@ import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import TagsInput from "../components/TagsInput";
 import AddIcon from "@mui/icons-material/Add";

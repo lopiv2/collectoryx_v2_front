@@ -38,6 +38,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import PropTypes from "prop-types";
 import { AppContext } from "../components/AppContext";
+import { FeatureForImplement} from "../utils/generic";
 
 function ManageCollections(props) {
   const [collectionsList, setCollectionsList] = useState([]);
@@ -148,7 +149,7 @@ function ManageCollections(props) {
   };
 
   const handleAmbitClick = (event, ambit) => {
-    const toggle = ConfigService.toggleCollectionAmbit(
+    ConfigService.toggleCollectionAmbit(
       event.currentTarget.id,
       ambit
     ).then((response) => {
@@ -252,7 +253,7 @@ function ManageCollections(props) {
   }, [collectionsList]);
 
   const handleDeleteClick = () => {
-    const deleteColl = ConfigService.deleteCollection(value, cascade).then(
+    ConfigService.deleteCollection(value, cascade).then(
       (response) => {
         if (response.data === true) {
           toast.success(
@@ -543,7 +544,7 @@ function ManageCollections(props) {
                   <Button
                     variant="contained"
                     color="success"
-                    onClick={() => console.log("Exportar")}
+                    onClick={() => FeatureForImplement()}
                   >
                     <FormattedMessage id="app.button.export_module"></FormattedMessage>
                   </Button>

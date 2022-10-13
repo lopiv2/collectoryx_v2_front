@@ -1,6 +1,3 @@
-import * as React from "react";
-import { FormattedMessage } from "react-intl";
-import Flags from "country-flag-icons/react/3x2";
 
 const LicenseTypes = [
   {

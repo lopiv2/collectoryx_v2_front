@@ -1,10 +1,9 @@
-import React, { useState, useEffect, lazy } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import {
   Grid,
   Box,
-  Avatar,
   TextField,
   Typography,
   MenuItem,
@@ -13,9 +12,8 @@ import {
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import ConfigService from "../../app/api/config.api";
-import { isUndefined, mapValues } from "lodash";
+import { isUndefined } from "lodash";
 import { toast } from "react-toastify";
-import NoImage from "../../images/no-photo-available.png";
 import { Popover } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -24,7 +22,6 @@ import BasicDateTimePicker from "../../components/BasicDateTimePicker";
 import { IconButton } from "@mui/material";
 import { format } from "date-fns";
 import { SetLocaleDateTime } from "../../utils/generic";
-import { CN } from "country-flag-icons/react/3x2";
 
 const EditEventPopover = (props) => {
   const {
@@ -34,7 +31,6 @@ const EditEventPopover = (props) => {
     setAnchorEl,
     onClose,
     event,
-    setEventClicked,
     setConfirmOpen,
     setOpen,
   } = props;

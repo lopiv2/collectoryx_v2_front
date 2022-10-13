@@ -4,8 +4,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { FormattedMessage, useIntl } from "react-intl";
-import { Grid, Box, Avatar, TextField, Typography } from "@mui/material";
+import { FormattedMessage } from "react-intl";
+import { Grid, Box, TextField, Typography } from "@mui/material";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import ConfigService from "../../app/api/config.api";
@@ -13,15 +13,15 @@ import { isUndefined } from "lodash";
 import { toast } from "react-toastify";
 
 const EditApiDialog = (props) => {
-  const { items, open, setOpen, onConfirm, setItem, newItem, setNewItem } =
+  const { items, open, setOpen, setNewItem } =
     props;
   const [images, setImages] = useState([]);
-  const intl = useIntl();
+  //const intl = useIntl();
   const [updatedValues, setUpdatedValues] = useState([]);
 
   useEffect(() => {
     if (open === true) {
-      const imagesList = ConfigService.getLocalImages().then((response) => {
+      ConfigService.getLocalImages().then((response) => {
         var filteredResponse = [];
         filteredResponse = response.data.filter(
           (image) => !image.path.includes("http")
@@ -31,17 +31,17 @@ const EditApiDialog = (props) => {
     }
   }, [open]);
 
-  const avatarStyleClicked = {
+  /*const avatarStyleClicked = {
     border: "2px solid green",
     width: 80,
     height: 80,
-  };
+  };*/
 
-  const avatarStyleHover = {
+  /*const avatarStyleHover = {
     cursor: "pointer",
     width: 80,
     height: 80,
-  };
+  };*/
 
   const newSerieSchema = Yup.object().shape({
     name: Yup.string().required(

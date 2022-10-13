@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Box } from "@mui/material";
@@ -9,7 +9,6 @@ import Tab from "@mui/material/Tab";
 import { TabContext } from "@material-ui/lab";
 import { TabList } from "@material-ui/lab";
 import { TabPanel } from "@material-ui/lab";
-import { ColorPicker, createColor } from "material-ui-color";
 import * as Yup from "yup";
 import CreateThemeTab from "../components/CreateThemeTab";
 import SelectThemeTab from "../components/SelectThemeTab";
@@ -19,9 +18,9 @@ function ConfigInterface() {
   const intl = useIntl();
   const [value, setValue] = useState("1");
 
-  const handleChangeColor = (value, set) => {
+  /*const handleChangeColor = (value, set) => {
     set(value);
-  };
+  };*/
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

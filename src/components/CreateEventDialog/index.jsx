@@ -4,22 +4,21 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { Grid, Box, TextField, Typography, Checkbox } from "@mui/material";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import ConfigService from "../../app/api/config.api";
-import { isUndefined } from "lodash";
 import { toast } from "react-toastify";
-import { format, isValid, parse } from "date-fns";
+import { isValid } from "date-fns";
 import { MenuItem } from "@mui/material";
 import BasicDateTimePicker from "../../components/BasicDateTimePicker";
 import { AppContext } from "../../components/AppContext";
 
 const CreateEventDialog = (props) => {
-  const { items, open, setOpen, onConfirm, setEventsList, dateClickedEvent, reloadCreated, setReloadCreated } =
+  const { open, setOpen, dateClickedEvent, setReloadCreated } =
     props;
-  const intl = useIntl();
+  //const intl = useIntl();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [allDay, setAllDay] = useState(false);

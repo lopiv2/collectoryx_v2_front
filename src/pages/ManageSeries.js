@@ -9,7 +9,6 @@ import "../styles/Dashboard.css";
 import NoImage from "../images/no-photo-available.png";
 import MaterialTable from "@material-table/core";
 import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { TextField, MenuItem } from "@mui/material";
 import { useIntl } from "react-intl";
@@ -27,7 +26,7 @@ function ManageSeries(props) {
   const [collectionList, setCollectionList] = useState([]);
   const [serieEdited, setSerieEdited] = useState();
   const [newSerieEdited, setNewSerieEdited] = useState();
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState("");
   const [preview, setPreview] = useState();
   const [collection, setCollection] = useState();
@@ -38,7 +37,7 @@ function ManageSeries(props) {
   const { userData, setUserData } = React.useContext(AppContext);
 
   const handleDeleteClick = () => {
-    const deleteItem = ConfigService.deleteSerie(value).then((response) => {
+    ConfigService.deleteSerie(value).then((response) => {
       if (response.data === true) {
         toast.success(
           <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
@@ -57,7 +56,7 @@ function ManageSeries(props) {
 
   useEffect(() => {
     if (!isUndefined(newSerieEdited)) {
-      var index = collectionSeriesList.findIndex((x) => x.id == newSerieEdited.id);
+      var index = collectionSeriesList.findIndex((x) => x.id === newSerieEdited.id);
       let newItems = [...collectionSeriesList];
       newItems[index] = newSerieEdited;
       setCollectionSeriesList(newItems);
@@ -66,16 +65,21 @@ function ManageSeries(props) {
   }, [newSerieEdited]);
 
   useEffect(() => {
-    const collectionSeries = ConfigService.getAllSeries(userData.id)
+    ConfigService.getAllSeries(userData.id)
       .then((response) => {
         setCollectionSeriesList(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    const collections = ConfigService.getCollectionLists(userData.id)
+      const query = {
+        id: userData.id,
+        orderField: "name",
+        orderDirection: "up",
+      };
+    ConfigService.getCollectionLists(query)
       .then((response) => {
-        setCollectionList(response.data);
+        setCollectionList(response.data.content);
       })
       .catch((err) => {
         console.log(err);
@@ -285,7 +289,7 @@ function ManageSeries(props) {
                       }
                       onChange={handleChangeCollection}
                     >
-                      {collectionList?.map((option) => {
+                      {collectionList.map((option) => {
                         return (
                           <MenuItem key={option.id} value={option.id}>
                             {option.name}

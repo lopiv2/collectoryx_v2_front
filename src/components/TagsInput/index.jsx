@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FormattedMessage } from 'react-intl';
 import styles from "../../styles/Collections.css";
 import { Box } from '@material-ui/core';
 import {Grid} from "@material-ui/core";

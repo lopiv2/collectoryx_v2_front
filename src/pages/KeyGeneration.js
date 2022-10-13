@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, TextField, Button } from "@mui/material";
+import { Box, Grid, Button } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import AdminService from "../app/api/admin.api";
 import MaterialTable from "@material-table/core";
@@ -14,7 +14,7 @@ function KeyGeneration(props) {
   const [licensesList, setLicensesList] = useState([]);
 
   const key = (email) => {
-    const licenses = AdminService.setKeyFileByEmail(email).then((response) => {
+    AdminService.setKeyFileByEmail(email).then((response) => {
       //console.log(response.data);
       var index = licensesList.findIndex(x => x.email === email);
       let newItems = [...licensesList];
@@ -26,7 +26,7 @@ function KeyGeneration(props) {
     });
   };
   useEffect(() => {
-    const licenses = AdminService.getAllLicenses()
+    AdminService.getAllLicenses()
       .then((response) => {
         setLicensesList(response.data);
         //console.log(response.data);

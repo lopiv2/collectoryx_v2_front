@@ -1,15 +1,13 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthService from "../../app/api/auth.api";
@@ -17,11 +15,10 @@ import { AppContext } from "../../components/AppContext";
 import { NavLink, useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
-import { Context } from "../../components/Wrapper";
+//import { Context } from "../../components/Wrapper";
 import { FormattedMessage, useIntl } from 'react-intl';
 import LanguageSwitcher from '../../components/LanguageSelector';
 import Logo from "../../assets/Collectoryx_Logo.png";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function Copyright(props) {
 
@@ -48,9 +45,9 @@ const images = importAll(require.context('../../../public/images/home/', false, 
 const theme = createTheme();
 
 export default function SignInSide() {
-  const { userName, setUserName, isLogged, setIsLogged, role, setRole } = useContext(AppContext);
+  const { setUserName, setIsLogged, setRole } = useContext(AppContext);
   const navigate = useNavigate();
-  const context = useContext(Context);
+  //const context = useContext(Context);
   const selectedImage = images[Math.floor(Math.random() * images.length)];
   const intl = useIntl();
 

@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardActions,
   Typography,
   Avatar,
 } from "@mui/material";
@@ -14,7 +13,6 @@ import ConfigService from "../../app/api/config.api";
 import React, { useState, useEffect } from "react";
 import { AppContext } from "../AppContext";
 import { GetCurrencySymbolLocale } from "../../utils/generic";
-import NoImage from "../../images/no-photo-available.png";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -30,7 +28,7 @@ export default function MostValuableItem() {
   const currency = GetCurrencySymbolLocale();
 
   useEffect(() => {
-    const item = ConfigService.getMostValuableItem(userData.id)
+    ConfigService.getMostValuableItem(userData.id)
       .then((response) => {
         setItemMax(response.data);
       })

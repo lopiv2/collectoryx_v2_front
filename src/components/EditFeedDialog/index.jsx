@@ -1,20 +1,20 @@
-import React, { useState, useEffect, lazy } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { FormattedMessage, useIntl } from "react-intl";
-import { Grid, Box, Avatar, TextField, Typography, MenuItem, Tooltip } from "@mui/material";
+import { FormattedMessage } from "react-intl";
+import { Grid, Box, TextField, Typography } from "@mui/material";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import ConfigService from "../../app/api/config.api";
-import { isUndefined, mapValues } from "lodash";
+import { isUndefined } from "lodash";
 import { toast } from "react-toastify";
 import NoImage from "../../images/no-photo-available.png";
 
 const EditFeedDialog = (props) => {
-  const { items, open, setOpen, onConfirm, setItem, collectionList, newItem, setNewItem } =
+  const { items, open, setOpen, setNewItem } =
     props;
 
   const newSerieSchema = Yup.object().shape({

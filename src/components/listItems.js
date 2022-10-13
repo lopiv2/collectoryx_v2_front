@@ -4,19 +4,16 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import { ListItemText, ListItem, ListItemAvatar } from "@material-ui/core";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import CollectionsIcon from "@mui/icons-material/Collections";
-import BarChartIcon from "@mui/icons-material/BarChart";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RssFeedIcon from "@mui/icons-material/RssFeed";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ScreenshotMonitorIcon from "@mui/icons-material/ScreenshotMonitor";
 import EventNoteIcon from "@mui/icons-material/EventNote";
-import KeyIcon from "@mui/icons-material/Key";
 import PreviewIcon from "@mui/icons-material/Preview";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import TuneIcon from "@mui/icons-material/Tune";
 import BallotIcon from "@mui/icons-material/Ballot";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedIcon from "@mui/icons-material/Feed";
 import Collapse from "@mui/material/Collapse";
@@ -28,7 +25,7 @@ import { FormattedMessage } from "react-intl";
 import { NavLink } from "react-router-dom";
 import ConfigService from "../app/api/config.api";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Box, Grid } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import { ThemeProvider, createTheme } from "@material-ui/core";
 import { AppContext } from "./AppContext";
@@ -66,7 +63,7 @@ export default function MainListItems(props) {
   });
 
   useEffect(() => {
-    const feeds = ConfigService.getAllUserFeeds(userData.id)
+    ConfigService.getAllUserFeeds(userData.id)
       .then((response) => {
         //console.log(response.data)
         setFeedsList(response.data);
@@ -94,9 +91,9 @@ export default function MainListItems(props) {
     setOpenCol(!openCol);
   };
 
-  const handleClickMarket = () => {
+  /*const handleClickMarket = () => {
     setOpenMarket(!openMarket);
-  };
+  };*/
 
   const handleClickFeed = () => {
     setOpenFeeds(!openFeeds);

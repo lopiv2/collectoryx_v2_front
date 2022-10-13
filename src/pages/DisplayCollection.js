@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { Pagination } from "@mui/material";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 import {
@@ -264,7 +264,7 @@ function DisplayCollection(props) {
   };
 
   useEffect(() => {
-    if (toggleView == "grid") {
+    if (toggleView === "grid") {
       fetchData(page, rowsPerPage, "name");
       setOrderDirection("down");
       getOwnedItems();
@@ -290,7 +290,7 @@ function DisplayCollection(props) {
   };
 
   const handleOwnClick = (event, own, wanted) => {
-    const toggle = ConfigService.toggleItemOwn(
+    ConfigService.toggleItemOwn(
       event.currentTarget.id,
       own,
       wanted
@@ -343,7 +343,7 @@ function DisplayCollection(props) {
   };
 
   const checkImageSerie = (item) => {
-    console.log(item);
+    //console.log(item);
     if (item.logo) {
       if (!item.logo.path.includes("http")) {
         return require("../../public/images/" + item.logo.path);

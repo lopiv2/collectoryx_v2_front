@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect} from "react";
 import { Card, CardContent, Typography } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
 import { FormattedMessage, FormattedNumber } from "react-intl";
@@ -26,7 +26,7 @@ export default function CollectionsSpentCard() {
       var userData = JSON.parse(user);
     }
     let money = 0;
-    const collections = ConfigService.countCollectionsMoney(userData.id)
+    ConfigService.countCollectionsMoney(userData.id)
       .then((response) => {
         if (response.data.length > 0) {
           response.data.map((item) => {

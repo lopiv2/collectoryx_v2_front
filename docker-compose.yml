@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  front:
+    #build: .
+    image: collectoryx-front
+    ports:
+      - "8082:8080"
+    depends_on:
+      - api
+

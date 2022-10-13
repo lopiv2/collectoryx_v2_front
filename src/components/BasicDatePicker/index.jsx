@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import esLocale from 'date-fns/locale/es';
 import enLocale from 'date-fns/locale/en-US';
 import TextField from '@mui/material/TextField';
@@ -16,7 +16,7 @@ const localeMap = {
 export default function BasicDatePicker(props) {
   const [value, setValue] = React.useState(null);
   const [locale, setLocale] = React.useState('es');
-  const c = CurrencyChecker();
+  //const c = CurrencyChecker();
 
   const selectLocale = (newLocale) => {
     setLocale(newLocale);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,13 +12,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FormattedMessage, useIntl } from "react-intl";
-import { Grid, Box, TextField, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from '@mui/icons-material/Close';
-import { Tooltip } from "@mui/material";
 
 const FeaturesDialog = (props) => {
-  const { title, open, setOpen, onConfirm, setImageSelected, columns, rows } = props;
+  const { title, open, setOpen, rows } = props;
   const intl = useIntl();
 
 

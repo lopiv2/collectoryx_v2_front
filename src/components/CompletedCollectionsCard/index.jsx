@@ -1,4 +1,4 @@
-import { Card, CardContent, CardActions, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import Grid from "@mui/material/Grid";

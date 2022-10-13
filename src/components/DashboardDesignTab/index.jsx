@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage} from "react-intl";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
@@ -15,13 +15,12 @@ import { AppContext } from "../AppContext";
 
 
 function DashboardDesignTab() {
-  const { userData, setUserData, userConfig, setUserConfig } =
+  const { userData, userConfig, setUserConfig } =
     React.useContext(AppContext);
   const [expensivePanel, setExpensivePanel] = useState(userConfig.expensivePanel);
   const [wishlistPanel, setWishlistPanel] = useState(userConfig.wishlistPanel);
   const [recentPurchasePanel, setRecentPurchasePanel] = useState(userConfig.recentPurchasePanel);
   const [completedCollectionsPanel, setCompletedCollectionsPanel] = useState(userConfig.completedCollectionsPanel);
-  const intl = useIntl();
 
   const handleChangeExpensiveItem = (event) => {
     setExpensivePanel(event.target.checked);
@@ -40,7 +39,7 @@ function DashboardDesignTab() {
   };
 
   const submitChanges = () => {
-    const save = ConfigService.saveConfigDashboard(
+    ConfigService.saveConfigDashboard(
       userData.id,
       expensivePanel,
       wishlistPanel,

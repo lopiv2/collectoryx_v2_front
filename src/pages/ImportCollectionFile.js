@@ -8,11 +8,9 @@ import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
-import NoImage from "../images/no-photo-available.png";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import OptionsService from "../components/DropDownOptions";
-import { Tooltip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AppContext } from "../components/AppContext";
 
@@ -20,11 +18,11 @@ function ImportCollectionFile() {
   const [selectedFile, setSelectedFile] = useState("");
   const [isLoading, setLoading] = useState(true);
   const [records, setRecords] = useState([]); //Trae los campos del Header del CSV de la API
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const intl = useIntl();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
-  const [finished, setFinished] = React.useState(false); //Acabada la importacion o no
+  //const [finished, setFinished] = React.useState(false); //Acabada la importacion o no
   const [fields, setFields] = useState([]); //Campos por defecto en coleccion
   const [mappings, setMappings] = useState([]); //Mapeos
   const effectTriggeredRef = React.useRef(false);
@@ -35,7 +33,7 @@ function ImportCollectionFile() {
   const { userData, setUserData } = React.useContext(AppContext);
 
   useEffect(() => {
-    const collections = ConfigService.getCollectionLists(userData.id)
+    ConfigService.getCollectionLists(userData.id)
       .then((response) => {
         setCollectionList(response.data);
       })
@@ -64,19 +62,19 @@ function ImportCollectionFile() {
   };
 
   function handleFileUpload() {
-    const file = ConfigService.putFile(selectedFile).then((response) => {
+    ConfigService.putFile(selectedFile).then((response) => {
       setLoading(false);
       setRecords(response.data);
     });
   }
 
   function parseFile() {
-    var res=0;
+    var res = 0;
     if (!parseTriggeredRef.current) {
-      const file = ConfigService.parseFile(mappings)
+      ConfigService.parseFile(mappings)
         .then((response) => {
           //console.log(response.data)
-          res=response.data
+          res = response.data
           parseTriggeredRef.current = true;
           toast.success(
             <FormattedMessage id="app.collection.created"></FormattedMessage>,
@@ -216,8 +214,7 @@ function ImportCollectionFile() {
                   pl={2}
                   style={{ border: "1px solid grey" }}
                 >
-                  Conecte cada campo de la derecha con el de la izda para
-                  importar correctamente cada columna
+                  <FormattedMessage id="app.collection.add_collection_import_instructions"></FormattedMessage>
                 </Grid>
                 <Grid item xs={4} pb={2} pt={2} pl={10}>
                   <Typography style={{ fontWeight: 600 }}>

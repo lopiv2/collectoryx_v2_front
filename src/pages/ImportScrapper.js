@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect} from "react";
 import { Typography } from "@mui/material";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom";
@@ -8,7 +8,6 @@ import { Grid, Card, CardContent, Avatar } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
-import NoImage from "../images/no-photo-available.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
@@ -18,7 +17,7 @@ import { FilterResultsByApiProvider } from "../utils/generic";
 
 function ImportScrapper() {
   const navigate = useNavigate();
-  const intl = useIntl();
+  //const intl = useIntl();
   const [apisList, setApisList] = useState([]);
   const { userData, setUserData } = React.useContext(AppContext);
   const [selectedApi, setSelectedApi] = useState();
@@ -32,7 +31,7 @@ function ImportScrapper() {
   const location = useLocation();
 
   useEffect(() => {
-    const apiList = ConfigService.getAllApis(userData.id)
+    ConfigService.getAllApis(userData.id)
       .then((response) => {
         setApisList(response.data);
       })
@@ -47,7 +46,7 @@ function ImportScrapper() {
 
   const importSelectedItem = () => {
     //console.log(selectedItem)
-    const item = ConfigService.importItemFromWeb(selectedItem)
+    ConfigService.importItemFromWeb(selectedItem)
       .then((response) => {
         if(response.status===200){
           toast.success(
@@ -66,7 +65,7 @@ function ImportScrapper() {
   const searchWebClick = () => {
     if(selectedApi.apiLink!==""){
       setStartSearch(true);
-      const collectionSeries = ConfigService.getItemFromWeb(
+      ConfigService.getItemFromWeb(
         searchString,
         selectedApi
       ).then((response) => {

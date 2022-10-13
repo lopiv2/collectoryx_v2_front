@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { makeStyles } from '@material-ui/styles';
 import ListItem from '@material-ui/core/ListItem';
-import { TextField, Select, MenuItem, Typography } from '@mui/material';
+import { TextField, MenuItem } from '@mui/material';
 import OptionsService from '../DropDownOptions';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Button } from '@material-ui/core';
