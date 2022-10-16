@@ -25,7 +25,6 @@ export default function RecentOrders() {
   useEffect(() => {
     const query = {
       id: userData.id,
-      size: 5,
       orderField: "id",
       search: "",
       orderDirection: "up",
@@ -34,7 +33,6 @@ export default function RecentOrders() {
       .then((response) => {
         setCollectionItems(response.data.content)
       })
-
   }, [])
 
 

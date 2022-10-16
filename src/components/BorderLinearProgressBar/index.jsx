@@ -20,13 +20,14 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 export default function NumberLinearProgress(props) {
+
   return (
     <Box display="flex" alignItems="center">
       <Box width="100%" mr={1}>
         <BorderLinearProgress variant="determinate" value={props.value} />
       </Box>
       <Typography variant="body2" color="textSecondary">
-        {props.value + "%"}
+        {Number(props.value).toFixed(2) + "%"}
       </Typography>
     </Box>
   );

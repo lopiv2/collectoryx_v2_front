@@ -21,7 +21,7 @@ export default function TotalItemsCard() {
   const { userData, setUserData } = React.useContext(AppContext);
 
   useEffect(() => {
-    const collections = ConfigService.countCollectionsItems(userData.id)
+    ConfigService.countCollectionsItems(userData.id)
       .then((response) => {
         setCollectionTotalCount(response);
       })

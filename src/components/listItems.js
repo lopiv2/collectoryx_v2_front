@@ -63,7 +63,8 @@ export default function MainListItems(props) {
   });
 
   useEffect(() => {
-    ConfigService.getAllUserFeeds(userData.id)
+    if(isLoading!==false){
+      ConfigService.getAllUserFeeds(userData.id)
       .then((response) => {
         //console.log(response.data)
         setFeedsList(response.data);
@@ -72,7 +73,8 @@ export default function MainListItems(props) {
       .catch((err) => {
         console.log(err);
       });
-  }, [feedsList]);
+    } 
+  }, [feedsList,isLoading]);
 
   useEffect(() => {
     feedsList.map((feed) => {

@@ -33,7 +33,15 @@ export default function MostValuableItem() {
         setItemMax(response.data);
       })
       .catch((err) => {
-        console.log(err);
+        const nullItem={
+          name: <FormattedMessage id="app.most_valuable_item_collection_none"></FormattedMessage>,
+          price: 0,
+          image:null,
+          collection: {
+            name: <FormattedMessage id="app.most_valuable_item_collection_none"></FormattedMessage>,
+          }
+        }
+        setItemMax(nullItem);
       });
   }, []);
 

@@ -9,16 +9,17 @@ import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import { toast } from "react-toastify";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import OptionsService from "../components/DropDownOptions";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AppContext } from "../components/AppContext";
+import { Navigate } from "react-router-dom";
 
 function ImportCollectionFile() {
   const [selectedFile, setSelectedFile] = useState("");
   const [isLoading, setLoading] = useState(true);
   const [records, setRecords] = useState([]); //Trae los campos del Header del CSV de la API
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const intl = useIntl();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
@@ -33,9 +34,15 @@ function ImportCollectionFile() {
   const { userData, setUserData } = React.useContext(AppContext);
 
   useEffect(() => {
-    ConfigService.getCollectionLists(userData.id)
+    const query = {
+      id: userData.id,
+      orderField: "name",
+      orderDirection: "up",
+    };
+    ConfigService.getCollectionLists(query)
       .then((response) => {
-        setCollectionList(response.data);
+        setCollection(response.data.content[0].id);
+        setCollectionList(response.data.content);
       })
       .catch((err) => {
         console.log(err);
@@ -71,19 +78,21 @@ function ImportCollectionFile() {
   function parseFile() {
     var res = 0;
     if (!parseTriggeredRef.current) {
-      ConfigService.parseFile(mappings)
-        .then((response) => {
-          //console.log(response.data)
-          res = response.data
-          parseTriggeredRef.current = true;
-          toast.success(
-            <FormattedMessage id="app.collection.created"></FormattedMessage>,
-            { theme: "colored" }
-          );
-          setRecordsImported(res)
-        });
+      ConfigService.parseFile(mappings).then((response) => {
+        //console.log(response.data)
+        res = response.data;
+        parseTriggeredRef.current = true;
+        toast.success(
+          <FormattedMessage id="app.collection.created"></FormattedMessage>,
+          { theme: "colored" }
+        );
+        setRecordsImported(res);
+        setTimeout(() => {
+          navigate(-1);
+        }, 3000);      
+      });
     }
-  };
+  }
 
   useEffect(() => {
     if (
@@ -190,8 +199,7 @@ function ImportCollectionFile() {
                     select
                     size="small"
                     sx={{ minWidth: 300 }}
-                    defaultValue=""
-                    value={collection ?? collectionList[0].id}
+                    value={collection ?? collection}
                     label={
                       <FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>
                     }
@@ -309,8 +317,8 @@ function ImportCollectionFile() {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
-        // find the first step that has been completed
-        steps.findIndex((step, i) => !(i in completed))
+          // find the first step that has been completed
+          steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
@@ -365,22 +373,22 @@ function ImportCollectionFile() {
         {allStepsCompleted() ? (
           <Box>
             {parseFile()}
-            {parseTriggeredRef === false
-              ? (<CircularProgress />)
-              : (
-                <Box>
-                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                    <FormattedMessage
-                      id="app.collection.add_collection_import_records_numbers"
-                      values={{
-                        records: recordsImported ?? recordsImported,
-                      }}
-                    ></FormattedMessage>
-                    <Box sx={{ flex: "1 1 auto" }} />
-                    <Button onClick={handleReset}>Reset</Button>
-                  </Box>
+            {parseTriggeredRef === false ? (
+              <CircularProgress />
+            ) : (
+              <Box>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <FormattedMessage
+                    id="app.collection.add_collection_import_records_numbers"
+                    values={{
+                      records: recordsImported ?? recordsImported,
+                    }}
+                  ></FormattedMessage>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button onClick={handleReset}>Reset</Button>
                 </Box>
-              )}
+              </Box>
+            )}
           </Box>
         ) : (
           <Box>
