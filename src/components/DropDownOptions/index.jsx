@@ -126,7 +126,7 @@ const fieldTypes = [
 
 const countriesOptions = [
   {
-    value: "en-EN",
+    value: "en-US",
     language: "English",
     flag: <Flags.US style={{ width: 20, height: 20 }} title="United States" />,
     currency: "USD",

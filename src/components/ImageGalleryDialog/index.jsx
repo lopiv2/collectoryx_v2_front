@@ -79,7 +79,7 @@ const ImageGalleryDialog = (props) => {
                             ? avatarStyleClicked
                             : avatarStyleHover
                         }
-                        src={require("../../../public/images/" + i)} // use normal <img> attributes as props
+                        src={"/images/upload/" + i} // use normal <img> attributes as props
                         width="100%"
                         onClick={(e) => {
                           setImageClicked(i);

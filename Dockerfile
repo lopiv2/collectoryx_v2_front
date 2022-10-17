@@ -13,7 +13,7 @@ RUN yarn install
 # add app
 COPY . ./
 
-RUN yarn build
+# RUN yarn build
 
 # start app
 CMD ["yarn", "start"]

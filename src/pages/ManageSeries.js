@@ -208,7 +208,7 @@ function ManageSeries(props) {
         ) : (
           <Avatar
             variant="rounded"
-            src={require("../../public/images/" + item.logo.path)}
+            src={"/images/uploads/" + item.logo.path}
             sx={{ width: 100, height: 35 }}
           ></Avatar>
         ),

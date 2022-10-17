@@ -333,25 +333,25 @@ function DisplayCollection(props) {
     if (item.image) {
       if (item.image.path) {
         if (!item.image.path.includes("http")) {
-          return require("../../public/images/" + item.image.path);
+          return "/images/uploads/" + item.image.path;
         } else {
           return item.image.path;
         }
       }
     }
-    return require("../images/no-photo-available.png");
+    return "/images/no-photo-available.png";
   };
 
   const checkImageSerie = (item) => {
     //console.log(item);
     if (item.logo) {
       if (!item.logo.path.includes("http")) {
-        return require("../../public/images/" + item.logo.path);
+        return "/images/uploads/" + item.logo.path;
       } else {
         return item.logo.path;
       }
     }
-    return require("../images/no-photo-available.png");
+    return "/images/no-photo-available.png";
   };
 
   const handleOpen = () => {

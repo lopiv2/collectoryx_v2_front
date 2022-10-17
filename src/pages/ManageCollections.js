@@ -473,7 +473,7 @@ function ManageCollections(props) {
                     <CardMedia
                       component="img"
                       width="100%"
-                      image={require("../../public/images/" + item.logo.path)}
+                      image={"images/uploads/" + item.logo.path}
                       alt={item.name}
                       className="card-collection"
                       onClick={() => {
@@ -564,7 +564,7 @@ function ManageCollections(props) {
               height={350}
               src={
                 imageClicked !== ""
-                  ? require("../../public/images/" + imageClicked)
+                  ? "/images/uploads" + imageClicked
                   : null
               }
               width="100%"
