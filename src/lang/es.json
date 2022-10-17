@@ -157,6 +157,7 @@
   "app.collection.template_default_fields": "Campos por defecto en la colección",
   "app.collection.created": "Colección creada correctamente",
   "app.collection.serie-created": "Serie creada correctamente",
+  "app.collection.serie-edited": "Serie editada correctamente",
   "app.collection.item-created": "Elemento creado correctamente",
   "app.collection.item-edited": "Elemento editado correctamente",
   "app.collection.item-deleted": "Elemento borrado correctamente",

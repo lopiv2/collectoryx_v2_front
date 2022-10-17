@@ -157,6 +157,7 @@
   "app.collection.template_default_fields": "Default fields in the collection",
   "app.collection.created": "Collection created sucesfully",
   "app.collection.serie-created": "Serie created sucesfully",
+  "app.collection.serie-edited": "Serie edited sucesfully",
   "app.collection.item-created": "Item created sucesfully",
   "app.collection.item-edited": "Item edited sucesfully",
   "app.collection.item-deleted": "Item deleted sucesfully",

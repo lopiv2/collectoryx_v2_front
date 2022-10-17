@@ -93,7 +93,7 @@ const EditSerieDialog = (props) => {
     ConfigService.updateSerie(values, removeHash()).then((response) => {
       if (response.status === 200) {
         toast.success(
-          <FormattedMessage id="app.config.general.api-edited"></FormattedMessage>,
+          <FormattedMessage id="app.collection.serie-edited"></FormattedMessage>,
           { theme: "colored" }
         );
         const data = {

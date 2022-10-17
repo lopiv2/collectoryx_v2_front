@@ -197,7 +197,7 @@ function ManageSeries(props) {
     let cols = {
       id: item.id,
       name: item.name,
-      collection: item.collection.collection,
+      collection: item ? item.collection.collection : null,
       logo:
         item.logo === null ? (
           <Avatar
