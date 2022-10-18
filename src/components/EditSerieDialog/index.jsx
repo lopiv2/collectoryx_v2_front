@@ -27,8 +27,7 @@ const EditSerieDialog = (props) => {
 
   const fetchImage = async (image) => {
     try {
-      const response = await import("../../../public/images/" + image) // change relative path to suit your needs
-      setPreview(response.default)
+      setPreview("/images/uploads/" + image)
     } catch (err) {
       console.log(err)
     } finally {
@@ -50,14 +49,17 @@ const EditSerieDialog = (props) => {
 
   useEffect(() => {
     if (!isUndefined(items)) {
-      fetchImage(items.logo.path)
+      if(items.logo!==null){
+        fetchImage(items.logo.path)
+      }
+      return NoImage;
     };
   }, [items])
 
   const handleImageClick = () => {
     fetchImage(img)
     setImgGallerySelected(true);
-    setPreview(img)
+    //setPreview(img)
   };
 
   /*const avatarStyleClicked = {
@@ -83,14 +85,14 @@ const EditSerieDialog = (props) => {
   });
 
   const removeHash = () => {
-    const prev = preview.replace('/static/media/', '')
+    const prev = preview.replace('/images/uploads/', '')
     const ext = preview.slice(preview.length - 4, preview.length)
     const ca = prev.slice(prev.indexOf("."), prev.indexOf(".") + 35)
     return prev.replace(ca, "") + ext;
   }
 
   const submitForm = (values) => {
-    ConfigService.updateSerie(values, removeHash()).then((response) => {
+    ConfigService.updateSerie(values, img).then((response) => {
       if (response.status === 200) {
         toast.success(
           <FormattedMessage id="app.collection.serie-edited"></FormattedMessage>,

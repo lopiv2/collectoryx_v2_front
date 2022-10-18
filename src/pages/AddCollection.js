@@ -119,9 +119,7 @@ function AddCollection() {
           userData.id
         ).then((response) => {
           if (response.status === 200 && resp.status === 200) {
-            setTimeout(() => {
-              navigate(-1);
-            }, 3000);
+            navigate(-1);
             toast.success(
               <FormattedMessage id="app.collection.created"></FormattedMessage>,
               { theme: "colored" }

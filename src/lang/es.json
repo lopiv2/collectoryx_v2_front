@@ -251,6 +251,7 @@
   "app.form.too_short": "Demasiado corto",
   "app.form.too_long": "Demasiado largo",
   "app.tooltip.click_image": "Click en imagen para ampliar",
+  "app.tooltip.click_open": "Click para abrir coleccion",
   "app.tooltip.click_own": "Click para coleccionar o no",
   "app.tooltip.click_wish": "Click para añadir a deseados",
   "app.tooltip.click_public": "Click para hacer pública o no",

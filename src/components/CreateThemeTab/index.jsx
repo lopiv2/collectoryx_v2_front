@@ -35,13 +35,11 @@ function CreateThemeTab() {
     //console.log(values);
     ConfigService.createTheme(userData.id, values).then((response) => {
       if (response.status === 200) {
+        navigate(0);
         toast.success(
           <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
           { theme: "colored" }
         );
-        setTimeout(() => {
-          navigate(0);
-        }, 3000);
       }
     });
   };

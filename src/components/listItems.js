@@ -160,7 +160,7 @@ export default function MainListItems(props) {
                 ></FormattedMessage>
               </ListItemButton>
             </NavLink>
-            <NavLink
+            {/*<NavLink
               className="nav-link"
               to="/collections/manage"
               style={{
@@ -176,7 +176,7 @@ export default function MainListItems(props) {
                 </ListItemIcon>
                 <FormattedMessage id="app.sidemenu.collections.admin"></FormattedMessage>
               </ListItemButton>
-            </NavLink>
+            </NavLink>*/}
             <NavLink
               className="nav-link"
               to="/collections/manage-series"

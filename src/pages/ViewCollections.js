@@ -27,6 +27,12 @@ import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
 import { NavLink } from "react-router-dom";
 import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { AppContext } from "../components/AppContext";
+import AddIcon from "@mui/icons-material/Add";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { toast } from "react-toastify";
+import { FeatureForImplement } from "../utils/generic";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 function ViewCollection(props) {
   const [collectionsList, setCollectionsList] = useState([]);
@@ -42,6 +48,10 @@ function ViewCollection(props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [totalPages, setTotalPages] = useState(0);
   const [orderDirection, setOrderDirection] = useState("down");
+  const [openNew, setOpenNew] = useState(false);
+  const [value, setValue] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [cascade, setCascade] = useState(false);
 
   const toggleOrderDirection = () => {
     if (orderDirection.includes("down")) {
@@ -57,7 +67,7 @@ function ViewCollection(props) {
   }, [orderDirection]);
 
   const handleChangeOrderDirection = () => {
-    toggleOrderDirection(); 
+    toggleOrderDirection();
   };
 
   const handleChange = (e, p) => {
@@ -87,6 +97,20 @@ function ViewCollection(props) {
     }
   };
 
+  const handleAmbitClick = (event, ambit) => {
+    ConfigService.toggleCollectionAmbit(
+      event.currentTarget.id,
+      ambit
+    ).then((response) => {
+      var index = collectionsList.findIndex(
+        (collectionsList) => collectionsList.id === response.data.id
+      );
+      let newItems = [...collectionsList];
+      newItems[index].ambit = response.data.ambit;
+      setCollectionsList(newItems);
+    });
+  };
+
   const fetchData = async (page, rowsPerPage, orderField, search) => {
     const query = {
       id: userData.id,
@@ -112,8 +136,8 @@ function ViewCollection(props) {
   };
 
   useEffect(() => {
-      fetchData(page, rowsPerPage, "name");
-      setOrderDirection("down");
+    fetchData(page, rowsPerPage, "name");
+    setOrderDirection("down");
   }, []);
 
   const cardStyleHover = {
@@ -122,6 +146,26 @@ function ViewCollection(props) {
     minWidth: 250,
     maxWidth: 250,
     boxShadow: 15,
+  };
+
+  const handleDeleteClick = () => {
+    ConfigService.deleteCollection(value, cascade).then(
+      (response) => {
+        if (response.data === true) {
+          toast.success(
+            <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
+            { theme: "colored" }
+          );
+          var index = collectionsList.findIndex(
+            (collectionsList) => collectionsList.id === value
+          );
+          if (index > -1) {
+            collectionsList.splice(index, 1);
+            setCollectionsList([...collectionsList]);
+          }
+        }
+      }
+    );
   };
 
   return (
@@ -146,6 +190,28 @@ function ViewCollection(props) {
               {" (" + collectionsList.length + "/3)"}
             </Typography>
           )*/}
+        </Grid>
+        <Grid container>
+          <Grid item mt={"1px"} mb={"10px"}>
+            <Tooltip
+              title={intl.formatMessage({
+                id: "app.tooltip.add_new_collection",
+              })}
+              placement="top"
+              arrow
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  setOpenNew(true);
+                }}
+              /*onClick={() => navigate("/collections/add")}*/
+              >
+                <AddIcon></AddIcon>
+              </Button>
+            </Tooltip>
+          </Grid>
         </Grid>
         <Grid container>
           <Grid item xs={4} pt={1}>
@@ -247,11 +313,11 @@ function ViewCollection(props) {
                   cardHover === item
                     ? cardStyleHover
                     : {
-                        height: 400,
-                        minWidth: 250,
-                        maxWidth: 250,
-                        boxShadow: 3,
-                      }
+                      height: 400,
+                      minWidth: 250,
+                      maxWidth: 250,
+                      boxShadow: 3,
+                    }
                 }
                 ml={200}
                 onMouseOver={() => {
@@ -261,59 +327,133 @@ function ViewCollection(props) {
                   setCardHover(null);
                 }}
               >
-                <CardContent>
-                  {item.logo ? null : (
-                    <Typography
-                      align="center"
-                      sx={{ fontSize: 20 }}
-                      color="text.primary"
-                      gutterBottom
+                <Box ml={23.1} mb={-10}>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.tooltip.click_public",
+                    })}
+                    placement="right"
+                    arrow
+                  >
+                    <IconButton
+                      id={item.id}
+                      color="primary"
+                      sx={{
+                        position: "relative",
+                        height: 25,
+                        width: 25,
+                        ml: -22.5,
+                        mb: 6,
+                      }}
+                      onClick={(e) => {
+                        handleAmbitClick(e, item.ambit);
+                      }}
+                      className="button-wish"
                     >
-                      {item.name}
-                    </Typography>
-                  )}
-                  <Typography variant="h5" component="div"></Typography>
-                  {item.logo != null && (
-                    <CardMedia
-                      component="img"
-                      width="100%"
-                      image={"/public/images/uploads/" + item.logo.path}
-                      alt={item.name}
-                      className="card-collection"
-                      style={styles}
-                    />
-                  )}
+                      {item.ambit ? (
+                        <VisibilityIcon
+                          color="success"
+                          fontSize="large"
+                        ></VisibilityIcon>
+                      ) : (
+                        <VisibilityOffIcon
+                          htmlColor="red"
+                          fontSize="large"
+                        ></VisibilityOffIcon>
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+                <NavLink
+                  to={{ pathname: `/collections/${item.name}` }}
+                  state={{ id: item.id, logo: item.logo, name: item.name }}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.tooltip.click_open",
+                    })}
+                    followCursor
+                    arrow
+                  >
+                    <CardContent>
+                      {item.logo ? null : (
+                        <Typography
+                          align="center"
+                          sx={{ fontSize: 20 }}
+                          color="text.primary"
+                          gutterBottom
+                        >
+                          {item.name}
+                        </Typography>
+                      )}
+                      <Typography variant="h5" component="div"></Typography>
+                      {item.logo != null && (
+                        <CardMedia
+                          component="img"
+                          width="100%"
+                          image={"/images/uploads/" + item.logo.path}
+                          alt={item.name}
+                          className="card-collection-no-pointer"
+                          style={styles}
+                        />
 
-                  <Typography
-                    align="center"
-                    sx={{ mb: 0.5 }}
-                    mt={1}
-                    color="text.secondary"
-                  >
-                    <FormattedMessage id="app.collection.items"></FormattedMessage>
-                  </Typography>
-                  <Typography align="center" color="text.secondary">
-                    {item.owned + "/" + item.totalItems}
-                  </Typography>
-                  <BorderLinearProgressBar
-                    variant="determinate"
-                    value={
-                      item.totalItems !== 0 && item.owned !== 0
-                        ? (item.owned / item.totalItems) * 100
-                        : 0
-                    }
-                  ></BorderLinearProgressBar>
-                </CardContent>
+                      )}
+                      <Typography
+                        align="center"
+                        sx={{ mb: 0.5 }}
+                        mt={1}
+                        color="text.secondary"
+                      >
+                        <FormattedMessage id="app.collection.items"></FormattedMessage>
+                      </Typography>
+                      <Typography align="center" color="text.secondary">
+                        {item.owned + "/" + item.totalItems}
+                      </Typography>
+                      <BorderLinearProgressBar
+                        variant="determinate"
+                        value={
+                          item.totalItems !== 0 && item.owned !== 0
+                            ? (item.owned / item.totalItems) * 100
+                            : 0
+                        }
+                      ></BorderLinearProgressBar>
+                    </CardContent>
+                  </Tooltip>
+                </NavLink>
                 <CardActions style={{ justifyContent: "center" }}>
-                  <NavLink
-                    to={{ pathname: `/collections/${item.name}` }}
-                    state={{ id: item.id, logo: item.logo, name: item.name }}
-                    style={{ textDecoration: "none" }}
+                  <Button
+                    variant="contained"
+                    color="error"
+                    type="submit"
+                    form="form"
+                    value={item.id}
+                    onClick={() => {
+                      setValue(item.id);
+                      setConfirmOpen(true);
+                    }}
                   >
-                    <Button variant="contained">
-                      <FormattedMessage id="app.button.open_collection"></FormattedMessage>
-                    </Button>
-                  </NavLink>
+                    <FormattedMessage id="app.button.delete"></FormattedMessage>
+                  </Button>
+                  <ConfirmDialog
+                    title={intl.formatMessage({
+                      id: "app.dialog.delete_title",
+                    })}
+                    open={confirmOpen}
+                    setOpen={setConfirmOpen}
+                    onConfirm={handleDeleteClick}
+                    showCascade={true}
+                    setCascade={setCascade}
+                  >
+                    <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+                  </ConfirmDialog>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => FeatureForImplement()}
+                  >
+                    <FormattedMessage id="app.button.export_module"></FormattedMessage>
+                  </Button>
                 </CardActions>
               </Card>
             </Grid>

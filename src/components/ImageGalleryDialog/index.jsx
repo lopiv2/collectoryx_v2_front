@@ -65,11 +65,12 @@ const ImageGalleryDialog = (props) => {
             {open && images.length > 0 && (
               <Grid
                 container
-                spacing={{ xs: 5, md: 15 }}
+                spacing={2}
                 columns={{ xs: 4, sm: 8, md: 12 }}
               >
                 {images.map((i) => (
                   <Grid item xs={2} key={i}>
+                    {console.log()}
                     <Tooltip title={i} placement="bottom" arrow>
                       <Avatar
                         key={i}
@@ -79,7 +80,7 @@ const ImageGalleryDialog = (props) => {
                             ? avatarStyleClicked
                             : avatarStyleHover
                         }
-                        src={"/images/upload/" + i} // use normal <img> attributes as props
+                        src={"/images/uploads/" + i} // use normal <img> attributes as props
                         width="100%"
                         onClick={(e) => {
                           setImageClicked(i);

@@ -38,7 +38,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import PropTypes from "prop-types";
 import { AppContext } from "../components/AppContext";
-import { FeatureForImplement} from "../utils/generic";
+import { FeatureForImplement } from "../utils/generic";
+import NoImage from "../images/no-photo-available.png";
 
 function ManageCollections(props) {
   const [collectionsList, setCollectionsList] = useState([]);
@@ -224,7 +225,17 @@ function ManageCollections(props) {
   useEffect(() => {
     fetchData(page, rowsPerPage, "name");
     setOrderDirection("down");
-}, []);
+  }, []);
+
+  const checkImage = (item) => {
+    if (item.logo) {
+      if (item.logo.path) {
+        return "/images/uploads/" + item.logo.path;
+      }
+    }
+    return NoImage;
+  };
+
 
   /*useEffect(() => {
     const collections = ConfigService.getCollectionLists(userData.id)
@@ -314,7 +325,7 @@ function ManageCollections(props) {
                 onClick={() => {
                   setOpenNew(true);
                 }}
-                /*onClick={() => navigate("/collections/add")}*/
+              /*onClick={() => navigate("/collections/add")}*/
               >
                 <AddIcon></AddIcon>
               </Button>
@@ -473,14 +484,14 @@ function ManageCollections(props) {
                     <CardMedia
                       component="img"
                       width="100%"
-                      image={"images/uploads/" + item.logo.path}
+                      image={checkImage(item)}
                       alt={item.name}
-                      className="card-collection"
-                      onClick={() => {
+                      className="card-collection-no-pointer"
+                      /*onClick={() => {
                         setImageClicked(item.logo.path);
                         handleOpen();
                       }}
-                      style={styles}
+                      style={styles}*/
                     />
                   )}
                   <Typography
@@ -490,8 +501,8 @@ function ManageCollections(props) {
                   >
                     {getTemplateLabel(item.template) !== undefined
                       ? intl.formatMessage({
-                          id: getTemplateLabel(item.template),
-                        })
+                        id: getTemplateLabel(item.template),
+                      })
                       : null}
                   </Typography>
 
@@ -564,7 +575,7 @@ function ManageCollections(props) {
               height={350}
               src={
                 imageClicked !== ""
-                  ? "/images/uploads" + imageClicked
+                  ? "/images/uploads/" + imageClicked
                   : null
               }
               width="100%"

@@ -20,6 +20,7 @@ import ConfirmDialog from "../components/ConfirmDialog";
 import EditSerieDialog from "../components/EditSerieDialog";
 import { isUndefined } from "lodash";
 import { AppContext } from "../components/AppContext";
+import { useNavigate } from "react-router-dom";
 
 function ManageSeries(props) {
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
@@ -35,6 +36,7 @@ function ManageSeries(props) {
   const [value, setValue] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const { userData, setUserData } = React.useContext(AppContext);
+  const navigate = useNavigate();
 
   const handleDeleteClick = () => {
     ConfigService.deleteSerie(value).then((response) => {
@@ -72,11 +74,11 @@ function ManageSeries(props) {
       .catch((err) => {
         console.log(err);
       });
-      const query = {
-        id: userData.id,
-        orderField: "name",
-        orderDirection: "up",
-      };
+    const query = {
+      id: userData.id,
+      orderField: "name",
+      orderDirection: "up",
+    };
     ConfigService.getCollectionLists(query)
       .then((response) => {
         setCollectionList(response.data.content);
@@ -116,17 +118,14 @@ function ManageSeries(props) {
         }
       );
     } else {
-      ConfigService.putImage(values.name, values.file).then((response) => {
-        ConfigService.createSerie(
-          values.name,
-          values.collection,
-          response.data.path
-        );
-        if (response.status === 200) {
-          toast.success(
-            <FormattedMessage id="app.collection.serie-created"></FormattedMessage>,
-            { theme: "colored" }
-          );
+      ConfigService.createSerieWithImage(values.name, values.file, values.collection).then((response) => {
+        if (response.data !== null) {
+          if (response.status === 200) {
+            toast.success(
+              <FormattedMessage id="app.collection.serie-created"></FormattedMessage>,
+              { theme: "colored" }
+            );
+          }
         }
         setCollectionSeriesList((collectionSeriesList) => [
           ...collectionSeriesList,
@@ -194,15 +193,16 @@ function ManageSeries(props) {
   ];
 
   const data = collectionSeriesList.map((item) => {
+    //console.log(item)
     let cols = {
       id: item.id,
       name: item.name,
-      collection: item ? item.collection.collection : null,
+      collection: item.collection ? item.collection.collection : null,
       logo:
         item.logo === null ? (
           <Avatar
             variant="rounded"
-            src={require("../images/no-photo-available.png")}
+            src={NoImage}
             sx={{ width: 100, height: 35 }}
           ></Avatar>
         ) : (
@@ -236,10 +236,14 @@ function ManageSeries(props) {
               return errors;*/
             }}
             validationSchema={newSerieSchema}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={(values, { setSubmitting, resetForm }) => {
               values.collection = collection;
               submitForm(values);
               setSubmitting(false);
+              resetForm();
+              setCollection("");
+              setPreview(null)
+              setSelectedFile(null)
             }}
           >
             {({
@@ -310,7 +314,7 @@ function ManageSeries(props) {
                         <FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>
                       }
                       variant="outlined"
-                      value={selectedFile.name || ""}
+                      value={selectedFile ? selectedFile.name || "" : ""}
                     />
                   </Grid>
                   <Grid item xs={4}>

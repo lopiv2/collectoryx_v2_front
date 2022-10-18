@@ -16,6 +16,13 @@
   cursor: pointer;
 }
 
+.card-collection-no-pointer {
+  height: 1;
+  width: "5.25%";
+  margin-top: "300";
+  border-radius: 8px;
+}
+
 .cardListItem-img {
   height: auto;
   max-height: 250px;

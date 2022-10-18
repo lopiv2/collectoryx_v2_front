@@ -62,7 +62,8 @@ function EditItem(props) {
   };
 
   const handleImageClick = () => {
-    setPreview(require("../../public/images/" + img));
+    setPreview("/images/uploads/" + img);
+    //return "/images/uploads/" + item.image.path;
     setImgGallerySelected(true);
   };
 
@@ -168,13 +169,11 @@ function EditItem(props) {
         values.metadata
       ).then((response) => {
         if (response.status === 200) {
+          navigate(-1);
           toast.success(
             <FormattedMessage id="app.collection.item-edited"></FormattedMessage>,
             { theme: "colored" }
           );
-          setTimeout(() => {
-            navigate(-1);
-          }, 3000);
         }
       });
     }
@@ -191,13 +190,11 @@ function EditItem(props) {
         values.metadata
       ).then((response) => {
         if (response.status === 200) {
+          navigate(-1);
           toast.success(
             <FormattedMessage id="app.collection.item-edited"></FormattedMessage>,
             { theme: "colored" }
           );
-          setTimeout(() => {
-            navigate(-1);
-          }, 3000);
         }
       });
     }
@@ -210,13 +207,11 @@ function EditItem(props) {
         values.metadata
       ).then((response) => {
         if (response.status === 200) {
+          navigate(-1);
           toast.success(
             <FormattedMessage id="app.collection.item-edited"></FormattedMessage>,
             { theme: "colored" }
           );
-          setTimeout(() => {
-            navigate(-1);
-          }, 3000);
         }
       });
     }
@@ -233,13 +228,11 @@ function EditItem(props) {
             values.metadata
           ).then((responseItem) => {
             if (response.status === 200 && responseItem.status === 200) {
+              navigate(-1);
               toast.success(
                 <FormattedMessage id="app.collection.item-edited"></FormattedMessage>,
                 { theme: "colored" }
               );
-              setTimeout(() => {
-                navigate(-1);
-              }, 3000);
             }
           });
         }
@@ -266,7 +259,7 @@ function EditItem(props) {
       if (location.state.item.image) {
         if (!location.state.item.image.path.includes("http")) {
           setPreview(
-            require("../../public/images/" + location.state.item.image.path)
+            "/images/uploads/" + location.state.item.image.path
           );
         } else {
           setPreview(location.state.item.image.path);

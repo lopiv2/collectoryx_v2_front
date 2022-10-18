@@ -339,7 +339,7 @@ function DisplayCollection(props) {
         }
       }
     }
-    return "/images/no-photo-available.png";
+    return NoImage;
   };
 
   const checkImageSerie = (item) => {
@@ -351,7 +351,7 @@ function DisplayCollection(props) {
         return item.logo.path;
       }
     }
-    return "/images/no-photo-available.png";
+    return NoImage;
   };
 
   const handleOpen = () => {
@@ -560,7 +560,7 @@ function DisplayCollection(props) {
             ) : (
               <Avatar
                 variant="rounded"
-                src={require("../images/no-photo-available.png")}
+                src={NoImage}
                 sx={{ width: 100, height: 35 }}
               />
             )}

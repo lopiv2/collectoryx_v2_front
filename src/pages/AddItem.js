@@ -163,13 +163,11 @@ function AddItem(props) {
         values.metadata
       ).then((response) => {
         if (response.status === 200) {
+          navigate(-1);
           toast.success(
             <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
             { theme: "colored" }
           );
-          setTimeout(() => {
-            navigate(-1);
-          }, 3000);
         }
       });
     }
@@ -182,13 +180,11 @@ function AddItem(props) {
         values.metadata
       ).then((response) => {
         if (response.status === 200) {
+          navigate(-1);
           toast.success(
             <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
             { theme: "colored" }
           );
-          setTimeout(() => {
-            navigate(-1);
-          }, 3000);
         }
       });
     }
@@ -202,13 +198,11 @@ function AddItem(props) {
           values.metadata
         );
         if (response.status === 200) {
+          navigate(-1);
           toast.success(
             <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
             { theme: "colored" }
           );
-          setTimeout(() => {
-            navigate(-1);
-          }, 3000);
         }
         //console.log(response);
       });

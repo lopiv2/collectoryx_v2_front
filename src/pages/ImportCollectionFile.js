@@ -82,14 +82,12 @@ function ImportCollectionFile() {
         //console.log(response.data)
         res = response.data;
         parseTriggeredRef.current = true;
+        setRecordsImported(res);
+        navigate(-1);
         toast.success(
           <FormattedMessage id="app.collection.created"></FormattedMessage>,
           { theme: "colored" }
-        );
-        setRecordsImported(res);
-        setTimeout(() => {
-          navigate(-1);
-        }, 3000);      
+        );   
       });
     }
   }

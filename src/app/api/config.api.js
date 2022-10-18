@@ -39,6 +39,7 @@ const GET_COLLECTION_METADATAS_URL = (id) =>
 const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
 const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
+const IMAGES_URL_SERIE = `${API_URL}/images/create-serie`;
 const GET_LOCAL_IMAGES_URL = `${API_URL}/images/get-images-local`;
 const FILE_URL = `${API_URL}/import-file`;
 const FILE_PARSE_URL = `${API_URL}/parse-file`;
@@ -248,7 +249,6 @@ const createSerie = (name, collection, file) => {
     collection: collection,
     file: file,
   };
-  //console.log(data)
   return axios
     .post(CREATE_SERIE_URL, data, { headers: authHeader() })
     .then((response) => {
@@ -611,6 +611,26 @@ const putImage = (name, image) => {
     });
 };
 
+const createSerieWithImage = (name, image, collection) => {
+  var formData = new FormData();
+  formData.append("name", name);
+  formData.append("image", image);
+  formData.append("collection", collection);
+  return axios
+    .put(IMAGES_URL_SERIE, formData, {
+      headers: authHeader(),
+      "Content-Type": "multipart/form-data",
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      if (error.response) {
+        return error.response;
+      }
+    });
+};
+
 const saveConfigAppearance = (id, theme, dark, config) => {
   const data = {
     id: id,
@@ -850,7 +870,7 @@ const updateSerie = (values, image) => {
     });
 };
 
-const viewFeed = (url) => {};
+const viewFeed = (url) => { };
 
 const ConfigService = {
   countCollections,
@@ -864,6 +884,7 @@ const ConfigService = {
   createFeed,
   createItem,
   createSerie,
+  createSerieWithImage,
   createTheme,
   deleteApi,
   deleteCollectionItem,
