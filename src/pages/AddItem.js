@@ -52,7 +52,7 @@ function AddItem(props) {
   };
 
   const handleImageClick = () => {
-    setPreview(require("../../public/images/" + img));
+    setPreview("/images/uploads/" + img);
     setImgGallerySelected(true);
   };
 
@@ -224,7 +224,7 @@ function AddItem(props) {
   const newItemSchema = Yup.object().shape({
     name: Yup.string()
       .min(
-        5,
+        1,
         intl.formatMessage({
           id: "app.form.too_short",
         })
@@ -251,8 +251,8 @@ function AddItem(props) {
       ),
     year: Yup.number()
       .moreThan(
-        1899,
-        <FormattedMessage id="app.collection.add_item_year_1900"></FormattedMessage>
+        999,
+        <FormattedMessage id="app.collection.add_item_year_999"></FormattedMessage>
       )
       .test(
         "len",

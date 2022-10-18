@@ -13,6 +13,7 @@ import ConfigService from "../../app/api/config.api";
 import React, { useState, useEffect } from "react";
 import { AppContext } from "../AppContext";
 import { GetCurrencySymbolLocale } from "../../utils/generic";
+import NoImage from "../../images/no-photo-available.png";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -48,13 +49,13 @@ export default function MostValuableItem() {
   const checkImage = (item) => {
     if(item.image!==null){
       if (!item.image.path.includes("http")) {
-        return require("../../../public/images/" + item.image.path);
+        return "/images/uploads/" + item.image.path;
       } else {
         return item.image.path;
       }
     }
     else{
-      return require("../../images/no-photo-available.png");
+      return NoImage;
     }
   };
 

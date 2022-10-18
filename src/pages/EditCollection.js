@@ -46,7 +46,7 @@ function EditCollection() {
   }
 
   const handleImageClick = () => {
-    setPreview(require("../../public/images/" + img));
+    setPreview("/images/uploads/" + img);
     setImgGallerySelected(true);
   };
 
@@ -102,7 +102,7 @@ function EditCollection() {
 
   useEffect(() => {
     if (location.state.item.logo) {
-      setPreview(require("../../public/images/" + location.state.item.logo.path));
+      setPreview("/images/uploads/" + location.state.item.logo.path);
     }
     ConfigService.getCollectionById(location.state.item.id).then((response) => {
       var tempArray = [];

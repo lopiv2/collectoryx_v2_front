@@ -35,10 +35,10 @@ const Signup = () => {
   };
   const required = intl.formatMessage({ id: "app.signin.required" });
   const validationSchema = Yup.object().shape({
-    userName: Yup.string().min(3, "It's too short").required(required),
+    userName: Yup.string().min(1, "It's too short").required(required),
     email: Yup.string().email("Enter valid email").required(required),
-    firstName: Yup.string().min(3, "It's too short").required(required),
-    lastName: Yup.string().min(3, "It's too short").required(required),
+    firstName: Yup.string().min(1, "It's too short").required(required),
+    lastName: Yup.string().min(1, "It's too short").required(required),
     password: Yup.string()
       .min(8, "Password minimum length should be 8")
       .required(required),

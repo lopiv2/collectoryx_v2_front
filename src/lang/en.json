@@ -129,7 +129,7 @@
   "app.collection.add_collection_field_required": "Field required",
   "app.collection.add_item_number_positive": "Must be 0 or superior",
   "app.collection.add_item_year_4digits": "Year must be 4 digits",
-  "app.collection.add_item_year_1900": "Year must be bigger or equal to 1900",
+  "app.collection.add_item_year_999": "Year must be bigger or equal to 1000",
   "app.collection.view_collections_series_add": "Add serie",
   "app.collection.edit_collection_title": "Collection Edit ",
   "app.collection.manage_collections_title": "Manage collections",

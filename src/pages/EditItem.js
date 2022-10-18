@@ -273,7 +273,7 @@ function EditItem(props) {
 
   const newItemSchema = Yup.object().shape({
     name: Yup.string()
-      .min(2, "Too Short!")
+      .min(1, "Too Short!")
       .max(50, "Too Long!")
       .required(
         <FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>
@@ -291,8 +291,8 @@ function EditItem(props) {
       ),
     year: Yup.number()
       .moreThan(
-        1899,
-        <FormattedMessage id="app.collection.add_item_year_1900"></FormattedMessage>
+        999,
+        <FormattedMessage id="app.collection.add_item_year_999"></FormattedMessage>
       )
       .test(
         "len",

@@ -18,6 +18,7 @@ import ConfirmDialog from "../ConfirmDialog";
 import EditApiDialog from "../EditApiDialog";
 import { AppContext } from "../../components/AppContext";
 import { isUndefined } from "lodash";
+import NoImage from "../../images/no-photo-available.png";
 
 function ManageApiTab(props) {
   const [apisList, setApisList] = useState([]);
@@ -157,7 +158,7 @@ function ManageApiTab(props) {
         item.logo === null ? (
           <Avatar
             variant="rounded"
-            src={require("../../images/no-photo-available.png")}
+            src={NoImage}
             sx={{ width: 100, height: 35 }}
           ></Avatar>
         ) : (
