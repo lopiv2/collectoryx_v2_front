@@ -33,6 +33,11 @@ import { toast } from "react-toastify";
 import { FeatureForImplement } from "../utils/generic";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { isUndefined } from "lodash";
+import EditCollectionDialog from "../components/EditCollectionDialog";
 
 function ViewCollection(props) {
   const [collectionsList, setCollectionsList] = useState([]);
@@ -52,6 +57,9 @@ function ViewCollection(props) {
   const [value, setValue] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [cascade, setCascade] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [collectionEdited, setCollectionEdited] = useState();
+  const [newCollectionEdited, setNewCollectionEdited] = useState();
 
   const toggleOrderDirection = () => {
     if (orderDirection.includes("down")) {
@@ -98,18 +106,27 @@ function ViewCollection(props) {
   };
 
   const handleAmbitClick = (event, ambit) => {
-    ConfigService.toggleCollectionAmbit(
-      event.currentTarget.id,
-      ambit
-    ).then((response) => {
-      var index = collectionsList.findIndex(
-        (collectionsList) => collectionsList.id === response.data.id
-      );
-      let newItems = [...collectionsList];
-      newItems[index].ambit = response.data.ambit;
-      setCollectionsList(newItems);
-    });
+    ConfigService.toggleCollectionAmbit(event.currentTarget.id, ambit).then(
+      (response) => {
+        var index = collectionsList.findIndex(
+          (collectionsList) => collectionsList.id === response.data.id
+        );
+        let newItems = [...collectionsList];
+        newItems[index].ambit = response.data.ambit;
+        setCollectionsList(newItems);
+      }
+    );
   };
+
+  useEffect(() => {
+    if (!isUndefined(newCollectionEdited)) {
+      var index = collectionsList .findIndex((x) => x.id === newCollectionEdited.id);
+      let newItems = [...collectionsList];
+      newItems[index] = newCollectionEdited;
+      setCollectionsList(newItems);
+      setNewCollectionEdited(undefined);
+    }
+  }, [newCollectionEdited]);
 
   const fetchData = async (page, rowsPerPage, orderField, search) => {
     const query = {
@@ -149,23 +166,21 @@ function ViewCollection(props) {
   };
 
   const handleDeleteClick = () => {
-    ConfigService.deleteCollection(value, cascade).then(
-      (response) => {
-        if (response.data === true) {
-          toast.success(
-            <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
-            { theme: "colored" }
-          );
-          var index = collectionsList.findIndex(
-            (collectionsList) => collectionsList.id === value
-          );
-          if (index > -1) {
-            collectionsList.splice(index, 1);
-            setCollectionsList([...collectionsList]);
-          }
+    ConfigService.deleteCollection(value, cascade).then((response) => {
+      if (response.data === true) {
+        toast.success(
+          <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
+          { theme: "colored" }
+        );
+        var index = collectionsList.findIndex(
+          (collectionsList) => collectionsList.id === value
+        );
+        if (index > -1) {
+          collectionsList.splice(index, 1);
+          setCollectionsList([...collectionsList]);
         }
       }
-    );
+    });
   };
 
   return (
@@ -206,7 +221,7 @@ function ViewCollection(props) {
                 onClick={() => {
                   setOpenNew(true);
                 }}
-              /*onClick={() => navigate("/collections/add")}*/
+                /*onClick={() => navigate("/collections/add")}*/
               >
                 <AddIcon></AddIcon>
               </Button>
@@ -313,11 +328,11 @@ function ViewCollection(props) {
                   cardHover === item
                     ? cardStyleHover
                     : {
-                      height: 400,
-                      minWidth: 250,
-                      maxWidth: 250,
-                      boxShadow: 3,
-                    }
+                        height: 400,
+                        minWidth: 250,
+                        maxWidth: 250,
+                        boxShadow: 3,
+                      }
                 }
                 ml={200}
                 onMouseOver={() => {
@@ -397,7 +412,6 @@ function ViewCollection(props) {
                           className="card-collection-no-pointer"
                           style={styles}
                         />
-
                       )}
                       <Typography
                         align="center"
@@ -421,20 +435,32 @@ function ViewCollection(props) {
                     </CardContent>
                   </Tooltip>
                 </NavLink>
-                <CardActions style={{ justifyContent: "center" }}>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    type="submit"
-                    form="form"
-                    value={item.id}
-                    onClick={() => {
-                      setValue(item.id);
-                      setConfirmOpen(true);
-                    }}
+                <CardActions style={{ justifyContent: "center", padding: 3 }}>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.button.delete",
+                    })}
+                    followCursor
+                    arrow
                   >
-                    <FormattedMessage id="app.button.delete"></FormattedMessage>
-                  </Button>
+                    <IconButton
+                      id={item.id}
+                      color="primary"
+                      fontSize="large"
+                      sx={{
+                        position: "relative",
+                        height: 55,
+                        width: 55,
+                        mb: 6,
+                      }}
+                      onClick={() => {
+                        setValue(item.id);
+                        setConfirmOpen(true);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                   <ConfirmDialog
                     title={intl.formatMessage({
                       id: "app.dialog.delete_title",
@@ -447,13 +473,58 @@ function ViewCollection(props) {
                   >
                     <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
                   </ConfirmDialog>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() => FeatureForImplement()}
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.button.edit",
+                    })}
+                    followCursor
+                    arrow
                   >
-                    <FormattedMessage id="app.button.export_module"></FormattedMessage>
-                  </Button>
+                    <IconButton
+                      id={item.id}
+                      color="primary"
+                      fontSize="large"
+                      sx={{
+                        position: "relative",
+                        height: 55,
+                        width: 55,
+                        mb: 6,
+                      }}
+                      onClick={() => {
+                        const data = collectionsList.find(
+                          (col) => col.id === item.id
+                        );
+                        setCollectionEdited(data);
+                        setOpenEdit(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.button.export_module",
+                    })}
+                    followCursor
+                    arrow
+                  >
+                    <IconButton
+                      id={item.id}
+                      color="primary"
+                      fontSize="large"
+                      sx={{
+                        position: "relative",
+                        height: 55,
+                        width: 55,
+                        mb: 6,
+                      }}
+                      onClick={() => {
+                        FeatureForImplement();
+                      }}
+                    >
+                      <FileDownloadIcon />
+                    </IconButton>
+                  </Tooltip>
                 </CardActions>
               </Card>
             </Grid>
@@ -478,6 +549,16 @@ function ViewCollection(props) {
           />
         </Grid>
       </Grid>
+      <EditCollectionDialog
+        items={collectionEdited}
+        setItem={setCollectionEdited}
+        newItem={newCollectionEdited}
+        setNewItem={setNewCollectionEdited}
+        open={openEdit}
+        setOpen={setOpenEdit}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </EditCollectionDialog>
     </Box>
   );
 }

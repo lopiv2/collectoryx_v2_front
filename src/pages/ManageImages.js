@@ -41,7 +41,7 @@ import { AppContext } from "../components/AppContext";
 import { FeatureForImplement } from "../utils/generic";
 import NoImage from "../images/no-photo-available.png";
 
-function ManageCollections(props) {
+function ManageImages(props) {
   const [collectionsList, setCollectionsList] = useState([]);
   const navigate = useNavigate();
   const [col, setCol] = useState([]);
@@ -606,4 +606,4 @@ function ManageCollections(props) {
   );
 }
 
-export default ManageCollections;
+export default ManageImages;

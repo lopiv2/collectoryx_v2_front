@@ -13,8 +13,7 @@ import ConfigInterface from "../pages/ConfigInterface";
 import Layout from "./Layout";
 import Dashboard from "./Dashboard";
 import EditItem from "../pages/EditItem";
-import ManageCollections from "../pages/ManageCollections";
-import EditCollection from "../pages/EditCollection";
+import ManageImages from "../pages/ManageImages";
 import KeyGeneration from "../pages/KeyGeneration";
 import BuyLicense from "../pages/BuyLicense";
 import ViewFeeds from "../pages/ViewFeeds";
@@ -79,14 +78,6 @@ export const Router = (props) => {
           }
         ></Route>
         <Route
-          path="/collections/edit"
-          element={
-            <ProtectedRoutes>
-              <EditCollection />
-            </ProtectedRoutes>
-          }
-        ></Route>
-        <Route
           path="/collections"
           element={
             <ProtectedRoutes>
@@ -98,7 +89,7 @@ export const Router = (props) => {
           path="/collections/manage"
           element={
             <ProtectedRoutes>
-              <ManageCollections />
+              <ManageImages />
             </ProtectedRoutes>
           }
         ></Route>

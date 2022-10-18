@@ -46,6 +46,7 @@ const FILE_PARSE_URL = `${API_URL}/parse-file`;
 const TOGGLE_COLLECTION_AMBIT_URL = `${API_URL}/toggle-collection-ambit`;
 const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
+const UPDATE_COLLECTION_URL = `${API_URL}/update-collection`;
 const UPDATE_ITEM_URL = `${API_URL}/update-item`;
 const UPDATE_SERIE_URL = `${API_URL}/update-serie`;
 const VIEW_COLLECTIONS_URL = `${API_URL}/view-collections`;
@@ -737,6 +738,30 @@ const updateApi = (values) => {
     });
 };
 
+const updateCollection = (values, image) => {
+  const data = {
+    id: values.id,
+    name: values.name,
+    collection: values.collection,
+    path: image,
+  };
+  return axios
+    .put(UPDATE_COLLECTION_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        //console.log(response.data)
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const updateEvent = (values) => {
   const data = {
     id: values.id,
@@ -923,6 +948,7 @@ const ConfigService = {
   toggleItemOwn,
   toggleItemWish,
   updateApi,
+  updateCollection,
   updateEvent,
   updateFeed,
   updateItem,

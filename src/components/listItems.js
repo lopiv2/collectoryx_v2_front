@@ -12,6 +12,7 @@ import ScreenshotMonitorIcon from "@mui/icons-material/ScreenshotMonitor";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import PreviewIcon from "@mui/icons-material/Preview";
 import ConstructionIcon from "@mui/icons-material/Construction";
+import ImageIcon from '@mui/icons-material/Image';
 import TuneIcon from "@mui/icons-material/Tune";
 import BallotIcon from "@mui/icons-material/Ballot";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -160,7 +161,7 @@ export default function MainListItems(props) {
                 ></FormattedMessage>
               </ListItemButton>
             </NavLink>
-            {/*<NavLink
+            {<NavLink
               className="nav-link"
               to="/collections/manage"
               style={{
@@ -172,11 +173,11 @@ export default function MainListItems(props) {
                 sx={{ pl: 4, margin: "5px 0", fontSize: ".75rem" }}
               >
                 <ListItemIcon>
-                  <ConstructionIcon />
+                  <ImageIcon />
                 </ListItemIcon>
-                <FormattedMessage id="app.sidemenu.collections.admin"></FormattedMessage>
+                <FormattedMessage id="app.sidemenu.collections.admin_images"></FormattedMessage>
               </ListItemButton>
-            </NavLink>*/}
+            </NavLink>}
             <NavLink
               className="nav-link"
               to="/collections/manage-series"
