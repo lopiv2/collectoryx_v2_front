@@ -36,18 +36,6 @@ const EditSerieDialog = (props) => {
   }
 
   useEffect(() => {
-    if (open === true) {
-      ConfigService.getLocalImages().then((response) => {
-        var filteredResponse = [];
-        filteredResponse = response.data.filter(
-          (image) => !image.path.includes("http")
-        );
-        filteredResponse.map((i) => setImages((images) => [...images, i.path]));
-      });
-    }
-  }, [open]);
-
-  useEffect(() => {
     if (!isUndefined(items)) {
       if(items.logo!==null){
         fetchImage(items.logo.path)

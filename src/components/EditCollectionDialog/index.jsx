@@ -49,18 +49,6 @@ const EditCollectionDialog = (props) => {
     };
   }, [items])
 
-  useEffect(() => {
-    if (open === true) {
-      ConfigService.getLocalImages().then((response) => {
-        var filteredResponse = [];
-        filteredResponse = response.data.filter(
-          (image) => !image.path.includes("http")
-        );
-        filteredResponse.map((i) => setImages((images) => [...images, i.path]));
-      });
-    }
-  }, [open]);
-
   const newSerieSchema = Yup.object().shape({
     name: Yup.string().required(
       <FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>

@@ -65,7 +65,7 @@ const ImageGalleryDialog = (props) => {
             {open && images.length > 0 && (
               <Grid
                 container
-                spacing={2}
+                spacing={1.2}
                 columns={{ xs: 4, sm: 8, md: 12 }}
               >
                 {images.map((i) => (

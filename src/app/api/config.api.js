@@ -489,11 +489,10 @@ const getItemFromWeb = (searchQuery, apiSelected) => {
     });
 };
 
-const getLocalImages = () => {
+const getLocalImages = (query) => {
   return axios
-    .get(GET_LOCAL_IMAGES_URL, { headers: authHeader() })
+    .post(GET_LOCAL_IMAGES_URL, query, { headers: authHeader() })
     .then((response) => {
-      //console.log(response.data);
       return response;
     });
 };

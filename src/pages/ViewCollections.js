@@ -120,7 +120,7 @@ function ViewCollection(props) {
 
   useEffect(() => {
     if (!isUndefined(newCollectionEdited)) {
-      var index = collectionsList .findIndex((x) => x.id === newCollectionEdited.id);
+      var index = collectionsList.findIndex((x) => x.id === newCollectionEdited.id);
       let newItems = [...collectionsList];
       newItems[index] = newCollectionEdited;
       setCollectionsList(newItems);
@@ -221,7 +221,7 @@ function ViewCollection(props) {
                 onClick={() => {
                   setOpenNew(true);
                 }}
-                /*onClick={() => navigate("/collections/add")}*/
+              /*onClick={() => navigate("/collections/add")}*/
               >
                 <AddIcon></AddIcon>
               </Button>
@@ -300,8 +300,23 @@ function ViewCollection(props) {
               id="search-bar"
               className="text"
               value={searchQuery}
-              onInput={(e) => {
-                setSearchQuery(e.target.value);
+              onChange={(e) => {
+                if (e.target.value.trim().length === 0) {
+                  setSearchQuery("")
+                  fetchData(page, rowsPerPage, "name");
+                }
+                else {
+                  setSearchQuery(e.target.value);
+                  fetchData(page, rowsPerPage, rowsOrder, searchQuery);
+                  
+                  //searchQueryInApi(searchQuery);
+                }
+              }}
+              onKeyPress={(e) => {
+                searchQueryInApi(searchQuery);
+                if (e.key === 'Enter') {
+                  searchQueryInApi(searchQuery);
+                }
               }}
               variant="outlined"
               placeholder={intl.formatMessage({
@@ -328,11 +343,11 @@ function ViewCollection(props) {
                   cardHover === item
                     ? cardStyleHover
                     : {
-                        height: 400,
-                        minWidth: 250,
-                        maxWidth: 250,
-                        boxShadow: 3,
-                      }
+                      height: 400,
+                      minWidth: 250,
+                      maxWidth: 250,
+                      boxShadow: 3,
+                    }
                 }
                 ml={200}
                 onMouseOver={() => {

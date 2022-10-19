@@ -364,7 +364,7 @@ function ManageSeries(props) {
             )}
           </Formik>
         </Grid>
-        <Grid item xs={7} mr={2}>
+        <Grid item xs={12} mr={2}>
           <MaterialTable
             title={
               <FormattedMessage id="app.collection.view_collections_series"></FormattedMessage>

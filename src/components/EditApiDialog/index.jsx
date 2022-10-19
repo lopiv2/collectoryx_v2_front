@@ -19,18 +19,6 @@ const EditApiDialog = (props) => {
   //const intl = useIntl();
   const [updatedValues, setUpdatedValues] = useState([]);
 
-  useEffect(() => {
-    if (open === true) {
-      ConfigService.getLocalImages().then((response) => {
-        var filteredResponse = [];
-        filteredResponse = response.data.filter(
-          (image) => !image.path.includes("http")
-        );
-        filteredResponse.map((i) => setImages((images) => [...images, i.path]));
-      });
-    }
-  }, [open]);
-
   /*const avatarStyleClicked = {
     border: "2px solid green",
     width: 80,
