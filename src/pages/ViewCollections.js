@@ -13,15 +13,20 @@ import {
   CardMedia,
   IconButton,
   Tooltip,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { FormattedMessage, useIntl } from "react-intl";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import { ToastContainer } from "react-toastify";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/Collections.css";
 import BorderLinearProgressBar from "../components/BorderLinearProgressBar";
 import { NavLink } from "react-router-dom";
@@ -33,6 +38,7 @@ import { toast } from "react-toastify";
 import { FeatureForImplement } from "../utils/generic";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import PropTypes from "prop-types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -42,7 +48,7 @@ import EditCollectionDialog from "../components/EditCollectionDialog";
 function ViewCollection(props) {
   const [collectionsList, setCollectionsList] = useState([]);
   const intl = useIntl();
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const [cardHover, setCardHover] = useState(null);
   const breadcrumbs = useBreadcrumbs();
   const { userData, setUserData } = React.useContext(AppContext);
@@ -53,6 +59,7 @@ function ViewCollection(props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [totalPages, setTotalPages] = useState(0);
   const [orderDirection, setOrderDirection] = useState("down");
+  const [open, setOpen] = useState(false);
   const [openNew, setOpenNew] = useState(false);
   const [value, setValue] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -60,6 +67,94 @@ function ViewCollection(props) {
   const [openEdit, setOpenEdit] = useState(false);
   const [collectionEdited, setCollectionEdited] = useState();
   const [newCollectionEdited, setNewCollectionEdited] = useState();
+
+  function SimpleDialog(props) {
+    const { onClose, selectedValue, open } = props;
+    const [templateSelected, setTemplateSelected] = useState("new");
+
+    const handleClose = () => {
+      onClose(selectedValue);
+    };
+
+    const checkOptions = () => {
+      if (templateSelected === "new") {
+        navigate("/collections/add");
+      }
+      if (templateSelected === "file") {
+        navigate("/collections/import-file");
+      }
+    };
+
+    return (
+      <Dialog onClose={handleClose} open={open}>
+        <DialogTitle>
+          <FormattedMessage id="app.collection.select_option"></FormattedMessage>
+        </DialogTitle>
+        <Grid container>
+          <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue={templateSelected}
+            name="radio-buttons-group"
+            value={templateSelected}
+            onChange={(e) => {
+              setTemplateSelected(e.target.value);
+            }}
+          >
+            <Grid item ml={2}>
+              <FormControlLabel
+                value="new"
+                control={<Radio />}
+                label={intl.formatMessage({
+                  id: "app.collection.add_collection_empty",
+                })}
+              />
+            </Grid>
+            <Grid item ml={2}>
+              <FormControlLabel
+                value="file"
+                control={<Radio />}
+                label={intl.formatMessage({
+                  id: "app.collection.add_collection_import",
+                })}
+              />
+            </Grid>
+            <Grid container style={{ justifyContent: "center" }}>
+              <Grid ml={2} mb={2}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={checkOptions}
+                >
+                  <FormattedMessage id="app.button.accept"></FormattedMessage>
+                </Button>
+              </Grid>
+              <Grid ml={3} mr={2}>
+                <Button variant="contained" color="error" onClick={onClose}>
+                  <FormattedMessage id="app.button.cancel"></FormattedMessage>
+                </Button>
+              </Grid>
+            </Grid>
+          </RadioGroup>
+        </Grid>
+      </Dialog>
+    );
+  }
+
+  SimpleDialog.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+  };
+
+  const handleCloseNewCol = () => {
+    setOpenNew(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const toggleOrderDirection = () => {
     if (orderDirection.includes("down")) {
@@ -308,7 +403,7 @@ function ViewCollection(props) {
                 else {
                   setSearchQuery(e.target.value);
                   fetchData(page, rowsPerPage, rowsOrder, searchQuery);
-                  
+
                   //searchQueryInApi(searchQuery);
                 }
               }}
@@ -545,6 +640,7 @@ function ViewCollection(props) {
             </Grid>
           ))}
         </Grid>
+        <SimpleDialog open={openNew} onClose={handleCloseNewCol} />
         <Grid
           container
           display="flex"

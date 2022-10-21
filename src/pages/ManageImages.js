@@ -9,9 +9,12 @@ import {
   Card,
   Avatar,
   Tooltip,
+  IconButton,
 } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import ConfigService from "../app/api/config.api";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import "../styles/Dashboard.css";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -20,10 +23,21 @@ import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { AppContext } from "../components/AppContext";
 import NoImage from "../images/no-photo-available.png";
 import { CircularProgress } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import { format } from "date-fns";
+import {
+  SetLocaleDateTime,
+} from "../utils/generic";
+import EditImageDialog from "../components/EditImageDialog";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 function ManageImages(props) {
   const [collectionsList, setCollectionsList] = useState([]);
   const [cardHover, setCardHover] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [newImageEdited, setNewImageEdited] = useState();
   const navigate = useNavigate();
   const breadcrumbs = useBreadcrumbs();
   const intl = useIntl();
@@ -32,14 +46,16 @@ function ManageImages(props) {
   const { userData, setUserData } = React.useContext(AppContext);
   const [imageClicked, setImageClicked] = useState(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsOrder, setRowsOrder] = useState("name");
   const [searchQuery, setSearchQuery] = useState("");
   const [totalPages, setTotalPages] = useState(0);
-  const [orderDirection, setOrderDirection] = useState("down");
+  const [orderDirection, setOrderDirection] = useState("up");
   const [images, setImages] = useState([]);
   const [imageSelected, setImageSelected] = useState();
   const [isLoading, setLoading] = useState(true);
+  const loc = SetLocaleDateTime();
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const toggleOrderDirection = () => {
     if (orderDirection.includes("down")) {
@@ -87,61 +103,26 @@ function ManageImages(props) {
   };
 
   const fetchData = async (page, rowsPerPage, orderField, search) => {
-    if (isLoading !== false) {
-      const query = {
-        id: userData.id,
-        page: page,
-        size: rowsPerPage,
-        search: search,
-        orderField: orderField,
-        orderDirection: orderDirection,
-      };
-      ConfigService.getLocalImages(query).then((response) => {
-        setTotalPages(response.data.totalPages);
-        var filteredResponse = [];
-        filteredResponse = response.data.content.filter(
-          (image) => !image.path.includes("http")
-        );
-        filteredResponse.map((i) => setImages((images) => [...images, i.path]));
-        setLoading(false);
-      });
-    }
-  };
-
-  /*useEffect(() => {
-    if (isLoading !== false) {
-      const query = {
-        id: userData.id,
-        page: page,
-        size: 12,
-        search: "",
-        orderField: "name",
-        orderDirection: orderDirection,
-      };
-      ConfigService.getLocalImages(query).then((response) => {
-        setLoading(false);
-        var filteredResponse = [];
-        filteredResponse = response.data.content.filter(
-          (image) => !image.path.includes("http")
-        );
-        filteredResponse.map((i) => setImages((images) => [...images, i.path]));
-        setTotalPages(response.data.totalPages);
-      });
-    }
-  }, [isLoading, images]);*/
-
-  /*useEffect(() => {
-    fetchData(page, rowsPerPage, "name");
-    setOrderDirection("down");
-  }, []);*/
-
-  const checkImage = (item) => {
-    if (item.logo) {
-      if (item.logo.path) {
-        return "/images/uploads/" + item.logo.path;
-      }
-    }
-    return NoImage;
+    //if (isLoading !== false) {
+    const query = {
+      id: userData.id,
+      page: page,
+      size: rowsPerPage,
+      search: search,
+      orderField: orderField,
+      orderDirection: orderDirection,
+    };
+    ConfigService.getLocalImages(query).then((response) => {
+      setTotalPages(response.data.totalPages);
+      var filteredResponse = [];
+      filteredResponse = response.data.content.filter(
+        (image) => !image.path.includes("http")
+      );
+      setImages([])
+      filteredResponse.map((i) => setImages((images) => [...images, i]));
+      setLoading(false);
+    });
+    //}
   };
 
   const avatarStyleClicked = {
@@ -167,18 +148,21 @@ function ManageImages(props) {
   };
 
   const handleDeleteClick = () => {
-    ConfigService.deleteCollection(value, cascade).then((response) => {
+    ConfigService.deleteImage(imageSelected, cascade).then((response) => {
       if (response.data === true) {
         toast.success(
           <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
           { theme: "colored" }
         );
-        var index = collectionsList.findIndex(
-          (collectionsList) => collectionsList.id === value
+        var index = images.findIndex(
+          (images) => images.id === imageSelected.id
         );
         if (index > -1) {
-          collectionsList.splice(index, 1);
-          setCollectionsList([...collectionsList]);
+          images.splice(index, 1);
+          setImages([...images]);
+          setImageSelected(undefined)
+          fetchData(page, rowsPerPage, "name");
+          setLoading(false)
         }
       }
     });
@@ -201,88 +185,310 @@ function ManageImages(props) {
             <FormattedMessage id="app.collection.manage_images_title"></FormattedMessage>
           </Typography>
         </Grid>
-        <Grid container>
-          <Grid item pt={1}>
-            <Typography variant="body1">
-              <FormattedMessage id="app.dialog.search_image"></FormattedMessage>
+        <Grid container pb={2} maxWidth="lg">
+          <Grid item xs={4} pt={1}>
+            <Typography variant="h6" display="inline" component="div">
+              <FormattedMessage id="app.license.show_code"></FormattedMessage>:
             </Typography>
+            <TextField
+              id="items-show"
+              name="items-show"
+              select
+              size="small"
+              sx={{ minWidth: 100 }}
+              value={rowsPerPage}
+              onChange={(event) => {
+                handleChangeShowItems(event.target.value);
+              }}
+            >
+              <MenuItem value="5">5</MenuItem>
+              <MenuItem value="10">10</MenuItem>
+              <MenuItem value="20">20</MenuItem>
+            </TextField>
           </Grid>
-          <Grid item pb={1}>
-            <TextField variant="outlined" size="small" onInput={(e) => {
-              setSearchQuery(e.target.value);
-            }}></TextField>
+          <Grid item xs={4} pt={1}>
+            <Typography variant="h6" display="inline" component="div">
+              <FormattedMessage id="app.collection.view_collections_order_by"></FormattedMessage>
+            </Typography>
+            <TextField
+              id="items-show"
+              name="items-show"
+              select
+              size="small"
+              sx={{ minWidth: 100 }}
+              value={rowsOrder}
+              onChange={(event) => {
+                handleChangeRowOrder(event.target.value);
+              }}
+            >
+              <MenuItem value="name">
+                <FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>
+              </MenuItem>
+            </TextField>
+            <Tooltip
+              title={intl.formatMessage({
+                id: orderDirection.includes("up")
+                  ? "app.tooltip.sort_order_asc"
+                  : "app.tooltip.sort_order_desc",
+              })}
+              arrow
+              followCursor
+            >
+              <IconButton
+                type="submit"
+                aria-label="search"
+                onClick={() => {
+                  handleChangeOrderDirection();
+                }}
+              >
+                {orderDirection.includes("up") ? (
+                  <ArrowUpwardIcon />
+                ) : (
+                  <ArrowDownwardIcon />
+                )}
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Grid item xs={4} pt={1}>
+            <TextField
+              id="search-bar"
+              className="text"
+              value={searchQuery}
+              onChange={(e) => {
+                if (e.target.value.trim().length === 0) {
+                  setSearchQuery("")
+                  fetchData(page, rowsPerPage, "name");
+                }
+                else {
+                  setSearchQuery(e.target.value);
+                  fetchData(page, rowsPerPage, rowsOrder, searchQuery);
+
+                  //searchQueryInApi(searchQuery);
+                }
+              }}
+              onKeyPress={(e) => {
+                searchQueryInApi(searchQuery);
+                if (e.key === 'Enter') {
+                  searchQueryInApi(searchQuery);
+                }
+              }}
+              variant="outlined"
+              placeholder={intl.formatMessage({
+                id: "app.button.search",
+              })}
+              size="small"
+            />
+            <IconButton
+              type="submit"
+              aria-label="search"
+              onClick={(e) => {
+                searchQueryInApi(searchQuery);
+              }}
+            >
+              <SearchIcon style={{ fill: "blue" }} />
+            </IconButton>
           </Grid>
         </Grid>
-        <Box sx={{ display: "flex" }}>
-          <Grid container style={{ border: "3px solid grey" }}>
-            {isLoading === false && images.length > 0 ? (
-              <Grid container spacing={1}>
-                {images.map((i) => (
-                  <Grid item xs={2} key={i} p={2}>
-                    <Card sx={
-                      cardHover === i
-                        ? cardStyleHover
-                        : {
-                          height: 200,
-                          minWidth: 200,
-                          maxWidth: 200,
-                          boxShadow: 3,
+        <Grid container>
+          <Grid item xs={10}>
+            <Grid item xs={12}>
+              <Grid container maxWidth="lg" className="container" style={{ border: "2px solid grey" }}>
+                {isLoading === false && images.length > 0 ? (
+                  <Grid container spacing={3}>
+                    {images.map((i) => (
+                      <Grid item xs={2.4} key={i.id} pl={1}>
+                        <Card sx={
+                          cardHover === i.id
+                            ? cardStyleHover
+                            : {
+                              height: 200,
+                              minWidth: 200,
+                              maxWidth: 200,
+                              boxShadow: 3,
+                            }
                         }
-                    }
-                      onMouseOver={() => {
-                        setCardHover(i);
-                      }}
-                      onMouseOut={() => {
-                        setCardHover(null);
-                      }}
-                    >
-                      <Tooltip title={i} followCursor arrow>
-                        <Avatar
-                          key={i}
-                          variant="rounded"
-                          sx={
-                            imageClicked === i
-                              ? avatarStyleClicked
-                              : avatarStyleHover
-                          }
-                          src={"/images/uploads/" + i} // use normal <img> attributes as props
-                          width="100%"
-                          onClick={(e) => {
-                            setImageClicked(i);
-                            setImageSelected(i);
+                          onMouseOver={() => {
+                            setCardHover(i.id);
                           }}
-                        />
-                      </Tooltip>
-                    </Card>
+                          onMouseOut={() => {
+                            setCardHover(null);
+                          }}
+                        >
+                          <Tooltip title={i.name} followCursor arrow>
+                            <Avatar
+                              key={i.id}
+                              variant="rounded"
+                              sx={
+                                imageClicked === i.id
+                                  ? avatarStyleClicked
+                                  : avatarStyleHover
+                              }
+                              src={"/images/uploads/" + i.path} // use normal <img> attributes as props
+                              width="100%"
+                              onClick={(e) => {
+                                setImageClicked(i.id);
+                                setImageSelected(i);
+                              }}
+                            />
+                          </Tooltip>
+                        </Card>
+                      </Grid>
+                    ))}
                   </Grid>
-                ))}
+                ) : null
+                }
               </Grid>
-            ) :
-              <Box>
-                <CircularProgress disableShrink />
-                <FormattedMessage id="app.images.loading"></FormattedMessage>
-              </Box>}
+            </Grid>
+            <Grid
+              item xs={12}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="10vh"
+              maxWidth="lg"
+            >
+              <Pagination
+                count={totalPages}
+                color="primary"
+                showFirstButton
+                showLastButton
+                page={page}
+                variant="outlined"
+                shape="rounded"
+                onChange={handleChange}
+              />
+            </Grid>
           </Grid>
-        </Box>
-        <Grid
-          container
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          minHeight="10vh"
-        >
-          <Pagination
-            count={totalPages}
-            color="primary"
-            showFirstButton
-            showLastButton
-            page={page}
-            variant="outlined"
-            shape="rounded"
-            onChange={handleChange}
-          />
+          <Grid item xs={2}>
+            <Grid item xs={12}>
+              {imageSelected !== undefined && <Grid container maxWidth="lg" className="container" style={{ border: "2px solid grey" }}>
+                <Grid item xs={2.4} height={"auto"}>
+                  <Card sx={{
+                    minWidth: 265,
+                    maxWidth: 265,
+                    boxShadow: 3,
+
+                  }}
+                  >
+                    <Avatar
+                      variant="rounded"
+                      src={"/images/uploads/" + imageSelected.path} // use normal <img> attributes as props
+                      sx={{
+                        marginLeft: 7,
+                        height: 150,
+                        minWidth: 150,
+                        maxWidth: 150,
+                      }}
+                    />
+                    <Typography
+                      align="left"
+                      mt={1}
+                      ml={1}
+                      color="text.primary"
+                      variant="body1"
+                    >
+                      {imageSelected.path}
+                    </Typography>
+                    <Typography
+                      align="left"
+                      sx={{ mb: 0.5, ml: 1 }}
+                      color="#8F8F8F"
+                      variant="body2"
+                    >
+                      {format(new Date(imageSelected.created), "P", { locale: loc })}
+                    </Typography>
+                    <Typography
+                      align="left"
+                      sx={{ mb: 0.5, ml: 1 }}
+                      color="#8F8F8F"
+                      variant="body2"
+                    >
+                      {imageSelected.dimensions}
+                    </Typography>
+                    <Typography
+                      align="left"
+                      sx={{ mb: 0.5, ml: 1 }}
+                      color="#8F8F8F"
+                      variant="body2"
+                    >
+                      {imageSelected.size}
+                    </Typography>
+                    <Tooltip
+                      title={intl.formatMessage({
+                        id: "app.button.edit",
+                      })}
+                      followCursor
+                      arrow
+                    >
+                      <IconButton
+                        color="primary"
+                        fontSize="large"
+                        sx={{
+                          position: "relative",
+                          height: 55,
+                          width: 55,
+                          mb: 6,
+                        }}
+                        onClick={() => {
+                          setOpenEdit(true);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                      title={intl.formatMessage({
+                        id: "app.button.delete",
+                      })}
+                      followCursor
+                      arrow
+                    >
+                      <IconButton
+                        color="primary"
+                        fontSize="large"
+                        sx={{
+                          position: "relative",
+                          height: 55,
+                          width: 55,
+                          mb: 6,
+                        }}
+                        onClick={() => {
+                          setConfirmOpen(true);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <ConfirmDialog
+                      title={intl.formatMessage({
+                        id: "app.dialog.delete_title",
+                      })}
+                      open={confirmOpen}
+                      setOpen={setConfirmOpen}
+                      onConfirm={handleDeleteClick}
+                      showCascade={false}
+                      setCascade={setCascade}
+                    >
+                      <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+                    </ConfirmDialog>
+                  </Card>
+                </Grid>
+              </Grid>}
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
+
+      <EditImageDialog
+        items={imageSelected}
+        setItem={setImageSelected}
+        newItem={newImageEdited}
+        setNewItem={setNewImageEdited}
+        open={openEdit}
+        setOpen={setOpenEdit}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </EditImageDialog>
     </Box>
   );
 }

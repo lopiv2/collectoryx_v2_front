@@ -40,6 +40,7 @@ const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
 const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
 const IMAGES_URL_SERIE = `${API_URL}/images/create-serie`;
+const DELETE_IMAGE_ID_URL = (id) => `${API_URL}/images/delete-image/${id}`;
 const GET_LOCAL_IMAGES_URL = `${API_URL}/images/get-images-local`;
 const FILE_URL = `${API_URL}/import-file`;
 const FILE_PARSE_URL = `${API_URL}/parse-file`;
@@ -47,6 +48,7 @@ const TOGGLE_COLLECTION_AMBIT_URL = `${API_URL}/toggle-collection-ambit`;
 const TOGGLE_COLLECTION_ITEM_OWN_URL = `${API_URL}/toggle-item-own`;
 const TOGGLE_COLLECTION_ITEM_WISH_URL = `${API_URL}/toggle-item-wish`;
 const UPDATE_COLLECTION_URL = `${API_URL}/update-collection`;
+const UPDATE_IMAGE_URL = `${API_URL}/images/update-image`;
 const UPDATE_ITEM_URL = `${API_URL}/update-item`;
 const UPDATE_SERIE_URL = `${API_URL}/update-serie`;
 const VIEW_COLLECTIONS_URL = `${API_URL}/view-collections`;
@@ -330,6 +332,14 @@ const deleteEvent = (id) => {
 const deleteFeed = (id) => {
   return axios
     .delete(DELETE_FEED_ID_URL(id), { headers: authHeader() })
+    .then((response) => {
+      return response;
+    });
+};
+
+const deleteImage = (image) => {
+  return axios
+    .delete(DELETE_IMAGE_ID_URL(image.id), { headers: authHeader() })
     .then((response) => {
       return response;
     });
@@ -813,6 +823,30 @@ const updateFeed = (values) => {
     });
 };
 
+const updateImage = (values, image) => {
+  const data = {
+    id: values.id,
+    name: values.name,
+    path: values.path,
+    logo: values.logo,
+  };
+  return axios
+    .put(UPDATE_IMAGE_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        //console.log(response.data)
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const updateItem = (values, collection, file, metadata) => {
   const data = {
     id: values.id,
@@ -915,6 +949,7 @@ const ConfigService = {
   deleteCollection,
   deleteEvent,
   deleteFeed,
+  deleteImage,
   deleteSerie,
   getAllApis,
   getAllUserEventsPeriod,
@@ -950,6 +985,7 @@ const ConfigService = {
   updateCollection,
   updateEvent,
   updateFeed,
+  updateImage,
   updateItem,
   updateProfile,
   updateSerie,

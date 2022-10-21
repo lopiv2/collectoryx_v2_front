@@ -23,7 +23,7 @@ function ImportCollectionFile() {
   const intl = useIntl();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
-  //const [finished, setFinished] = React.useState(false); //Acabada la importacion o no
+  const [fieldsFilled, setFieldsFilled] = useState(false); //Si los campos han sido rellenados o no
   const [fields, setFields] = useState([]); //Campos por defecto en coleccion
   const [mappings, setMappings] = useState([]); //Mapeos
   const effectTriggeredRef = React.useRef(false);
@@ -43,11 +43,19 @@ function ImportCollectionFile() {
       .then((response) => {
         setCollection(response.data.content[0].id);
         setCollectionList(response.data.content);
+        mapFields(response.data.content[0].id);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+
+  useEffect(() => {
+    //if the active step is the mapping screen, and file uploaded is not null and records from file are fullfilled...
+    if (activeStep === 1 && selectedFile !== null && records.length > 0) {
+      mapValues();
+    }
+  }, [activeStep, records])
 
   const checkValue = (item) => {
     const result = records.find((record) => record.name === "item");
@@ -55,68 +63,18 @@ function ImportCollectionFile() {
   };
 
   const handleChangeCollection = (event) => {
+    //setMappings([])
     setCollection(event.target.value);
+    mapFields(event.target.value)
+    if (fieldsFilled) {
+      console.log(fields)
+      mapValues();
+    }
   };
 
-  const setValue = (event, field) => {
-    const fieldId = intl.formatMessage({
-      id: field.value,
-    });
-    var index = mappings.findIndex((mapping) => mapping.original === field.key);
-    const updatedMappings = [...mappings];
-    updatedMappings[index].new = event;
-    setMappings(updatedMappings);
-  };
-
-  function handleFileUpload() {
-    ConfigService.putFile(selectedFile).then((response) => {
-      setLoading(false);
-      setRecords(response.data);
-    });
-  }
-
-  function parseFile() {
-    var res = 0;
-    if (!parseTriggeredRef.current) {
-      ConfigService.parseFile(mappings).then((response) => {
-        //console.log(response.data)
-        res = response.data;
-        parseTriggeredRef.current = true;
-        setRecordsImported(res);
-        navigate(-1);
-        toast.success(
-          <FormattedMessage id="app.collection.created"></FormattedMessage>,
-          { theme: "colored" }
-        );   
-      });
-    }
-  }
-
-  useEffect(() => {
-    if (
-      !effectTriggeredRef.current &&
-      records.length > 0 &&
-      fields.length > 0
-    ) {
-      for (let i = 0; i < fields.length; i++) {
-        const field = intl.formatMessage({
-          id: fields[i].value,
-        });
-        const data = {
-          original: fields[i].key,
-          new: records[i].name,
-        };
-        setMappings((mappings) => [...mappings, data]);
-      }
-      const col = {
-        collection: collectionList[0].id,
-      };
-      setMappings((mappings) => [...mappings, col]);
-      effectTriggeredRef.current = true;
-    }
-  }, [records, fields, collectionList]);
-
-  useEffect(() => {
+  const mapFields = (event) => {
+    setFieldsFilled(false)
+    setFields([])
     var tempArray = [];
     tempArray = OptionsService.createCollectionOptions.find(
       (f) => f.value === "New"
@@ -129,10 +87,95 @@ function ImportCollectionFile() {
         };
         setFields((fields) => [...fields, field]);
       }
+      if (collectionList.length > 0) {
+        var index = collectionList.findIndex((col) => col.id === event);
+        if (collectionList[index].metadata !== null) {
+          if (collectionList[index].metadata.length > 0) {
+            for (let i = 0; i < collectionList[index].metadata.length; i++) {
+              const field = {
+                key: collectionList[index].metadata[i].id,
+                value: collectionList[index].metadata[i].name,
+              };
+              setFields((fields) => [...fields, field]);
+            }
+          }
+        }
+      }
+      setFieldsFilled(true)
     } else {
       setFields("");
     }
-  }, []);
+  }
+
+  const mapValues = () => {
+    console.log(fields)
+    for (let i = 0; i < fields.length; i++) {
+      const data = {
+        original: fields[i].key,
+        new: records[0].name,
+      };
+      setMappings((mappings) => [...mappings, data]);
+    }
+    /*const col = {
+      collection: collection,
+    };
+    console.log(collection)
+    setMappings((mappings) => [...mappings, col]);*/
+  }
+
+  const setValue = (event, field) => {
+    /*const fieldId = intl.formatMessage({
+      id: field.value,
+    });*/
+    console.log(mappings)
+    var index = mappings.findIndex((mapping) => mapping.original === field.key);
+    const updatedMappings = [...mappings];
+    updatedMappings[index].new = event;
+    setMappings(updatedMappings);
+  };
+
+  function handleFileUpload() {
+    //ConfigService.putFile(selectedFile).then((response) => {
+      setLoading(false);
+      const data=[
+        {name: "id"},
+        {name: "serie"},
+        {name: "hola"},
+        {name: "prueba"},
+        {name: "casa"},
+      ]
+      setRecords(data);
+      //setRecords(response.data);
+    //});
+  }
+
+  function parseFile() {
+    var res = 0;
+    if (!parseTriggeredRef.current) {
+      console.log(mappings);
+      /*ConfigService.parseFile(mappings).then((response) => {
+        //console.log(response.data)
+        res = response.data;
+        parseTriggeredRef.current = true;
+        setRecordsImported(res);
+        toast.success(
+          <FormattedMessage id="app.collection.created"></FormattedMessage>,
+          { theme: "colored" }
+        );
+      });*/
+    }
+  }
+
+  useEffect(() => {
+    if (
+      !effectTriggeredRef.current &&
+      records.length > 0 &&
+      fields.length > 0 && fieldsFilled === true
+    ) {
+
+      effectTriggeredRef.current = true;
+    }
+  }, [records, fields]);
 
   useEffect(() => {
     if (activeStep === 1 && selectedFile !== null && isLoading === true) {
@@ -234,9 +277,9 @@ function ImportCollectionFile() {
                         id="outlined-basic"
                         size="small"
                         label={item.name}
-                        value={intl.formatMessage({
-                          id: fields[index].value,
-                        })}
+                        value={item.value.includes("app.collection") ? intl.formatMessage({
+                          id: item.value,
+                        }) : item.value}
                         variant="outlined"
                       />
                     </Grid>
@@ -252,7 +295,7 @@ function ImportCollectionFile() {
                           id="demo-simple-select"
                           size="small"
                           onChange={(e) =>
-                            setValue(e.target.value, fields[index])
+                            setValue(e.target.value, item)
                           }
                         >
                           {records?.map((option) => {
@@ -315,8 +358,8 @@ function ImportCollectionFile() {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
+        // find the first step that has been completed
+        steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
@@ -343,8 +386,9 @@ function ImportCollectionFile() {
   };
 
   const handleReset = () => {
-    setActiveStep(0);
-    setCompleted({});
+    //setActiveStep(0);
+    //setCompleted({});
+    navigate(0);
   };
 
   useEffect(() => {

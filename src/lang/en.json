@@ -163,6 +163,8 @@
   "app.collection.item-created": "Item created sucesfully",
   "app.collection.item-edited": "Item edited sucesfully",
   "app.collection.item-deleted": "Item deleted sucesfully",
+  "app.collection.image_name": "Image name",
+  "app.collection.image_edited": "Image edited sucesfully",
   "app.collection.items": "Items",
   "app.collection.collected": "Collected:",
   "app.collection.wanted": "Wanted:",

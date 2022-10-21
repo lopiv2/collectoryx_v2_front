@@ -163,6 +163,8 @@
   "app.collection.item-created": "Elemento creado correctamente",
   "app.collection.item-edited": "Elemento editado correctamente",
   "app.collection.item-deleted": "Elemento borrado correctamente",
+  "app.collection.image_name": "Nombre de imagen",
+  "app.collection.image_edited": "Imagen editada correctamente",
   "app.collection.items": "Articulos",
   "app.collection.collected": "Coleccionadas:",
   "app.collection.wanted": "Deseadas:",
