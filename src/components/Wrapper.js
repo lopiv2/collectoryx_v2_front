@@ -5,7 +5,7 @@ import English from '../lang/en.json';
 const Context = React.createContext();
 const local = navigator.language;
 let lang = English;
-if (local === "en-EN") {
+if (local === "en-US") {
     lang = English;
 } else {
     if (local === "es-ES") {
@@ -23,7 +23,7 @@ const Wrapper = (props) => {
         if (newLocale === 'es-ES') {
             setMessages(Spanish);
         } else {
-            if (newLocale === 'en-EN') {
+            if (newLocale === 'en-US') {
                 setMessages(English);
             }
         }

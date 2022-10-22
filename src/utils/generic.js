@@ -112,7 +112,7 @@ const SetLocaleDateTime = () => {
   switch (context.locale) {
     case "es-ES":
       return esLocale;
-    case "en-EN":
+    case "en-US":
       return enLocale;
     default:
       return enLocale;

@@ -14,6 +14,7 @@ import OptionsService from "../components/DropDownOptions";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AppContext } from "../components/AppContext";
 import { Navigate } from "react-router-dom";
+import { isUndefined } from "lodash";
 
 function ImportCollectionFile() {
   const [selectedFile, setSelectedFile] = useState("");
@@ -33,6 +34,7 @@ function ImportCollectionFile() {
   const [recordsImported, setRecordsImported] = useState(0);
   const { userData, setUserData } = React.useContext(AppContext);
 
+  //Primero
   useEffect(() => {
     const query = {
       id: userData.id,
@@ -43,7 +45,7 @@ function ImportCollectionFile() {
       .then((response) => {
         setCollection(response.data.content[0].id);
         setCollectionList(response.data.content);
-        mapFields(response.data.content[0].id);
+        //mapFields(response.data.content[0].id);
       })
       .catch((err) => {
         console.log(err);
@@ -53,28 +55,44 @@ function ImportCollectionFile() {
   useEffect(() => {
     //if the active step is the mapping screen, and file uploaded is not null and records from file are fullfilled...
     if (activeStep === 1 && selectedFile !== null && records.length > 0) {
-      mapValues();
+      mapFields(collection);
+      //mapValues();
     }
-  }, [activeStep, records])
+  }, [activeStep, records]);
 
   const checkValue = (item) => {
     const result = records.find((record) => record.name === "item");
     return result;
   };
 
+  //En cada cambio de coleccion, obtengo todos los campos Fields
   const handleChangeCollection = (event) => {
-    //setMappings([])
     setCollection(event.target.value);
-    mapFields(event.target.value)
-    if (fieldsFilled) {
-      console.log(fields)
-      mapValues();
-    }
+    setMappings([]);
+    setFields([]);
+    setFieldsFilled(false);
+    mapFields(event.target.value);
   };
 
+  //Si ya estan los campos llenos con su variable, hago el mapeo llamando a mapValues()
+  useEffect(() => {
+    if (fieldsFilled === true) {
+      mapValues();
+      //console.log(fields);
+    }
+  }, [fieldsFilled]);
+
+  //Si ya estan llenos los campos, pongo la variable fieldsFilled a true
+  useEffect(() => {
+    if (fields.length !== 0) {
+      setFieldsFilled(true);
+    } else {
+      setFieldsFilled(false);
+    }
+  }, [fields]);
+
+  //Pick the default fields from collection
   const mapFields = (event) => {
-    setFieldsFilled(false)
-    setFields([])
     var tempArray = [];
     tempArray = OptionsService.createCollectionOptions.find(
       (f) => f.value === "New"
@@ -101,14 +119,12 @@ function ImportCollectionFile() {
           }
         }
       }
-      setFieldsFilled(true)
     } else {
-      setFields("");
+      setFields([]);
     }
-  }
+  };
 
   const mapValues = () => {
-    console.log(fields)
     for (let i = 0; i < fields.length; i++) {
       const data = {
         original: fields[i].key,
@@ -116,18 +132,17 @@ function ImportCollectionFile() {
       };
       setMappings((mappings) => [...mappings, data]);
     }
-    /*const col = {
-      collection: collection,
+    const col = {
+      original: "collection",
+      new: collection,
     };
-    console.log(collection)
-    setMappings((mappings) => [...mappings, col]);*/
-  }
+    setMappings((mappings) => [...mappings, col]);
+  };
 
   const setValue = (event, field) => {
     /*const fieldId = intl.formatMessage({
       id: field.value,
     });*/
-    console.log(mappings)
     var index = mappings.findIndex((mapping) => mapping.original === field.key);
     const updatedMappings = [...mappings];
     updatedMappings[index].new = event;
@@ -135,25 +150,26 @@ function ImportCollectionFile() {
   };
 
   function handleFileUpload() {
-    //ConfigService.putFile(selectedFile).then((response) => {
+    ConfigService.putFile(selectedFile).then((response) => {
       setLoading(false);
-      const data=[
-        {name: "id"},
-        {name: "serie"},
-        {name: "hola"},
-        {name: "prueba"},
-        {name: "casa"},
-      ]
-      setRecords(data);
-      //setRecords(response.data);
-    //});
+      /*const data = [
+      { name: "id" },
+      { name: "serie" },
+      { name: "hola" },
+      { name: "prueba" },
+      { name: "casa" },
+    ];
+    setRecords(data);*/
+      setRecords(response.data);
+    });
   }
 
   function parseFile() {
     var res = 0;
     if (!parseTriggeredRef.current) {
-      console.log(mappings);
-      /*ConfigService.parseFile(mappings).then((response) => {
+      //console.log(mappings);
+      //console.log(collection);
+      ConfigService.parseFile(mappings).then((response) => {
         //console.log(response.data)
         res = response.data;
         parseTriggeredRef.current = true;
@@ -162,7 +178,7 @@ function ImportCollectionFile() {
           <FormattedMessage id="app.collection.created"></FormattedMessage>,
           { theme: "colored" }
         );
-      });*/
+      });
     }
   }
 
@@ -170,9 +186,9 @@ function ImportCollectionFile() {
     if (
       !effectTriggeredRef.current &&
       records.length > 0 &&
-      fields.length > 0 && fieldsFilled === true
+      fields.length > 0 &&
+      fieldsFilled === true
     ) {
-
       effectTriggeredRef.current = true;
     }
   }, [records, fields]);
@@ -186,7 +202,9 @@ function ImportCollectionFile() {
 
   const steps = [
     {
-      label: "Import file",
+      label: intl.formatMessage({
+        id: "app.collection.import_file",
+      }),
       content: (
         <Box>
           <Box sx={{ pt: 2 }}>
@@ -220,7 +238,9 @@ function ImportCollectionFile() {
       ),
     },
     {
-      label: "Link fields",
+      label: intl.formatMessage({
+        id: "app.collection.import_link_fields",
+      }),
       content:
         selectedFile !== "" && activeStep === 1 ? (
           <Box>
@@ -277,9 +297,13 @@ function ImportCollectionFile() {
                         id="outlined-basic"
                         size="small"
                         label={item.name}
-                        value={item.value.includes("app.collection") ? intl.formatMessage({
-                          id: item.value,
-                        }) : item.value}
+                        value={
+                          item.value.includes("app.collection")
+                            ? intl.formatMessage({
+                                id: item.value,
+                              })
+                            : item.value
+                        }
                         variant="outlined"
                       />
                     </Grid>
@@ -294,9 +318,7 @@ function ImportCollectionFile() {
                           select
                           id="demo-simple-select"
                           size="small"
-                          onChange={(e) =>
-                            setValue(e.target.value, item)
-                          }
+                          onChange={(e) => setValue(e.target.value, item)}
                         >
                           {records?.map((option) => {
                             return (
@@ -318,7 +340,9 @@ function ImportCollectionFile() {
         ),
     },
     {
-      label: "Start importing",
+      label: intl.formatMessage({
+        id: "app.collection.import_start import",
+      }),
       content: (
         <Box>
           <Grid container pt={2}>
@@ -358,8 +382,8 @@ function ImportCollectionFile() {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
-        // find the first step that has been completed
-        steps.findIndex((step, i) => !(i in completed))
+          // find the first step that has been completed
+          steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
@@ -400,7 +424,7 @@ function ImportCollectionFile() {
   return (
     <Box sx={{ width: "60%" }}>
       <Typography variant="h4" component="h4">
-        <FormattedMessage id="app.collection.import_collection_title"></FormattedMessage>
+        <FormattedMessage id="app.collection.add_collection_import"></FormattedMessage>
       </Typography>
       <Stepper nonLinear activeStep={activeStep}>
         {steps.map((step, index) => (
