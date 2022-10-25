@@ -9,7 +9,7 @@ export default function LogoDisplay(image) {
         <LazyLoadImage
             alt=""
             height={150}
-            src={'/images/uploads/' + image} // use normal <img> attributes as props
+            src={!image.includes("http") ? "/images/uploads/" + image : image}
             width="100%" />
     )
 }

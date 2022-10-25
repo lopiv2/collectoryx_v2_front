@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Button from "@material-ui/core/Button";
+import { Button } from "@mui/material";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -13,6 +13,8 @@ import { isUndefined } from "lodash";
 import { toast } from "react-toastify";
 import NoImage from "../../images/no-photo-available.png";
 import ImageGalleryDialog from "../ImageGalleryDialog";
+import LinkIcon from '@mui/icons-material/Link';
+import URLImageDialog from "../../components/URLImageDialog";
 
 const EditCollectionDialog = (props) => {
   const { items, open, setOpen, setNewItem } = props;
@@ -21,18 +23,31 @@ const EditCollectionDialog = (props) => {
   const [images, setImages] = useState([]);
   const [img, setImg] = useState();
   const [updatedValues, setUpdatedValues] = useState([]);
+  const [openUrl, setOpenUrl] = useState(false);
+  const [urlImageChosen, setUrlImageChosen] = useState(false); //If a image was selected from url
   const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
   const [imgGallerySelected, setImgGallerySelected] = useState(false);
 
   const fetchImage = async (image) => {
     try {
-      setPreview("/images/uploads/" + image)
+      if(image.includes("http")){
+        setPreview(image)
+      }
+      else{
+        setPreview("/images/uploads/" + image)
+      }     
     } catch (err) {
       console.log(err)
     } finally {
 
     }
   }
+
+  useEffect(() => {
+    if (urlImageChosen === true) {
+      setImg(preview)
+    }
+  }, [urlImageChosen])
 
   const handleImageClick = () => {
     fetchImage(img)
@@ -42,7 +57,7 @@ const EditCollectionDialog = (props) => {
 
   useEffect(() => {
     if (!isUndefined(items)) {
-      if(items.logo!==null){
+      if (items.logo !== null) {
         fetchImage(items.logo.path)
       }
       return NoImage;
@@ -78,7 +93,7 @@ const EditCollectionDialog = (props) => {
           totalPrice: response.data.totalPrice,
           ambit: response.data.ambit,
           logo: {
-            path: removeHash(),
+            path: urlImageChosen ? preview : removeHash(),
           },
         };
         setNewItem(response.data);
@@ -111,7 +126,7 @@ const EditCollectionDialog = (props) => {
               initialValues={{
                 id: items.id,
                 name: items.name,
-                logo: items.logo,
+                logo: items.logo ? items.logo.path : "",
               }}
               validate={(values) => {
                 const errors = {};
@@ -191,9 +206,29 @@ const EditCollectionDialog = (props) => {
                         </Button>
                       </Tooltip>
                     </Grid>
+                    <Grid item>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.collection.add_collection_image_url",
+                        })}
+                        placement="right"
+                        arrow
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={(e) => {
+                            setOpenUrl(true);
+                          }}
+                        >
+                          <LinkIcon />
+                        </Button>
+                      </Tooltip>
+                    </Grid>
                     <DialogActions>
                       <Button
                         variant="contained"
+                        color="success"
                         onClick={() => {
                           setUpdatedValues(values);
                           submitForm(values);
@@ -203,6 +238,7 @@ const EditCollectionDialog = (props) => {
                       </Button>
                       <Button
                         variant="contained"
+                        color="error"
                         onClick={() => setOpen(false)}
                       >
                         <FormattedMessage id="app.button.cancel"></FormattedMessage>
@@ -212,6 +248,14 @@ const EditCollectionDialog = (props) => {
                 </Form>
               )}
             </Formik>
+            <URLImageDialog
+              setUrl={setPreview}
+              setUrlImageChosen={setUrlImageChosen}
+              open={openUrl}
+              setOpen={setOpenUrl}
+            >
+              <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+            </URLImageDialog>
             <ImageGalleryDialog
               title={intl.formatMessage({
                 id: "app.dialog.gallery_title",

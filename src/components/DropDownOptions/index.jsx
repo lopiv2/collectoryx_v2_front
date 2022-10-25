@@ -81,7 +81,7 @@ const createCollectionOptions = [
         value: (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>),
       }]
   },
-  {
+  /*{
     label: <FormattedMessage id="app.collection.coins"></FormattedMessage>,
     value: "Coins",
   },
@@ -94,7 +94,7 @@ const createCollectionOptions = [
       <FormattedMessage id="app.collection.digital_collection"></FormattedMessage>
     ),
     value: "Digital_Collection",
-  },
+  },*/
 ];
 
 const fieldTypes = [

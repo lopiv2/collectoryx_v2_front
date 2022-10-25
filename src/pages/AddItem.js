@@ -24,6 +24,9 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { Tooltip } from "@mui/material";
 import { format } from "date-fns";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
+import { FeatureForImplement } from "../utils/generic";
+import LinkIcon from '@mui/icons-material/Link';
+import URLImageDialog from "../components/URLImageDialog";
 
 const localeMap = {
   en: enLocale,
@@ -46,6 +49,8 @@ function AddItem(props) {
   const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
   const [img, setImg] = useState();
   const [imgGallerySelected, setImgGallerySelected] = useState(false);
+  const [openUrl, setOpenUrl] = useState(false);
+  const [urlImageChosen, setUrlImageChosen] = useState(false); //If a image was selected from url
 
   const handleChangeOwn = (event) => {
     setOwn(event.target.checked);
@@ -152,10 +157,26 @@ function AddItem(props) {
   };
 
   const submitForm = (values) => {
-    //console.log(values)
-    //Si se sube imagen desde la galeria
+    //If image was chosen from URL
     values.metadata = metadataValues;
-    if (imgGallerySelected === true) {
+    if (urlImageChosen === true && values.file===undefined) {
+      ConfigService.createItem(
+        values,
+        location.state.id,
+        preview,
+        values.metadata
+      ).then((response) => {
+        if (response.status === 200) {
+          navigate(-1);
+          toast.success(
+            <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
+            { theme: "colored" }
+          );
+        }
+      });
+    }
+    //Image from gallery
+    if (imgGallerySelected === true && urlImageChosen === false) {
       ConfigService.createItem(
         values,
         location.state.id,
@@ -171,8 +192,8 @@ function AddItem(props) {
         }
       });
     }
-    //Si no se sube imagen
-    if (values.file === undefined && imgGallerySelected === false) {
+    //Image not set
+    if (values.file === undefined && imgGallerySelected === false && urlImageChosen === false) {
       ConfigService.createItem(
         values,
         location.state.id,
@@ -188,8 +209,8 @@ function AddItem(props) {
         }
       });
     }
-    //Si se sube imagen nueva y no de galeria
-    if (values.file !== undefined && imgGallerySelected === false) {
+    //New image uploaded not from gallery nor url
+    if (values.file !== undefined && imgGallerySelected === false && urlImageChosen === false) {
       ConfigService.putImage(values.name, values.file).then((response) => {
         ConfigService.createItem(
           values,
@@ -372,6 +393,25 @@ function AddItem(props) {
                     <Grid item>
                       <Tooltip
                         title={intl.formatMessage({
+                          id: "app.collection.add_collection_image_url",
+                        })}
+                        placement="right"
+                        arrow
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={(e) => {
+                            setOpenUrl(true);
+                          }}
+                        >
+                          <LinkIcon />
+                        </Button>
+                      </Tooltip>
+                    </Grid>
+                    {/*<Grid item>
+                      <Tooltip
+                        title={intl.formatMessage({
                           id: "app.tooltip.search_google",
                         })}
                         placement="right"
@@ -381,15 +421,15 @@ function AddItem(props) {
                           color="primary"
                           variant="contained"
                           onClick={(e) => {
-                            searchWebClick(values.name);
+                            FeatureForImplement();
+                            //searchWebClick(values.name);
                           }}
                         >
                           <GoogleIcon></GoogleIcon>
                         </Button>
                       </Tooltip>
-                    </Grid>
+                        </Grid>*/}
                   </Grid>
-
                   <Grid container spacing={40}>
                     <Grid item xs={2}>
                       <Box pt={2} ml={2}>
@@ -591,6 +631,14 @@ function AddItem(props) {
           </Formik>
         </Grid>
       </Grid>
+      <URLImageDialog
+        setUrl={setPreview}
+        setUrlImageChosen={setUrlImageChosen}
+        open={openUrl}
+        setOpen={setOpenUrl}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </URLImageDialog>
       <ImageGalleryDialog
         title={intl.formatMessage({
           id: "app.dialog.gallery_title",
@@ -602,7 +650,7 @@ function AddItem(props) {
       >
         <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
       </ImageGalleryDialog>
-    </Box>
+    </Box >
   );
 }
 

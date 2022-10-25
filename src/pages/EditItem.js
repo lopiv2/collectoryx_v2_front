@@ -25,6 +25,8 @@ import { Tooltip } from "@mui/material";
 import { format } from "date-fns";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
 import { isUndefined } from "lodash";
+import URLImageDialog from "../components/URLImageDialog";
+import LinkIcon from '@mui/icons-material/Link';
 
 const localeMap = {
   en: enLocale,
@@ -47,6 +49,8 @@ function EditItem(props) {
   const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
   const [img, setImg] = useState();
   const [imgGallerySelected, setImgGallerySelected] = useState(false);
+  const [urlImageChosen, setUrlImageChosen] = useState(false); //If a image was selected from url
+  const [openUrl, setOpenUrl] = useState(false);
 
   useEffect(() => {
     if (location.state !== null) {
@@ -147,7 +151,7 @@ function EditItem(props) {
         serie: location.state.item.serie ? location.state.item.serie.id : null,
         price: location.state.item.price,
         year: location.state.item.year,
-        adquiringDate: date,
+        acquiringDate: date,
         own: location.state.item.own,
         image: "",
         notes: location.state.item.notes,
@@ -159,9 +163,25 @@ function EditItem(props) {
   }, [location.state]);
 
   const submitForm = (values) => {
-    //console.log(values);
-    //Tiene imagen seteada ya en la BBDD y la actualizamos desde galeria de imagenes sin subir nada
-    if (preview !== undefined && imgGallerySelected === true) {
+    //Image set from URL
+    if (urlImageChosen === true && values.file === undefined) {
+      ConfigService.updateItem(
+        values,
+        location.state.id,
+        preview,
+        values.metadata
+      ).then((response) => {
+        if (response.status === 200) {
+          navigate(-1);
+          toast.success(
+            <FormattedMessage id="app.collection.item-edited"></FormattedMessage>,
+            { theme: "colored" }
+          );
+        }
+      });
+    }
+    //Image set in Database and updated from gallery
+    if (preview !== undefined && imgGallerySelected === true && urlImageChosen === false) {
       ConfigService.updateItem(
         values,
         location.state.id,
@@ -177,11 +197,11 @@ function EditItem(props) {
         }
       });
     }
-    //Tiene imagen seteada ya en la BBDD y no la actualizamos
+    //Image set in Database and not updated from gallery
     if (
       preview !== undefined &&
       values.file === undefined &&
-      imgGallerySelected === false
+      imgGallerySelected === false && urlImageChosen === false
     ) {
       ConfigService.updateItem(
         values,
@@ -198,8 +218,8 @@ function EditItem(props) {
         }
       });
     }
-    //Si no tiene imagen seteada y no actualizamos dicha imagen
-    if (preview === undefined && values.file === undefined) {
+    //Image not set in Database and not updated
+    if (preview === undefined && values.file === undefined && urlImageChosen === false) {
       ConfigService.updateItem(
         values,
         location.state.id,
@@ -215,12 +235,10 @@ function EditItem(props) {
         }
       });
     }
-    //Si se actualiza la imagen, sea la que sea
+    //Image updated
     if (values.file !== undefined) {
       ConfigService.putImage(values.name, values.file).then((response) => {
         if (response.data.path) {
-          //console.log(preview)
-          //console.log(response.data.path)
           ConfigService.updateItem(
             values,
             location.state.id,
@@ -266,7 +284,7 @@ function EditItem(props) {
         }
       }
       setOwn(location.state.item.own);
-      const dateFormatPickup = new Date(location.state.item.adquiringDate);
+      const dateFormatPickup = new Date(location.state.item.acquiringDate);
       setDate(dateFormatPickup);
     }
   }, [location.state]);
@@ -304,7 +322,7 @@ function EditItem(props) {
       .required(
         <FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>
       ),
-    /*adquiringDate: Yup.date()
+    /*acquiringDate: Yup.date()
             .required(<FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>),*/
   });
   //console.log(location.state.item)
@@ -328,7 +346,7 @@ function EditItem(props) {
                 onSubmit={(values, { setSubmitting }) => {
                   values.own = own;
                   const d = format(new Date(date), "yyyy-MM-dd");
-                  values.adquiringDate = d;
+                  values.acquiringDate = d;
                   submitForm(values);
                   setSubmitting(false);
                 }}
@@ -413,7 +431,7 @@ function EditItem(props) {
                           <Grid item>
                             <Tooltip
                               title={intl.formatMessage({
-                                id: "app.tooltip.search_google",
+                                id: "app.collection.add_collection_image_url",
                               })}
                               placement="right"
                               arrow
@@ -422,10 +440,10 @@ function EditItem(props) {
                                 color="primary"
                                 variant="contained"
                                 onClick={(e) => {
-                                  console.log(e);
+                                  setOpenUrl(true);
                                 }}
                               >
-                                <GoogleIcon></GoogleIcon>
+                                <LinkIcon />
                               </Button>
                             </Tooltip>
                           </Grid>
@@ -646,6 +664,14 @@ function EditItem(props) {
             )}
           </Grid>
         </Grid>
+        <URLImageDialog
+          setUrl={setPreview}
+          setUrlImageChosen={setUrlImageChosen}
+          open={openUrl}
+          setOpen={setOpenUrl}
+        >
+          <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+        </URLImageDialog>
         <ImageGalleryDialog
           title={intl.formatMessage({
             id: "app.dialog.gallery_title",

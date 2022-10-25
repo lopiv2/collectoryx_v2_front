@@ -13,6 +13,8 @@ import { isUndefined } from "lodash";
 import { toast } from "react-toastify";
 import ImageGalleryDialog from "../ImageGalleryDialog";
 import NoImage from "../../images/no-photo-available.png";
+import LinkIcon from '@mui/icons-material/Link';
+import URLImageDialog from "../../components/URLImageDialog";
 
 const EditSerieDialog = (props) => {
   const { items, open, setOpen, setNewItem } =
@@ -22,12 +24,19 @@ const EditSerieDialog = (props) => {
   const [collection, setCollection] = useState();
   const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
   const [imgGallerySelected, setImgGallerySelected] = useState(false);
+  const [openUrl, setOpenUrl] = useState(false);
+  const [urlImageChosen, setUrlImageChosen] = useState(false); //If a image was selected from url
   const [img, setImg] = useState();
   const [preview, setPreview] = useState();
 
   const fetchImage = async (image) => {
     try {
-      setPreview("/images/uploads/" + image)
+      if(image.includes("http")){
+        setPreview(image)
+      }
+      else{
+        setPreview("/images/uploads/" + image)
+      }     
     } catch (err) {
       console.log(err)
     } finally {
@@ -37,34 +46,24 @@ const EditSerieDialog = (props) => {
 
   useEffect(() => {
     if (!isUndefined(items)) {
-      if(items.logo!==null){
+      if (items.logo !== null) {
         fetchImage(items.logo.path)
       }
       return NoImage;
     };
   }, [items])
 
+  useEffect(() => {
+    if (urlImageChosen === true) {
+      setImg(preview)
+    }
+  }, [urlImageChosen])
+
   const handleImageClick = () => {
     fetchImage(img)
     setImgGallerySelected(true);
     //setPreview(img)
   };
-
-  /*const avatarStyleClicked = {
-    border: "2px solid green",
-    width: 80,
-    height: 80,
-  };
-
-  const avatarStyleHover = {
-    cursor: "pointer",
-    width: 80,
-    height: 80,
-  };*/
-
-  /*const handleChangeCollection = (event) => {
-    setCollection(event.target.value);
-  };*/
 
   const newSerieSchema = Yup.object().shape({
     name: Yup.string().required(
@@ -80,6 +79,7 @@ const EditSerieDialog = (props) => {
   }
 
   const submitForm = (values) => {
+    //If image chosen is from URL
     ConfigService.updateSerie(values, img).then((response) => {
       if (response.status === 200) {
         toast.success(
@@ -91,7 +91,7 @@ const EditSerieDialog = (props) => {
           name: values.name,
           collection: response.data.collection,
           logo: {
-            path: removeHash(),
+            path: urlImageChosen ? preview : removeHash(),
           },
         };
         setNewItem(data);
@@ -229,6 +229,25 @@ const EditSerieDialog = (props) => {
                         </Button>
                       </Tooltip>
                     </Grid>
+                    <Grid item>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.collection.add_collection_image_url",
+                        })}
+                        placement="right"
+                        arrow
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={(e) => {
+                            setOpenUrl(true);
+                          }}
+                        >
+                          <LinkIcon />
+                        </Button>
+                      </Tooltip>
+                    </Grid>
                     <DialogActions>
                       <Button
                         variant="contained"
@@ -249,6 +268,14 @@ const EditSerieDialog = (props) => {
                 </Form>
               )}
             </Formik>
+            <URLImageDialog
+              setUrl={setPreview}
+              setUrlImageChosen={setUrlImageChosen}
+              open={openUrl}
+              setOpen={setOpenUrl}
+            >
+              <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+            </URLImageDialog>
             <ImageGalleryDialog
               title={intl.formatMessage({
                 id: "app.dialog.gallery_title",

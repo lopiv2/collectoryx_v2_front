@@ -517,7 +517,7 @@ function ViewCollection(props) {
                         <CardMedia
                           component="img"
                           width="100%"
-                          image={"/images/uploads/" + item.logo.path}
+                          image={!item.logo.path.includes("http") ? "/images/uploads/" + item.logo.path : item.logo.path}
                           alt={item.name}
                           className="card-collection-no-pointer"
                           style={styles}

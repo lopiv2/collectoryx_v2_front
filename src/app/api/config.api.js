@@ -172,7 +172,7 @@ const createItem = (values, collection, file, metadata) => {
     serie: values.serie,
     price: values.price,
     year: values.year,
-    adquiringDate: values.adquiringDate,
+    acquiringDate: values.acquiringDate,
     own: values.own,
     notes: values.notes,
     image: file,
@@ -250,7 +250,7 @@ const createSerie = (name, collection, file) => {
   const data = {
     name: name,
     collection: collection,
-    file: file,
+    path: file,
   };
   return axios
     .post(CREATE_SERIE_URL, data, { headers: authHeader() })
@@ -702,7 +702,6 @@ const toggleItemOwn = (id, own, wanted) => {
   return axios
     .post(TOGGLE_COLLECTION_ITEM_OWN_URL, data, { headers: authHeader() })
     .then((response) => {
-      //console.log(response);
       return response;
     });
 };
@@ -855,7 +854,7 @@ const updateItem = (values, collection, file, metadata) => {
     serie: values.serie,
     price: values.price,
     year: values.year,
-    adquiringDate: values.adquiringDate,
+    acquiringDate: values.acquiringDate,
     own: values.own,
     notes: values.notes,
     image: file,

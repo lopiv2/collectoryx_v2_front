@@ -173,7 +173,7 @@ export default function BarChartYearly(props) {
                 //console.log(response.data)
                 for (var month = 1; month < 13; month++) {
                     response.data.filter(function (element) {
-                        var date = new Date(element.adquiringDate)
+                        var date = new Date(element.acquiringDate)
                         if (date.getMonth() + 1 === month) {
                             priceCount += element.price;
                         }

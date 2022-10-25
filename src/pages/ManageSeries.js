@@ -10,7 +10,7 @@ import NoImage from "../images/no-photo-available.png";
 import MaterialTable from "@material-table/core";
 import { ToastContainer, toast } from "react-toastify";
 import { Formik, Form } from "formik";
-import { TextField, MenuItem } from "@mui/material";
+import { TextField, MenuItem, Tooltip } from "@mui/material";
 import { useIntl } from "react-intl";
 import { Avatar } from "@mui/material";
 import * as Yup from "yup";
@@ -21,6 +21,9 @@ import EditSerieDialog from "../components/EditSerieDialog";
 import { isUndefined } from "lodash";
 import { AppContext } from "../components/AppContext";
 import { useNavigate } from "react-router-dom";
+import ImageGalleryDialog from "../components/ImageGalleryDialog";
+import LinkIcon from '@mui/icons-material/Link';
+import URLImageDialog from "../components/URLImageDialog";
 
 function ManageSeries(props) {
   const [collectionSeriesList, setCollectionSeriesList] = useState([]);
@@ -36,7 +39,17 @@ function ManageSeries(props) {
   const [value, setValue] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const { userData, setUserData } = React.useContext(AppContext);
+  const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
+  const [img, setImg] = useState();
+  const [imgGallerySelected, setImgGallerySelected] = useState(false);
+  const [urlImageChosen, setUrlImageChosen] = useState(false); //If a image was selected from url
+  const [openUrl, setOpenUrl] = useState(false);
   const navigate = useNavigate();
+
+  const handleImageClick = () => {
+    setPreview("/images/uploads/" + img);
+    setImgGallerySelected(true);
+  };
 
   const handleDeleteClick = () => {
     ConfigService.deleteSerie(value).then((response) => {
@@ -102,7 +115,8 @@ function ManageSeries(props) {
   }, [selectedFile]);
 
   const submitForm = (values) => {
-    if (values.file === undefined) {
+    //Empty serie without any kind of image
+    if (values.file === undefined && imgGallerySelected === false && urlImageChosen === false) {
       ConfigService.createSerie(values.name, values.collection, null).then(
         (response) => {
           if (response.status === 200) {
@@ -117,7 +131,26 @@ function ManageSeries(props) {
           }
         }
       );
-    } else {
+    }
+    //Create Serie with uploading image from gallery or url
+    if (values.file === undefined && (imgGallerySelected === true || urlImageChosen === true)) {
+      ConfigService.createSerie(values.name, values.collection, preview).then(
+        (response) => {
+          if (response.status === 200) {
+            toast.success(
+              <FormattedMessage id="app.collection.serie-created"></FormattedMessage>,
+              { theme: "colored" }
+            );
+            setCollectionSeriesList((collectionSeriesList) => [
+              ...collectionSeriesList,
+              response.data,
+            ]);
+          }
+        }
+      );
+    }
+    //Create Serie with uploading image
+    if (values.file !== undefined && imgGallerySelected === false && urlImageChosen === false) {
       ConfigService.createSerieWithImage(values.name, values.file, values.collection).then((response) => {
         if (response.data !== null) {
           if (response.status === 200) {
@@ -193,7 +226,6 @@ function ManageSeries(props) {
   ];
 
   const data = collectionSeriesList.map((item) => {
-    //console.log(item)
     let cols = {
       id: item.id,
       name: item.name,
@@ -208,7 +240,7 @@ function ManageSeries(props) {
         ) : (
           <Avatar
             variant="rounded"
-            src={"/images/uploads/" + item.logo.path}
+            src={!item.logo.path.includes("http") ? "/images/uploads/" + item.logo.path : item.logo.path}
             sx={{ width: 100, height: 35 }}
           ></Avatar>
         ),
@@ -277,7 +309,7 @@ function ManageSeries(props) {
                       />
                     </Box>
                   </Grid>
-                  <Grid item xs={9}>
+                  <Grid item xs={9} mb={2}>
                     <TextField
                       id="demo-simple-select"
                       name="collection"
@@ -302,7 +334,7 @@ function ManageSeries(props) {
                       })}
                     </TextField>
                   </Grid>
-                  <Grid item xs={4} pt={1}>
+                  {/*<Grid item xs={4} pt={1}>
                     <TextField
                       sx={{ minWidth: 300 }}
                       size="small"
@@ -316,25 +348,67 @@ function ManageSeries(props) {
                       variant="outlined"
                       value={selectedFile ? selectedFile.name || "" : ""}
                     />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Box ml={20}>
-                      <Button variant="contained" component="label">
-                        {
-                          <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
-                        }
-                        <input
-                          type="file"
-                          hidden
-                          name="file"
-                          accept="image/png, image/jpeg"
-                          onChange={(e) => {
-                            setFieldValue("file", e.currentTarget.files[0]);
-                            setSelectedFile(e.currentTarget.files[0]);
+                    </Grid>*/}
+                  <Grid container spacing={2} ml={0}>
+                    <Grid item>
+                      <Box>
+                        <Button variant="contained" component="label">
+                          {
+                            <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
+                          }
+                          <input
+                            type="file"
+                            hidden
+                            name="file"
+                            accept="image/png, image/jpeg"
+                            onChange={(e) => {
+                              setFieldValue("file", e.currentTarget.files[0]);
+                              setSelectedFile(e.currentTarget.files[0]);
+                            }}
+                          />
+                        </Button>
+                      </Box>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.tooltip.search_gallery",
+                        })}
+                        placement="bottom"
+                        arrow
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={(e) => {
+                            setConfirmOpenGallery(true);
                           }}
-                        />
-                      </Button>
-                    </Box>
+                        >
+                          {
+                            <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
+                          }
+                        </Button>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.collection.add_collection_image_url",
+                        })}
+                        placement="right"
+                        arrow
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={(e) => {
+                            setOpenUrl(true);
+                          }}
+                        >
+                          <LinkIcon />
+                        </Button>
+                      </Tooltip>
+                    </Grid>
                   </Grid>
                   <Grid item xs={12} pt={1}>
                     <Box
@@ -386,6 +460,25 @@ function ManageSeries(props) {
       >
         <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
       </ConfirmDialog>
+      <URLImageDialog
+        setUrl={setPreview}
+        setUrlImageChosen={setUrlImageChosen}
+        open={openUrl}
+        setOpen={setOpenUrl}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </URLImageDialog>
+      <ImageGalleryDialog
+        title={intl.formatMessage({
+          id: "app.dialog.gallery_title",
+        })}
+        open={confirmOpenGallery}
+        setImageSelected={setImg}
+        setOpen={setConfirmOpenGallery}
+        onConfirm={handleImageClick}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </ImageGalleryDialog>
       <EditSerieDialog
         items={serieEdited}
         collectionList={collectionList}

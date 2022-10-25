@@ -20,6 +20,8 @@ import * as Yup from "yup";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Tooltip } from "@mui/material";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
+import LinkIcon from '@mui/icons-material/Link';
+import URLImageDialog from "../components/URLImageDialog";
 
 function AddCollection() {
   const [template, setTemplate] = useState("");
@@ -33,6 +35,8 @@ function AddCollection() {
   const [img, setImg] = useState();
   const [imgGallerySelected, setImgGallerySelected] = useState(false);
   const [licenseCollections, setLicenseCollections] = useState([]);
+  const [openUrl, setOpenUrl] = useState(false);
+  const [urlImageChosen, setUrlImageChosen] = useState(false); //If a image was selected from url
 
   const handleChangeTemplate = (event) => {
     setTemplate(event.target.value);
@@ -71,8 +75,26 @@ function AddCollection() {
   }
 
   const submitForm = (values) => {
-    //Si se sube imagen desde la galeria
-    if (imgGallerySelected === true) {
+    //If image was chosen from URL
+    if (urlImageChosen === true && values.file === undefined) {
+      ConfigService.createCollection(
+        values.name,
+        values.template,
+        preview,
+        values.metadata,
+        userData.id
+      ).then((response) => {
+        if (response.status === 200) {
+          navigate(-1);
+          toast.success(
+            <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
+            { theme: "colored" }
+          );
+        }
+      });
+    }
+    //Image from gallery
+    if (imgGallerySelected === true && urlImageChosen === false) {
       ConfigService.createCollection(
         values.name,
         values.template,
@@ -89,9 +111,8 @@ function AddCollection() {
         }
       });
     }
-
-    //Si no se sube imagen
-    if (values.file === undefined && imgGallerySelected === false) {
+    //Image not set
+    if (values.file === undefined && imgGallerySelected === false && urlImageChosen === false) {
       ConfigService.createCollection(
         values.name,
         values.template,
@@ -108,8 +129,8 @@ function AddCollection() {
         }
       });
     }
-    //Si se sube imagen nueva y no de galeria
-    if (values.file !== undefined && imgGallerySelected === false) {
+    //New image uploaded not from gallery nor url
+    if (values.file !== undefined && imgGallerySelected === false && urlImageChosen === false) {
       ConfigService.putImage(values.name, values.file).then((resp) => {
         ConfigService.createCollection(
           values.name,
@@ -296,7 +317,26 @@ function AddCollection() {
                     </Button>
                   </Tooltip>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item>
+                  <Tooltip
+                    title={intl.formatMessage({
+                      id: "app.collection.add_collection_image_url",
+                    })}
+                    placement="right"
+                    arrow
+                  >
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={(e) => {
+                        setOpenUrl(true);
+                      }}
+                    >
+                      <LinkIcon />
+                    </Button>
+                  </Tooltip>
+                </Grid>
+                {/*<Grid item xs={2}>
                   <Tooltip
                     title={intl.formatMessage({
                       id: "app.tooltip.search_google",
@@ -314,7 +354,7 @@ function AddCollection() {
                       <GoogleIcon></GoogleIcon>
                     </Button>
                   </Tooltip>
-                </Grid>
+                    </Grid>*/}
                 <Grid item xs={12}>
                   <Box pt={2}>
                     <TextField
@@ -412,6 +452,14 @@ function AddCollection() {
           )}
         </Formik>
       </Grid>
+      <URLImageDialog
+        setUrl={setPreview}
+        setUrlImageChosen={setUrlImageChosen}
+        open={openUrl}
+        setOpen={setOpenUrl}
+      >
+        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+      </URLImageDialog>
       <ImageGalleryDialog
         title={intl.formatMessage({
           id: "app.dialog.gallery_title",

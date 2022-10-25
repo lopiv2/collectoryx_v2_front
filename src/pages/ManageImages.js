@@ -18,11 +18,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import "../styles/Dashboard.css";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import OptionsService from "../components/DropDownOptions";
 import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { AppContext } from "../components/AppContext";
-import NoImage from "../images/no-photo-available.png";
-import { CircularProgress } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -34,14 +31,12 @@ import EditImageDialog from "../components/EditImageDialog";
 import ConfirmDialog from "../components/ConfirmDialog";
 
 function ManageImages(props) {
-  const [collectionsList, setCollectionsList] = useState([]);
   const [cardHover, setCardHover] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [newImageEdited, setNewImageEdited] = useState();
   const navigate = useNavigate();
   const breadcrumbs = useBreadcrumbs();
   const intl = useIntl();
-  const [value, setValue] = useState(null);
   const [cascade, setCascade] = useState(false);
   const { userData, setUserData } = React.useContext(AppContext);
   const [imageClicked, setImageClicked] = useState(null);

@@ -299,6 +299,7 @@ function DisplayCollection(props) {
       );
       let newItems = [...collectionItems];
       newItems[index].own = response.data.own;
+      newItems[index].acquiringDate = response.data.acquiringDate;
       if (response.data.own) {
         setMoneySpent(moneySpent + response.data.price);
         setCollected(collected + 1);
@@ -778,10 +779,10 @@ function DisplayCollection(props) {
                       setSearchQuery("")
                       fetchData(page, rowsPerPage, "name");
                     }
-                    else{
-                      setSearchQuery(e.target.value); 
+                    else {
+                      setSearchQuery(e.target.value);
                       fetchData(page, rowsPerPage, rowsOrder, searchQuery);
-                    }                       
+                    }
                   }}
                   onKeyPress={(e) => {
                     searchQueryInApi(searchQuery);
@@ -1134,7 +1135,7 @@ function DisplayCollection(props) {
                       <ListItem>
                         <Typography variant="body1">
                           <FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>
-                          : {format(new Date(), "P", { locale: loc })}
+                          : {itemSelected.own ? format(new Date(itemSelected.acquiringDate), "P", { locale: loc }) : ""}
                         </Typography>
                       </ListItem>
                       {itemSelected.metadata.length > 0 ? <Divider /> : null}
@@ -1145,7 +1146,7 @@ function DisplayCollection(props) {
                               {item.name} : {item.value}
                             </Typography>
                           </ListItem>
-                        );
+                        );                     
                       })}
                     </List>
                   </Paper>

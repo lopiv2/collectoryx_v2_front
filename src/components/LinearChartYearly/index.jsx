@@ -129,7 +129,7 @@ export default function LinearChartYearly(props) {
                 setCollectionItems(response.data);
                 for (var month = 1; month < 13; month++) {
                     var countfiltered = response.data.filter(function (element) {
-                        var date = new Date(element.adquiringDate)
+                        var date = new Date(element.acquiringDate)
                         return date.getMonth() + 1 == month;
                     }).length
                     var index = collectionItemsGroup.findIndex(x => x.label == month);

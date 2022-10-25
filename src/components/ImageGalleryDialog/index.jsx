@@ -8,17 +8,24 @@ import { FormattedMessage } from "react-intl";
 import { Grid, Box, Avatar, TextField, Typography } from "@mui/material";
 import { Tooltip } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
+import { AppContext } from "../../components/AppContext";
 
 const ImageGalleryDialog = (props) => {
   const { title, open, setOpen, onConfirm, setImageSelected } = props;
   const [images, setImages] = useState([]);
   const [imageClicked, setImageClicked] = useState();
+  const { userData, setUserData } = React.useContext(AppContext);
 
   useEffect(() => {
     if (open === true) {
-      ConfigService.getLocalImages().then((response) => {
+      const query = {
+        id: userData.id,
+        orderField: "id",
+        orderDirection: "up",
+      };
+      ConfigService.getLocalImages(query).then((response) => {
         var filteredResponse = []
-        filteredResponse = response.data.filter(image => !image.path.includes("http"))
+        filteredResponse = response.data.content.filter(image => !image.path.includes("http"))
         filteredResponse.map((i) =>
           setImages((images) => [...images, i.path]));
       });

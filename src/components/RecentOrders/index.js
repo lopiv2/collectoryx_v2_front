@@ -38,7 +38,7 @@ export default function RecentOrders() {
 
   const data = collectionItems.map((item) => {
     let rows = {
-      date: format(new Date(item.adquiringDate), 'P', { locale: loc }),
+      date: format(new Date(item.acquiringDate), 'P', { locale: loc }),
       id: item.id,
       name: item.name,
       serie: item.serie !== null ? item.serie.name : "",
