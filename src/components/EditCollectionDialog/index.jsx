@@ -15,12 +15,13 @@ import NoImage from "../../images/no-photo-available.png";
 import ImageGalleryDialog from "../ImageGalleryDialog";
 import LinkIcon from '@mui/icons-material/Link';
 import URLImageDialog from "../../components/URLImageDialog";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const EditCollectionDialog = (props) => {
   const { items, open, setOpen, setNewItem } = props;
   const intl = useIntl();
   const [preview, setPreview] = useState();
-  const [images, setImages] = useState([]);
+  //const [images, setImages] = useState([]);
   const [img, setImg] = useState();
   const [updatedValues, setUpdatedValues] = useState([]);
   const [openUrl, setOpenUrl] = useState(false);
@@ -30,12 +31,12 @@ const EditCollectionDialog = (props) => {
 
   const fetchImage = async (image) => {
     try {
-      if(image.includes("http")){
+      if (image.includes("http")) {
         setPreview(image)
       }
-      else{
+      else {
         setPreview("/images/uploads/" + image)
-      }     
+      }
     } catch (err) {
       console.log(err)
     } finally {
@@ -77,6 +78,10 @@ const EditCollectionDialog = (props) => {
     return prev.replace(ca, "") + ext;
   }
 
+  const deleteImage = () => {
+    setPreview(null)
+  }
+
   const submitForm = (values) => {
     ConfigService.updateCollection(values, img).then((response) => {
       if (response.status === 200) {
@@ -93,7 +98,7 @@ const EditCollectionDialog = (props) => {
           totalPrice: response.data.totalPrice,
           ambit: response.data.ambit,
           logo: {
-            path: urlImageChosen ? preview : removeHash(),
+            path: urlImageChosen ? preview : preview !== null ? removeHash() : null,
           },
         };
         setNewItem(response.data);
@@ -184,6 +189,25 @@ const EditCollectionDialog = (props) => {
                         alt="Logo"
                         src={preview ? preview : NoImage}
                       ></Box>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.collection.add_collection_image_delete",
+                        })}
+                        placement="right"
+                        arrow
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={(e) => {
+                            deleteImage();
+                          }}
+                        >
+                          <DeleteIcon />
+                        </Button>
+                      </Tooltip>
                     </Grid>
                     <Grid item>
                       <Tooltip

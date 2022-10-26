@@ -15,11 +15,12 @@ import ImageGalleryDialog from "../ImageGalleryDialog";
 import NoImage from "../../images/no-photo-available.png";
 import LinkIcon from '@mui/icons-material/Link';
 import URLImageDialog from "../../components/URLImageDialog";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const EditSerieDialog = (props) => {
   const { items, open, setOpen, setNewItem } =
     props;
-  const [images, setImages] = useState([]);
+  //const [images, setImages] = useState([]);
   const intl = useIntl();
   const [collection, setCollection] = useState();
   const [confirmOpenGallery, setConfirmOpenGallery] = useState(false);
@@ -78,6 +79,10 @@ const EditSerieDialog = (props) => {
     return prev.replace(ca, "") + ext;
   }
 
+  const deleteImage = () => {
+    setPreview(null)
+  }
+
   const submitForm = (values) => {
     //If image chosen is from URL
     ConfigService.updateSerie(values, img).then((response) => {
@@ -91,7 +96,7 @@ const EditSerieDialog = (props) => {
           name: values.name,
           collection: response.data.collection,
           logo: {
-            path: urlImageChosen ? preview : removeHash(),
+            path: urlImageChosen ? preview : preview !== null ? removeHash() : null,
           },
         };
         setNewItem(data);
@@ -207,6 +212,25 @@ const EditSerieDialog = (props) => {
                         alt="Logo"
                         src={preview ? preview : NoImage}
                       ></Box>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.collection.add_collection_image_delete",
+                        })}
+                        placement="right"
+                        arrow
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={(e) => {
+                            deleteImage();
+                          }}
+                        >
+                          <DeleteIcon />
+                        </Button>
+                      </Tooltip>
                     </Grid>
                     <Grid item>
                       <Tooltip

@@ -131,6 +131,8 @@
   "app.collection.add_collection_field_type": "Type of field",
   "app.collection.add_collection_field_required": "Field required",
   "app.collection.add_collection_image_url": "Image URL",
+  "app.collection.add_collection_image_url_warning": "URL must contain http or https.",
+  "app.collection.add_collection_image_delete": "Delete image",
   "app.collection.add_item_number_positive": "Must be 0 or superior",
   "app.collection.add_item_year_4digits": "Year must be 4 digits",
   "app.collection.add_item_year_999": "Year must be bigger or equal to 1000",

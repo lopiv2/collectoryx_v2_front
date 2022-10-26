@@ -5,9 +5,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { FormattedMessage } from "react-intl";
-import { Grid, Box, TextField, Typography } from "@mui/material";
+import { Grid, Box, TextField, Typography} from "@mui/material";
 import { Formik, Form } from "formik";
 import NoImage from "../../images/no-photo-available.png";
+import * as Yup from "yup";
 
 const URLImageDialog = (props) => {
   const { open, setOpen, setUrl, setUrlImageChosen } =
@@ -18,6 +19,11 @@ const URLImageDialog = (props) => {
     setUrlImageChosen(true);
     setOpen(false);
   }
+
+  const newURLSchema = Yup.object().shape({
+    name: Yup.string()
+      .url(<FormattedMessage id="app.collection.add_collection_image_url_warning"></FormattedMessage>)
+  });
 
   return (
     <Dialog
@@ -36,12 +42,15 @@ const URLImageDialog = (props) => {
       <DialogContent>
         <Grid item xs={3}>
           <Formik
+            validateOnBlur={true}
+            validateOnChange={true}
             initialValues={{
               name: ""
             }}
             validate={(values) => {
               const errors = {};
             }}
+            validationSchema={newURLSchema}
             onSubmit={(values, { setSubmitting }) => {
               submitForm(values);
               setSubmitting(false);
@@ -97,6 +106,7 @@ const URLImageDialog = (props) => {
                   <DialogActions>
                     <Button
                       variant="contained"
+                      disabled={Array.isArray(errors) || Object.values(errors).toString() !== ""}
                       onClick={() => {
                         submitForm(values);
                       }}
@@ -105,7 +115,9 @@ const URLImageDialog = (props) => {
                     </Button>
                     <Button
                       variant="contained"
-                      onClick={() => setOpen(false)}
+                      onClick={() => {
+                        setOpen(false)
+                      }}
                     >
                       <FormattedMessage id="app.button.cancel"></FormattedMessage>
                     </Button>
