@@ -7,6 +7,7 @@ import esLocale from "date-fns/locale/es";
 import enLocale from "date-fns/locale/en-US";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
+import NoImage from "../images/no-photo-available.png";
 
 const cleanUrl = (url) => {
   let cleanedUrl = url.includes("https")
@@ -119,6 +120,15 @@ const SetLocaleDateTime = () => {
   }
 };
 
+const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
+  if (selectedApi.name.includes("Pokemon")) {
+    return Math.ceil(response.data.totalCount / rowsPerPage);
+  }
+  if (selectedApi.name.includes("Rebrickable")) {
+    return Math.ceil(response.data.count / rowsPerPage);
+  }
+}
+
 const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   var items = [];
   if (selectedApi.name.includes("Pokemon")) {
@@ -127,7 +137,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
       results.data.map((item, index) =>
         items.push({
           name: item.name,
-          image: item.images.large,
+          image: item.images.large ? item.images.large : NoImage,
           collection: collection,
           year: new Date(item.set.releaseDate).getFullYear(),
           serie: item.set.series,
@@ -143,6 +153,21 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
       return items;
     }
     return null;
+  }
+  if (selectedApi.name.includes("Rebrickable")) {
+    if (results.results) {
+      results.results.map((item, index) =>
+        items.push({
+          name: item.name,
+          image: item.set_img_url ? item.set_img_url : NoImage,
+          collection: collection,
+          year: item.year,
+          serie: "",
+          price: 0.0,
+        })
+      );
+      return items;
+    }
   }
   return null;
 };
@@ -183,6 +208,7 @@ export {
   cleanUrl,
   CreateTheme,
   CurrencyChecker,
+  CheckCountFieldNameApi,
   FeatureForImplement,
   FilterResultsByApiProvider,
   GetCurrencySymbolLocale,

@@ -1,10 +1,10 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { Grid, Card, CardContent, Avatar } from "@mui/material";
+import { Grid, Card, CardContent, Avatar, Pagination } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
@@ -13,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AppContext } from "../components/AppContext";
-import { FilterResultsByApiProvider } from "../utils/generic";
+import { FilterResultsByApiProvider, CheckCountFieldNameApi } from "../utils/generic";
+import ApiMetadataFields from "../components/ApiMetadata";
 
 function ImportScrapper() {
   const navigate = useNavigate();
@@ -29,6 +30,10 @@ function ImportScrapper() {
   const [results, setResults] = useState([]);
   const [cardHover, setCardHover] = useState(null);
   const location = useLocation();
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [metadata, setMetadata] = useState("");
 
   useEffect(() => {
     ConfigService.getAllApis(userData.id)
@@ -41,20 +46,26 @@ function ImportScrapper() {
   }, []);
 
   useEffect(() => {
-    //console.log(results);
-  }, [results]);
+    if (startSearch === true) {
+      searchWebClick();
+    }
+  }, [page, searchString, startSearch]);
+
+  const handleChange = (e, p) => {
+    setPage(p);
+    setStartSearch(true)
+  };
 
   const importSelectedItem = () => {
-    //console.log(selectedItem)
     ConfigService.importItemFromWeb(selectedItem)
       .then((response) => {
-        if(response.status===200){
+        if (response.status === 200) {
           toast.success(
             <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
             { theme: "colored" }
           );
           //console.log(response.data)
-        }    
+        }
       })
   }
 
@@ -63,20 +74,20 @@ function ImportScrapper() {
   };
 
   const searchWebClick = () => {
-    if(selectedApi.apiLink!==""){
+    if (selectedApi.apiLink !== "") {
       setStartSearch(true);
-      ConfigService.getItemFromWeb(
+      ConfigService.getItemFromWeb(page, rowsPerPage,
         searchString,
-        selectedApi
+        selectedApi, metadata,
       ).then((response) => {
-        //console.log(response.data)
+        setTotalPages(CheckCountFieldNameApi(response, selectedApi, rowsPerPage));
         setResults(FilterResultsByApiProvider(response.data, selectedApi, location.state.id));
         setSearching(false);
         setStartSearch(false);
         setShowResults(true);
       });
     }
-    else{
+    else {
       toast.error(
         <FormattedMessage id="app.config.general.api-no_url"></FormattedMessage>,
         { theme: "colored" }
@@ -99,6 +110,7 @@ function ImportScrapper() {
   const cardStyle = {
     display: 'block',
     width: 150,
+    height: 'auto',
   }
 
   const avatarCardStyle = {
@@ -134,6 +146,37 @@ function ImportScrapper() {
             onChange={handleTextInputChange}
           />
         </Grid>
+        <ApiMetadataFields
+          selectedApi={selectedApi}
+          metadata={metadata}
+          setMetadata={setMetadata}
+        >
+        </ApiMetadataFields>
+        {/*<Grid>
+          {selectedApi !== undefined && selectedApi.name.includes("Rebrickable") && (<RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            name="radio-buttons-group"
+            value={metadata}
+            onChange={(e) => {
+              setMetadata(e.target.value);
+            }}
+          >
+            <Grid item ml={2}>
+              <FormControlLabel
+                value="sets"
+                control={<Radio />}
+                label="Sets"
+              />
+            </Grid>
+            <Grid item ml={2}>
+              <FormControlLabel
+                value="minifigs"
+                control={<Radio />}
+                label="Minifigs"
+              />
+            </Grid>
+          </RadioGroup>)}
+          </Grid>*/}
         <Grid item xs={12} pt={2}>
           <Typography variant="h6" component="h4">
             <FormattedMessage
@@ -147,7 +190,7 @@ function ImportScrapper() {
         </Grid>
       </Grid>
       {/*Listado de Apis*/}
-      <Grid container sx={{ border: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+      <Grid container sx={{ border: 2 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="flex-start">
         {showResults === false &&
           apisList.map((item, index) => (
             <Grid item pl={2} pt={2} pb={2} key={index} >
@@ -172,49 +215,51 @@ function ImportScrapper() {
             </Grid>
           ))}
       </Grid>
-      <Grid container sx={{ border: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-        {startSearch === true ? (
-          <CircularProgress />
-        ) : (
-          results.map((item, index) => (
-            <Grid item key={index} pl={2} pt={2} pb={2}>
-              <Card style={cardStyle} sx={
-                cardHover === item ? cardStyleHover :
-                  {
-                    boxShadow: 3,
-                  }
-              }
-                onMouseOver={() => {
-                  setCardHover(item)
-                }}
-                onMouseOut={() => {
-                  setCardHover(null)
-                }}>
-                <CardContent style={{ display: 'flex', justifyContent: 'center' }} >
-                  <Tooltip title={item.name} placement="bottom" arrow>
-                    <Avatar style={avatarCardStyle}
-                      variant="rounded"
-                      key={item.name}
-                      sx={
-                        selectedItem === item
-                          ? avatarStyleClicked
-                          : avatarStyleHover
-                      }
-                      src={item.image} // use normal <img> attributes as props
-                      width="100%"
-                      onClick={(e) => {
-                        setSelectedItem(item);
-                      }}
-                    />
-                  </Tooltip>
-                </CardContent>
-                {item.name}
-              </Card>
-            </Grid>
-          ))
-
-        )}
-      </Grid>
+      {results && (<Box sx={{
+        display: "flex", flexDirection: "column",
+        overflow: "hidden", overflowY: "scroll", maxHeight: "300px", border: results.length > 0 ? "3px solid black" : "0px solid black"
+      }}>
+        <Grid container columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="space-between">
+          {startSearch === true ? (
+            <CircularProgress />
+          ) : (
+            results.map((item, index) => (
+              <Tooltip title={item.name} key={index} followCursor arrow>
+                <Grid item key={index} pl={2} pt={2} pb={2}>
+                  <Card key={index} style={cardStyle} sx={[
+                    cardHover === item ? cardStyleHover :
+                      {
+                        boxShadow: 3,
+                      },
+                    selectedItem === item
+                      ? avatarStyleClicked
+                      : avatarStyleHover,
+                  ]
+                  } onClick={(e) => {
+                    setSelectedItem(item);
+                  }}
+                    onMouseOver={() => {
+                      setCardHover(item)
+                    }}
+                    onMouseOut={() => {
+                      setCardHover(null)
+                    }}>
+                    <CardContent style={{ display: 'flex', justifyContent: 'center' }} >
+                      <Avatar style={avatarCardStyle}
+                        variant="rounded"
+                        key={item.name}
+                        src={item.image} // use normal <img> attributes as props
+                        width="100%"
+                      />
+                    </CardContent>
+                    {item.name}
+                  </Card>
+                </Grid>
+              </Tooltip>
+            ))
+          )}
+        </Grid>
+      </Box>)}
       <Grid container pt={2}>
         {showResults === false && (
           <Button
@@ -226,6 +271,25 @@ function ImportScrapper() {
             <FormattedMessage id="app.button.accept"></FormattedMessage>
           </Button>
         )}
+        <Grid
+          item xs={12}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="10vh"
+          maxWidth="lg"
+        >
+          <Pagination
+            count={totalPages}
+            color="primary"
+            showFirstButton
+            showLastButton
+            page={page}
+            variant="outlined"
+            shape="rounded"
+            onChange={handleChange}
+          />
+        </Grid>
         {showResults === true && (
           <Grid container spacing={2}>
             <Grid item>
@@ -246,6 +310,8 @@ function ImportScrapper() {
                 onClick={() => {
                   setResults([]);
                   setShowResults(false);
+                  setTotalPages(0)
+                  setPage(1)
                 }}
               >
                 <FormattedMessage id="app.button.search_again"></FormattedMessage>
@@ -254,7 +320,7 @@ function ImportScrapper() {
           </Grid>
         )}
       </Grid>
-    </Box>
+    </Box >
   );
 }
 

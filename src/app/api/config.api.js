@@ -114,7 +114,7 @@ const countCompletedCollections = (query) => {
     });
 };
 
-const createApi = (userId, header, name, apiLink, keyCode, logo) => {
+const createApi = (userId, name, header, apiLink, keyCode, logo) => {
   const data = {
     userId: userId,
     header: header,
@@ -483,12 +483,15 @@ const getImages = (query) => {
     });
 };
 
-const getItemFromWeb = (searchQuery, apiSelected) => {
+const getItemFromWeb = (page, rowsPerPage, searchQuery, apiSelected, metadata) => {
   const data = {
+    page: page,
+    rowsPerPage: rowsPerPage,
     searchQuery: searchQuery,
     url: apiSelected.apiLink,
     header: apiSelected.header,
     keyCode: apiSelected.keyCode,
+    metadata: metadata,
   };
   //console.log(data);
   return axios

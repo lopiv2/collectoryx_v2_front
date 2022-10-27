@@ -108,6 +108,7 @@ function ManageApiTab(props) {
         setValue(rowData.id_api);
         setConfirmOpen(true);
       },
+      hidden: rowData.locked
     }),
   ];
 
@@ -145,6 +146,11 @@ function ManageApiTab(props) {
       title: intl.formatMessage({ id: "app.collection.add_collection_logo" }),
       field: "logo",
     },
+    {
+      title: intl.formatMessage({ id: "app.collection.add_collection_logo" }),
+      field: "locked",
+      hidden: true,
+    },
   ];
 
   const data = apisList.map((item) => {
@@ -168,8 +174,8 @@ function ManageApiTab(props) {
             sx={{ width: 100, height: 35 }}
           ></Avatar>
         ),
+      locked: item.locked,
     };
-    //console.log(apisList)
     return cols;
   });
 
@@ -242,7 +248,7 @@ function ManageApiTab(props) {
                   <Grid item xs={9}>
                     <TextField
                       id="demo-simple-select"
-                      name="key"
+                      name="header"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       size="small"
