@@ -131,7 +131,7 @@ const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
 }
 
 const CheckSerieApiRebrickable = (item, selectedApi) => {
-  ConfigService.prueba(item.serie, selectedApi).then((response) => {
+  ConfigService.getSerieFromRebrickable(item.serie, selectedApi).then((response) => {
     return response.data.name;
   })
 }

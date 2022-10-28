@@ -34,6 +34,7 @@ function ImportScrapper() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [metadata, setMetadata] = useState("");
+  const [serie, setSerie]=useState("");
 
   useEffect(() => {
     ConfigService.getAllApis(userData.id)
@@ -58,10 +59,8 @@ function ImportScrapper() {
 
   const importSelectedItem = () => {
     //console.log(selectedItem)
-    if (selectedApi.name.includes("Rebrickable")) {
-      var serie;
-      serie = CheckSerieApiRebrickable(selectedItem, selectedApi)
-      console.log(serie)
+    if (selectedApi.name.includes("Rebrickable")) { 
+      setSerie(CheckSerieApiRebrickable(selectedItem, selectedApi))
       let newItems = selectedItem;
       selectedItem.serie = serie;
       console.log(newItems)

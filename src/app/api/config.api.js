@@ -484,7 +484,7 @@ const getImages = (query) => {
     });
 };
 
-const prueba=(serie, selectedApi)=>{
+const getSerieFromRebrickable=(serie, selectedApi)=>{
   const data = {
     page: null,
     rowsPerPage: null,
@@ -993,6 +993,7 @@ const ConfigService = {
   getUserConfig,
   getUserDetails,
   getUserFeedsIDTitle,
+  getSerieFromRebrickable,
   importItemFromWeb,
   parseFile,
   putFile,
@@ -1011,7 +1012,6 @@ const ConfigService = {
   updateProfile,
   updateSerie,
   viewFeed,
-  prueba,
 };
 
 export default ConfigService;
