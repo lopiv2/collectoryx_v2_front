@@ -37,6 +37,7 @@ const GET_IMAGES_QUERY_URL = (query) =>
 const GET_COLLECTION_METADATAS_URL = (id) =>
   `${API_URL}/get-metadata-fields/${id}`;
 const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
+const GET_SERIE_REBRICKABLE_URL = `${API_URL}/scrapper/get-serie-name-rebrickable/`;
 const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
 const IMAGES_URL_SERIE = `${API_URL}/images/create-serie`;
@@ -482,6 +483,24 @@ const getImages = (query) => {
       return response;
     });
 };
+
+const prueba=(serie, selectedApi)=>{
+  const data = {
+    page: null,
+    rowsPerPage: null,
+    searchQuery: serie,
+    url: selectedApi.apiLink,
+    header: selectedApi.header,
+    keyCode: selectedApi.keyCode,
+    metadata: "series",
+  };
+  return axios
+    .post(GET_SERIE_REBRICKABLE_URL, data, { headers: authHeader() })
+    .then((response) => {
+      console.log(response);
+      return response;
+    });
+}
 
 const getItemFromWeb = (page, rowsPerPage, searchQuery, apiSelected, metadata) => {
   const data = {
@@ -992,6 +1011,7 @@ const ConfigService = {
   updateProfile,
   updateSerie,
   viewFeed,
+  prueba,
 };
 
 export default ConfigService;

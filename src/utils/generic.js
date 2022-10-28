@@ -8,6 +8,7 @@ import enLocale from "date-fns/locale/en-US";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
 import NoImage from "../images/no-photo-available.png";
+import ConfigService from "../app/api/config.api";
 
 const cleanUrl = (url) => {
   let cleanedUrl = url.includes("https")
@@ -129,6 +130,12 @@ const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
   }
 }
 
+const CheckSerieApiRebrickable = (item, selectedApi) => {
+  ConfigService.prueba(item.serie, selectedApi).then((response) => {
+    return response.data.name;
+  })
+}
+
 const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   var items = [];
   if (selectedApi.name.includes("Pokemon")) {
@@ -162,7 +169,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           image: item.set_img_url ? item.set_img_url : NoImage,
           collection: collection,
           year: item.year,
-          serie: "",
+          serie: item.theme_id,
           price: 0.0,
         })
       );
@@ -209,6 +216,7 @@ export {
   CreateTheme,
   CurrencyChecker,
   CheckCountFieldNameApi,
+  CheckSerieApiRebrickable,
   FeatureForImplement,
   FilterResultsByApiProvider,
   GetCurrencySymbolLocale,

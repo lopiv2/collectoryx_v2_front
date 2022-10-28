@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AppContext } from "../components/AppContext";
-import { FilterResultsByApiProvider, CheckCountFieldNameApi } from "../utils/generic";
+import { FilterResultsByApiProvider, CheckCountFieldNameApi, CheckSerieApiRebrickable } from "../utils/generic";
 import ApiMetadataFields from "../components/ApiMetadata";
 
 function ImportScrapper() {
@@ -57,7 +57,17 @@ function ImportScrapper() {
   };
 
   const importSelectedItem = () => {
-    ConfigService.importItemFromWeb(selectedItem)
+    //console.log(selectedItem)
+    if (selectedApi.name.includes("Rebrickable")) {
+      var serie;
+      serie = CheckSerieApiRebrickable(selectedItem, selectedApi)
+      console.log(serie)
+      let newItems = selectedItem;
+      selectedItem.serie = serie;
+      console.log(newItems)
+      setSelectedItem(newItems);
+    }
+    /*ConfigService.importItemFromWeb(selectedItem)
       .then((response) => {
         if (response.status === 200) {
           toast.success(
@@ -66,7 +76,7 @@ function ImportScrapper() {
           );
           //console.log(response.data)
         }
-      })
+      })*/
   }
 
   const handleTextInputChange = (event) => {
