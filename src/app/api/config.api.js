@@ -497,7 +497,7 @@ const getSerieFromRebrickable=(serie, selectedApi)=>{
   return axios
     .post(GET_SERIE_REBRICKABLE_URL, data, { headers: authHeader() })
     .then((response) => {
-      console.log(response);
+      //console.log(response);
       return response;
     });
 }

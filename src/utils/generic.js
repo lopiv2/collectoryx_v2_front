@@ -130,12 +130,6 @@ const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
   }
 }
 
-const CheckSerieApiRebrickable = (item, selectedApi) => {
-  ConfigService.getSerieFromRebrickable(item.serie, selectedApi).then((response) => {
-    return response.data.name;
-  })
-}
-
 const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   var items = [];
   if (selectedApi.name.includes("Pokemon")) {
@@ -216,7 +210,6 @@ export {
   CreateTheme,
   CurrencyChecker,
   CheckCountFieldNameApi,
-  CheckSerieApiRebrickable,
   FeatureForImplement,
   FilterResultsByApiProvider,
   GetCurrencySymbolLocale,

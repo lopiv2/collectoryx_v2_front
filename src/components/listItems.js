@@ -16,6 +16,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import TuneIcon from "@mui/icons-material/Tune";
 import BallotIcon from "@mui/icons-material/Ballot";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import DescriptionIcon from '@mui/icons-material/Description';
 import FeedIcon from "@mui/icons-material/Feed";
 import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
@@ -309,6 +310,21 @@ export default function MainListItems(props) {
                   <TuneIcon />
                 </ListItemIcon>
                 <FormattedMessage id="app.sidemenu.options.general"></FormattedMessage>
+              </ListItemButton>
+            </NavLink>
+            <NavLink
+              className="nav-link"
+              to="/config/updates"
+              style={{
+                textDecoration: "none",
+                color: props.theme.palette.text.primary,
+              }}
+            >
+              <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <FormattedMessage id="app.sidemenu.options.updates"></FormattedMessage>
               </ListItemButton>
             </NavLink>
             <ListItemButton sx={{ pl: 4, margin: "5px 0" }}>

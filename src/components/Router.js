@@ -19,6 +19,7 @@ import BuyLicense from "../pages/BuyLicense";
 import ViewFeeds from "../pages/ViewFeeds";
 import ImportCollectionFile from "../pages/ImportCollectionFile";
 import ImportScrapper from "../pages/ImportScrapper";
+import Updates from "../pages/Updates";
 import CalendarScheduler from "../pages/CalendarScheduler";
 import Profile from "../pages/Profile";
 
@@ -98,6 +99,14 @@ export const Router = (props) => {
           element={
             <ProtectedRoutes>
               <ConfigGeneral />
+            </ProtectedRoutes>
+          }
+        ></Route>
+        <Route
+          path="/config/updates"
+          element={
+            <ProtectedRoutes>
+              <Updates />
             </ProtectedRoutes>
           }
         ></Route>

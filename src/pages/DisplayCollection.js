@@ -829,11 +829,12 @@ function DisplayCollection(props) {
                 ? collectionItems.map((item) => (
                   <Grid item key={item.id}>
                     <Card
+                    //Height auto while dynamic size of font cant be achieved in MUI
                       sx={
                         cardHover === item
                           ? cardStyleHover
                           : {
-                            height: 380,
+                            height: "auto",
                             minWidth: 250,
                             maxWidth: 250,
                             boxShadow: 3,
@@ -1062,7 +1063,7 @@ function DisplayCollection(props) {
                   />
                 </Grid>
                 <Grid item pt={4} pl={2}>
-                  <Typography display="inline" variant="h4" component="h4">
+                  <Typography display="inline" variant="h6">
                     {itemSelected.name}
                   </Typography>
                 </Grid>
