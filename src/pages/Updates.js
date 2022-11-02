@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Typography } from "@mui/material";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
 import "../styles/Dashboard.css";
-import { ToastContainer} from "react-toastify";
-import { AppContext } from "../components/AppContext";
+import { ToastContainer } from "react-toastify";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Markdown from "markdown-to-jsx";
+import { Context } from "../components/Wrapper";
 
 function Updates() {
   const version = process.env.REACT_APP_VERSION;
-  const intl = useIntl();
-  const { userData, setUserData } = React.useContext(AppContext);
   const [changelogText, setChangelogText] = useState("");
+  const context = useContext(Context);
+  const [langChangelog, setLangchangelog] = useState('es');
 
   async function fetchHtml() {
-    setChangelogText(await (await fetch(`../changelog.md`)).text());
+    setChangelogText(await (await fetch('../changelog_' + langChangelog + '.md')).text());
   }
+
   useEffect(() => {
     fetchHtml();
-  }, []);
+  }, [langChangelog])
+
+  useEffect(() => {
+    setLangchangelog(context.locale.substring(0, 2))
+  }, [context.locale]);
 
   return (
     <Box>
