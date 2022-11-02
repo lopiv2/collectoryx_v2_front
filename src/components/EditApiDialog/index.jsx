@@ -17,7 +17,6 @@ const EditApiDialog = (props) => {
     props;
   const [images, setImages] = useState([]);
   //const intl = useIntl();
-  const [updatedValues, setUpdatedValues] = useState([]);
 
   /*const avatarStyleClicked = {
     border: "2px solid green",
@@ -122,7 +121,7 @@ const EditApiDialog = (props) => {
                     <Grid item xs={9}>
                       <TextField
                         id="demo-simple-select"
-                        name="key"
+                        name="keyCode"
                         onChange={handleChange}
                         onBlur={handleBlur}
                         size="small"
@@ -136,7 +135,7 @@ const EditApiDialog = (props) => {
                     <Grid item xs={9}>
                       <TextField
                         id="demo-simple-select"
-                        name="url"
+                        name="apiLink"
                         onChange={handleChange}
                         onBlur={handleBlur}
                         size="small"
@@ -165,7 +164,6 @@ const EditApiDialog = (props) => {
                       <Button
                         variant="contained"
                         onClick={() => {
-                          setUpdatedValues(values);
                           submitForm(values);
                         }}
                       >
