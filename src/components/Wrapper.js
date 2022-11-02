@@ -3,7 +3,8 @@ import { IntlProvider } from 'react-intl';
 import Spanish from '../lang/es.json';
 import English from '../lang/en.json';
 const Context = React.createContext();
-const local = navigator.language;
+//const local = navigator.language;
+const local = "en-US";
 let lang = English;
 if (local === "en-US") {
     lang = English;
