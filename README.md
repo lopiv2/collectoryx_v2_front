@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+![favicon-1](https://user-images.githubusercontent.com/58883759/199532747-fb997fdb-8551-46f9-9075-b3f64f57b4a2.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Collectoryx is a manager where you can add your own collections and objects and keep track of the ones you own, as well as the money they cost, images, import items from online databases, and so on.
 
-## Available Scripts
+## Version Tags
 
-In the project directory, you can run:
+This image provides various versions that are available via tags. Please read the descriptions carefully and exercise caution when using unstable or development tags.
 
-### `npm start`
+| Tag | Available | Description |
+| :----: | :----: |--- |
+| latest | ✅ | Stable releases from Collectoryx (currently v1) |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Application Setup
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+As you will see in the Docker Compose below, you need an image of the Collectoryx Backend and Frontend, as well as the dependency on a Maria DB Database, which if you already have it configured in your Stack, is simply to change the parameters of the API environment variable in the docker-compose, putting the IP and user and password of the database.
 
-### `npm test`
+Essential: Leave the uploads volume as it is created because both, Backend and Frontend have to share it.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Access the webui at `<your-ip>:8082`
 
-### `npm run build`
+## Usage
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Here are some example snippets to help you get started creating a container.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### docker-compose (recommended)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```yaml
+---
+version: "3.9"
 
-### `npm run eject`
+services:
+  api:
+    #build: .
+    image: collectoryx-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+    volumes:
+      - uploads:/app/uploads:rw
+    environment:
+      SPRING_APPLICATION_JSON: '{"spring":{"datasource":{"url":"jdbc:mariadb://mariadb:3306/collectoryx", "username": "root", "password": "root-password"}},"collectoryx.upload-directory":"/app/uploads/"}'
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  front:
+    #build: .
+    image: collectoryx-front
+    ports:
+      - "8082:8082"
+    depends_on:
+      - api
+    volumes:
+      - uploads:/app/public/images/uploads:ro
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  mariadb:
+    image: "mariadb:10.9"
+    ports:
+      - "33306:3306"
+    environment:
+      MARIADB_USER: collectoryx
+      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: root-password
+      MARIADB_DATABASE: collectoryx
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+volumes:
+  uploads:
 
-## Learn More
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Parameters
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Container images are configured using parameters passed at runtime (such as those above).
 
-### Code Splitting
+| Parameter | Function |
+| :----: | --- |
+| `-p 8082` | The port for the Collectoryx webinterface |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Updating Info
 
-### Analyzing the Bundle Size
+Below are the instructions for updating containers:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Via Docker Compose
 
-### Making a Progressive Web App
+* Update all images: `docker-compose pull`
+  * or update a single image: `docker-compose pull sonarr`
+* Let compose update all containers as necessary: `docker-compose up -d`
+  * or update a single container: `docker-compose up -d sonarr`
+* You can also remove the old dangling images: `docker image prune`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Frontend Github
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+https://github.com/lopiv2/collectoryx_v2_api
