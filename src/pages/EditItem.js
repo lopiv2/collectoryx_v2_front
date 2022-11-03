@@ -89,11 +89,13 @@ function EditItem(props) {
     switch (field.type) {
       case "BOOLEAN":
         var check = true;
-        if (field.value === 1 || field.value === true) {
+
+        if (field.value == 1 || field.value === true) {
           check = true;
         } else {
           check = false;
         }
+
         return (
           <Checkbox
             value={field.value}

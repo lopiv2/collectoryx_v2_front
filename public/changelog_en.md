@@ -1,3 +1,11 @@
+### 1.0.1 - 3 November 2022 
+***
+
+#### Fixed
+ * Edit items with metadata, find by id was String instead Long
+ * Metadata fields of type Boolean fixed. Now checked appears when value is 1 or true.
+
+
 
 ### 1.0.0 - 30 October 2022 
 ***

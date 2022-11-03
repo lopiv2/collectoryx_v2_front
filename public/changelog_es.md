@@ -1,3 +1,11 @@
+### 1.0.1 - 3 Noviembre 2022 
+***
+
+#### Fixed
+ * Editar objetos con metadatos, buscar por id era un String, ahora es un Long.
+ * Los campos de metadatos de tipo Boolean arreglados al editar objetos. Ahora aparecen marcados cuando el valor es 1 o true.
+
+
 
 ### 1.0.0 - 30 Octubre 2022 
 ***
