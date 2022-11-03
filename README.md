@@ -87,6 +87,6 @@ Below are the instructions for updating containers:
   * or update a single container: `docker-compose up -d sonarr`
 * You can also remove the old dangling images: `docker image prune`
 
-## Frontend Github
+## Backend Github
 
 https://github.com/lopiv2/collectoryx_v2_api
