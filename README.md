@@ -22,6 +22,20 @@ Access the webui at `<your-ip>:8082`
 
 Here are some example snippets to help you get started creating a container.
 
+## Screenshots
+
+![Screenshot_2](https://user-images.githubusercontent.com/58883759/199770991-e580b849-efd6-4731-85d1-a81e42c886b5.png)
+
+![Screenshot_3](https://user-images.githubusercontent.com/58883759/199771032-e7de364b-2302-4fcd-a630-8cb166712949.png)
+
+![Screenshot_4](https://user-images.githubusercontent.com/58883759/199771142-dd8465fb-2465-4dfc-b70b-74d7e2a5b3cd.png)
+
+![Screenshot_5](https://user-images.githubusercontent.com/58883759/199771173-f3117ca8-c00b-4c3e-ba1b-660b09253043.png)
+
+![Screenshot_6](https://user-images.githubusercontent.com/58883759/199771191-e04f1543-3d56-41df-9eb1-f1050afa3ec2.png)
+
+![Screenshot_7](https://user-images.githubusercontent.com/58883759/199771208-548e4987-f6b0-40c9-8f0e-9f199a43259d.png)
+
 ### docker-compose (recommended)
 
 ```yaml
