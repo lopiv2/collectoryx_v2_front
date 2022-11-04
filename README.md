@@ -96,9 +96,9 @@ Below are the instructions for updating containers:
 ### Via Docker Compose
 
 * Update all images: `docker-compose pull`
-  * or update a single image: `docker-compose pull sonarr`
+  * or update a single image: `docker-compose pull collectoryx`
 * Let compose update all containers as necessary: `docker-compose up -d`
-  * or update a single container: `docker-compose up -d sonarr`
+  * or update a single container: `docker-compose up -d collectoryx`
 * You can also remove the old dangling images: `docker image prune`
 
 ## Backend Github
