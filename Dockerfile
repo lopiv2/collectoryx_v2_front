@@ -15,14 +15,6 @@ COPY . ./
 
 RUN yarn build
 
-# Bundle static assets with nginx
-FROM nginx:1.23.2-alpine
+FROM httpd:alpine
 
-# Copy built assets from `builder` image
-COPY --from=builder /app/build /usr/share/nginx/html
-# Add your nginx.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-# Expose port
-EXPOSE 8082
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+COPY --from=builder /app/build /usr/local/apache2/htdocs
