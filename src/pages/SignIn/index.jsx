@@ -51,8 +51,6 @@ export default function SignInSide() {
   const selectedImage = images[Math.floor(Math.random() * images.length)];
   const intl = useIntl();
 
-  //console.log(selectedImage)
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
