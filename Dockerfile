@@ -15,11 +15,11 @@ RUN yarn install
 COPY . ./
 
 #Environment variables
-RUN REACT_APP_API_URL=$REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 RUN yarn build
 
 FROM httpd:alpine
 
 COPY --from=builder /app/build /usr/local/apache2/htdocs
-#COPY --from=builder /app/.env /usr/local/apache2/htdocs
+#COPY httpd.conf /usr/local/apache2/conf/httpd.conf
