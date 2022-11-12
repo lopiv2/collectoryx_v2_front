@@ -26,7 +26,7 @@ import { format } from "date-fns";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
 import { isUndefined } from "lodash";
 import URLImageDialog from "../components/URLImageDialog";
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from "@mui/icons-material/Link";
 
 const localeMap = {
   en: enLocale,
@@ -80,6 +80,7 @@ function EditItem(props) {
       }
     }
     var index = metadataValues.findIndex((x) => x.id === item.id);
+    //console.log(metadataValues)
     let newItems = [...metadataValues];
     metadataValues[index].value = val;
     setMetadataValues(newItems);
@@ -145,6 +146,18 @@ function EditItem(props) {
     }
   }, [collectionId]);
 
+  /*useEffect(() => {
+    if (metadataValues !== null) {
+      setFormValues((existingValues) => ({
+        // Retain the existing values
+        ...existingValues,
+        // update the firstName
+        metadata: metadataValues,
+      }));
+      console.log(metadataValues)
+    }
+  }, [metadataValues]);*/
+
   useEffect(() => {
     if (location.state != null) {
       const data = {
@@ -159,6 +172,7 @@ function EditItem(props) {
         notes: location.state.item.notes,
         metadata: location.state.item.metadata,
       };
+      //console.log(location.state.item);
       setMetadataValues(location.state.item.metadata);
       setFormValues(data);
     }
@@ -166,6 +180,7 @@ function EditItem(props) {
 
   const submitForm = (values) => {
     //Image set from URL
+    console.log(values.metadata)
     if (urlImageChosen === true && values.file === undefined) {
       ConfigService.updateItem(
         values,
@@ -183,7 +198,11 @@ function EditItem(props) {
       });
     }
     //Image set in Database and updated from gallery
-    if (preview !== undefined && imgGallerySelected === true && urlImageChosen === false) {
+    if (
+      preview !== undefined &&
+      imgGallerySelected === true &&
+      urlImageChosen === false
+    ) {
       ConfigService.updateItem(
         values,
         location.state.id,
@@ -203,7 +222,8 @@ function EditItem(props) {
     if (
       preview !== undefined &&
       values.file === undefined &&
-      imgGallerySelected === false && urlImageChosen === false
+      imgGallerySelected === false &&
+      urlImageChosen === false
     ) {
       ConfigService.updateItem(
         values,
@@ -221,7 +241,11 @@ function EditItem(props) {
       });
     }
     //Image not set in Database and not updated
-    if (preview === undefined && values.file === undefined && urlImageChosen === false) {
+    if (
+      preview === undefined &&
+      values.file === undefined &&
+      urlImageChosen === false
+    ) {
       ConfigService.updateItem(
         values,
         location.state.id,
@@ -278,9 +302,7 @@ function EditItem(props) {
     if (location.state != null) {
       if (location.state.item.image) {
         if (!location.state.item.image.path.includes("http")) {
-          setPreview(
-            "/images/uploads/" + location.state.item.image.path
-          );
+          setPreview("/images/uploads/" + location.state.item.image.path);
         } else {
           setPreview(location.state.item.image.path);
         }

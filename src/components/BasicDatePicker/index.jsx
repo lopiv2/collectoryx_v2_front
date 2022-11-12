@@ -30,7 +30,6 @@ export default function BasicDatePicker(props) {
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={localeMap[locale]}>
       <DatePicker
         type="datetime-local"
-        disablePast
         id={props.id}
         dateFormat="yyyy-MM-dd"
         name={props.name}
