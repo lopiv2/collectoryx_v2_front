@@ -14,7 +14,12 @@ This image provides various versions that are available via tags. Please read th
 
 As you will see in the Docker Compose below, you need an image of the Collectoryx Backend and Frontend, as well as the dependency on a Maria DB Database, which if you already have it configured in your Stack, is simply to change the parameters of the API environment variable in the docker-compose, putting the IP and user and password of the database.
 
-Essential: Leave the uploads volume as it is created because both, Backend and Frontend have to share it.
+Essential: 
+- Leave the uploads volume as it is created because both, Backend and Frontend have to share it.
+- Config.js file has this content: 
+   - window.env = { API_URL: "https://api-collectoryx.domain" };
+
+If you need to call the backend api with traefik or another reverse proxy, you need to change the API_URL in config.js file to your api route. IF NOT, THE APP WON´T WORK
 
 Access the webui at `<your-ip>:8082`
 
