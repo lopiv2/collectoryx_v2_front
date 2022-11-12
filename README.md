@@ -44,8 +44,7 @@ version: "3.9"
 
 services:
   api:
-    #build: .
-    image: lopiv2/collectoryx-api:1.0.1
+    image: lopiv2/collectoryx-api:latest
     ports:
       - "8080:8080"
     depends_on:
@@ -56,14 +55,16 @@ services:
       SPRING_APPLICATION_JSON: '{"spring":{"datasource":{"url":"jdbc:mariadb://mariadb:3306/collectoryx", "username": "root", "password": "root-password"}},"collectoryx.upload-directory":"/app/uploads/"}'
 
   front:
-    #build: .
-    image: lopiv2/collectoryx-front:1.0.1
+    image: lopiv2/collectoryx-front:latest
     ports:
       - "8082:8082"
     depends_on:
       - api
     volumes:
       - uploads:/app/public/images/uploads:ro
+      - type: bind
+        source: ./config.js
+        target: /usr/local/apache2/htdocs/config.js
 
 
   mariadb:
