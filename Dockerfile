@@ -1,8 +1,6 @@
 # pull official base image
 FROM node:18.10.0-alpine3.15 as builder
 
-ARG REACT_APP_API_URL
-
 # set working directory
 WORKDIR /app
 
@@ -13,9 +11,6 @@ COPY yarn.lock ./
 RUN yarn install
 # add app
 COPY . ./
-
-#Environment variables
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 RUN yarn build
 

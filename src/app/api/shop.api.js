@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = window.env.API_URL;
 const SHOP_URL = `${API_URL}/shop`;
 const GET_KEYFILE_EMAIL_URL = `${SHOP_URL}/key-request`;
 

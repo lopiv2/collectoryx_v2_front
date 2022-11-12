@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = window.env.API_URL;
 const GET_COLLECTION_ITEMS_ID_URL = `${API_URL}/collections`;
 const GET_RECENT_COLLECTION_ITEMS_ID_URL = `${API_URL}/collections/recent`;
 const COUNT_COLLECTIONS_URL = (id) => `${API_URL}/count-collections/${id}`;

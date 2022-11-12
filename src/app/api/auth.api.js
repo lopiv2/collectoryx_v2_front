@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import { toast } from "react-toastify";
 import { FormattedMessage} from "react-intl";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = window.env.API_URL;
 //const API_URL = "http://localhost:8083";
 const LOGIN_URL = `${API_URL}/login`;
 const REGISTER_URL = `${API_URL}/register`;
