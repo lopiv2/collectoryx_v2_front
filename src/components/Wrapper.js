@@ -3,15 +3,13 @@ import { IntlProvider } from 'react-intl';
 import Spanish from '../lang/es.json';
 import English from '../lang/en.json';
 const Context = React.createContext();
-//const local = navigator.language;
-const local = "en-US";
+const local = navigator.language;
 let lang = English;
-if (local === "en-US") {
+if (local === "es-ES") {
+    lang = Spanish;
+}
+else{
     lang = English;
-} else {
-    if (local === "es-ES") {
-        lang = Spanish;
-    }
 }
 
 const Wrapper = (props) => {
