@@ -285,7 +285,7 @@ function AddItem(props) {
       .required(
         <FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>
       ),
-    /*adquiringDate: Yup.date()
+    /*acquiringDate: Yup.date()
             .required(<FormattedMessage id="app.collection.add_collection_field_required"></FormattedMessage>),*/
   });
 
@@ -305,7 +305,7 @@ function AddItem(props) {
               serie: "",
               price: "",
               year: "",
-              adquiringDate: date,
+              acquiringDate: date,
               own: "",
               image: "",
               notes: "",
@@ -317,7 +317,7 @@ function AddItem(props) {
               }
               values.own = own;
               const d = format(new Date(date), "yyyy-MM-dd");
-              values.adquiringDate = d;
+              values.acquiringDate = d;
               submitForm(values);
               setSubmitting(false);
             }}
