@@ -5,24 +5,24 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { FormattedMessage } from "react-intl";
-import { Grid, Box, TextField, Typography} from "@mui/material";
+import { Grid, Box, TextField, Typography } from "@mui/material";
 import { Formik, Form } from "formik";
 import NoImage from "../../images/no-photo-available.png";
 import * as Yup from "yup";
 
 const URLImageDialog = (props) => {
-  const { open, setOpen, setUrl, setUrlImageChosen } =
-    props;
+  const { open, setOpen, url, setUrl, setUrlImageChosen } = props;
 
   const submitForm = (values) => {
     setUrl(values.name);
     setUrlImageChosen(true);
     setOpen(false);
-  }
+  };
 
   const newURLSchema = Yup.object().shape({
-    name: Yup.string()
-      .url(<FormattedMessage id="app.collection.add_collection_image_url_warning"></FormattedMessage>)
+    name: Yup.string().url(
+      <FormattedMessage id="app.collection.add_collection_image_url_warning"></FormattedMessage>
+    ),
   });
 
   return (
@@ -34,9 +34,7 @@ const URLImageDialog = (props) => {
     >
       <DialogTitle id="confirm-dialog">
         <Typography component="p" variant="h5" align="center">
-          <FormattedMessage
-            id="app.collection.add_collection_image_url"
-          ></FormattedMessage>
+          <FormattedMessage id="app.collection.add_collection_image_url"></FormattedMessage>
         </Typography>
       </DialogTitle>
       <DialogContent>
@@ -45,7 +43,7 @@ const URLImageDialog = (props) => {
             validateOnBlur={true}
             validateOnChange={true}
             initialValues={{
-              name: ""
+              name: url ? (url.includes("http") ? url : "") : "",
             }}
             validate={(values) => {
               const errors = {};
@@ -106,7 +104,10 @@ const URLImageDialog = (props) => {
                   <DialogActions>
                     <Button
                       variant="contained"
-                      disabled={Array.isArray(errors) || Object.values(errors).toString() !== ""}
+                      disabled={
+                        Array.isArray(errors) ||
+                        Object.values(errors).toString() !== ""
+                      }
                       onClick={() => {
                         submitForm(values);
                       }}
@@ -116,7 +117,7 @@ const URLImageDialog = (props) => {
                     <Button
                       variant="contained"
                       onClick={() => {
-                        setOpen(false)
+                        setOpen(false);
                       }}
                     >
                       <FormattedMessage id="app.button.cancel"></FormattedMessage>
@@ -129,6 +130,6 @@ const URLImageDialog = (props) => {
         </Grid>
       </DialogContent>
     </Dialog>
-  )
+  );
 };
 export default URLImageDialog;

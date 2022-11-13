@@ -172,7 +172,11 @@ function EditItem(props) {
         notes: location.state.item.notes,
         metadata: location.state.item.metadata,
       };
-      //console.log(location.state.item);
+      console.log(location.state.item);
+      if(location.state.item.image){
+        setPreview(location.state.item.image.path)
+      }
+      
       setMetadataValues(location.state.item.metadata);
       setFormValues(data);
     }
@@ -689,6 +693,7 @@ function EditItem(props) {
           </Grid>
         </Grid>
         <URLImageDialog
+          url={preview}
           setUrl={setPreview}
           setUrlImageChosen={setUrlImageChosen}
           open={openUrl}
