@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Avatar,
-} from "@mui/material";
+import { Card, CardContent, Typography, Avatar } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -34,46 +29,49 @@ export default function MostValuableItem() {
         setItemMax(response.data);
       })
       .catch((err) => {
-        const nullItem={
-          name: <FormattedMessage id="app.most_valuable_item_collection_none"></FormattedMessage>,
+        const nullItem = {
+          name: (
+            <FormattedMessage id="app.most_valuable_item_collection_none"></FormattedMessage>
+          ),
           price: 0,
-          image:null,
+          image: null,
           collection: {
-            name: <FormattedMessage id="app.most_valuable_item_collection_none"></FormattedMessage>,
-          }
-        }
+            name: (
+              <FormattedMessage id="app.most_valuable_item_collection_none"></FormattedMessage>
+            ),
+          },
+        };
         setItemMax(nullItem);
       });
   }, []);
 
   const checkImage = (item) => {
-    if(item.image!==null){
+    if (item.image !== null) {
       if (!item.image.path.includes("http")) {
         return "/images/uploads/" + item.image.path;
       } else {
         return item.image.path;
       }
-    }
-    else{
+    } else {
       return NoImage;
     }
   };
 
   return (
     itemMax && (
-      <Card sx={{ minWidth: 200, maxHeight: 138 }} elevation={6}>
+      <Card sx={{ minWidth: 200 }} elevation={6}>
         <CardContent>
           <Grid
             container
-            rowSpacing={2}
-            columnSpacing={{ xs: 0, sm: 1, md: 1 }}
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 3, sm: 8, md: 12 }}
           >
             <Grid item xs={2}>
               <Avatar
                 variant="rounded"
                 src={checkImage(itemMax)} // use normal <img> attributes as props
                 width="100%"
-                sx={{ width: 100, height: 100 }}
+                sx={{ width: 90, height: 90 }}
               />
             </Grid>
             <Grid item xs={10}>
@@ -88,7 +86,7 @@ export default function MostValuableItem() {
                     <FormattedMessage id="app.most_valuable_item"></FormattedMessage>
                   </Typography>
                   <Typography
-                    sx={{ fontSize: 25 }}
+                    sx={{ fontSize: 18 }}
                     color="text.primary"
                     gutterBottom
                     style={{ fontWeight: 600 }}
@@ -96,12 +94,12 @@ export default function MostValuableItem() {
                     {itemMax.name}
                   </Typography>
                   <Typography
-                    sx={{ fontSize: 20 }}
+                    sx={{ fontSize: 18 }}
                     color="text.secondary"
                     gutterBottom
                   >
                     {itemMax.price}
-                    {" " + currency + " - " }
+                    {" " + currency + " - "}
                     <FormattedMessage
                       id="app.most_valuable_item_collection"
                       values={{

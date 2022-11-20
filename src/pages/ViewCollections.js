@@ -323,7 +323,11 @@ function ViewCollection(props) {
             </Tooltip>
           </Grid>
         </Grid>
-        <Grid container>
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+        >
           <Grid item xs={4} pt={1}>
             <Typography variant="h6" display="inline" component="div">
               <FormattedMessage id="app.license.show_code"></FormattedMessage>:

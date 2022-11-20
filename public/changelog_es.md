@@ -1,7 +1,17 @@
+### 1.1.0 - 20 Noviembre 2022 
+***
+
+#### Nuevo
+ * Pantallas de Series, Imágenes, Colecciones, Apis y Panel de Control adaptadas para múltiples resoluciones.
+
+#### Corregido
+ * Búsqueda recurrente de elementos en Apis sin tener que seleccionar de nuevo una Api.
+
+
 ### 1.0.1 - 3 Noviembre 2022 
 ***
 
-#### Fixed
+#### Corregido
  * Editar objetos con metadatos, buscar por id era un String, ahora es un Long.
  * Los campos de metadatos de tipo Boolean arreglados al editar objetos. Ahora aparecen marcados cuando el valor es 1 o true.
 
@@ -10,7 +20,7 @@
 ### 1.0.0 - 30 Octubre 2022 
 ***
 
-#### New
+#### Nuevo
  * CRUD Colecciones
  * CRUD Series 
  * CRUD Imagenes

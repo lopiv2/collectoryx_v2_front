@@ -108,7 +108,7 @@ function EditItem(props) {
         return (
           <TextField
             inputProps={{ type: "number" }}
-            sx={{ minWidth: 300 }}
+            sx={{ minWidth: { xs: 120, sm: 250 } }}
             size="small"
             id="name"
             name="name"
@@ -120,7 +120,7 @@ function EditItem(props) {
       default:
         return (
           <TextField
-            sx={{ minWidth: 300 }}
+            sx={{ minWidth: { xs: 120, sm: 250 } }}
             size="small"
             id="name"
             name="name"
@@ -172,11 +172,11 @@ function EditItem(props) {
         notes: location.state.item.notes,
         metadata: location.state.item.metadata,
       };
-      console.log(location.state.item);
-      if(location.state.item.image){
-        setPreview(location.state.item.image.path)
+      //console.log(location.state.item);
+      if (location.state.item.image) {
+        setPreview(location.state.item.image.path);
       }
-      
+
       setMetadataValues(location.state.item.metadata);
       setFormValues(data);
     }
@@ -184,7 +184,7 @@ function EditItem(props) {
 
   const submitForm = (values) => {
     //Image set from URL
-    console.log(values.metadata)
+    console.log(values.metadata);
     if (urlImageChosen === true && values.file === undefined) {
       ConfigService.updateItem(
         values,
@@ -359,8 +359,12 @@ function EditItem(props) {
       <Box sx={{ display: "flex" }}>
         <ToastContainer autoClose={2000} />
         <Grid container>
-          <Grid item xs={6}>
-            <Typography variant="h5" component="h5">
+          <Grid item xs={12}>
+            <Typography
+              variant="h5"
+              component="h5"
+              sx={{ typography: { sm: "h5", xs: "h6" } }}
+            >
               <FormattedMessage id="app.collection.edit_item_title"></FormattedMessage>
               {location.state.name}
             </Typography>
@@ -406,16 +410,20 @@ function EditItem(props) {
                           sx={{
                             height: "auto",
                             width: "auto",
-                            maxHeight: 300,
-                            maxWidth: 400,
+                            maxHeight: { xs: 200, md: 300 },
+                            maxWidth: { xs: 300, md: 400 },
                           }}
                           alt="Logo"
                           src={preview ? preview : NoImage}
                         ></Box>
                       </Grid>
                       <Box ml={2}>
-                        <Grid container spacing={2}>
-                          <Grid item>
+                        <Grid
+                          container
+                          spacing={{ xs: 6, md: 12 }}
+                          columns={{ xs: 3, sm: 8, md: 12 }}
+                        >
+                          <Grid item xs={1} sm={3} md={3}>
                             <Button variant="contained" component="label">
                               {
                                 <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
@@ -435,7 +443,7 @@ function EditItem(props) {
                               />
                             </Button>
                           </Grid>
-                          <Grid item>
+                          <Grid item xs={2} sm={3} md={3}>
                             <Tooltip
                               title={intl.formatMessage({
                                 id: "app.tooltip.search_gallery",
@@ -456,7 +464,7 @@ function EditItem(props) {
                               </Button>
                             </Tooltip>
                           </Grid>
-                          <Grid item>
+                          <Grid item xs={4} sm={3} md={3}>
                             <Tooltip
                               title={intl.formatMessage({
                                 id: "app.collection.add_collection_image_url",
@@ -477,17 +485,23 @@ function EditItem(props) {
                           </Grid>
                         </Grid>
                       </Box>
-                      <Grid container spacing={40}>
+                      <Grid
+                        container
+                        spacing={{ xs: 2, sm: 15, md: 12 }}
+                        columns={{ xs: 4, sm: 8, md: 12 }}
+                      >
                         <Grid item xs={2}>
                           <Box pt={2} ml={2}>
                             <Typography variant="body1">
                               <FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>
                             </Typography>
                             <TextField
-                              sx={{ minWidth: 300 }}
+                              sx={{ minWidth: { xs: 250, sm: 260 } }}
                               size="small"
                               id="name"
                               name="name"
+                              multiline
+                              maxRows={4}
                               onChange={handleChange}
                               onBlur={handleBlur}
                               error={touched.name && Boolean(errors.name)}
@@ -498,7 +512,7 @@ function EditItem(props) {
                           </Box>
                         </Grid>
                         <Grid item xs={4}>
-                          <Box pt={2}>
+                          <Box pt={2} pl={2}>
                             <Typography variant="body1">
                               <FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>
                             </Typography>
@@ -507,7 +521,7 @@ function EditItem(props) {
                               name="serie"
                               select
                               size="small"
-                              sx={{ minWidth: 300 }}
+                              sx={{ minWidth: { xs: 250, sm: 237 } }}
                               value={values.serie != null ? values.serie : ""}
                               error={touched.serie && Boolean(errors.serie)}
                               helperText={touched.serie && errors.serie}
@@ -538,7 +552,7 @@ function EditItem(props) {
                             <FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>
                           </Typography>
                           <TextField
-                            sx={{ minWidth: 300 }}
+                            sx={{ minWidth: { xs: 100, sm: 260 } }}
                             size="small"
                             id="price"
                             name="price"
@@ -558,13 +572,13 @@ function EditItem(props) {
                           />
                         </Box>
                       </Grid>
-                      <Grid item xs={3}>
-                        <Box pt={2} ml={4.7}>
+                      <Grid item xs={4}>
+                        <Box pt={2} sx={{ pl: { xs: 7.7, sm: 2.1 } }}>
                           <Typography variant="body1">
                             <FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>
                           </Typography>
                           <TextField
-                            sx={{ minWidth: 300 }}
+                            sx={{ minWidth: { xs: 140, sm: 237 } }}
                             size="small"
                             id="year"
                             name="year"
@@ -590,8 +604,8 @@ function EditItem(props) {
                             ></Checkbox>
                           </Box>
                         </Grid>
-                        <Grid item xs={2}>
-                          <Box pt={2} pl={6.5}>
+                        <Grid item xs={9}>
+                          <Box pt={2} sx={{ pl: { xs: 9.8, sm: 1.3 } }}>
                             <Typography variant="body1">
                               <FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>
                             </Typography>
@@ -614,14 +628,14 @@ function EditItem(props) {
                         </Grid>
                       </Grid>
                       <Grid container>
-                        <Grid item xs={4.65}>
+                        <Grid item xs={4}>
                           <Box pt={2} ml={2}>
                             <Typography variant="body1">
                               <FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>
                             </Typography>
                             <TextField
                               fullWidth
-                              sx={{ minWidth: 300 }}
+                              sx={{ minWidth: { xs: 250, sm: 267 } }}
                               size="small"
                               id="notes"
                               name="notes"
@@ -648,9 +662,11 @@ function EditItem(props) {
                     {formValues.metadata.length > 0 && (
                       <Grid
                         container
-                        sx={{ border: 2 }}
+                        sx={{
+                          border: 2,
+                          maxWidth: { xs: "93%", sm: "32.7%" },
+                        }}
                         mt={2}
-                        style={{ maxWidth: "38%" }}
                       >
                         {formValues.metadata.map((item, index) => (
                           <Grid item xs={12} key={index} pl={2}>

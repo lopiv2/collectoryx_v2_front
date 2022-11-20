@@ -90,21 +90,40 @@ export default function TopToolBar(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 1 }}
+          <Grid
+            container
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 3, sm: 8, md: 12 }}
+            justifyContent="space-around"
           >
-            <Grid container justifyContent="center">
-              <Grid item xs={2} ml={65}>
-                <Typography variant="h5" color="white" weight="600">
-                  <FormattedMessage id="app.sidemenu.welcome" values={{ user: capitalizeFirstLetter(userData.userName) }}></FormattedMessage>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              noWrap
+              sx={{ flexGrow: 1 }}
+            >
+              <Grid item xs={2} sm={3} md={3}>
+                <Typography
+                  variant="h5"
+                  component="h5"
+                  color="white"
+                  weight="600"
+                  sx={{
+                    display: { xs: "none", sm: "block" },
+                    typography: { sm: "h5", xs: "h6" },
+                    pl: 80,
+                    pt:3
+                  }}
+                >
+                  <FormattedMessage
+                    id="app.sidemenu.welcome"
+                    values={{ user: capitalizeFirstLetter(userData.userName) }}
+                  ></FormattedMessage>
                 </Typography>
               </Grid>
               {AuthService.checkUserLogged() === "USER_ROLE" ? (
-                <Grid item xs={2} ml={50}>
+                <Grid item xs={2} sm={3} md={3}>
                   {/*<FormattedMessage
                     id={
                       userData.expiringDate > 0
@@ -127,32 +146,38 @@ export default function TopToolBar(props) {
                     noWrap
                     sx={{ flexGrow: 1 }}
                   >
-                    <FormattedMessage id="app.dashboard.admin_panel" ></FormattedMessage>
+                    <FormattedMessage id="app.dashboard.admin_panel"></FormattedMessage>
                   </Typography>
                 </Grid>
               )}
-            </Grid>
-          </Typography>
-          <LanguageSwitcher></LanguageSwitcher>
-          <IconButton
-            color="inherit"
-            sx={{ color: props.theme.palette.secondary.contrastText }}
-          >
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 1 }}
-            aria-controls={props.openAnch ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={props.openAnch ? "true" : undefined}
-            color="inherit"
-          >
-            <Avatar name={userData.userName} size={35} round="200px" />
-          </IconButton>
+            </Typography>
+          </Grid>
+          <Grid item xs={2} sm={4} md={4}>
+            <LanguageSwitcher></LanguageSwitcher>
+          </Grid>
+          <Grid item xs={2} sm={4} md={4}>
+            <IconButton
+              color="inherit"
+              sx={{ color: props.theme.palette.secondary.contrastText }}
+            >
+              <Badge badgeContent={4} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          </Grid>
+          <Grid item xs={2} sm={4} md={4}>
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 1 }}
+              aria-controls={props.openAnch ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={props.openAnch ? "true" : undefined}
+              color="inherit"
+            >
+              <Avatar name={userData.userName} size={35} round="200px" />
+            </IconButton>
+          </Grid>
           <Menu
             id="account-menu"
             anchorEl={props.anchorEl}
@@ -189,10 +214,10 @@ export default function TopToolBar(props) {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={onClickProfile}>
-              <FormattedMessage id="app.sidemenu.my_account" ></FormattedMessage>
+              <FormattedMessage id="app.sidemenu.my_account"></FormattedMessage>
             </MenuItem>
             <MenuItem onClick={onClickLogout}>
-              <FormattedMessage id="app.sidemenu.logout" ></FormattedMessage>
+              <FormattedMessage id="app.sidemenu.logout"></FormattedMessage>
             </MenuItem>
           </Menu>
         </Toolbar>

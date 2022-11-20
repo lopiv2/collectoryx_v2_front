@@ -46,7 +46,11 @@ export default function CollectionsSpentCard() {
   return (
     <Card sx={{ minWidth: 200 }} style={{ backgroundColor: "#217dbf" }} elevation={6}>
       <CardContent>
-        <Grid container rowSpacing={2} columnSpacing={{ xs: 0, sm: 1, md: 1 }}>
+      <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 3, sm: 8, md: 12 }}
+        >
           <Grid item xs={2}>
             <PaidIcon sx={{ fontSize: 80 }}></PaidIcon>
           </Grid>

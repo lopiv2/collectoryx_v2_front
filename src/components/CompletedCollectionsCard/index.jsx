@@ -22,10 +22,10 @@ export default function CompletedCollectionsCard() {
 
   useEffect(() => {
     const query = {
-        id: userData.id,
-        orderField: "id",
-        orderDirection: "up",
-      };
+      id: userData.id,
+      orderField: "id",
+      orderDirection: "up",
+    };
     ConfigService.countCompletedCollections(query)
       .then((response) => {
         setCollectionTotalCount(response);
@@ -38,7 +38,11 @@ export default function CompletedCollectionsCard() {
   return (
     <Card sx={{ minWidth: 200 }} elevation={6}>
       <CardContent>
-        <Grid container rowSpacing={2} columnSpacing={{ xs: 0, sm: 1, md: 1 }}>
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 3, sm: 8, md: 12 }}
+        >
           <Grid item xs={2}>
             <EmojiEventsIcon sx={{ fontSize: 80 }}></EmojiEventsIcon>
           </Grid>

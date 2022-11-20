@@ -75,7 +75,7 @@ function DashboardDesignTab() {
 
   return (
     <Grid container>
-      <Grid item xs={5}>
+      <Grid item xs={12} sm={5}>
         <FormGroup>
           <FormControlLabel
             control={<Switch checked={expensivePanel} onChange={handleChangeExpensiveItem} />}

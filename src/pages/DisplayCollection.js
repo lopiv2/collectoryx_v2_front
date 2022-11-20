@@ -289,26 +289,24 @@ function DisplayCollection(props) {
   };
 
   const handleOwnClick = (event, own, wanted) => {
-    ConfigService.toggleItemOwn(
-      event.currentTarget.id,
-      own,
-      wanted
-    ).then((response) => {
-      var index = collectionItems.findIndex(
-        (collectionItems) => collectionItems.id === response.data.id
-      );
-      let newItems = [...collectionItems];
-      newItems[index].own = response.data.own;
-      newItems[index].acquiringDate = response.data.acquiringDate;
-      if (response.data.own) {
-        setMoneySpent(moneySpent + response.data.price);
-        setCollected(collected + 1);
-      } else {
-        setMoneySpent(moneySpent - response.data.price);
-        setCollected(collected - 1);
+    ConfigService.toggleItemOwn(event.currentTarget.id, own, wanted).then(
+      (response) => {
+        var index = collectionItems.findIndex(
+          (collectionItems) => collectionItems.id === response.data.id
+        );
+        let newItems = [...collectionItems];
+        newItems[index].own = response.data.own;
+        newItems[index].acquiringDate = response.data.acquiringDate;
+        if (response.data.own) {
+          setMoneySpent(moneySpent + response.data.price);
+          setCollected(collected + 1);
+        } else {
+          setMoneySpent(moneySpent - response.data.price);
+          setCollected(collected - 1);
+        }
+        setCollectionItems(newItems);
       }
-      setCollectionItems(newItems);
-    });
+    );
   };
 
   const handleDeleteClick = () => {
@@ -577,7 +575,7 @@ function DisplayCollection(props) {
       <Grid container>
         <Grid
           container
-          spacing={{ xs: 2, md: 3 }}
+          spacing={{ xs: 2, md: 5 }}
           columns={{ xs: 4, sm: 8, md: 12 }}
         >
           <Grid item xs={3} mt={"115px"}>
@@ -594,7 +592,7 @@ function DisplayCollection(props) {
                 onClick={() => {
                   setOpenNew(true);
                 }}
-              /*onClick={() => navigate("/collections/add")}*/
+                /*onClick={() => navigate("/collections/add")}*/
               >
                 {/*</Button><Button
                 variant="contained"
@@ -660,26 +658,30 @@ function DisplayCollection(props) {
             }
           ></BorderLinearProgressBar>
         </Grid>
-        <Grid container>
-          <Grid item xs={3}>
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 3, sm: 8, md: 12 }}
+        >
+          <Grid item xs={3} sm={3} md={3}>
             <Typography variant="h5" component="div">
               <FormattedMessage id="app.collection.collected"></FormattedMessage>{" "}
               {collected + " / " + totalItems}
             </Typography>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} sm={3} md={3}>
             <Typography variant="h5" component="div">
               <FormattedMessage id="app.collection.wanted"></FormattedMessage>{" "}
               {wished}
             </Typography>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} sm={3} md={3}>
             <Typography variant="h5" component="div">
               <FormattedMessage id="app.collection.missing"></FormattedMessage>{" "}
               {totalItems - collected}
             </Typography>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} sm={3} md={3}>
             <Typography variant="h5" component="div">
               <FormattedMessage id="app.collection.invested"></FormattedMessage>{" "}
               {
@@ -692,8 +694,14 @@ function DisplayCollection(props) {
             </Typography>
           </Grid>
           {toggleView === "grid" && (
-            <Grid container>
-              <Grid item xs={3} pt={1}>
+            <Grid
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
+              pt={2}
+              pl={3}
+            >
+              <Grid item xs={3} sm={3} md={3} pt={1}>
                 <Typography variant="h6" display="inline" component="div">
                   <FormattedMessage id="app.license.show_code"></FormattedMessage>
                   :
@@ -714,7 +722,7 @@ function DisplayCollection(props) {
                   <MenuItem value="20">20</MenuItem>
                 </TextField>
               </Grid>
-              <Grid item xs={3} pt={1}>
+              <Grid item xs={3} sm={3} md={3} pt={1}>
                 <Typography variant="h6" display="inline" component="div">
                   <FormattedMessage id="app.collection.view_collections_order_by"></FormattedMessage>
                 </Typography>
@@ -769,24 +777,23 @@ function DisplayCollection(props) {
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid item xs={3} pt={1}>
+              <Grid item xs={3} sm={3} md={3} pt={1}>
                 <TextField
                   id="search-bar"
                   className="text"
                   value={searchQuery}
                   onChange={(e) => {
                     if (e.target.value.trim().length === 0) {
-                      setSearchQuery("")
+                      setSearchQuery("");
                       fetchData(page, rowsPerPage, "name");
-                    }
-                    else {
+                    } else {
                       setSearchQuery(e.target.value);
                       fetchData(page, rowsPerPage, rowsOrder, searchQuery);
                     }
                   }}
                   onKeyPress={(e) => {
                     searchQueryInApi(searchQuery);
-                    if (e.key === 'Enter') {
+                    if (e.key === "Enter") {
                       searchQueryInApi(searchQuery);
                     }
                   }}
@@ -824,174 +831,181 @@ function DisplayCollection(props) {
             </Grid>
           )}
           {toggleView === "grid" && (
-            <Grid container spacing={5} className="container" pt={3}>
+            <Grid
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 3, sm: 8, md: 12 }}
+              pt={2}
+              pl={3}
+            >
               {collectionItems !== undefined
                 ? collectionItems.map((item) => (
-                  <Grid item key={item.id}>
-                    <Card
-                    //Height auto while dynamic size of font cant be achieved in MUI
-                      sx={
-                        cardHover === item
-                          ? cardStyleHover
-                          : {
-                            height: "auto",
-                            minWidth: 250,
-                            maxWidth: 250,
-                            boxShadow: 3,
-                          }
-                      }
-                      ml={200}
-                      onMouseOver={() => {
-                        setCardHover(item);
-                      }}
-                      onMouseOut={() => {
-                        setCardHover(null);
-                      }}
-                    >
-                      <Box ml={23.1} mb={-10}>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.click_wish",
-                          })}
-                          placement="right"
-                          arrow
-                        >
-                          <IconButton
-                            id={item.id}
-                            style={{ color: "rgba(240, 216, 0, 1)" }}
-                            sx={{
-                              position: "relative",
-                              height: 25,
-                              width: 25,
-                              ml: -22.5,
-                              mb: 6,
-                              mt: 1,
-                            }}
-                            onClick={(e) => {
-                              handleWishClick(e, item.own, item.wanted);
-                            }}
-                            className="button-wish"
+                    <Grid item key={item.id}>
+                      <Card
+                        //Height auto while dynamic size of font cant be achieved in MUI
+                        sx={
+                          cardHover === item
+                            ? cardStyleHover
+                            : {
+                                height: "auto",
+                                minWidth: 250,
+                                maxWidth: 250,
+                                boxShadow: 3,
+                              }
+                        }
+                        ml={200}
+                        onMouseOver={() => {
+                          setCardHover(item);
+                        }}
+                        onMouseOut={() => {
+                          setCardHover(null);
+                        }}
+                      >
+                        <Box ml={23.1} mb={-10}>
+                          <Tooltip
+                            title={intl.formatMessage({
+                              id: "app.tooltip.click_wish",
+                            })}
+                            placement="right"
+                            arrow
                           >
-                            {item.wanted ? (
-                              <StarIcon fontSize="large"></StarIcon>
-                            ) : (
-                              <StarBorderIcon fontSize="large"></StarBorderIcon>
-                            )}
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.click_own",
-                          })}
-                          placement="right"
-                          arrow
-                        >
-                          <Button
-                            id={item.id}
-                            sx={{
-                              position: "relative",
-                              height: 75,
-                              width: 75,
-                              ml: 18.153,
-                              mt: -1.5,
-                            }}
-                            onClick={(e) => {
-                              handleOwnClick(e, item.own, item.wanted);
-                            }}
-                            className="button-own"
-                            startIcon={
-                              <Avatar
-                                variant="square"
-                                sx={{ width: 75, height: 75, ml: 1, mt: 1 }}
-                                src={item.own ? OwnImage : NotOwnImage}
-                              />
-                            }
-                          >
-                            <Typography
-                              className="own-text"
-                              sx={{ position: "absolute", ml: 2.5 }}
+                            <IconButton
+                              id={item.id}
+                              style={{ color: "rgba(240, 216, 0, 1)" }}
+                              sx={{
+                                position: "relative",
+                                height: 25,
+                                width: 25,
+                                ml: -22.5,
+                                mb: 6,
+                                mt: 1,
+                              }}
+                              onClick={(e) => {
+                                handleWishClick(e, item.own, item.wanted);
+                              }}
+                              className="button-wish"
                             >
-                              {item.own ? (
-                                <FormattedMessage id="app.button.own"></FormattedMessage>
+                              {item.wanted ? (
+                                <StarIcon fontSize="large"></StarIcon>
                               ) : (
-                                <FormattedMessage id="app.button.not_own"></FormattedMessage>
+                                <StarBorderIcon fontSize="large"></StarBorderIcon>
                               )}
-                            </Typography>
-                          </Button>
-                        </Tooltip>
-                      </Box>
-                      <CardContent>
-                        {item.logo ? null : (
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip
+                            title={intl.formatMessage({
+                              id: "app.tooltip.click_own",
+                            })}
+                            placement="right"
+                            arrow
+                          >
+                            <Button
+                              id={item.id}
+                              sx={{
+                                position: "relative",
+                                height: 75,
+                                width: 75,
+                                ml: 18.153,
+                                mt: -1.5,
+                              }}
+                              onClick={(e) => {
+                                handleOwnClick(e, item.own, item.wanted);
+                              }}
+                              className="button-own"
+                              startIcon={
+                                <Avatar
+                                  variant="square"
+                                  sx={{ width: 75, height: 75, ml: 1, mt: 1 }}
+                                  src={item.own ? OwnImage : NotOwnImage}
+                                />
+                              }
+                            >
+                              <Typography
+                                className="own-text"
+                                sx={{ position: "absolute", ml: 2.5 }}
+                              >
+                                {item.own ? (
+                                  <FormattedMessage id="app.button.own"></FormattedMessage>
+                                ) : (
+                                  <FormattedMessage id="app.button.not_own"></FormattedMessage>
+                                )}
+                              </Typography>
+                            </Button>
+                          </Tooltip>
+                        </Box>
+                        <CardContent>
+                          {item.logo ? null : (
+                            <Typography
+                              align="center"
+                              sx={{ fontSize: 20 }}
+                              color="text.primary"
+                              gutterBottom
+                            ></Typography>
+                          )}
+                          <Tooltip
+                            title={intl.formatMessage({
+                              id: "app.tooltip.click_image",
+                            })}
+                            arrow
+                            followCursor
+                          >
+                            <CardMedia
+                              component="img"
+                              width="500%"
+                              height="220"
+                              image={checkImage(item)}
+                              alt={item.name}
+                              className="card-collection"
+                              onClick={() => {
+                                setImageClicked(item);
+                                setItemSelected(item);
+                                handleOpen();
+                              }}
+                              style={styles}
+                            />
+                          </Tooltip>
                           <Typography
                             align="center"
-                            sx={{ fontSize: 20 }}
+                            sx={{ mb: 0.5 }}
+                            mt={1}
                             color="text.primary"
-                            gutterBottom
-                          ></Typography>
-                        )}
-                        <Tooltip
-                          title={intl.formatMessage({
-                            id: "app.tooltip.click_image",
-                          })}
-                          arrow
-                          followCursor
-                        >
-                          <CardMedia
-                            component="img"
-                            width="500%"
-                            height="220"
-                            image={checkImage(item)}
-                            alt={item.name}
-                            className="card-collection"
+                          >
+                            {item.name}
+                          </Typography>
+                          <Typography align="center" color="text.secondary">
+                            {item.year}
+                          </Typography>
+                        </CardContent>
+                        <CardActions style={{ justifyContent: "center" }}>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            type="submit"
+                            form="form"
+                            value={item.id}
                             onClick={() => {
-                              setImageClicked(item);
-                              setItemSelected(item);
-                              handleOpen();
+                              setValue(item.id);
+                              setConfirmOpen(true);
                             }}
-                            style={styles}
-                          />
-                        </Tooltip>
-                        <Typography
-                          align="center"
-                          sx={{ mb: 0.5 }}
-                          mt={1}
-                          color="text.primary"
-                        >
-                          {item.name}
-                        </Typography>
-                        <Typography align="center" color="text.secondary">
-                          {item.year}
-                        </Typography>
-                      </CardContent>
-                      <CardActions style={{ justifyContent: "center" }}>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          type="submit"
-                          form="form"
-                          value={item.id}
-                          onClick={() => {
-                            setValue(item.id);
-                            setConfirmOpen(true);
-                          }}
-                        >
-                          <FormattedMessage id="app.button.delete"></FormattedMessage>
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          onClick={() => setItemSelected(item)}
-                        >
-                          <FormattedMessage id="app.button.edit"></FormattedMessage>
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))
+                          >
+                            <FormattedMessage id="app.button.delete"></FormattedMessage>
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => setItemSelected(item)}
+                          >
+                            <FormattedMessage id="app.button.edit"></FormattedMessage>
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))
                 : null}
             </Grid>
           )}
         </Grid>
+
         <ConfirmDialog
           title={intl.formatMessage({
             id: "app.dialog.delete_title",
@@ -1020,11 +1034,14 @@ function DisplayCollection(props) {
           >
             <Grid
               container
+              spacing={{ xs: 2, md: 5 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
               style={{ backgroundColor: "rgba(245, 245, 245, 1)" }}
               width="100%"
             >
               <Grid
                 container
+                columns={{ xs: 4, sm: 8, md: 12 }}
                 item
                 xs={6}
                 alignItems="center"
@@ -1048,8 +1065,8 @@ function DisplayCollection(props) {
                   />
                 </Grid>
               </Grid>
-              <Grid container item xs={6} pb={2}>
-                <Grid item pt={2} pb={2}>
+              <Grid container item xs={12} sm={6} pb={2} >
+                <Grid item pt={2} pb={2} sx={{ pl: { xs: 2 } }}>
                   <Avatar
                     component={Paper}
                     elevation={2}
@@ -1067,7 +1084,7 @@ function DisplayCollection(props) {
                     {itemSelected.name}
                   </Typography>
                 </Grid>
-                <Grid container>
+                <Grid container sx={{ pl: { xs: 2 } }}>
                   <Paper
                     style={{ backgroundColor: "rgba(232, 232, 232, 1)" }}
                     xs={12}
@@ -1136,7 +1153,14 @@ function DisplayCollection(props) {
                       <ListItem>
                         <Typography variant="body1">
                           <FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>
-                          : {itemSelected.own ? format(new Date(itemSelected.acquiringDate), "P", { locale: loc }) : ""}
+                          :{" "}
+                          {itemSelected.own
+                            ? format(
+                                new Date(itemSelected.acquiringDate),
+                                "P",
+                                { locale: loc }
+                              )
+                            : ""}
                         </Typography>
                       </ListItem>
                       {itemSelected.metadata.length > 0 ? <Divider /> : null}
@@ -1147,7 +1171,7 @@ function DisplayCollection(props) {
                               {item.name} : {item.value}
                             </Typography>
                           </ListItem>
-                        );                     
+                        );
                       })}
                     </List>
                   </Paper>

@@ -1,78 +1,112 @@
 import React from "react";
-import CollectionsSpentCard from '../CollectionsSpendCard';
-import TotalItemsCard from '../TotalItemsCard';
+import CollectionsSpentCard from "../CollectionsSpendCard";
+import TotalItemsCard from "../TotalItemsCard";
 import TotalCollectionsCard from "../TotalCollectionsCard";
 import MostValuableItem from "../MostValuableItem";
 import WishlistCard from "../WishListCard";
 import CompletedCollectionsCard from "../CompletedCollectionsCard";
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import { Box } from "@mui/material";
 import LinearChartYearly from "../LinearChartYearly";
 import BarChartYearly from "../BarChartYearly";
 import RecentOrders from "../RecentOrders";
 import AuthService from "../../app/api/auth.api";
+import "../../styles/Dashboard.css";
 import { AppContext } from "../AppContext";
 
 export default function Dashboard(props) {
-    const { userData, userConfig } =
-        React.useContext(AppContext);
+  const { userData, userConfig } = React.useContext(AppContext);
 
-    return AuthService.checkUserLogged() === "USER_ROLE" && (
-        <Grid container spacing={3} mt={2}>
-            <Grid container spacing={3} ml={0}>
-                {/*Spent Money in all collections*/}
-                <Grid item xs={10} md={8} lg={4}>
-                    <CollectionsSpentCard item xs={12} md={8} lg={9}></CollectionsSpentCard>
-                </Grid>
-                {/*Total items in all collections*/}
-                <Grid item xs={10} md={8} lg={4}>
-                    <TotalItemsCard item xs={12} md={8} lg={9}></TotalItemsCard>
-                </Grid>
-                <Grid item xs={10} md={8} lg={4}>
-                    <TotalCollectionsCard item xs={12} md={8} lg={9}></TotalCollectionsCard>
-                </Grid>
-                <Grid item xs={10} md={8} lg={4}>
-                    {userConfig.expensivePanel === true && <MostValuableItem item xs={12} md={8} lg={9}></MostValuableItem>}
-                </Grid>
-                <Grid item xs={10} md={8} lg={4}>
-                    {userConfig.wishlistPanel === true && <WishlistCard item xs={12} md={8} lg={9}></WishlistCard>}
-                </Grid>
-                <Grid item xs={10} md={8} lg={4}>
-                    {userConfig.completedCollectionsPanel === true && <CompletedCollectionsCard item xs={12} md={8} lg={9}></CompletedCollectionsCard>}
-                </Grid>
-            </Grid>
-            {/*Charts*/}
-            <Grid container spacing={3} ml={0} mt={1}>
-                <Grid item xs={12} md={8} lg={4}>
-                    <Paper
-                        sx={{
-                            p: 2,
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
-                        elevation={6}
-                    >
-                        <Box>
-                            <LinearChartYearly userData={userData} />
-                        </Box>
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} md={8} lg={4}>
-                    <Paper
-                        sx={{
-                            p: 2,
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
-                        elevation={6}
-                    >
-                        <Box>
-                            <BarChartYearly userData={userData} />
-                        </Box>
-                    </Paper>
-                </Grid>
-                {/*<Grid item xs={12} md={8} lg={4}>
+  return (
+    AuthService.checkUserLogged() === "USER_ROLE" && (
+      <Grid container spacing={3} mt={2}>
+        <Grid container spacing={3} ml={0}>
+          {/*Spent Money in all collections*/}
+          <Grid item xs={10} md={8} lg={4}>
+            <CollectionsSpentCard
+              item
+              xs={12}
+              md={8}
+              lg={9}
+            ></CollectionsSpentCard>
+          </Grid>
+          {/*Total items in all collections*/}
+          <Grid item xs={10} md={8} lg={4}>
+            <TotalItemsCard item xs={12} md={8} lg={9}></TotalItemsCard>
+          </Grid>
+          <Grid item xs={10} md={8} lg={4}>
+            <TotalCollectionsCard
+              item
+              xs={12}
+              md={8}
+              lg={9}
+            ></TotalCollectionsCard>
+          </Grid>
+          <Grid item xs={10} md={8} lg={4}>
+            {userConfig.expensivePanel === true && (
+              <MostValuableItem item xs={12} md={8} lg={9}></MostValuableItem>
+            )}
+          </Grid>
+          <Grid item xs={10} md={8} lg={4}>
+            {userConfig.wishlistPanel === true && (
+              <WishlistCard item xs={12} md={8} lg={9}></WishlistCard>
+            )}
+          </Grid>
+          <Grid item xs={10} md={8} lg={4}>
+            {userConfig.completedCollectionsPanel === true && (
+              <CompletedCollectionsCard
+                item
+                xs={12}
+                md={8}
+                lg={9}
+              ></CompletedCollectionsCard>
+            )}
+          </Grid>
+        </Grid>
+        {/*Charts*/}
+        <Grid container spacing={3} ml={0} mt={1}>
+          <Grid item xs={12} md={8} lg={4} className="chart-container">
+            <Paper
+              sx={{
+                p: 2,
+                width: { xs: 235, sm: "auto" },
+                display: "flex",
+                flexDirection: "column",
+              }}
+              elevation={6}
+            >
+              <Box
+                sx={{
+                  width: { xs: 210, sm: "auto" },
+                  height: { xs: 190, sm: 240 },
+                }}
+              >
+                <LinearChartYearly userData={userData} />
+              </Box>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={8} lg={4} className="chart-container">
+            <Paper
+              sx={{
+                p: 2,
+                width: { xs: 235, sm: "auto" },
+                display: "flex",
+                flexDirection: "column",
+              }}
+              elevation={6}
+            >
+              <Box
+                sx={{
+                  width: { xs: 210, sm: "auto" },
+                  height: { xs: 190, sm: 240 },
+                }}
+              >
+                <BarChartYearly userData={userData} />
+              </Box>
+            </Paper>
+          </Grid>
+          {/*<Grid item xs={12} md={8} lg={4}>
                     <Paper
                         sx={{
                             p: 2,
@@ -86,12 +120,16 @@ export default function Dashboard(props) {
                         </Box>
                     </Paper>
                     </Grid>*/}
-                <Grid item xs={12}>
-                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }} elevation={6}>
-                        <RecentOrders />
-                    </Paper>
-                </Grid>
-            </Grid>
+          <Grid item xs={12}>
+            <Paper
+              sx={{ p: 2, display: "flex", flexDirection: "column" }}
+              elevation={6}
+            >
+              <RecentOrders />
+            </Paper>
+          </Grid>
         </Grid>
+      </Grid>
     )
+  );
 }

@@ -1,16 +1,9 @@
-import React, {
-  useState,
-  useEffect,
-} from "react";
+import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
-import {
-  getHours,
-  getMinutes,
-  isAfter,
-} from "date-fns";
+import { getHours, getMinutes, isAfter } from "date-fns";
 import ConfigService from "../app/api/config.api";
 import { ToastContainer, toast } from "react-toastify";
 import { GetLocaleDateTime } from "../utils/generic";
@@ -64,12 +57,12 @@ function CalendarScheduler() {
             end: i.end,
             backgroundColor:
               i.type === "Event"
-                ? isAfter(today,new Date(i.end))
+                ? isAfter(today, new Date(i.end))
                   ? "rgba(195, 227, 176, 1)"
                   : "rgba(107, 181, 64, 1)"
-                : isAfter(today,new Date(i.end))
-                  ? "rgba(64, 177, 181, 1)"
-                  : "rgba(161, 220, 222, 1)",
+                : isAfter(today, new Date(i.end))
+                ? "rgba(64, 177, 181, 1)"
+                : "rgba(161, 220, 222, 1)",
             extendedProps: {
               description: i.description,
               type: i.type,
@@ -204,7 +197,13 @@ function CalendarScheduler() {
           <FormattedMessage id="app.button.create"></FormattedMessage>
         </Button>
       </Grid>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }} className="fc">
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          maxHeight: { xs: "700px", sm: "750px" },
+        }}
+      >
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{

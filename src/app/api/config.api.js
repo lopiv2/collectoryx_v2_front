@@ -518,6 +518,12 @@ const getItemFromWeb = (page, rowsPerPage, searchQuery, apiSelected, metadata) =
     .then((response) => {
       //console.log(response.data);
       return response;
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
     });
 };
 

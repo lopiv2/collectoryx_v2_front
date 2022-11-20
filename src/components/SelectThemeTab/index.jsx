@@ -85,7 +85,7 @@ function SelectThemeTab() {
 
   return (
     <Grid container>
-      <Grid item xs={5}>
+      <Grid item xs={12} sm={5}>
         <Typography variant="h6" component="h5">
           <FormattedMessage id="app.config.appearance_choose_theme"></FormattedMessage>
         </Typography>

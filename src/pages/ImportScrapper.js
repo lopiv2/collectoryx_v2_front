@@ -19,6 +19,7 @@ import {
   CheckSerieApiRebrickable,
 } from "../utils/generic";
 import ApiMetadataFields from "../components/ApiMetadata";
+import { isUndefined } from "lodash";
 
 function ImportScrapper() {
   const navigate = useNavigate();
@@ -38,7 +39,8 @@ function ImportScrapper() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [metadata, setMetadata] = useState("");
-  const [serie, setSerie] = useState("");
+  const [searchAgain, setSearchAgain] = useState(false);
+  const [showErrorNoApi, setShowErrorNoApi] = useState(false);
 
   useEffect(() => {
     ConfigService.getAllApis(userData.id)
@@ -104,6 +106,12 @@ function ImportScrapper() {
         selectedApi,
         metadata
       ).then((response) => {
+        if (response.error) {
+          console.log(response);
+        }
+        if (response.data.count == 0) {
+          //setResults("Error")
+        }
         setTotalPages(
           CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
         );
@@ -174,6 +182,22 @@ function ImportScrapper() {
             }
             variant="outlined"
             value={searchString}
+            error={showErrorNoApi}
+            helperText={
+              showErrorNoApi && (
+                <FormattedMessage id="app.button.no_api_selected"></FormattedMessage>
+              )
+            }
+            onKeyPress={(ev) => {
+              if (ev.key === "Enter" && !isUndefined(selectedApi)) {
+                setShowErrorNoApi(false);
+                searchWebClick();
+                ev.preventDefault();
+              }
+              if (isUndefined(selectedApi)) {
+                setShowErrorNoApi(true);
+              }
+            }}
             onChange={handleTextInputChange}
           />
         </Grid>
@@ -182,31 +206,6 @@ function ImportScrapper() {
           metadata={metadata}
           setMetadata={setMetadata}
         ></ApiMetadataFields>
-        {/*<Grid>
-          {selectedApi !== undefined && selectedApi.name.includes("Rebrickable") && (<RadioGroup
-            aria-labelledby="demo-radio-buttons-group-label"
-            name="radio-buttons-group"
-            value={metadata}
-            onChange={(e) => {
-              setMetadata(e.target.value);
-            }}
-          >
-            <Grid item ml={2}>
-              <FormControlLabel
-                value="sets"
-                control={<Radio />}
-                label="Sets"
-              />
-            </Grid>
-            <Grid item ml={2}>
-              <FormControlLabel
-                value="minifigs"
-                control={<Radio />}
-                label="Minifigs"
-              />
-            </Grid>
-          </RadioGroup>)}
-          </Grid>*/}
         <Grid item xs={12} pt={2}>
           <Typography variant="h6" component="h4">
             <FormattedMessage
@@ -214,6 +213,20 @@ function ImportScrapper() {
                 showResults === false
                   ? "app.collection.select_option"
                   : "app.collection.add_collection_import_scrapper_search_results"
+              }
+            ></FormattedMessage>
+          </Typography>
+          <Typography variant="body1">
+            <FormattedMessage id="app.empty"></FormattedMessage>
+          </Typography>
+          <Typography variant="body1">
+            <FormattedMessage
+              id={
+                showResults === true
+                  ? results.length > 0
+                    ? "app.empty"
+                    : "app.collection.add_collection_import_scrapper_zero_results"
+                  : "app.empty"
               }
             ></FormattedMessage>
           </Typography>
@@ -227,6 +240,7 @@ function ImportScrapper() {
         justifyContent="flex-start"
       >
         {showResults === false &&
+          searchAgain === false &&
           apisList.map((item, index) => (
             <Grid item pl={2} pt={2} pb={2} key={index}>
               <Card>
@@ -242,6 +256,7 @@ function ImportScrapper() {
                     src={item.logo} // use normal <img> attributes as props
                     width="100%"
                     onClick={(e) => {
+                      setShowErrorNoApi(false);
                       setSelectedApi(item);
                     }}
                   />
@@ -363,14 +378,32 @@ function ImportScrapper() {
             <Grid item>
               <Button
                 variant="contained"
+                color="secondary"
                 onClick={() => {
                   setResults([]);
                   setShowResults(false);
                   setTotalPages(0);
                   setPage(1);
+                  setSearchAgain(true);
+                  searchWebClick();
                 }}
               >
                 <FormattedMessage id="app.button.search_again"></FormattedMessage>
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setSelectedApi(undefined);
+                  setResults([]);
+                  setShowResults(false);
+                  setTotalPages(0);
+                  setPage(1);
+                  setSearchAgain(false);
+                }}
+              >
+                <FormattedMessage id="app.button.change_api"></FormattedMessage>
               </Button>
             </Grid>
           </Grid>

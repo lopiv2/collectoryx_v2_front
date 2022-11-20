@@ -1,3 +1,13 @@
+### 1.1.0 - 20 November 2022 
+***
+
+#### New
+ * Responsive screens in Series, Images, Collections, Apis and Dashboard
+
+#### Fixed
+ * Recurrent searching for items in Apis without selecting again a new Api.
+ 
+
 ### 1.0.1 - 3 November 2022 
 ***
 

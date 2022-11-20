@@ -1,4 +1,5 @@
 {
+  "app.empty": " ",
   "app.sidemenu.dashboard": "Dashboard",
   "app.sidemenu.my_account": "My account",
   "app.sidemenu.logout": "Logout",
@@ -108,6 +109,7 @@
   "app.collection.add_collection_import_scrapper_item": "Import item",
   "app.collection.add_collection_import_scrapper_search": "Search",
   "app.collection.add_collection_import_scrapper_search_results": "Results",
+  "app.collection.add_collection_import_scrapper_zero_results": "Nothing was found",
   "app.collection.add_collection_import_start": "Press Start to import the file records",
   "app.collection.add_collection_import_records_numbers": "{records} records were imported",
   "app.collection.add_collection_import_select_option": "Select collection",
@@ -231,6 +233,8 @@
   "app.button.search_gallery": "Gallery",
   "app.button.search": "Search...",
   "app.button.search_again": "Search again",
+  "app.button.change_api": "Change api...",
+  "app.button.no_api_selected": "Select api to search for",
   "app.chart.year_title": "Purchases year",
   "app.chart.year_paid_title": "Monthly purchases year",
   "app.chart.purchases": "Expenses",

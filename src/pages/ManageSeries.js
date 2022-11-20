@@ -22,7 +22,7 @@ import { isUndefined } from "lodash";
 import { AppContext } from "../components/AppContext";
 import { useNavigate } from "react-router-dom";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from "@mui/icons-material/Link";
 import URLImageDialog from "../components/URLImageDialog";
 
 function ManageSeries(props) {
@@ -71,7 +71,9 @@ function ManageSeries(props) {
 
   useEffect(() => {
     if (!isUndefined(newSerieEdited)) {
-      var index = collectionSeriesList.findIndex((x) => x.id === newSerieEdited.id);
+      var index = collectionSeriesList.findIndex(
+        (x) => x.id === newSerieEdited.id
+      );
       let newItems = [...collectionSeriesList];
       newItems[index] = newSerieEdited;
       setCollectionSeriesList(newItems);
@@ -116,7 +118,11 @@ function ManageSeries(props) {
 
   const submitForm = (values) => {
     //Empty serie without any kind of image
-    if (values.file === undefined && imgGallerySelected === false && urlImageChosen === false) {
+    if (
+      values.file === undefined &&
+      imgGallerySelected === false &&
+      urlImageChosen === false
+    ) {
       ConfigService.createSerie(values.name, values.collection, null).then(
         (response) => {
           if (response.status === 200) {
@@ -133,7 +139,10 @@ function ManageSeries(props) {
       );
     }
     //Create Serie with uploading image from gallery or url
-    if (values.file === undefined && (imgGallerySelected === true || urlImageChosen === true)) {
+    if (
+      values.file === undefined &&
+      (imgGallerySelected === true || urlImageChosen === true)
+    ) {
       ConfigService.createSerie(values.name, values.collection, preview).then(
         (response) => {
           if (response.status === 200) {
@@ -150,8 +159,16 @@ function ManageSeries(props) {
       );
     }
     //Create Serie with uploading image
-    if (values.file !== undefined && imgGallerySelected === false && urlImageChosen === false) {
-      ConfigService.createSerieWithImage(values.name, values.file, values.collection).then((response) => {
+    if (
+      values.file !== undefined &&
+      imgGallerySelected === false &&
+      urlImageChosen === false
+    ) {
+      ConfigService.createSerieWithImage(
+        values.name,
+        values.file,
+        values.collection
+      ).then((response) => {
         if (response.data !== null) {
           if (response.status === 200) {
             toast.success(
@@ -183,7 +200,9 @@ function ManageSeries(props) {
       icon: EditIcon,
       tooltip: intl.formatMessage({ id: "app.button.edit" }),
       onClick: (event, rowData) => {
-        const data = collectionSeriesList.find((serie) => serie.id === rowData.id);
+        const data = collectionSeriesList.find(
+          (serie) => serie.id === rowData.id
+        );
         setSerieEdited(data);
         setOpenEdit(true);
       },
@@ -240,7 +259,11 @@ function ManageSeries(props) {
         ) : (
           <Avatar
             variant="rounded"
-            src={!item.logo.path.includes("http") ? "/images/uploads/" + item.logo.path : item.logo.path}
+            src={
+              !item.logo.path.includes("http")
+                ? "/images/uploads/" + item.logo.path
+                : item.logo.path
+            }
             sx={{ width: 100, height: 35 }}
           ></Avatar>
         ),
@@ -257,7 +280,7 @@ function ManageSeries(props) {
             <FormattedMessage id="app.collection.view_collections_series_add"></FormattedMessage>
           </Typography>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item>
           <Formik
             initialValues={{ name: "", logo: "" }}
             validate={(values) => {
@@ -274,8 +297,8 @@ function ManageSeries(props) {
               setSubmitting(false);
               resetForm();
               setCollection("");
-              setPreview(null)
-              setSelectedFile(null)
+              setPreview(null);
+              setSelectedFile(null);
             }}
           >
             {({
@@ -293,7 +316,7 @@ function ManageSeries(props) {
                   <Grid item xs={12}>
                     <Box pt={2}>
                       <TextField
-                        sx={{ minWidth: 300 }}
+                        sx={{ minWidth: { xs: 250, sm: 260 } }}
                         size="small"
                         id="outlined-basic"
                         name="name"
@@ -315,7 +338,7 @@ function ManageSeries(props) {
                       name="collection"
                       select
                       size="small"
-                      sx={{ minWidth: 300 }}
+                      sx={{ minWidth: { xs: 250, sm: 260 } }}
                       defaultValue=""
                       value={collection ?? ""}
                       error={touched.collection && Boolean(errors.collection)}
@@ -334,24 +357,13 @@ function ManageSeries(props) {
                       })}
                     </TextField>
                   </Grid>
-                  {/*<Grid item xs={4} pt={1}>
-                    <TextField
-                      sx={{ minWidth: 300 }}
-                      size="small"
-                      id="outlined-basic"
-                      name="logo"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      label={
-                        <FormattedMessage id="app.collection.add_collection_logo"></FormattedMessage>
-                      }
-                      variant="outlined"
-                      value={selectedFile ? selectedFile.name || "" : ""}
-                    />
-                    </Grid>*/}
-                  <Grid container spacing={2} ml={0}>
-                    <Grid item>
-                      <Box>
+                  <Box ml={2}>
+                    <Grid
+                      container
+                      spacing={{ xs: 6, md: 12 }}
+                      columns={{ xs: 3, sm: 8, md: 12 }}
+                    >
+                      <Grid item xs={1} sm={3} md={3}>
                         <Button variant="contained" component="label">
                           {
                             <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
@@ -367,49 +379,49 @@ function ManageSeries(props) {
                             }}
                           />
                         </Button>
-                      </Box>
-                    </Grid>
-                    <Grid item>
-                      <Tooltip
-                        title={intl.formatMessage({
-                          id: "app.tooltip.search_gallery",
-                        })}
-                        placement="bottom"
-                        arrow
-                      >
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          onClick={(e) => {
-                            setConfirmOpenGallery(true);
-                          }}
+                      </Grid>
+                      <Grid item xs={2} sm={3} md={3}>
+                        <Tooltip
+                          title={intl.formatMessage({
+                            id: "app.tooltip.search_gallery",
+                          })}
+                          placement="bottom"
+                          arrow
                         >
-                          {
-                            <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
-                          }
-                        </Button>
-                      </Tooltip>
-                    </Grid>
-                    <Grid item>
-                      <Tooltip
-                        title={intl.formatMessage({
-                          id: "app.collection.add_collection_image_url",
-                        })}
-                        placement="right"
-                        arrow
-                      >
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          onClick={(e) => {
-                            setOpenUrl(true);
-                          }}
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={(e) => {
+                              setConfirmOpenGallery(true);
+                            }}
+                          >
+                            {
+                              <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
+                            }
+                          </Button>
+                        </Tooltip>
+                      </Grid>
+                      <Grid item xs={4} sm={3} md={3}>
+                        <Tooltip
+                          title={intl.formatMessage({
+                            id: "app.collection.add_collection_image_url",
+                          })}
+                          placement="right"
+                          arrow
                         >
-                          <LinkIcon />
-                        </Button>
-                      </Tooltip>
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={(e) => {
+                              setOpenUrl(true);
+                            }}
+                          >
+                            <LinkIcon />
+                          </Button>
+                        </Tooltip>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                  </Box>
                   <Grid item xs={12} pt={1}>
                     <Box
                       pt={0}

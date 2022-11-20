@@ -24,9 +24,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { format } from "date-fns";
-import {
-  SetLocaleDateTime,
-} from "../utils/generic";
+import { SetLocaleDateTime } from "../utils/generic";
 import EditImageDialog from "../components/EditImageDialog";
 import ConfirmDialog from "../components/ConfirmDialog";
 
@@ -113,7 +111,7 @@ function ManageImages(props) {
       filteredResponse = response.data.content.filter(
         (image) => !image.path.includes("http")
       );
-      setImages([])
+      setImages([]);
       filteredResponse.map((i) => setImages((images) => [...images, i]));
       setLoading(false);
     });
@@ -124,14 +122,14 @@ function ManageImages(props) {
     border: "2px solid green",
     width: 200,
     height: 200,
-    boxShadow: 10
+    boxShadow: 10,
   };
 
   const avatarStyleHover = {
     cursor: "pointer",
     width: 200,
     height: 200,
-    boxShadow: 10
+    boxShadow: 10,
   };
 
   const cardStyleHover = {
@@ -155,9 +153,9 @@ function ManageImages(props) {
         if (index > -1) {
           images.splice(index, 1);
           setImages([...images]);
-          setImageSelected(undefined)
+          setImageSelected(undefined);
           fetchData(page, rowsPerPage, "name");
-          setLoading(false)
+          setLoading(false);
         }
       }
     });
@@ -180,7 +178,12 @@ function ManageImages(props) {
             <FormattedMessage id="app.collection.manage_images_title"></FormattedMessage>
           </Typography>
         </Grid>
-        <Grid container pb={2} maxWidth="lg">
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+          pt={2}
+        >
           <Grid item xs={4} pt={1}>
             <Typography variant="h6" display="inline" component="div">
               <FormattedMessage id="app.license.show_code"></FormattedMessage>:
@@ -251,10 +254,9 @@ function ManageImages(props) {
               value={searchQuery}
               onChange={(e) => {
                 if (e.target.value.trim().length === 0) {
-                  setSearchQuery("")
+                  setSearchQuery("");
                   fetchData(page, rowsPerPage, "name");
-                }
-                else {
+                } else {
                   setSearchQuery(e.target.value);
                   fetchData(page, rowsPerPage, rowsOrder, searchQuery);
 
@@ -263,7 +265,7 @@ function ManageImages(props) {
               }}
               onKeyPress={(e) => {
                 searchQueryInApi(searchQuery);
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   searchQueryInApi(searchQuery);
                 }
               }}
@@ -284,24 +286,38 @@ function ManageImages(props) {
             </IconButton>
           </Grid>
         </Grid>
-        <Grid container>
+        <Grid container pt={2}>
           <Grid item xs={10}>
             <Grid item xs={12}>
-              <Grid container maxWidth="lg" className="container" style={{ border: "2px solid grey" }}>
+              <Grid
+                container
+                maxWidth="auto"
+                width="auto"
+                className="container"
+                sx={{ border: "2px solid grey", minWidth:200 }}
+              >
                 {isLoading === false && images.length > 0 ? (
-                  <Grid container spacing={3}>
+                  <Grid
+                    container
+                    spacing={{ xs: 2, md: 3 }}
+                    columns={{ xs: 3, sm: 8, md: 12 }}
+                    pt={2}
+                    pb={2}
+                    pl={2}
+                  >
                     {images.map((i) => (
                       <Grid item xs={2.4} key={i.id} pl={1}>
-                        <Card sx={
-                          cardHover === i.id
-                            ? cardStyleHover
-                            : {
-                              height: 200,
-                              minWidth: 200,
-                              maxWidth: 200,
-                              boxShadow: 3,
-                            }
-                        }
+                        <Card
+                          sx={
+                            cardHover === i.id
+                              ? cardStyleHover
+                              : {
+                                  height: 200,
+                                  minWidth: 200,
+                                  maxWidth: 200,
+                                  boxShadow: 3,
+                                }
+                          }
                           onMouseOver={() => {
                             setCardHover(i.id);
                           }}
@@ -330,12 +346,12 @@ function ManageImages(props) {
                       </Grid>
                     ))}
                   </Grid>
-                ) : null
-                }
+                ) : null}
               </Grid>
             </Grid>
             <Grid
-              item xs={12}
+              item
+              xs={12}
               display="flex"
               justifyContent="center"
               alignItems="center"
@@ -356,119 +372,128 @@ function ManageImages(props) {
           </Grid>
           <Grid item xs={2}>
             <Grid item xs={12}>
-              {imageSelected !== undefined && <Grid container maxWidth="lg" className="container" style={{ border: "2px solid grey" }}>
-                <Grid item xs={2.4} height={"auto"}>
-                  <Card sx={{
-                    minWidth: 265,
-                    maxWidth: 265,
-                    boxShadow: 3,
-
-                  }}
-                  >
-                    <Avatar
-                      variant="rounded"
-                      src={"/images/uploads/" + imageSelected.path} // use normal <img> attributes as props
+              {imageSelected !== undefined && (
+                <Grid
+                  container
+                  maxWidth="lg"
+                  className="container"
+                  style={{ border: "2px solid grey" }}
+                >
+                  <Grid item xs={2.4} height={"auto"}>
+                    <Card
                       sx={{
-                        marginLeft: 7,
-                        height: 150,
-                        minWidth: 150,
-                        maxWidth: 150,
+                        minWidth: 265,
+                        maxWidth: 265,
+                        boxShadow: 3,
                       }}
-                    />
-                    <Typography
-                      align="left"
-                      mt={1}
-                      ml={1}
-                      color="text.primary"
-                      variant="body1"
                     >
-                      {imageSelected.path}
-                    </Typography>
-                    <Typography
-                      align="left"
-                      sx={{ mb: 0.5, ml: 1 }}
-                      color="#8F8F8F"
-                      variant="body2"
-                    >
-                      {format(new Date(imageSelected.created), "P", { locale: loc })}
-                    </Typography>
-                    <Typography
-                      align="left"
-                      sx={{ mb: 0.5, ml: 1 }}
-                      color="#8F8F8F"
-                      variant="body2"
-                    >
-                      {imageSelected.dimensions}
-                    </Typography>
-                    <Typography
-                      align="left"
-                      sx={{ mb: 0.5, ml: 1 }}
-                      color="#8F8F8F"
-                      variant="body2"
-                    >
-                      {imageSelected.size}
-                    </Typography>
-                    <Tooltip
-                      title={intl.formatMessage({
-                        id: "app.button.edit",
-                      })}
-                      followCursor
-                      arrow
-                    >
-                      <IconButton
-                        color="primary"
-                        fontSize="large"
+                      <Avatar
+                        variant="rounded"
+                        src={"/images/uploads/" + imageSelected.path} // use normal <img> attributes as props
                         sx={{
-                          position: "relative",
-                          height: 55,
-                          width: 55,
-                          mb: 6,
+                          marginLeft: 7,
+                          height: 150,
+                          minWidth: 150,
+                          maxWidth: 150,
                         }}
-                        onClick={() => {
-                          setOpenEdit(true);
-                        }}
+                      />
+                      <Typography
+                        align="left"
+                        mt={1}
+                        ml={1}
+                        color="text.primary"
+                        variant="body1"
                       >
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip
-                      title={intl.formatMessage({
-                        id: "app.button.delete",
-                      })}
-                      followCursor
-                      arrow
-                    >
-                      <IconButton
-                        color="primary"
-                        fontSize="large"
-                        sx={{
-                          position: "relative",
-                          height: 55,
-                          width: 55,
-                          mb: 6,
-                        }}
-                        onClick={() => {
-                          setConfirmOpen(true);
-                        }}
+                        {imageSelected.path}
+                      </Typography>
+                      <Typography
+                        align="left"
+                        sx={{ mb: 0.5, ml: 1 }}
+                        color="#8F8F8F"
+                        variant="body2"
                       >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <ConfirmDialog
-                      title={intl.formatMessage({
-                        id: "app.dialog.delete_title",
-                      })}
-                      open={confirmOpen}
-                      setOpen={setConfirmOpen}
-                      onConfirm={handleDeleteClick}
-                      showCascade={false}
-                      setCascade={setCascade}
-                    >
-                      <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
-                    </ConfirmDialog>
-                  </Card>
+                        {format(new Date(imageSelected.created), "P", {
+                          locale: loc,
+                        })}
+                      </Typography>
+                      <Typography
+                        align="left"
+                        sx={{ mb: 0.5, ml: 1 }}
+                        color="#8F8F8F"
+                        variant="body2"
+                      >
+                        {imageSelected.dimensions}
+                      </Typography>
+                      <Typography
+                        align="left"
+                        sx={{ mb: 0.5, ml: 1 }}
+                        color="#8F8F8F"
+                        variant="body2"
+                      >
+                        {imageSelected.size}
+                      </Typography>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.button.edit",
+                        })}
+                        followCursor
+                        arrow
+                      >
+                        <IconButton
+                          color="primary"
+                          fontSize="large"
+                          sx={{
+                            position: "relative",
+                            height: 55,
+                            width: 55,
+                            mb: 6,
+                          }}
+                          onClick={() => {
+                            setOpenEdit(true);
+                          }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.button.delete",
+                        })}
+                        followCursor
+                        arrow
+                      >
+                        <IconButton
+                          color="primary"
+                          fontSize="large"
+                          sx={{
+                            position: "relative",
+                            height: 55,
+                            width: 55,
+                            mb: 6,
+                          }}
+                          onClick={() => {
+                            setConfirmOpen(true);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <ConfirmDialog
+                        title={intl.formatMessage({
+                          id: "app.dialog.delete_title",
+                        })}
+                        open={confirmOpen}
+                        setOpen={setConfirmOpen}
+                        onConfirm={handleDeleteClick}
+                        showCascade={false}
+                        setCascade={setCascade}
+                      >
+                        <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
+                      </ConfirmDialog>
+                    </Card>
+                  </Grid>
                 </Grid>
-              </Grid>}
+              )}
             </Grid>
           </Grid>
         </Grid>

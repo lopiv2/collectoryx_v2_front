@@ -302,7 +302,7 @@ function ManageApiTab(props) {
             )}
           </Formik>
         </Grid>
-        <Grid item xs={8} mr={2}>
+        <Grid item xs={12} mr={2}>
           <MaterialTable
             title={
               <FormattedMessage id="app.config.general_apis_tab_list_title"></FormattedMessage>

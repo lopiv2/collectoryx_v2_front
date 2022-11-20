@@ -81,6 +81,7 @@ export default function BarChartYearly(props) {
     },]);
 
     const options = {
+        maintainAspectRatio: false,
         responsive: true,
         scales: {
             y: {

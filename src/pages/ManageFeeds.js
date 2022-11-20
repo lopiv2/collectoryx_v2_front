@@ -239,7 +239,7 @@ function ManageFeeds(props) {
             )}
           </Formik>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <MaterialTable
             title={<FormattedMessage id="app.feed.list"></FormattedMessage>}
             data={data}

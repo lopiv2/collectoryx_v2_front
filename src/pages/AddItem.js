@@ -25,7 +25,7 @@ import { Tooltip } from "@mui/material";
 import { format } from "date-fns";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
 import { FeatureForImplement } from "../utils/generic";
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from "@mui/icons-material/Link";
 import URLImageDialog from "../components/URLImageDialog";
 
 const localeMap = {
@@ -69,9 +69,7 @@ function AddItem(props) {
   };
 
   useEffect(() => {
-    ConfigService.getCollectionSeries(
-      location.state.id
-    )
+    ConfigService.getCollectionSeries(location.state.id)
       .then((response) => {
         setCollectionSeriesList(response.data);
       })
@@ -131,7 +129,9 @@ function AddItem(props) {
         return (
           <TextField
             inputProps={{ type: "number" }}
-            sx={{ minWidth: 300 }}
+            sx={{ minWidth: { xs: 120, sm: 250 } }}
+            multiline
+            maxRows={4}
             size="small"
             id="name"
             name="name"
@@ -143,7 +143,7 @@ function AddItem(props) {
       default:
         return (
           <TextField
-            sx={{ minWidth: 300 }}
+            sx={{ minWidth: { xs: 120, sm: 250 } }}
             size="small"
             id="name"
             name="name"
@@ -159,7 +159,7 @@ function AddItem(props) {
   const submitForm = (values) => {
     //If image was chosen from URL
     values.metadata = metadataValues;
-    if (urlImageChosen === true && values.file===undefined) {
+    if (urlImageChosen === true && values.file === undefined) {
       ConfigService.createItem(
         values,
         location.state.id,
@@ -193,7 +193,11 @@ function AddItem(props) {
       });
     }
     //Image not set
-    if (values.file === undefined && imgGallerySelected === false && urlImageChosen === false) {
+    if (
+      values.file === undefined &&
+      imgGallerySelected === false &&
+      urlImageChosen === false
+    ) {
       ConfigService.createItem(
         values,
         location.state.id,
@@ -210,7 +214,11 @@ function AddItem(props) {
       });
     }
     //New image uploaded not from gallery nor url
-    if (values.file !== undefined && imgGallerySelected === false && urlImageChosen === false) {
+    if (
+      values.file !== undefined &&
+      imgGallerySelected === false &&
+      urlImageChosen === false
+    ) {
       ConfigService.putImage(values.name, values.file).then((response) => {
         ConfigService.createItem(
           values,
@@ -292,8 +300,12 @@ function AddItem(props) {
   return (
     <Box>
       <Grid container>
-        <Grid item xs={6}>
-          <Typography variant="h5" component="h5">
+        <Grid item xs={12}>
+          <Typography
+            variant="h5"
+            component="h5"
+            sx={{ typography: { sm: "h5", xs: "h6" } }}
+          >
             <FormattedMessage id="app.tooltip.add_new_item"></FormattedMessage>
             {location.state.name}
           </Typography>
@@ -343,73 +355,77 @@ function AddItem(props) {
                       sx={{
                         height: "auto",
                         width: "auto",
-                        maxHeight: 300,
-                        maxWidth: 400,
+                        maxHeight: { xs: 200, md: 300 },
+                        maxWidth: { xs: 300, md: 400 },
                       }}
                       alt="Logo"
                       src={preview ? preview : NoImage}
                     ></Box>
                   </Grid>
-
-                  <Grid container spacing={2} ml={0}>
-                    <Grid item>
-                      <Button variant="contained" component="label">
-                        {
-                          <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
-                        }
-                        <input
-                          type="file"
-                          hidden
-                          name="file"
-                          accept="image/png, image/jpeg"
-                          onChange={(e) => {
-                            setFieldValue("file", e.currentTarget.files[0]);
-                            setSelectedFile(e.currentTarget.files[0]);
-                          }}
-                        />
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Tooltip
-                        title={intl.formatMessage({
-                          id: "app.tooltip.search_gallery",
-                        })}
-                        placement="bottom"
-                        arrow
-                      >
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          onClick={(e) => {
-                            setConfirmOpenGallery(true);
-                          }}
-                        >
+                  <Box ml={2}>
+                    <Grid
+                      container
+                      spacing={{ xs: 6, md: 12 }}
+                      columns={{ xs: 3, sm: 8, md: 12 }}
+                    >
+                      <Grid item xs={1} sm={3} md={3}>
+                        <Button variant="contained" component="label">
                           {
-                            <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
+                            <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
                           }
+                          <input
+                            type="file"
+                            hidden
+                            name="file"
+                            accept="image/png, image/jpeg"
+                            onChange={(e) => {
+                              setFieldValue("file", e.currentTarget.files[0]);
+                              setSelectedFile(e.currentTarget.files[0]);
+                            }}
+                          />
                         </Button>
-                      </Tooltip>
-                    </Grid>
-                    <Grid item>
-                      <Tooltip
-                        title={intl.formatMessage({
-                          id: "app.collection.add_collection_image_url",
-                        })}
-                        placement="right"
-                        arrow
-                      >
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          onClick={(e) => {
-                            setOpenUrl(true);
-                          }}
+                      </Grid>
+                      <Grid item xs={2} sm={3} md={3}>
+                        <Tooltip
+                          title={intl.formatMessage({
+                            id: "app.tooltip.search_gallery",
+                          })}
+                          placement="bottom"
+                          arrow
                         >
-                          <LinkIcon />
-                        </Button>
-                      </Tooltip>
-                    </Grid>
-                    {/*<Grid item>
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={(e) => {
+                              setConfirmOpenGallery(true);
+                            }}
+                          >
+                            {
+                              <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
+                            }
+                          </Button>
+                        </Tooltip>
+                      </Grid>
+                      <Grid item xs={4} sm={3} md={3}>
+                        <Tooltip
+                          title={intl.formatMessage({
+                            id: "app.collection.add_collection_image_url",
+                          })}
+                          placement="right"
+                          arrow
+                        >
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={(e) => {
+                              setOpenUrl(true);
+                            }}
+                          >
+                            <LinkIcon />
+                          </Button>
+                        </Tooltip>
+                      </Grid>
+                      {/*<Grid item>
                       <Tooltip
                         title={intl.formatMessage({
                           id: "app.tooltip.search_google",
@@ -429,15 +445,20 @@ function AddItem(props) {
                         </Button>
                       </Tooltip>
                         </Grid>*/}
-                  </Grid>
-                  <Grid container spacing={40}>
+                    </Grid>
+                  </Box>
+                  <Grid
+                    container
+                    spacing={{ xs: 2, sm: 15, md: 12 }}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
+                  >
                     <Grid item xs={2}>
                       <Box pt={2} ml={2}>
                         <Typography variant="body1">
                           <FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>
                         </Typography>
                         <TextField
-                          sx={{ minWidth: 300 }}
+                          sx={{ minWidth: { xs: 250, sm: 260 } }}
                           size="small"
                           id="name"
                           name="name"
@@ -451,7 +472,7 @@ function AddItem(props) {
                       </Box>
                     </Grid>
                     <Grid item xs={4}>
-                      <Box pt={2}>
+                      <Box pt={2} pl={2}>
                         <Typography variant="body1">
                           <FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>
                         </Typography>
@@ -460,7 +481,7 @@ function AddItem(props) {
                           name="serie"
                           select
                           size="small"
-                          sx={{ minWidth: 300 }}
+                          sx={{ minWidth: { xs: 250, sm: 237 } }}
                           value={values.serie}
                           error={touched.serie && Boolean(errors.serie)}
                           helperText={touched.serie && errors.serie}
@@ -488,7 +509,7 @@ function AddItem(props) {
                         <FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>
                       </Typography>
                       <TextField
-                        sx={{ minWidth: 300 }}
+                        sx={{ minWidth: { xs: 100, sm: 260 } }}
                         size="small"
                         id="price"
                         name="price"
@@ -508,13 +529,13 @@ function AddItem(props) {
                       />
                     </Box>
                   </Grid>
-                  <Grid item xs={3}>
-                    <Box pt={2} ml={4.7}>
+                  <Grid item xs={4}>
+                    <Box pt={2} sx={{ pl: { xs: 7.7, sm: 2.1 } }}>
                       <Typography variant="body1">
                         <FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>
                       </Typography>
                       <TextField
-                        sx={{ minWidth: 300 }}
+                        sx={{ minWidth: { xs: 140, sm: 237 } }}
                         size="small"
                         id="year"
                         name="year"
@@ -539,8 +560,8 @@ function AddItem(props) {
                         ></Checkbox>
                       </Box>
                     </Grid>
-                    <Grid item xs={2}>
-                      <Box pt={2} pl={6.5}>
+                    <Grid item xs={9}>
+                      <Box pt={2} sx={{ pl: { xs: 9.8, sm: 1.3 } }}>
                         <Typography variant="body1">
                           <FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>
                         </Typography>
@@ -561,14 +582,14 @@ function AddItem(props) {
                     </Grid>
                   </Grid>
                   <Grid container>
-                    <Grid item xs={4.65}>
+                    <Grid item xs={4}>
                       <Box pt={2} ml={2}>
                         <Typography variant="body1">
                           <FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>
                         </Typography>
                         <TextField
                           fullWidth
-                          sx={{ minWidth: 300 }}
+                          sx={{ minWidth: { xs: 250, sm: 267 } }}
                           size="small"
                           id="notes"
                           name="notes"
@@ -593,9 +614,12 @@ function AddItem(props) {
                 {metadataFields.length > 0 && (
                   <Grid
                     container
-                    sx={{ border: 2 }}
+                    sx={{
+                      border: 2,
+                      maxWidth: { xs: "93%", sm: "32.7%" },
+                    }}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
                     mt={2}
-                    style={{ maxWidth: "38%" }}
                   >
                     {metadataFields.map((item, index) => (
                       <Grid item xs={12} key={index} pl={2}>
@@ -650,7 +674,7 @@ function AddItem(props) {
       >
         <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
       </ImageGalleryDialog>
-    </Box >
+    </Box>
   );
 }
 

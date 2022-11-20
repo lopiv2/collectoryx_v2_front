@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Card, CardContent, Typography } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
 import { FormattedMessage } from "react-intl";
-import StarIcon from '@mui/icons-material/Star';
+import StarIcon from "@mui/icons-material/Star";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
@@ -33,7 +33,11 @@ export default function WishlistCard() {
   return (
     <Card sx={{ minWidth: 200 }} elevation={6}>
       <CardContent>
-        <Grid container rowSpacing={2} columnSpacing={{ xs: 0, sm: 1, md: 1 }}>
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 3, sm: 8, md: 12 }}
+        >
           <Grid item xs={2}>
             <StarIcon sx={{ fontSize: 80 }}></StarIcon>
           </Grid>

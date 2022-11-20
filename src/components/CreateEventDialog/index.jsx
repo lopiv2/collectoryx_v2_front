@@ -16,8 +16,7 @@ import BasicDateTimePicker from "../../components/BasicDateTimePicker";
 import { AppContext } from "../../components/AppContext";
 
 const CreateEventDialog = (props) => {
-  const { open, setOpen, dateClickedEvent, setReloadCreated } =
-    props;
+  const { open, setOpen, dateClickedEvent, setReloadCreated } = props;
   //const intl = useIntl();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -26,13 +25,13 @@ const CreateEventDialog = (props) => {
 
   useEffect(() => {
     if (open === false) {
-      setStartDate(new Date())
+      setStartDate(new Date());
     }
   }, [open]);
 
   useEffect(() => {
     if (isValid(dateClickedEvent)) {
-      setStartDate(dateClickedEvent)
+      setStartDate(dateClickedEvent);
     }
   }, [dateClickedEvent]);
 
@@ -54,7 +53,7 @@ const CreateEventDialog = (props) => {
           <FormattedMessage id="app.event.created"></FormattedMessage>,
           { theme: "colored" }
         );
-        setReloadCreated(true)
+        setReloadCreated(true);
         setOpen(false);
       }
     });
@@ -70,13 +69,11 @@ const CreateEventDialog = (props) => {
     >
       <DialogTitle id="confirm-dialog">
         <Typography component="p" variant="h5" align="center">
-          <FormattedMessage
-            id="app.event.create"
-          ></FormattedMessage>
+          <FormattedMessage id="app.event.create"></FormattedMessage>
         </Typography>
       </DialogTitle>
-      <DialogContent>
-        <Grid item xs={3}>
+      <DialogContent sx={{ alignItems: "center" }}>
+        <Grid container item justifyContent="flex-end">
           <Formik
             initialValues={{
               userId: userData.id,
@@ -91,8 +88,8 @@ const CreateEventDialog = (props) => {
             validationSchema={newEventSchema}
             onSubmit={(values, { setSubmitting }) => {
               //const d = format(new Date(startDate), "yyyy-MM-dd");
-              values.start = startDate
-              values.end = endDate
+              values.start = startDate;
+              values.end = endDate;
               values.allDay = allDay;
               submitForm(values);
               setSubmitting(false);
@@ -113,7 +110,7 @@ const CreateEventDialog = (props) => {
                   <Grid item xs={12}>
                     <Box pt={2}>
                       <TextField
-                        sx={{ minWidth: 400 }}
+                        sx={{ minWidth: { xs: 220, sm: 260 } }}
                         size="small"
                         id="title"
                         name="title"
@@ -136,7 +133,7 @@ const CreateEventDialog = (props) => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       size="small"
-                      sx={{ minWidth: 400 }}
+                      sx={{ minWidth: { xs: 220, sm: 260 } }}
                       value={values.description}
                       label={
                         <FormattedMessage id="app.event.description"></FormattedMessage>
@@ -197,7 +194,7 @@ const CreateEventDialog = (props) => {
                       name="type"
                       select
                       size="small"
-                      sx={{ minWidth: 300 }}
+                      sx={{ minWidth: { xs: 220, sm: 260 } }}
                       value={values.type}
                       label={
                         <FormattedMessage id="app.license.type"></FormattedMessage>
@@ -221,10 +218,7 @@ const CreateEventDialog = (props) => {
                     >
                       <FormattedMessage id="app.button.accept"></FormattedMessage>
                     </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() => setOpen(false)}
-                    >
+                    <Button variant="contained" onClick={() => setOpen(false)}>
                       <FormattedMessage id="app.button.cancel"></FormattedMessage>
                     </Button>
                   </DialogActions>
@@ -234,7 +228,7 @@ const CreateEventDialog = (props) => {
           </Formik>
         </Grid>
       </DialogContent>
-    </Dialog >
-  )
+    </Dialog>
+  );
 };
 export default CreateEventDialog;
