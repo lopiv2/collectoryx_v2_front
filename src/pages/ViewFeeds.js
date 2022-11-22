@@ -17,17 +17,14 @@ import {
 } from "@material-ui/core";
 import { useLocation } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
+import { AppContext } from "../components/AppContext";
 
 
 export default function ViewFeeds(props) {
     const parser = new Parser({});
     const [feedsList, setFeedsList] = useState([]);
     const location = useLocation();
-
-    if (localStorage.getItem("user")) {
-        var user = localStorage.getItem("user");
-        var userData = JSON.parse(user);
-    }
+    const { userData } = React.useContext(AppContext);
 
     const theme = createTheme({
         typography: {

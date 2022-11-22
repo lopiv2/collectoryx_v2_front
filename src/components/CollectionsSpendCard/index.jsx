@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, Typography } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
 import { FormattedMessage, FormattedNumber } from "react-intl";
@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { CurrencyChecker } from "../../utils/generic";
+import { AppContext } from "../AppContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -19,24 +20,12 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function CollectionsSpentCard() {
   const [moneySpent, setMoneySpent] = useState(0);
   const currency = CurrencyChecker();
+  const { userData } = React.useContext(AppContext);
 
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      var user = localStorage.getItem("user");
-      var userData = JSON.parse(user);
-    }
-    let money = 0;
     ConfigService.countCollectionsMoney(userData.id)
       .then((response) => {
-        if (response.data.length > 0) {
-          response.data.map((item) => {
-            if (item.own) {
-              money = money + item.price;
-            }
-          });
-          //console.log(response.data);
-        }
-        setMoneySpent(money);
+        setMoneySpent(response.data)
       })
       .catch((err) => {
         console.log(err);
@@ -46,7 +35,7 @@ export default function CollectionsSpentCard() {
   return (
     <Card sx={{ minWidth: 200 }} style={{ backgroundColor: "#217dbf" }} elevation={6}>
       <CardContent>
-      <Grid
+        <Grid
           container
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 3, sm: 8, md: 12 }}
