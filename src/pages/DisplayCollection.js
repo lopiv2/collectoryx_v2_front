@@ -252,6 +252,14 @@ function DisplayCollection(props) {
     };
   };
 
+  const changeFontSize = (text) => {
+    if (text.length > 22) {
+      return "body2";
+    } else {
+      return "body1";
+    }
+  };
+
   const searchQueryInApi = () => {
     if (searchQuery.length > 0) {
       fetchData(page, rowsPerPage, rowsOrder, searchQuery);
@@ -461,7 +469,7 @@ function DisplayCollection(props) {
 
   const cardStyleHover = {
     cursor: "pointer",
-    height: 380,
+    height: 400,
     minWidth: 250,
     maxWidth: 250,
     boxShadow: 15,
@@ -847,7 +855,7 @@ function DisplayCollection(props) {
                           cardHover === item
                             ? cardStyleHover
                             : {
-                                height: "auto",
+                                height: 400,
                                 minWidth: 250,
                                 maxWidth: 250,
                                 boxShadow: 3,
@@ -861,78 +869,6 @@ function DisplayCollection(props) {
                           setCardHover(null);
                         }}
                       >
-                        <Box ml={23.1} mb={-10}>
-                          <Tooltip
-                            title={intl.formatMessage({
-                              id: "app.tooltip.click_wish",
-                            })}
-                            placement="right"
-                            arrow
-                          >
-                            <IconButton
-                              id={item.id}
-                              style={{ color: "rgba(240, 216, 0, 1)" }}
-                              sx={{
-                                position: "relative",
-                                height: 25,
-                                width: 25,
-                                ml: -22.5,
-                                mb: 6,
-                                mt: 1,
-                              }}
-                              onClick={(e) => {
-                                handleWishClick(e, item.own, item.wanted);
-                              }}
-                              className="button-wish"
-                            >
-                              {item.wanted ? (
-                                <StarIcon fontSize="large"></StarIcon>
-                              ) : (
-                                <StarBorderIcon fontSize="large"></StarBorderIcon>
-                              )}
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip
-                            title={intl.formatMessage({
-                              id: "app.tooltip.click_own",
-                            })}
-                            placement="right"
-                            arrow
-                          >
-                            <Button
-                              id={item.id}
-                              sx={{
-                                position: "relative",
-                                height: 75,
-                                width: 75,
-                                ml: 18.153,
-                                mt: -1.5,
-                              }}
-                              onClick={(e) => {
-                                handleOwnClick(e, item.own, item.wanted);
-                              }}
-                              className="button-own"
-                              startIcon={
-                                <Avatar
-                                  variant="square"
-                                  sx={{ width: 75, height: 75, ml: 1, mt: 1 }}
-                                  src={item.own ? OwnImage : NotOwnImage}
-                                />
-                              }
-                            >
-                              <Typography
-                                className="own-text"
-                                sx={{ position: "absolute", ml: 2.5 }}
-                              >
-                                {item.own ? (
-                                  <FormattedMessage id="app.button.own"></FormattedMessage>
-                                ) : (
-                                  <FormattedMessage id="app.button.not_own"></FormattedMessage>
-                                )}
-                              </Typography>
-                            </Button>
-                          </Tooltip>
-                        </Box>
                         <CardContent>
                           {item.logo ? null : (
                             <Typography
@@ -942,33 +878,125 @@ function DisplayCollection(props) {
                               gutterBottom
                             ></Typography>
                           )}
-                          <Tooltip
-                            title={intl.formatMessage({
-                              id: "app.tooltip.click_image",
-                            })}
-                            arrow
-                            followCursor
-                          >
-                            <CardMedia
-                              component="img"
-                              width="500%"
-                              height="220"
-                              image={checkImage(item)}
-                              alt={item.name}
-                              className="card-collection"
-                              onClick={() => {
-                                setImageClicked(item);
-                                setItemSelected(item);
-                                handleOpen();
+
+                          <Box sx={{ position: "relative" }}>
+                            <Tooltip
+                              title={intl.formatMessage({
+                                id: "app.tooltip.click_image",
+                              })}
+                              arrow
+                              followCursor
+                            >
+                              <CardMedia
+                                component="img"
+                                width="500%"
+                                height="220"
+                                image={checkImage(item)}
+                                alt={item.name}
+                                className="card-collection"
+                                onClick={() => {
+                                  setImageClicked(item);
+                                  setItemSelected(item);
+                                  handleOpen();
+                                }}
+                                style={styles}
+                              />
+                            </Tooltip>
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                bottom: "97%",
+                                left: "-5%",
+                                width: "100%",
                               }}
-                              style={styles}
-                            />
-                          </Tooltip>
+                            >
+                              <Tooltip
+                                title={intl.formatMessage({
+                                  id: "app.tooltip.click_wish",
+                                })}
+                                placement="right"
+                                arrow
+                              >
+                                <IconButton
+                                  id={item.id}
+                                  style={{ color: "rgba(240, 216, 0, 1)" }}
+                                  sx={{
+                                    height: 25,
+                                    width: 25,
+                                  }}
+                                  onClick={(e) => {
+                                    handleWishClick(e, item.own, item.wanted);
+                                  }}
+                                  className="button-wish"
+                                >
+                                  {item.wanted ? (
+                                    <StarIcon fontSize="large"></StarIcon>
+                                  ) : (
+                                    <StarBorderIcon fontSize="large"></StarBorderIcon>
+                                  )}
+                                </IconButton>
+                              </Tooltip>
+                            </Box>
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                bottom: "77%",
+                                left: "76%",
+                                width: "100%",
+                              }}
+                            >
+                              <Tooltip
+                                title={intl.formatMessage({
+                                  id: "app.tooltip.click_own",
+                                })}
+                                placement="right"
+                                arrow
+                              >
+                                <Button
+                                  id={item.id}
+                                  sx={{
+                                    height: 75,
+                                    width: 75,
+                                  }}
+                                  onClick={(e) => {
+                                    handleOwnClick(e, item.own, item.wanted);
+                                  }}
+                                  className="button-own"
+                                  startIcon={
+                                    <Avatar
+                                      variant="square"
+                                      sx={{
+                                        width: 75,
+                                        height: 75,
+                                      }}
+                                      src={item.own ? OwnImage : NotOwnImage}
+                                    />
+                                  }
+                                >
+                                  <Typography
+                                    className="own-text"
+                                    sx={{
+                                      position: "absolute",
+                                      ml: "2.5%",
+                                      mt: "-20%",
+                                    }}
+                                  >
+                                    {item.own ? (
+                                      <FormattedMessage id="app.button.own"></FormattedMessage>
+                                    ) : (
+                                      <FormattedMessage id="app.button.not_own"></FormattedMessage>
+                                    )}
+                                  </Typography>
+                                </Button>
+                              </Tooltip>
+                            </Box>
+                          </Box>
                           <Typography
                             align="center"
                             sx={{ mb: 0.5 }}
                             mt={1}
                             color="text.primary"
+                            variant={changeFontSize(item.name)}
                           >
                             {item.name}
                           </Typography>
@@ -976,7 +1004,7 @@ function DisplayCollection(props) {
                             {item.year}
                           </Typography>
                         </CardContent>
-                        <CardActions style={{ justifyContent: "center" }}>
+                        <CardActions sx={{ justifyContent: "center" }}>
                           <Button
                             variant="contained"
                             color="error"
@@ -1065,7 +1093,7 @@ function DisplayCollection(props) {
                   />
                 </Grid>
               </Grid>
-              <Grid container item xs={12} sm={6} pb={2} >
+              <Grid container item xs={12} sm={6} pb={2}>
                 <Grid item pt={2} pb={2} sx={{ pl: { xs: 2 } }}>
                   <Avatar
                     component={Paper}
