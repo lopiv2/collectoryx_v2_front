@@ -474,8 +474,10 @@ const getCollectionById = (id) => {
     });
 };
 
-const getItemMarvelLegends = (query, metadata) => {
+const getItemMarvelLegends = (page, rowsPerPage, query, metadata) => {
   const params = {
+    page: page,
+    rowsPerPage: rowsPerPage,
     query: query,
     metadata: metadata,
   };
@@ -485,7 +487,7 @@ const getItemMarvelLegends = (query, metadata) => {
       //console.log(response);
       return response;
     });
-}
+};
 
 const getSerieFromRebrickable = (serie, selectedApi) => {
   const data = {
@@ -503,9 +505,15 @@ const getSerieFromRebrickable = (serie, selectedApi) => {
       //console.log(response);
       return response;
     });
-}
+};
 
-const getItemFromWeb = (page, rowsPerPage, searchQuery, apiSelected, metadata) => {
+const getItemFromWeb = (
+  page,
+  rowsPerPage,
+  searchQuery,
+  apiSelected,
+  metadata
+) => {
   const data = {
     page: page,
     rowsPerPage: rowsPerPage,
@@ -958,7 +966,7 @@ const updateSerie = (values, image) => {
     });
 };
 
-const viewFeed = (url) => { };
+const viewFeed = (url) => {};
 
 const ConfigService = {
   countCollections,

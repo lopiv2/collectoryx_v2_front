@@ -52,11 +52,11 @@ function ImportScrapper() {
       });
   }, []);
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (startSearch === true) {
-      //searchWebClick();
+      searchWebClick();
     }
-  }, [page, searchString, startSearch]);*/
+  }, [page, searchString, startSearch]);
 
   const handleChange = (e, p) => {
     setPage(p);
@@ -102,25 +102,33 @@ function ImportScrapper() {
         <FormattedMessage id="app.config.general.api-no_search_string"></FormattedMessage>,
         { theme: "colored" }
       );
-    }
-    else {
+    } else {
       if (selectedApi.name.includes("Marvel Legends")) {
+        console.log("Empie")
         setStartSearch(true);
-        ConfigService.getItemMarvelLegends(searchString, metadata).then((response) => {
-          /*setResults(
+        ConfigService.getItemMarvelLegends(
+          page,
+          rowsPerPage,
+          searchString,
+          metadata
+        ).then((response) => {
+          console.log(response.data);
+          setTotalPages(
+            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+          );
+          setResults(
             FilterResultsByApiProvider(
               response.data,
               selectedApi,
               location.state.id
             )
-          );*/
+          );
           setSearching(false);
           setStartSearch(false);
           setShowResults(true);
-          console.log(response.data)
-        })
-      }
-      else {
+        });
+        return
+      } else {
         if (selectedApi.apiLink !== "") {
           setStartSearch(true);
           ConfigService.getItemFromWeb(
@@ -317,8 +325,8 @@ function ImportScrapper() {
                         cardHover === item
                           ? cardStyleHover
                           : {
-                            boxShadow: 3,
-                          },
+                              boxShadow: 3,
+                            },
                         selectedItem === item
                           ? avatarStyleClicked
                           : avatarStyleHover,

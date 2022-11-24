@@ -102,7 +102,7 @@ const FeatureForImplement = () => {
     <FormattedMessage id="app.feature_for_implement"></FormattedMessage>,
     { theme: "colored" }
   );
-}
+};
 
 const GetLocaleDateTime = () => {
   const context = useContext(Context);
@@ -122,13 +122,13 @@ const SetLocaleDateTime = () => {
 };
 
 const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
-  if (selectedApi.name.includes("Pokemon")) {
+  if (selectedApi.name.includes("Pokemon") || selectedApi.name.includes("Marvel Legends")) {
     return Math.ceil(response.data.totalCount / rowsPerPage);
   }
   if (selectedApi.name.includes("Rebrickable")) {
     return Math.ceil(response.data.count / rowsPerPage);
   }
-}
+};
 
 const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   var items = [];
@@ -165,6 +165,21 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           year: item.year,
           serie: item.theme_id,
           price: 0.0,
+        })
+      );
+      return items;
+    }
+  }
+  if (selectedApi.name.includes("Marvel Legends")) {
+    if (results.items) {
+      results.items.map((item, index) =>
+        items.push({
+          name: item.name,
+          image: item.image.path ? item.image.path : NoImage,
+          collection: collection,
+          year: item.year,
+          serie: item.serie.name,
+          price: item.price,
         })
       );
       return items;
