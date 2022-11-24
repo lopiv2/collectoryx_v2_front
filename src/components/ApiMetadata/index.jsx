@@ -30,6 +30,36 @@ export default function ApiMetadataFields(props) {
           />
         </Grid>
       </RadioGroup>)}
+      {selectedApi !== undefined && selectedApi.name.includes("Marvel Legends") && (<RadioGroup
+        aria-labelledby="demo-radio-buttons-group-label"
+        name="radio-buttons-group"
+        value={metadata}
+        onChange={(e) => {
+          setMetadata(e.target.value);
+        }}
+      >
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="baf"
+            control={<Radio />}
+            label="BAFS"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="sets"
+            control={<Radio />}
+            label="Sets"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="exclusives"
+            control={<Radio />}
+            label="Exclusives"
+          />
+        </Grid>
+      </RadioGroup>)}
     </Grid>
   );
 }

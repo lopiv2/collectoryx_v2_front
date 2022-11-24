@@ -52,11 +52,11 @@ function ImportScrapper() {
       });
   }, []);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (startSearch === true) {
-      searchWebClick();
+      //searchWebClick();
     }
-  }, [page, searchString, startSearch]);
+  }, [page, searchString, startSearch]);*/
 
   const handleChange = (e, p) => {
     setPage(p);
@@ -97,40 +97,63 @@ function ImportScrapper() {
   };
 
   const searchWebClick = () => {
-    if (selectedApi.apiLink !== "") {
-      setStartSearch(true);
-      ConfigService.getItemFromWeb(
-        page,
-        rowsPerPage,
-        searchString,
-        selectedApi,
-        metadata
-      ).then((response) => {
-        if (response.error) {
-          console.log(response);
-        }
-        if (response.data.count == 0) {
-          //setResults("Error")
-        }
-        setTotalPages(
-          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-        );
-        setResults(
-          FilterResultsByApiProvider(
-            response.data,
-            selectedApi,
-            location.state.id
-          )
-        );
-        setSearching(false);
-        setStartSearch(false);
-        setShowResults(true);
-      });
-    } else {
+    if (searchString === "" || searchString === undefined) {
       toast.error(
-        <FormattedMessage id="app.config.general.api-no_url"></FormattedMessage>,
+        <FormattedMessage id="app.config.general.api-no_search_string"></FormattedMessage>,
         { theme: "colored" }
       );
+    }
+    else {
+      if (selectedApi.name.includes("Marvel Legends")) {
+        setStartSearch(true);
+        ConfigService.getItemMarvelLegends(searchString, metadata).then((response) => {
+          /*setResults(
+            FilterResultsByApiProvider(
+              response.data,
+              selectedApi,
+              location.state.id
+            )
+          );*/
+          setSearching(false);
+          setStartSearch(false);
+          setShowResults(true);
+          console.log(response.data)
+        })
+      }
+      else {
+        if (selectedApi.apiLink !== "") {
+          setStartSearch(true);
+          ConfigService.getItemFromWeb(
+            page,
+            rowsPerPage,
+            searchString,
+            selectedApi,
+            metadata
+          ).then((response) => {
+            if (response.error) {
+              console.log(response);
+            }
+            setTotalPages(
+              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+            );
+            setResults(
+              FilterResultsByApiProvider(
+                response.data,
+                selectedApi,
+                location.state.id
+              )
+            );
+            setSearching(false);
+            setStartSearch(false);
+            setShowResults(true);
+          });
+        } else {
+          toast.error(
+            <FormattedMessage id="app.config.general.api-no_url"></FormattedMessage>,
+            { theme: "colored" }
+          );
+        }
+      }
     }
   };
 
@@ -294,8 +317,8 @@ function ImportScrapper() {
                         cardHover === item
                           ? cardStyleHover
                           : {
-                              boxShadow: 3,
-                            },
+                            boxShadow: 3,
+                          },
                         selectedItem === item
                           ? avatarStyleClicked
                           : avatarStyleHover,

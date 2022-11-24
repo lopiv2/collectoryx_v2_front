@@ -61,13 +61,6 @@ function AddItem(props) {
     setImgGallerySelected(true);
   };
 
-  const searchWebClick = (query) => {
-    console.log(query);
-    /*const collectionSeries = ConfigService.getImages(query).then((response) => {
-      console.log(response.data);
-    });*/
-  };
-
   useEffect(() => {
     ConfigService.getCollectionSeries(location.state.id)
       .then((response) => {

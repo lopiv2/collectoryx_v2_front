@@ -195,6 +195,7 @@
   "app.config.general.api-created": "API creada correctamente",
   "app.config.general.api-edited": "API editada correctamente",
   "app.config.general.api-no_url": "La API seleccionada no tiene URL establecida",
+  "app.config.general.api-no_search_string": "No se ha introducido texto para buscar",
   "app.config.saved": "Configuración guardada",
   "app.config.appearance_title": "Opciones de aparencia",
   "app.config.appearance_create_theme": "Crea un tema",

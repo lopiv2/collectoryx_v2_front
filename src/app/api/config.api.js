@@ -32,12 +32,11 @@ const GET_EVENTS_PERIOD_URL = `${API_URL}/events/get-period`;
 const UPDATE_EVENT_URL = `${API_URL}/events/update`;
 const CREATE_EVENT_URL = `${API_URL}/events/create-event`;
 const DELETE_EVENT_ID_URL = (id) => `${API_URL}/events/delete-event/${id}`;
-const GET_IMAGES_QUERY_URL = (query) =>
-  `${API_URL}/marvel/item-images/${query}`;
 const GET_COLLECTION_METADATAS_URL = (id) =>
   `${API_URL}/get-metadata-fields/${id}`;
 const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
 const GET_SERIE_REBRICKABLE_URL = `${API_URL}/scrapper/get-serie-name-rebrickable/`;
+const GET_MARVEL = `${API_URL}/scrapper/get-marvel-legends`;
 const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
 const IMAGES_URL_SERIE = `${API_URL}/images/create-serie`;
@@ -475,16 +474,20 @@ const getCollectionById = (id) => {
     });
 };
 
-const getImages = (query) => {
+const getItemMarvelLegends = (query, metadata) => {
+  const params = {
+    query: query,
+    metadata: metadata,
+  };
   return axios
-    .get(GET_IMAGES_QUERY_URL(query), { headers: authHeader() })
+    .get(GET_MARVEL, { headers: authHeader(), params })
     .then((response) => {
-      //console.log(response.data);
+      //console.log(response);
       return response;
     });
-};
+}
 
-const getSerieFromRebrickable=(serie, selectedApi)=>{
+const getSerieFromRebrickable = (serie, selectedApi) => {
   const data = {
     page: null,
     rowsPerPage: null,
@@ -990,7 +993,7 @@ const ConfigService = {
   getCollectionItemsPerYear,
   getCollectionLists,
   getCollectionSeries,
-  getImages,
+  getItemMarvelLegends,
   getItemFromWeb,
   getLocalImages,
   getMetadataFields,
