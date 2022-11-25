@@ -265,7 +265,7 @@ function AddItem(props) {
     ),
     price: Yup.number()
       .moreThan(
-        0,
+        -1,
         <FormattedMessage id="app.collection.add_item_number_positive"></FormattedMessage>
       )
       .required(
