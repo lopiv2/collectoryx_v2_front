@@ -104,8 +104,6 @@ function ImportScrapper() {
       );
     } else {
       if (selectedApi.name.includes("Marvel Legends")) {
-        console.log("Empie")
-        setStartSearch(true);
         ConfigService.getItemMarvelLegends(
           page,
           rowsPerPage,
@@ -130,7 +128,6 @@ function ImportScrapper() {
         return
       } else {
         if (selectedApi.apiLink !== "") {
-          setStartSearch(true);
           ConfigService.getItemFromWeb(
             page,
             rowsPerPage,
@@ -138,6 +135,7 @@ function ImportScrapper() {
             selectedApi,
             metadata
           ).then((response) => {
+            console.log(response.data);
             if (response.error) {
               console.log(response);
             }
@@ -253,7 +251,7 @@ function ImportScrapper() {
           <Typography variant="body1">
             <FormattedMessage
               id={
-                showResults === true
+                showResults === true && results
                   ? results.length > 0
                     ? "app.empty"
                     : "app.collection.add_collection_import_scrapper_zero_results"
@@ -310,7 +308,7 @@ function ImportScrapper() {
           <Grid
             container
             columns={{ xs: 4, sm: 8, md: 12 }}
-            justifyContent="space-between"
+            justifyContent="space-evenly"
           >
             {startSearch === true ? (
               <CircularProgress />
@@ -366,7 +364,8 @@ function ImportScrapper() {
           <Button
             variant="contained"
             onClick={() => {
-              searchWebClick();
+              setStartSearch(true);
+              //searchWebClick();
             }}
           >
             <FormattedMessage id="app.button.accept"></FormattedMessage>
@@ -416,6 +415,7 @@ function ImportScrapper() {
                   setTotalPages(0);
                   setPage(1);
                   setSearchAgain(true);
+                  setStartSearch(true);
                   searchWebClick();
                 }}
               >

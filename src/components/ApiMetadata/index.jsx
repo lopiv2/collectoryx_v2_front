@@ -47,7 +47,7 @@ export default function ApiMetadataFields(props) {
         </Grid>
         <Grid item ml={2}>
           <FormControlLabel
-            value="sets"
+            value="set"
             control={<Radio />}
             label="Sets"
           />
