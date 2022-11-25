@@ -1,3 +1,14 @@
+### 1.2.0 - 25 November 2022 
+***
+
+#### New
+ * Marvel Legends Api import added
+
+#### Fixed
+ * Empty search string when importing from collections API error fixed
+ * Price validation in edit and insert item fixed
+
+
 ### 1.1.0 - 20 November 2022 
 ***
 

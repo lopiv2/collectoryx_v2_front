@@ -184,7 +184,7 @@ function EditItem(props) {
 
   const submitForm = (values) => {
     //Image set from URL
-    console.log(values.metadata);
+    //console.log(values.metadata);
     if (urlImageChosen === true && values.file === undefined) {
       ConfigService.updateItem(
         values,
@@ -329,7 +329,7 @@ function EditItem(props) {
     ),
     price: Yup.number()
       .moreThan(
-        0,
+        -1,
         <FormattedMessage id="app.collection.add_item_number_positive"></FormattedMessage>
       )
       .required(
