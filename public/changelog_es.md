@@ -1,4 +1,17 @@
-### 1.2.0 - 25 November 2022 
+### 1.3.0 - 1 Diciembre 2022 
+***
+
+#### Nuevo
+ * Posibilidad de importar objetos como poseídos cuando se añaden desde una Api o Web
+ * Importación añadida Hot Wheels Api
+ * Importacion de metadatos cuando se importan objetos desde una Api o Web
+
+#### Corregido
+ * Se han adaptado las pantallas para las resoluciones de Tablets 
+ * Añadido icono Tick o Cruz para metadatos de tipo boolean al ver elementos de colecciones
+
+
+### 1.2.0 - 25 Noviembre 2022 
 ***
 
 #### Nuevo

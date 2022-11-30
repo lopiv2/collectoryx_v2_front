@@ -6,18 +6,22 @@ import { Grid } from "@mui/material";
 import "../styles/Dashboard.css";
 import { ToastContainer } from "react-toastify";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from '@mui/icons-material/Cancel';
 import Markdown from "markdown-to-jsx";
 import { Context } from "../components/Wrapper";
 
+
 function Updates() {
-  const version = process.env.REACT_APP_VERSION;
+  const version = window.env.VERSION;
   const [changelogText, setChangelogText] = useState("");
   const context = useContext(Context);
   const [langChangelog, setLangchangelog] = useState('es');
+  const [isLatestVersion, setIsLatestVersion] = useState(false);
 
   async function fetchHtml() {
     setChangelogText(await (await fetch('../changelog_' + langChangelog + '.md')).text());
   }
+
 
   useEffect(() => {
     fetchHtml();
@@ -36,15 +40,29 @@ function Updates() {
             <FormattedMessage id="app.sidemenu.options.updates"></FormattedMessage>
           </Typography>
           <Typography variant="h6" component="h6">
-            <CheckCircleIcon
-              sx={{
-                color: "green",
-                fontSize: "38px",
-                paddingRight: "2px",
-                paddingTop: "2px",
-              }}
-            ></CheckCircleIcon>
-            <FormattedMessage id="app.changelog.version_installed"></FormattedMessage>
+            {!isLatestVersion ?
+              <Grid>
+                <CheckCircleIcon
+                  sx={{
+                    color: "green",
+                    fontSize: "38px",
+                    paddingRight: "2px",
+                    paddingTop: "2px",
+                  }}
+                ></CheckCircleIcon>
+                <FormattedMessage id="app.changelog.version_installed"></FormattedMessage>
+              </Grid>
+              : <Grid>
+                <CancelIcon
+                  sx={{
+                    color: "red",
+                    fontSize: "38px",
+                    paddingRight: "2px",
+                    paddingTop: "2px",
+                  }}
+                ></CancelIcon>
+                <FormattedMessage id="app.changelog.version_installed"></FormattedMessage>
+              </Grid>}
           </Typography>
           <Markdown options={{ forceBlock: true }}>{changelogText}</Markdown>
         </Grid>

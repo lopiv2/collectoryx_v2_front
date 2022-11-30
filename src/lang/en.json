@@ -107,6 +107,8 @@
   "app.collection.add_collection_import_scrapper": "Import from external web...",
   "app.collection.add_collection_import_shop": "Import from My Purchases...",
   "app.collection.add_collection_import_scrapper_item": "Import item",
+  "app.collection.add_collection_import_scrapper_owned": "Import item as owned",
+  "app.collection.add_collection_import_scrapper_metadata": "Import metadata",
   "app.collection.add_collection_import_scrapper_search": "Search",
   "app.collection.add_collection_import_scrapper_search_results": "Results",
   "app.collection.add_collection_import_scrapper_zero_results": "Nothing was found",

@@ -36,6 +36,7 @@ const GET_COLLECTION_METADATAS_URL = (id) =>
   `${API_URL}/get-metadata-fields/${id}`;
 const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
 const GET_SERIE_REBRICKABLE_URL = `${API_URL}/scrapper/get-serie-name-rebrickable/`;
+const GET_HOT_WHEELS = `${API_URL}/scrapper/get-hot-wheels`;
 const GET_MARVEL = `${API_URL}/scrapper/get-marvel-legends`;
 const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
@@ -470,6 +471,21 @@ const getCollectionById = (id) => {
     .get(GET_COLLECTION_ID_URL(id), { headers: authHeader() })
     .then((response) => {
       //console.log(response.data);
+      return response;
+    });
+};
+
+const getItemHotWheels = (page, rowsPerPage, query, metadata) => {
+  const params = {
+    page: page,
+    rowsPerPage: rowsPerPage,
+    query: query,
+    metadata: metadata,
+  };
+  return axios
+    .get(GET_HOT_WHEELS, { headers: authHeader(), params })
+    .then((response) => {
+      //console.log(response);
       return response;
     });
 };
@@ -1001,6 +1017,7 @@ const ConfigService = {
   getCollectionItemsPerYear,
   getCollectionLists,
   getCollectionSeries,
+  getItemHotWheels,
   getItemMarvelLegends,
   getItemFromWeb,
   getLocalImages,

@@ -112,8 +112,8 @@ export default function TopToolBar(props) {
                   sx={{
                     display: { xs: "none", sm: "block" },
                     typography: { sm: "h5", xs: "h6" },
-                    pl: 80,
-                    pt:3
+                    pl: { md: 20, lg: 60, xl: 60 },
+                    pt: 3
                   }}
                 >
                   <FormattedMessage
@@ -152,7 +152,7 @@ export default function TopToolBar(props) {
               )}
             </Typography>
           </Grid>
-          <Grid item xs={2} sm={4} md={4}>
+          <Grid item xs={2} sm={4} md={4} sx={{ ml: { sm: 6, md: 10, lg: 27, xl: 90 }, mr: { sm: 0, md: 0, xs: 10, lg: 0 } }} >
             <LanguageSwitcher></LanguageSwitcher>
           </Grid>
           <Grid item xs={2} sm={4} md={4}>
@@ -221,7 +221,7 @@ export default function TopToolBar(props) {
             </MenuItem>
           </Menu>
         </Toolbar>
-      </AppBar>
+      </AppBar >
     )
   );
 }

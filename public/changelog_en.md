@@ -1,3 +1,15 @@
+### 1.3.0 - 1 December 2022 
+***
+
+#### New
+ * Possibility to import objects as owned when added from an Api or Web
+ * Hot Wheels Api import added
+ * Metadata import when importing objects from Api or Web
+
+#### Fixed
+ * Responsive screens for tablets resolutions
+ * Added Tick icon or Cross icon for boolean metadata types in item collections display
+
 ### 1.2.0 - 25 November 2022 
 ***
 

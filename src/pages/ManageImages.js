@@ -294,13 +294,13 @@ function ManageImages(props) {
                 maxWidth="auto"
                 width="auto"
                 className="container"
-                sx={{ border: "2px solid grey", minWidth:200 }}
+                sx={{ border: "2px solid grey", minWidth: 200 }}
               >
                 {isLoading === false && images.length > 0 ? (
                   <Grid
                     container
-                    spacing={{ xs: 2, md: 3 }}
-                    columns={{ xs: 3, sm: 8, md: 12 }}
+                    spacing={{ xs: 2, sm: 2, md: 8, lg: 6, xl: 8 }}
+                    columns={{ xs: 3, sm: 5, md: 8, lg: 10, xl: 12 }}
                     pt={2}
                     pb={2}
                     pl={2}
@@ -312,11 +312,11 @@ function ManageImages(props) {
                             cardHover === i.id
                               ? cardStyleHover
                               : {
-                                  height: 200,
-                                  minWidth: 200,
-                                  maxWidth: 200,
-                                  boxShadow: 3,
-                                }
+                                height: 200,
+                                minWidth: 200,
+                                maxWidth: 200,
+                                boxShadow: 3,
+                              }
                           }
                           onMouseOver={() => {
                             setCardHover(i.id);

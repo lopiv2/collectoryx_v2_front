@@ -122,7 +122,9 @@ const SetLocaleDateTime = () => {
 };
 
 const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
-  if (selectedApi.name.includes("Pokemon") || selectedApi.name.includes("Marvel Legends")) {
+  if (selectedApi.name.includes("Pokemon")
+    || selectedApi.name.includes("Marvel Legends")
+    || selectedApi.name.includes("Hot Wheels")) {
     return Math.ceil(response.data.totalCount / rowsPerPage);
   }
   if (selectedApi.name.includes("Rebrickable")) {
@@ -142,6 +144,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           collection: collection,
           year: new Date(item.set.releaseDate).getFullYear(),
           serie: item.set.series,
+          own: false,
           price: item.tcgplayer
             ? item.tcgplayer.prices
               ? item.tcgplayer.prices.normal
@@ -164,13 +167,14 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           collection: collection,
           year: item.year,
           serie: item.theme_id,
+          own: false,
           price: 0.0,
         })
       );
       return items;
     }
   }
-  if (selectedApi.name.includes("Marvel Legends")) {
+  if (selectedApi.name.includes("Marvel Legends") || selectedApi.name.includes("Hot Wheels")) {
     if (results.items) {
       results.items.map((item, index) =>
         items.push({
@@ -179,7 +183,9 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           collection: collection,
           year: item.year,
           serie: item.serie.name,
+          own: false,
           price: item.price,
+          metadata: item.metadata ?? item.metadata
         })
       );
       return items;

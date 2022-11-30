@@ -146,18 +146,6 @@ function EditItem(props) {
     }
   }, [collectionId]);
 
-  /*useEffect(() => {
-    if (metadataValues !== null) {
-      setFormValues((existingValues) => ({
-        // Retain the existing values
-        ...existingValues,
-        // update the firstName
-        metadata: metadataValues,
-      }));
-      console.log(metadataValues)
-    }
-  }, [metadataValues]);*/
-
   useEffect(() => {
     if (location.state != null) {
       const data = {

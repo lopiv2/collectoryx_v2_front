@@ -19,14 +19,14 @@ import { isUndefined } from "lodash";
 function ImportCollectionFile() {
   const [selectedFile, setSelectedFile] = useState("");
   const [isLoading, setLoading] = useState(true);
-  const [records, setRecords] = useState([]); //Trae los campos del Header del CSV de la API
+  const [records, setRecords] = useState([]); //Fetch CSV Header fields from the API
   const navigate = useNavigate();
   const intl = useIntl();
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
-  const [fieldsFilled, setFieldsFilled] = useState(false); //Si los campos han sido rellenados o no
-  const [fields, setFields] = useState([]); //Campos por defecto en coleccion
-  const [mappings, setMappings] = useState([]); //Mapeos
+  const [fieldsFilled, setFieldsFilled] = useState(false); //Whether or not the fields have been filled in
+  const [fields, setFields] = useState([]); //Default fields in collection
+  const [mappings, setMappings] = useState([]); //Mappings
   const effectTriggeredRef = React.useRef(false);
   const parseTriggeredRef = useRef(false);
   const [collectionList, setCollectionList] = useState([]);
@@ -34,7 +34,6 @@ function ImportCollectionFile() {
   const [recordsImported, setRecordsImported] = useState(0);
   const { userData, setUserData } = React.useContext(AppContext);
 
-  //Primero
   useEffect(() => {
     const query = {
       id: userData.id,
@@ -65,7 +64,7 @@ function ImportCollectionFile() {
     return result;
   };
 
-  //En cada cambio de coleccion, obtengo todos los campos Fields
+  //At each change of collection, I get all the Fields fields
   const handleChangeCollection = (event) => {
     setCollection(event.target.value);
     setMappings([]);
@@ -74,7 +73,7 @@ function ImportCollectionFile() {
     mapFields(event.target.value);
   };
 
-  //Si ya estan los campos llenos con su variable, hago el mapeo llamando a mapValues()
+  //If the fields are already filled with their variable, I do the mapping by calling mapValues()
   useEffect(() => {
     if (fieldsFilled === true) {
       mapValues();
@@ -82,7 +81,7 @@ function ImportCollectionFile() {
     }
   }, [fieldsFilled]);
 
-  //Si ya estan llenos los campos, pongo la variable fieldsFilled a true
+  //If the fields are already filled, I set the fieldsFilled variable to true.
   useEffect(() => {
     if (fields.length !== 0) {
       setFieldsFilled(true);

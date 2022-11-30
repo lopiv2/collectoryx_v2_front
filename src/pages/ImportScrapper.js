@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { Grid, Card, CardContent, Avatar, Pagination } from "@mui/material";
+import { Grid, Card, CardContent, Avatar, Pagination, Checkbox, ListItem, MenuItem } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
@@ -27,9 +27,12 @@ function ImportScrapper() {
   const [apisList, setApisList] = useState([]);
   const { userData, setUserData } = React.useContext(AppContext);
   const [selectedApi, setSelectedApi] = useState();
-  const [selectedItem, setSelectedItem] = useState();
+  const [selectedItem, setSelectedItem] = useState(); //Item clicked for import
+  const [sentItem, setSentItem] = useState(); //Item sent to API
   const [searchString, setSearchString] = useState("");
   const [startSearch, setStartSearch] = useState(false);
+  const [importOwned, setImportOwned] = useState(false);
+  const [importMetadata, setImportMetadata] = useState(false);
   const [searching, setSearching] = useState(true);
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState([]);
@@ -41,6 +44,7 @@ function ImportScrapper() {
   const [metadata, setMetadata] = useState("");
   const [searchAgain, setSearchAgain] = useState(false);
   const [showErrorNoApi, setShowErrorNoApi] = useState(false);
+  const [metaFields, setMetaFields] = useState([]); //Metadata fields in collection
 
   useEffect(() => {
     ConfigService.getAllApis(userData.id)
@@ -64,24 +68,25 @@ function ImportScrapper() {
   };
 
   const importSelectedItem = () => {
+    //console.log(sentItem)
+    sentItem.own = importOwned;
     if (selectedApi.name.includes("Rebrickable")) {
       ConfigService.getSerieFromRebrickable(
-        selectedItem.serie,
+        sentItem.serie,
         selectedApi
       ).then((response) => {
-        selectedItem.serie = response.data.name;
-        ConfigService.importItemFromWeb(selectedItem).then((response) => {
+        sentItem.serie = response.data.name;
+        ConfigService.importItemFromWeb(sentItem).then((response) => {
           if (response.status === 200) {
             toast.success(
               <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
               { theme: "colored" }
             );
-            //console.log(response.data)
           }
         });
       });
     } else {
-      ConfigService.importItemFromWeb(selectedItem).then((response) => {
+      ConfigService.importItemFromWeb(sentItem).then((response) => {
         if (response.status === 200) {
           toast.success(
             <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
@@ -96,70 +101,149 @@ function ImportScrapper() {
     setSearchString(event.target.value);
   };
 
+  const handleImportOwned = (event) => {
+    setImportOwned(event.target.checked);
+  };
+
+  const handleImportMetadata = (event) => {
+    setImportMetadata(event.target.checked);
+    getMetadataFields()
+  };
+
+  useEffect(() => {
+    if (!isUndefined(selectedItem))
+      getMetadataFields()
+  }, [selectedItem])
+
+  //When metadata importing is selected
+  useEffect(() => {
+    if (metaFields.length > 0) {
+      sentItem.metadata = metaFields;
+    }
+  }, [metaFields])
+
+  const setValue = (dataKey, initialKey) => {
+    //Find index in selectedItem to get the value to map
+    var index = selectedItem.metadata.findIndex((field) => field.name === dataKey);
+    //Get the value from selected item 
+    if (selectedItem.metadata[index]?.value) {
+      var metaValue = selectedItem.metadata[index].value;
+    }
+    else {
+      var metaValue = "";
+    }
+    var newIndex = sentItem.metadata.findIndex((field) => field.key === initialKey)
+    //Set the sent item with the new value from mapping
+    let newSentItem = { ...sentItem };
+    newSentItem.metadata[newIndex].value = metaValue;
+    setSentItem(newSentItem);
+  };
+
+  //Pick the metadata fields from collection
+  const getMetadataFields = () => {
+    setMetaFields([])
+    //Copy of selectedItem
+    setSentItem({ ...selectedItem });
+    ConfigService.getMetadataFields(selectedItem.collection).then((response) => {
+      response.data.map((f) => {
+        const field = {
+          id: f.id,
+          key: f.name,
+          value: "",
+        };
+        setMetaFields((fields) => [...fields, field]);
+      })
+    })
+  }
+
   const searchWebClick = () => {
     if (searchString === "" || searchString === undefined) {
       toast.error(
         <FormattedMessage id="app.config.general.api-no_search_string"></FormattedMessage>,
         { theme: "colored" }
       );
-    } else {
-      if (selectedApi.name.includes("Marvel Legends")) {
-        ConfigService.getItemMarvelLegends(
-          page,
-          rowsPerPage,
-          searchString,
-          metadata
-        ).then((response) => {
-          //console.log(response.data);
-          setTotalPages(
-            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-          );
-          setResults(
-            FilterResultsByApiProvider(
-              response.data,
-              selectedApi,
-              location.state.id
-            )
-          );
-          setSearching(false);
-          setStartSearch(false);
-          setShowResults(true);
-        });
-        return
-      } else {
-        if (selectedApi.apiLink !== "") {
-          ConfigService.getItemFromWeb(
-            page,
-            rowsPerPage,
-            searchString,
+      return;
+    }
+    if (selectedApi.name.includes("Marvel Legends")) {
+      ConfigService.getItemMarvelLegends(
+        page,
+        rowsPerPage,
+        searchString,
+        metadata
+      ).then((response) => {
+        setTotalPages(
+          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+        );
+        setResults(
+          FilterResultsByApiProvider(
+            response.data,
             selectedApi,
-            metadata
-          ).then((response) => {
-            //console.log(response.data);
-            if (response.error) {
-              console.log(response);
-            }
-            setTotalPages(
-              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-            );
-            setResults(
-              FilterResultsByApiProvider(
-                response.data,
-                selectedApi,
-                location.state.id
-              )
-            );
-            setSearching(false);
-            setStartSearch(false);
-            setShowResults(true);
-          });
-        } else {
-          toast.error(
-            <FormattedMessage id="app.config.general.api-no_url"></FormattedMessage>,
-            { theme: "colored" }
-          );
+            location.state.id
+          )
+        );
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
+      return
+    }
+    if (selectedApi.name.includes("Hot Wheels")) {
+      ConfigService.getItemHotWheels(
+        page,
+        rowsPerPage,
+        searchString,
+        metadata
+      ).then((response) => {
+        //console.log(response.data)
+        setTotalPages(
+          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+        );
+        setResults(
+          FilterResultsByApiProvider(
+            response.data,
+            selectedApi,
+            location.state.id
+          )
+        );
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
+      return
+    }
+    if (selectedApi.apiLink !== "") {
+      ConfigService.getItemFromWeb(
+        page,
+        rowsPerPage,
+        searchString,
+        selectedApi,
+        metadata
+      ).then((response) => {
+        //console.log(response.data);
+        if (response.error) {
+          console.log(response);
         }
-      }
+        setTotalPages(
+          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+        );
+        setResults(
+          FilterResultsByApiProvider(
+            response.data,
+            selectedApi,
+            location.state.id
+          )
+        );
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      })
+      return;
+    } else {
+      toast.error(
+        <FormattedMessage id="app.config.general.api-no_url"></FormattedMessage>,
+        { theme: "colored" }
+      );
+      return;
     }
   };
 
@@ -323,8 +407,8 @@ function ImportScrapper() {
                         cardHover === item
                           ? cardStyleHover
                           : {
-                              boxShadow: 3,
-                            },
+                            boxShadow: 3,
+                          },
                         selectedItem === item
                           ? avatarStyleClicked
                           : avatarStyleHover,
@@ -359,6 +443,92 @@ function ImportScrapper() {
           </Grid>
         </Box>
       )}
+      <Grid
+        item
+        xs={12}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="10vh"
+        maxWidth="lg"
+      >
+        <Pagination
+          count={totalPages}
+          color="primary"
+          showFirstButton
+          showLastButton
+          page={page}
+          variant="outlined"
+          shape="rounded"
+          onChange={handleChange}
+        />
+      </Grid>
+      <Grid>
+        <Grid item xs={12}>
+          <Box ml={-1}>
+            <Checkbox
+              value={importOwned}
+              checked={importOwned}
+              onChange={handleImportOwned}
+            ></Checkbox>
+            <Typography variant="body1" display="inline">
+              <FormattedMessage id="app.collection.add_collection_import_scrapper_owned"></FormattedMessage>
+            </Typography>
+          </Box>
+        </Grid>
+        {selectedItem && selectedItem.metadata
+          ? selectedItem.metadata.length > 0 ? (<Grid item xs={12}>
+            <Box ml={-1}>
+              <Checkbox
+                value={importMetadata}
+                checked={importMetadata}
+                onChange={handleImportMetadata}
+              ></Checkbox>
+              <Typography variant="body1" display="inline">
+                <FormattedMessage id="app.collection.add_collection_import_scrapper_metadata"></FormattedMessage>
+              </Typography>
+            </Box>
+          </Grid>) : null : null}
+        {importMetadata === true && (
+          <Grid item xs={12}>
+            {metaFields.map((item, index) => (
+              <ListItem divider key={index}>
+                <Grid item xs={4}>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    label={item.key}
+                    value={item.key}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  {" -> "}
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    defaultValue=""
+                    select
+                    id="demo-simple-select"
+                    size="small"
+                    onChange={(e) => setValue(e.target.value, item.key)}
+                  >
+                    <MenuItem key="empty" value="">
+                    </MenuItem>
+                    {selectedItem.metadata?.map((option) => {
+                      return (
+                        <MenuItem key={option.name} value={option.name}>
+                          {option.name ?? option.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </TextField>
+                </Grid>
+              </ListItem>
+            ))}
+          </Grid>
+        )}
+      </Grid>
       <Grid container pt={2}>
         {showResults === false && (
           <Button
@@ -371,26 +541,6 @@ function ImportScrapper() {
             <FormattedMessage id="app.button.accept"></FormattedMessage>
           </Button>
         )}
-        <Grid
-          item
-          xs={12}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          minHeight="10vh"
-          maxWidth="lg"
-        >
-          <Pagination
-            count={totalPages}
-            color="primary"
-            showFirstButton
-            showLastButton
-            page={page}
-            variant="outlined"
-            shape="rounded"
-            onChange={handleChange}
-          />
-        </Grid>
         {showResults === true && (
           <Grid container spacing={2}>
             <Grid item>
@@ -414,9 +564,11 @@ function ImportScrapper() {
                   setShowResults(false);
                   setTotalPages(0);
                   setPage(1);
+                  setImportMetadata(false)
+                  setSelectedItem()
                   setSearchAgain(true);
                   setStartSearch(true);
-                  searchWebClick();
+                  //searchWebClick();
                 }}
               >
                 <FormattedMessage id="app.button.search_again"></FormattedMessage>
@@ -431,6 +583,8 @@ function ImportScrapper() {
                   setShowResults(false);
                   setTotalPages(0);
                   setPage(1);
+                  setImportMetadata(false)
+                  setSelectedItem()
                   setSearchAgain(false);
                 }}
               >
