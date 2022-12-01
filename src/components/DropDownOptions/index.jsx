@@ -26,6 +26,10 @@ const createCollectionOptions = [
         value: (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
       },
       {
+        key: "acquiringDate",
+        value: (<FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>),
+      },
+      {
         key: "own",
         value: (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
       },
@@ -63,6 +67,10 @@ const createCollectionOptions = [
       {
         key: "year",
         value: (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
+      },
+      {
+        key: "acquiringDate",
+        value: (<FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>),
       },
       {
         key: "own",
