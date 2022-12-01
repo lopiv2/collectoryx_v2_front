@@ -565,6 +565,7 @@ function ImportScrapper() {
                   setTotalPages(0);
                   setPage(1);
                   setImportMetadata(false)
+                  setMetadata("")
                   setSelectedItem()
                   setSearchAgain(true);
                   setStartSearch(true);
@@ -584,6 +585,7 @@ function ImportScrapper() {
                   setTotalPages(0);
                   setPage(1);
                   setImportMetadata(false)
+                  setMetadata("")
                   setSelectedItem()
                   setSearchAgain(false);
                 }}

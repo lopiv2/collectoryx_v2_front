@@ -12,7 +12,7 @@ export function ResponseInterceptor() {
             undefined,
             error => {
                 // todo: handle error
-                switch (error.response.status) {
+                switch (error.response?.status) {
                     case 404:
                         break;
                     case 401:
