@@ -8,7 +8,7 @@ This image provides various versions that are available via tags. Please read th
 
 | Tag | Available | Description |
 | :----: | :----: |--- |
-| latest | ✅ | Stable releases from Collectoryx (currently 1.3.0) |
+| latest | ✅ | Stable releases from Collectoryx (currently 1.4.0) |
 
 ## Application Setup
 
