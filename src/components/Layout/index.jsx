@@ -49,7 +49,6 @@ function Layout(props) {
   }, []);
 
   useEffect(() => {
-    //console.log(userConfig)
     setIsLatestVersion(CheckLatestVersionInstalled(version, userConfig.latestVersion))
   }, [userConfig.latestVersion])
 

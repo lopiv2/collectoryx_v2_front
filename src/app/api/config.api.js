@@ -432,7 +432,7 @@ const getAppVersion = () => {
       //console.log(response.data);
       return response;
     });
-}
+};
 
 const getCollectionItemsById = (query) => {
   return axios
@@ -646,6 +646,7 @@ const buildUserConfig = (response, userName) => {
   const userConfig = {
     userName: userName,
     darkTheme: response.data.darkTheme,
+    latestVersion: response.data.latestVersion,
   };
   localStorage.setItem("userConfig", JSON.stringify(userConfig));
 };
@@ -1008,7 +1009,7 @@ const updateSerie = (values, image) => {
     });
 };
 
-const viewFeed = (url) => { };
+const viewFeed = (url) => {};
 
 const ConfigService = {
   countCollections,
