@@ -124,6 +124,7 @@ const SetLocaleDateTime = () => {
 const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
   if (selectedApi.name.includes("Pokemon")
     || selectedApi.name.includes("Marvel Legends")
+    || selectedApi.name.includes("DC Multiverse")
     || selectedApi.name.includes("Hot Wheels")) {
     return Math.ceil(response.data.totalCount / rowsPerPage);
   }
@@ -131,6 +132,17 @@ const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
     return Math.ceil(response.data.count / rowsPerPage);
   }
 };
+
+const CheckLatestVersionInstalled = (version, latestVersion) => {
+  if (latestVersion !== "") {
+    if (latestVersion?.includes(version)) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+}
 
 const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   var items = [];
@@ -174,7 +186,9 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
       return items;
     }
   }
-  if (selectedApi.name.includes("Marvel Legends") || selectedApi.name.includes("Hot Wheels")) {
+  if (selectedApi.name.includes("Marvel Legends")
+    || selectedApi.name.includes("Hot Wheels")
+    || selectedApi.name.includes("DC Multiverse")) {
     if (results.items) {
       results.items.map((item, index) =>
         items.push({
@@ -231,6 +245,7 @@ export {
   CreateTheme,
   CurrencyChecker,
   CheckCountFieldNameApi,
+  CheckLatestVersionInstalled,
   FeatureForImplement,
   FilterResultsByApiProvider,
   GetCurrencySymbolLocale,

@@ -164,6 +164,29 @@ function ImportScrapper() {
       );
       return;
     }
+    if (selectedApi.name.includes("DC Multiverse")) {
+      ConfigService.getItemDCMultiverse(
+        page,
+        rowsPerPage,
+        searchString,
+        metadata
+      ).then((response) => {
+        setTotalPages(
+          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+        );
+        setResults(
+          FilterResultsByApiProvider(
+            response.data,
+            selectedApi,
+            location.state.id
+          )
+        );
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
+      return
+    }
     if (selectedApi.name.includes("Marvel Legends")) {
       ConfigService.getItemMarvelLegends(
         page,

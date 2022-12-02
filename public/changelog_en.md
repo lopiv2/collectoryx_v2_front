@@ -1,3 +1,18 @@
+### 1.4.0 - 2 December 2022 
+***
+
+#### New
+ * Version checker for latest version installed or not in Settings->Updates and Top Bar with Red ribbon
+ * DC Multiverse Api import added
+ * Added CSV import support
+
+#### Fixed
+ * Fixed acquisition date parsing error when importing data from a CSV file
+ * Removed next button when finishing all import steps from CSV before starting the import
+ * When a series is deleted, all objects that had that series are defaulted to a Default series.
+ * When an object is deleted, if there are no more objects with that series, the series is also deleted.
+ * When an object is deleted, the list of objects on the screen is updated with the new data.
+
 ### 1.3.0 - 1 December 2022 
 ***
 

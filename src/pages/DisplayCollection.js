@@ -238,7 +238,7 @@ function DisplayCollection(props) {
     };
     ConfigService.getCollectionItemsById(query)
       .then((response) => {
-        //xconsole.log(response.data)
+        //console.log(response.data)
         if (isMounted) {
           setTotalPages(response.data.totalPages);
           setCollectionItems(response.data.content);
@@ -338,6 +338,7 @@ function DisplayCollection(props) {
           setTotalItems(response.data.totalItems);
           setWished(response.data.wanted);
         });
+        fetchData(page, rowsPerPage, rowsOrder, searchQuery);
       }
     });
   };
@@ -404,7 +405,7 @@ function DisplayCollection(props) {
       icon: DeleteIcon,
       tooltip: intl.formatMessage({ id: "app.button.delete" }),
       onClick: (event, rowData) => {
-        console.log(rowData.id);
+        //console.log(rowData.id);
         setValue(rowData.id);
         setConfirmOpen(true);
       },

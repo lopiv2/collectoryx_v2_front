@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Typography } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
 import { TextField, Stepper, Step, StepButton } from "@mui/material";
-import { Box, ListItem } from "@mui/material";
+import { Box, ListItem, List } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
@@ -299,8 +299,8 @@ function ImportCollectionFile() {
                         value={
                           item.value.includes("app.collection")
                             ? intl.formatMessage({
-                                id: item.value,
-                              })
+                              id: item.value,
+                            })
                             : item.value
                         }
                         variant="outlined"
@@ -381,8 +381,8 @@ function ImportCollectionFile() {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
+        // find the first step that has been completed
+        steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
@@ -422,81 +422,101 @@ function ImportCollectionFile() {
 
   return (
     <Box sx={{ width: "60%" }}>
-      <Typography variant="h4" component="h4">
-        <FormattedMessage id="app.collection.add_collection_import"></FormattedMessage>
-      </Typography>
-      <Stepper nonLinear activeStep={activeStep}>
-        {steps.map((step, index) => (
-          <Step key={step.label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
-              {step.label}
-            </StepButton>
-          </Step>
-        ))}
-      </Stepper>
-      <div>
-        {allStepsCompleted() ? (
-          <Box>
-            {parseFile()}
-            {parseTriggeredRef === false ? (
-              <CircularProgress />
+      <Grid container >
+        <Typography variant="h4" component="h4">
+          <FormattedMessage id="app.collection.add_collection_import"></FormattedMessage>
+        </Typography>
+        <Grid container item xs={12} sx={{ backgroundColor: "rgba(0, 161, 32, 0.2)", border: 1, borderRadius: 2 }}>
+          <List sx={{
+            pl: 4,
+            listStyleType: 'disc',
+            '& .MuiListItem-root': {
+              display: 'list-item',
+            },
+          }}>
+            <Typography variant="body1" sx={{fontWeight:800}}>
+            <FormattedMessage id="app.collection.add_collection_import_help"></FormattedMessage>
+            </Typography>
+            <ListItem>
+              <FormattedMessage id="app.collection.add_collection_import_date_format"></FormattedMessage>
+            </ListItem>
+          </List>
+        </Grid>
+        <Grid item xs={12} pt={2}>
+          <Stepper nonLinear activeStep={activeStep}>
+            {steps.map((step, index) => (
+              <Step key={step.label} completed={completed[index]}>
+                <StepButton color="inherit" onClick={handleStep(index)}>
+                  {step.label}
+                </StepButton>
+              </Step>
+            ))}
+          </Stepper>
+          <div>
+            {allStepsCompleted() ? (
+              <Box>
+                {parseFile()}
+                {parseTriggeredRef === false ? (
+                  <CircularProgress />
+                ) : (
+                  <Box>
+                    <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                      <FormattedMessage
+                        id="app.collection.add_collection_import_records_numbers"
+                        values={{
+                          records: recordsImported ?? recordsImported,
+                        }}
+                      ></FormattedMessage>
+                      <Box sx={{ flex: "1 1 auto" }} />
+                      <Button onClick={handleReset}>Reset</Button>
+                    </Box>
+                  </Box>
+                )}
+              </Box>
             ) : (
               <Box>
+                {steps[activeStep].content}
                 <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <FormattedMessage
-                    id="app.collection.add_collection_import_records_numbers"
-                    values={{
-                      records: recordsImported ?? recordsImported,
-                    }}
-                  ></FormattedMessage>
+                  <Button
+                    color="inherit"
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    sx={{ mr: 1 }}
+                  >
+                    <FormattedMessage id="app.collection.import_collection_back"></FormattedMessage>
+                  </Button>
                   <Box sx={{ flex: "1 1 auto" }} />
-                  <Button onClick={handleReset}>Reset</Button>
+                  <Button
+                    onClick={handleNext}
+                    sx={{ mr: 1 }}
+                    disabled={activeStep === 0 && selectedFile === ""}
+                  >
+                    {activeStep !== 2 && (<FormattedMessage id="app.collection.import_collection_next"></FormattedMessage>)}
+                  </Button>
+                  {activeStep !== steps.length &&
+                    (completed[activeStep] ? (
+                      <Typography
+                        variant="caption"
+                        sx={{ display: "inline-block" }}
+                      >
+                        {/*Step {activeStep + 1} already completed*/}
+                      </Typography>
+                    ) : (
+                      <Button onClick={handleComplete}>
+                        {completedSteps() === totalSteps() - 1 ? (
+                          <FormattedMessage id="app.collection.import_collection_start"></FormattedMessage>
+                        ) : (
+                          "Complete Step"
+                        )}
+                      </Button>
+                    ))}
                 </Box>
               </Box>
             )}
-          </Box>
-        ) : (
-          <Box>
-            {steps[activeStep].content}
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                <FormattedMessage id="app.collection.import_collection_back"></FormattedMessage>
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button
-                onClick={handleNext}
-                sx={{ mr: 1 }}
-                disabled={activeStep === 0 && selectedFile === ""}
-              >
-                <FormattedMessage id="app.collection.import_collection_next"></FormattedMessage>
-              </Button>
-              {activeStep !== steps.length &&
-                (completed[activeStep] ? (
-                  <Typography
-                    variant="caption"
-                    sx={{ display: "inline-block" }}
-                  >
-                    {/*Step {activeStep + 1} already completed*/}
-                  </Typography>
-                ) : (
-                  <Button onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1 ? (
-                      <FormattedMessage id="app.collection.import_collection_start"></FormattedMessage>
-                    ) : (
-                      "Complete Step"
-                    )}
-                  </Button>
-                ))}
-            </Box>
-          </Box>
-        )}
-      </div>
-    </Box>
+          </div>
+        </Grid>
+      </Grid>
+    </Box >
   );
 }
 

@@ -1,3 +1,18 @@
+### 1.4.0 - 2 Diciembre 2022 
+***
+
+#### Nuevo
+ * Comprobador de última versión instalada o no, en Configuración->Actualizaciones y en la Barra Superior, con color rojo
+ * Importación añadida DC Multiverse Api
+ * Añadida ayuda a la importación de CSV
+
+#### Corregido
+ * Se ha corregido el error de parsing de la fecha de adquisicion al importar datos desde un CSV
+ * Eliminado botón de siguiente cuando se finalizan todos los pasos de importación desde CSV antes de comenzar la importación
+ * Cuando se borra una serie, se ponen por defecto a todos los objetos que tenían esa serie, una llamada Default
+ * Cuando se borra un objeto, si no hay mas objetos con esa serie, la serie se borra también.
+ * Cuando se borra un objeto, se actualiza el listado de objetos en pantalla con los nuevos datos.
+
 ### 1.3.0 - 1 Diciembre 2022 
 ***
 
