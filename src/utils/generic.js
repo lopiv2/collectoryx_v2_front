@@ -18,6 +18,20 @@ const cleanUrl = (url) => {
   return cleanedUrl;
 };
 
+const CheckIsDuplicatedItem = (item) => {
+  ConfigService.getCollectionItemByData(item
+  ).then((response) => {
+    //Duplicated
+    console.log(response.data)
+    if(response.data!==""){
+      return true
+    }
+    else{
+      return false
+    }
+  })
+}
+
 const CreateTheme = (userData) => {
   const currTheme = createTheme({
     palette: {
@@ -124,6 +138,7 @@ const SetLocaleDateTime = () => {
 const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
   if (selectedApi.name.includes("Pokemon")
     || selectedApi.name.includes("Marvel Legends")
+    || selectedApi.name.includes("MOTU")
     || selectedApi.name.includes("DC Multiverse")
     || selectedApi.name.includes("Hot Wheels")) {
     return Math.ceil(response.data.totalCount / rowsPerPage);
@@ -187,6 +202,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
     }
   }
   if (selectedApi.name.includes("Marvel Legends")
+    || selectedApi.name.includes("MOTU")
     || selectedApi.name.includes("Hot Wheels")
     || selectedApi.name.includes("DC Multiverse")) {
     if (results.items) {
@@ -241,6 +257,7 @@ const setToLocalStorage = (key, value) => {
 };
 
 export {
+  CheckIsDuplicatedItem,
   cleanUrl,
   CreateTheme,
   CurrencyChecker,

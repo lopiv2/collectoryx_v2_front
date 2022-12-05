@@ -23,6 +23,7 @@ const DELETE_COLLECTION_ITEM_ID_URL = (id) =>
 const DELETE_COLLECTION_ID_URL = (id) => `${API_URL}/delete-collection/${id}`;
 const DELETE_COLLECTION_ID_URL_CASCADE = (id) =>
   `${API_URL}/delete-collection-cascade/${id}`;
+  const GET_COLLECTION_ITEM_DATA_URL = `${API_URL}/collections/get-item-data`;
 const GET_COLLECTION_ITEM_ID_URL = (id) => `${API_URL}/get-item/${id}`;
 const GET_COLLECTION_ITEMS_YEAR_ID_URL = (id) =>
   `${API_URL}/get-items-per-year/${id}`;
@@ -40,6 +41,7 @@ const GET_SERIE_REBRICKABLE_URL = `${API_URL}/scrapper/get-serie-name-rebrickabl
 const GET_DC = `${API_URL}/scrapper/get-dc-multiverse`;
 const GET_HOT_WHEELS = `${API_URL}/scrapper/get-hot-wheels`;
 const GET_MARVEL = `${API_URL}/scrapper/get-marvel-legends`;
+const GET_MOTU = `${API_URL}/scrapper/get-motu`;
 const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
 const IMAGES_URL_SERIE = `${API_URL}/images/create-serie`;
@@ -443,6 +445,21 @@ const getCollectionItemsById = (query) => {
     });
 };
 
+//Check for an item in Database with its data for duplicated check
+const getCollectionItemByData = (query) => {
+  const data = {
+    name: query.name,
+    year: query.year,
+    serie: query.serie,
+  };
+  return axios
+    .post(GET_COLLECTION_ITEM_DATA_URL, data, { headers: authHeader() })
+    .then((response) => {
+      //console.log(response.data);
+      return response;
+    });
+};
+
 const getCollectionItem = (id) => {
   return axios
     .get(GET_COLLECTION_ITEM_ID_URL(id), { headers: authHeader() })
@@ -496,8 +513,16 @@ const getItemDCMultiverse = (page, rowsPerPage, query, metadata) => {
   return axios
     .get(GET_DC, { headers: authHeader(), params })
     .then((response) => {
-      //console.log(response);
-      return response;
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
     });
 };
 
@@ -511,8 +536,16 @@ const getItemHotWheels = (page, rowsPerPage, query, metadata) => {
   return axios
     .get(GET_HOT_WHEELS, { headers: authHeader(), params })
     .then((response) => {
-      //console.log(response);
-      return response;
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
     });
 };
 
@@ -526,8 +559,39 @@ const getItemMarvelLegends = (page, rowsPerPage, query, metadata) => {
   return axios
     .get(GET_MARVEL, { headers: authHeader(), params })
     .then((response) => {
-      //console.log(response);
-      return response;
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
+const getItemMotu = (page, rowsPerPage, query, metadata) => {
+  const params = {
+    page: page,
+    rowsPerPage: rowsPerPage,
+    query: query,
+    metadata: metadata,
+  };
+  return axios
+    .get(GET_MOTU, { headers: authHeader(), params })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
     });
 };
 
@@ -569,8 +633,10 @@ const getItemFromWeb = (
   return axios
     .post(GET_ITEM_WEB_QUERY_URL, data, { headers: authHeader() })
     .then((response) => {
-      //console.log(response.data);
-      return response;
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
     })
     .catch((error) => {
       if (error.response) {
@@ -1009,7 +1075,7 @@ const updateSerie = (values, image) => {
     });
 };
 
-const viewFeed = (url) => {};
+const viewFeed = (url) => { };
 
 const ConfigService = {
   countCollections,
@@ -1039,6 +1105,7 @@ const ConfigService = {
   getAllUserFeeds,
   getAllUserReadFeeds,
   getAppVersion,
+  getCollectionItemByData,
   getCollectionItemsById,
   getCollectionById,
   getCollectionItem,
@@ -1048,6 +1115,7 @@ const ConfigService = {
   getItemDCMultiverse,
   getItemHotWheels,
   getItemMarvelLegends,
+  getItemMotu,
   getItemFromWeb,
   getLocalImages,
   getMetadataFields,

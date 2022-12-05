@@ -28,9 +28,9 @@ function Layout(props) {
   const [themeLoaded, setThemeLoaded] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("");
   const [isLatestVersion, setIsLatestVersion] = useState(false);
-  const version = window.env.VERSION;
-  const { userData, setUserData, setUserConfig, userConfig } =
+  const { userData, setUserData, setUserConfig, userConfig, version } =
     React.useContext(AppContext);
+  const currentVersion = version;
 
   useEffect(() => {
     if (localStorage.getItem("user")) {
@@ -51,7 +51,7 @@ function Layout(props) {
   useEffect(() => {
     //console.log(version)
     //console.log(userConfig.latestVersion)
-    setIsLatestVersion(CheckLatestVersionInstalled(version, userConfig.latestVersion))
+    setIsLatestVersion(CheckLatestVersionInstalled(currentVersion, userConfig.latestVersion))
   }, [userConfig.latestVersion])
 
   useEffect(() => {

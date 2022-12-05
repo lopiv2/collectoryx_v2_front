@@ -108,6 +108,7 @@
   "app.collection.add_collection_import_instructions": "Conecte cada campo de la derecha con el de la izda para importar correctamente cada columna",
   "app.collection.add_collection_import_date_format": "Formato de fechas al importar: YYYY-mm-d",
   "app.collection.add_collection_import_scrapper": "Importar desde web externa...",
+  "app.collection.add_collection_import_scrapper_duplicated": "Posible elemento duplicado",
   "app.collection.add_collection_import_shop": "Importar desde Mis Compras...",
   "app.collection.add_collection_import_scrapper_item": "Importar objeto",
   "app.collection.add_collection_import_scrapper_owned": "Importar objeto como poseído",

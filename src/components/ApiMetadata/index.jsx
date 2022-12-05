@@ -60,6 +60,50 @@ export default function ApiMetadataFields(props) {
           />
         </Grid>
       </RadioGroup>)}
+      {selectedApi !== undefined && selectedApi.name.includes("MOTU") && (<RadioGroup
+        aria-labelledby="demo-radio-buttons-group-label"
+        name="radio-buttons-group"
+        value={metadata}
+        onChange={(e) => {
+          setMetadata(e.target.value);
+        }}
+      >
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="origins"
+            control={<Radio />}
+            label="Origins"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="original"
+            control={<Radio />}
+            label="Original"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="classics"
+            control={<Radio />}
+            label="Classics"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="masterverse"
+            control={<Radio />}
+            label="Masterverse"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="super7"
+            control={<Radio />}
+            label="Super7"
+          />
+        </Grid>
+      </RadioGroup>)}
     </Grid>
   );
 }

@@ -1,3 +1,11 @@
+### 1.4.1 - 8 Diciembre 2022 
+***
+
+#### New
+ * Importación añadida MOTU Api
+ * Comprobación de objetos duplicados antes de importar un elemento mediante Scrapper
+
+
 ### 1.4.0 - 2 Diciembre 2022 
 ***
 

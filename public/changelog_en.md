@@ -1,3 +1,10 @@
+### 1.4.1 - 8 December 2022 
+***
+
+#### New
+ * MOTU Api import added
+ * Duplicate item checking before import item from scrapper
+
 ### 1.4.0 - 2 December 2022 
 ***
 

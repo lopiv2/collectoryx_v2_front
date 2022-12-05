@@ -14,8 +14,8 @@ import { AppContext } from "../components/AppContext";
 
 
 function Updates() {
-  const version = window.env.VERSION;
-  const { userConfig } = React.useContext(AppContext);
+  const { userConfig, version } = React.useContext(AppContext);
+  const currentVersion = version;
   const [changelogText, setChangelogText] = useState("");
   const context = useContext(Context);
   const [langChangelog, setLangchangelog] = useState('es');
@@ -26,7 +26,7 @@ function Updates() {
   }
 
   useEffect(() => {
-    setIsLatestVersion(CheckLatestVersionInstalled(version, userConfig.latestVersion))
+    setIsLatestVersion(CheckLatestVersionInstalled(currentVersion, userConfig.latestVersion))
   }, [userConfig.latestVersion])
 
   useEffect(() => {

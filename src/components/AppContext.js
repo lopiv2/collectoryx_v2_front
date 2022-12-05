@@ -9,6 +9,7 @@ const ContextProvider = (props) => {
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [feedsList, setFeedsList] = useState([]);
+  const version="1.4.1"
   return (
     <AppContext.Provider
       value={{
@@ -24,6 +25,7 @@ const ContextProvider = (props) => {
         setRole,
         feedsList,
         setFeedsList,
+        version,
       }}
     >
       {props.children}

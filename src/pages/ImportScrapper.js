@@ -4,19 +4,21 @@ import { FormattedMessage } from "react-intl";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { Grid, Card, CardContent, Avatar, Pagination, Checkbox, ListItem, MenuItem } from "@mui/material";
+import { Grid, Card, CardContent, Avatar, Pagination, Checkbox, ListItem, MenuItem, Paper } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
+import { Dialog, DialogActions } from "@material-ui/core";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AppContext } from "../components/AppContext";
 import {
   FilterResultsByApiProvider,
   CheckCountFieldNameApi,
   CheckSerieApiRebrickable,
+  CheckIsDuplicatedItem,
 } from "../utils/generic";
 import ApiMetadataFields from "../components/ApiMetadata";
 import { isUndefined } from "lodash";
@@ -32,6 +34,7 @@ function ImportScrapper() {
   const [searchString, setSearchString] = useState("");
   const [startSearch, setStartSearch] = useState(false);
   const [importOwned, setImportOwned] = useState(false);
+  const [openDupeDialog, setOpenDupeDialog] = useState(false);
   const [importMetadata, setImportMetadata] = useState(false);
   const [searching, setSearching] = useState(true);
   const [showResults, setShowResults] = useState(false);
@@ -45,6 +48,10 @@ function ImportScrapper() {
   const [searchAgain, setSearchAgain] = useState(false);
   const [showErrorNoApi, setShowErrorNoApi] = useState(false);
   const [metaFields, setMetaFields] = useState([]); //Metadata fields in collection
+
+  const handleClose = () => {
+    setOpenDupeDialog(false);
+  };
 
   useEffect(() => {
     ConfigService.getAllApis(userData.id)
@@ -67,9 +74,20 @@ function ImportScrapper() {
     setStartSearch(true);
   };
 
+  const checkDuplicate = () => {
+    var p = CheckIsDuplicatedItem(sentItem);
+    if (p == true) {
+      setOpenDupeDialog(true)
+    }
+    else {
+      importSelectedItem();
+    }
+  }
+
   const importSelectedItem = () => {
-    //console.log(sentItem)
-    sentItem.own = importOwned;
+    //Check if item is duplicated before import
+    console.log("Dupli")
+    /*sentItem.own = importOwned;
     if (selectedApi.name.includes("Rebrickable")) {
       ConfigService.getSerieFromRebrickable(
         sentItem.serie,
@@ -94,7 +112,7 @@ function ImportScrapper() {
           );
         }
       });
-    }
+    }*/
   };
 
   const handleTextInputChange = (event) => {
@@ -197,6 +215,30 @@ function ImportScrapper() {
         setTotalPages(
           CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
         );
+        setResults(
+          FilterResultsByApiProvider(
+            response.data,
+            selectedApi,
+            location.state.id
+          )
+        );
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
+      return
+    }
+    if (selectedApi.name.includes("MOTU")) {
+      ConfigService.getItemMotu(
+        page,
+        rowsPerPage,
+        searchString,
+        metadata
+      ).then((response) => {
+        if (response.data.error)
+          setTotalPages(
+            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+          );
         setResults(
           FilterResultsByApiProvider(
             response.data,
@@ -572,7 +614,8 @@ function ImportScrapper() {
                 disabled={selectedItem ? false : true}
                 color="success"
                 onClick={() => {
-                  importSelectedItem();
+                  checkDuplicate();
+                  //importSelectedItem();
                 }}
               >
                 <FormattedMessage id="app.collection.add_collection_import_scrapper_item"></FormattedMessage>
@@ -588,7 +631,7 @@ function ImportScrapper() {
                   setTotalPages(0);
                   setPage(1);
                   setImportMetadata(false)
-                  setMetadata("")
+                  //setMetadata("")
                   setSelectedItem()
                   setSearchAgain(true);
                   setStartSearch(true);
@@ -619,6 +662,62 @@ function ImportScrapper() {
           </Grid>
         )}
       </Grid>
+      {openDupeDialog && (<Dialog
+        disableEnforceFocus
+        PaperProps={{
+          sx: {
+            width: "50%",
+            maxHeight: 300,
+          },
+          style: {
+            backgroundColor: "rgba(255, 255, 255)",
+            boxShadow: "none",
+          },
+        }}
+        style={{ maxWidth: false, maxHeight: "100%", minHeight: "350px" }}
+        open={openDupeDialog}
+        onClose={handleClose}>
+        <Grid
+          container
+          spacing={{ xs: 2, md: 5 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+          style={{ backgroundColor: "rgba(245, 245, 245, 1)" }}
+          width="100%"
+        ><Grid
+          item
+          ml={2}
+          mt={2}
+          mr={2}
+          mb={2}
+          component={Paper}
+          elevation={2}
+        >
+            <Typography display="inline" variant="h4" color="red">
+              <FormattedMessage id="app.collection.add_collection_import_scrapper_duplicated"></FormattedMessage>
+            </Typography>
+          </Grid>
+        </Grid>
+        <DialogActions>
+          <Grid container>
+            <Grid item xs={3} ml={12}>
+              <Button variant="contained" onClick={() => setOpenDupeDialog(false)}>
+                <FormattedMessage id="app.button.no"></FormattedMessage>
+              </Button>
+            </Grid>
+            <Grid item xs={4} ml={2}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setOpenDupeDialog(false);
+                  importSelectedItem();
+                }}
+              >
+                <FormattedMessage id="app.button.yes"></FormattedMessage>
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
+      </Dialog>)}
     </Box>
   );
 }
