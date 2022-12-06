@@ -252,6 +252,7 @@
   "app.dialog.delete_title": "¿Borrar elemento?",
   "app.dialog.gallery_title": "Galeria de imagenes",
   "app.dialog.cascade_delete": "¿Borrar registros relacionados?",
+  "app.dialog.confirm_import": "¿Está seguro que desea importar este elemento?",
   "app.event.created": "Evento creado correctamente",
   "app.event.deleted": "Evento eliminado correctamente",
   "app.event.edited": "Evento editado correctamente",

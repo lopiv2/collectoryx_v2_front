@@ -8,7 +8,6 @@ import enLocale from "date-fns/locale/en-US";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
 import NoImage from "../images/no-photo-available.png";
-import ConfigService from "../app/api/config.api";
 
 const cleanUrl = (url) => {
   let cleanedUrl = url.includes("https")
@@ -17,20 +16,6 @@ const cleanUrl = (url) => {
   cleanedUrl = cleanedUrl.includes("/") ? cleanedUrl.split("/")[0] : cleanedUrl;
   return cleanedUrl;
 };
-
-const CheckIsDuplicatedItem = (item) => {
-  ConfigService.getCollectionItemByData(item
-  ).then((response) => {
-    //Duplicated
-    console.log(response.data)
-    if(response.data!==""){
-      return true
-    }
-    else{
-      return false
-    }
-  })
-}
 
 const CreateTheme = (userData) => {
   const currTheme = createTheme({
@@ -136,11 +121,13 @@ const SetLocaleDateTime = () => {
 };
 
 const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
-  if (selectedApi.name.includes("Pokemon")
-    || selectedApi.name.includes("Marvel Legends")
-    || selectedApi.name.includes("MOTU")
-    || selectedApi.name.includes("DC Multiverse")
-    || selectedApi.name.includes("Hot Wheels")) {
+  if (
+    selectedApi.name.includes("Pokemon") ||
+    selectedApi.name.includes("Marvel Legends") ||
+    selectedApi.name.includes("MOTU") ||
+    selectedApi.name.includes("DC Multiverse") ||
+    selectedApi.name.includes("Hot Wheels")
+  ) {
     return Math.ceil(response.data.totalCount / rowsPerPage);
   }
   if (selectedApi.name.includes("Rebrickable")) {
@@ -151,13 +138,12 @@ const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
 const CheckLatestVersionInstalled = (version, latestVersion) => {
   if (latestVersion !== "") {
     if (latestVersion?.includes(version)) {
-      return true
-    }
-    else {
-      return false
+      return true;
+    } else {
+      return false;
     }
   }
-}
+};
 
 const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   var items = [];
@@ -201,10 +187,12 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
       return items;
     }
   }
-  if (selectedApi.name.includes("Marvel Legends")
-    || selectedApi.name.includes("MOTU")
-    || selectedApi.name.includes("Hot Wheels")
-    || selectedApi.name.includes("DC Multiverse")) {
+  if (
+    selectedApi.name.includes("Marvel Legends") ||
+    selectedApi.name.includes("MOTU") ||
+    selectedApi.name.includes("Hot Wheels") ||
+    selectedApi.name.includes("DC Multiverse")
+  ) {
     if (results.items) {
       results.items.map((item, index) =>
         items.push({
@@ -215,7 +203,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           serie: item.serie.name,
           own: false,
           price: item.price,
-          metadata: item.metadata ?? item.metadata
+          metadata: item.metadata ?? item.metadata,
         })
       );
       return items;
@@ -257,7 +245,6 @@ const setToLocalStorage = (key, value) => {
 };
 
 export {
-  CheckIsDuplicatedItem,
   cleanUrl,
   CreateTheme,
   CurrencyChecker,

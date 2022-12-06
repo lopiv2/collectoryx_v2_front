@@ -4,14 +4,24 @@ import { FormattedMessage } from "react-intl";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { Grid, Card, CardContent, Avatar, Pagination, Checkbox, ListItem, MenuItem, Paper } from "@mui/material";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Avatar,
+  Pagination,
+  Checkbox,
+  ListItem,
+  MenuItem,
+  Paper,
+} from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
 import "../styles/Dashboard.css";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
-import { Dialog, DialogActions } from "@material-ui/core";
+import { Dialog, DialogActions, DialogTitle } from "@material-ui/core";
 import CircularProgress from "@mui/material/CircularProgress";
 import { AppContext } from "../components/AppContext";
 import {
@@ -75,34 +85,32 @@ function ImportScrapper() {
   };
 
   const checkDuplicate = () => {
-    var p = CheckIsDuplicatedItem(sentItem);
-    if (p == true) {
-      setOpenDupeDialog(true)
-    }
-    else {
-      importSelectedItem();
-    }
-  }
+    ConfigService.getCollectionItemByData(selectedItem).then((response) => {
+      if (response.data == "") {
+        importSelectedItem();
+      } else {
+        setOpenDupeDialog(true);
+      }
+    });
+  };
 
   const importSelectedItem = () => {
     //Check if item is duplicated before import
-    console.log("Dupli")
-    /*sentItem.own = importOwned;
+    sentItem.own = importOwned;
     if (selectedApi.name.includes("Rebrickable")) {
-      ConfigService.getSerieFromRebrickable(
-        sentItem.serie,
-        selectedApi
-      ).then((response) => {
-        sentItem.serie = response.data.name;
-        ConfigService.importItemFromWeb(sentItem).then((response) => {
-          if (response.status === 200) {
-            toast.success(
-              <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
-              { theme: "colored" }
-            );
-          }
-        });
-      });
+      ConfigService.getSerieFromRebrickable(sentItem.serie, selectedApi).then(
+        (response) => {
+          sentItem.serie = response.data.name;
+          ConfigService.importItemFromWeb(sentItem).then((response) => {
+            if (response.status === 200) {
+              toast.success(
+                <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
+                { theme: "colored" }
+              );
+            }
+          });
+        }
+      );
     } else {
       ConfigService.importItemFromWeb(sentItem).then((response) => {
         if (response.status === 200) {
@@ -112,7 +120,7 @@ function ImportScrapper() {
           );
         }
       });
-    }*/
+    }
   };
 
   const handleTextInputChange = (event) => {
@@ -125,32 +133,34 @@ function ImportScrapper() {
 
   const handleImportMetadata = (event) => {
     setImportMetadata(event.target.checked);
-    getMetadataFields()
+    getMetadataFields();
   };
 
   useEffect(() => {
-    if (!isUndefined(selectedItem))
-      getMetadataFields()
-  }, [selectedItem])
+    if (!isUndefined(selectedItem)) getMetadataFields();
+  }, [selectedItem]);
 
   //When metadata importing is selected
   useEffect(() => {
     if (metaFields.length > 0) {
       sentItem.metadata = metaFields;
     }
-  }, [metaFields])
+  }, [metaFields]);
 
   const setValue = (dataKey, initialKey) => {
     //Find index in selectedItem to get the value to map
-    var index = selectedItem.metadata.findIndex((field) => field.name === dataKey);
-    //Get the value from selected item 
+    var index = selectedItem.metadata.findIndex(
+      (field) => field.name === dataKey
+    );
+    //Get the value from selected item
     if (selectedItem.metadata[index]?.value) {
       var metaValue = selectedItem.metadata[index].value;
-    }
-    else {
+    } else {
       var metaValue = "";
     }
-    var newIndex = sentItem.metadata.findIndex((field) => field.key === initialKey)
+    var newIndex = sentItem.metadata.findIndex(
+      (field) => field.key === initialKey
+    );
     //Set the sent item with the new value from mapping
     let newSentItem = { ...sentItem };
     newSentItem.metadata[newIndex].value = metaValue;
@@ -159,20 +169,22 @@ function ImportScrapper() {
 
   //Pick the metadata fields from collection
   const getMetadataFields = () => {
-    setMetaFields([])
+    setMetaFields([]);
     //Copy of selectedItem
     setSentItem({ ...selectedItem });
-    ConfigService.getMetadataFields(selectedItem.collection).then((response) => {
-      response.data.map((f) => {
-        const field = {
-          id: f.id,
-          key: f.name,
-          value: "",
-        };
-        setMetaFields((fields) => [...fields, field]);
-      })
-    })
-  }
+    ConfigService.getMetadataFields(selectedItem.collection).then(
+      (response) => {
+        response.data.map((f) => {
+          const field = {
+            id: f.id,
+            key: f.name,
+            value: "",
+          };
+          setMetaFields((fields) => [...fields, field]);
+        });
+      }
+    );
+  };
 
   const searchWebClick = () => {
     if (searchString === "" || searchString === undefined) {
@@ -203,7 +215,7 @@ function ImportScrapper() {
         setStartSearch(false);
         setShowResults(true);
       });
-      return
+      return;
     }
     if (selectedApi.name.includes("Marvel Legends")) {
       ConfigService.getItemMarvelLegends(
@@ -226,31 +238,28 @@ function ImportScrapper() {
         setStartSearch(false);
         setShowResults(true);
       });
-      return
+      return;
     }
     if (selectedApi.name.includes("MOTU")) {
-      ConfigService.getItemMotu(
-        page,
-        rowsPerPage,
-        searchString,
-        metadata
-      ).then((response) => {
-        if (response.data.error)
-          setTotalPages(
-            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+      ConfigService.getItemMotu(page, rowsPerPage, searchString, metadata).then(
+        (response) => {
+          if (response.data.error)
+            setTotalPages(
+              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+            );
+          setResults(
+            FilterResultsByApiProvider(
+              response.data,
+              selectedApi,
+              location.state.id
+            )
           );
-        setResults(
-          FilterResultsByApiProvider(
-            response.data,
-            selectedApi,
-            location.state.id
-          )
-        );
-        setSearching(false);
-        setStartSearch(false);
-        setShowResults(true);
-      });
-      return
+          setSearching(false);
+          setStartSearch(false);
+          setShowResults(true);
+        }
+      );
+      return;
     }
     if (selectedApi.name.includes("Hot Wheels")) {
       ConfigService.getItemHotWheels(
@@ -274,7 +283,7 @@ function ImportScrapper() {
         setStartSearch(false);
         setShowResults(true);
       });
-      return
+      return;
     }
     if (selectedApi.apiLink !== "") {
       ConfigService.getItemFromWeb(
@@ -301,7 +310,7 @@ function ImportScrapper() {
         setSearching(false);
         setStartSearch(false);
         setShowResults(true);
-      })
+      });
       return;
     } else {
       toast.error(
@@ -472,8 +481,8 @@ function ImportScrapper() {
                         cardHover === item
                           ? cardStyleHover
                           : {
-                            boxShadow: 3,
-                          },
+                              boxShadow: 3,
+                            },
                         selectedItem === item
                           ? avatarStyleClicked
                           : avatarStyleHover,
@@ -541,19 +550,22 @@ function ImportScrapper() {
             </Typography>
           </Box>
         </Grid>
-        {selectedItem && selectedItem.metadata
-          ? selectedItem.metadata.length > 0 ? (<Grid item xs={12}>
-            <Box ml={-1}>
-              <Checkbox
-                value={importMetadata}
-                checked={importMetadata}
-                onChange={handleImportMetadata}
-              ></Checkbox>
-              <Typography variant="body1" display="inline">
-                <FormattedMessage id="app.collection.add_collection_import_scrapper_metadata"></FormattedMessage>
-              </Typography>
-            </Box>
-          </Grid>) : null : null}
+        {selectedItem && selectedItem.metadata ? (
+          selectedItem.metadata.length > 0 ? (
+            <Grid item xs={12}>
+              <Box ml={-1}>
+                <Checkbox
+                  value={importMetadata}
+                  checked={importMetadata}
+                  onChange={handleImportMetadata}
+                ></Checkbox>
+                <Typography variant="body1" display="inline">
+                  <FormattedMessage id="app.collection.add_collection_import_scrapper_metadata"></FormattedMessage>
+                </Typography>
+              </Box>
+            </Grid>
+          ) : null
+        ) : null}
         {importMetadata === true && (
           <Grid item xs={12}>
             {metaFields.map((item, index) => (
@@ -578,8 +590,7 @@ function ImportScrapper() {
                     size="small"
                     onChange={(e) => setValue(e.target.value, item.key)}
                   >
-                    <MenuItem key="empty" value="">
-                    </MenuItem>
+                    <MenuItem key="empty" value=""></MenuItem>
                     {selectedItem.metadata?.map((option) => {
                       return (
                         <MenuItem key={option.name} value={option.name}>
@@ -630,9 +641,9 @@ function ImportScrapper() {
                   setShowResults(false);
                   setTotalPages(0);
                   setPage(1);
-                  setImportMetadata(false)
+                  setImportMetadata(false);
                   //setMetadata("")
-                  setSelectedItem()
+                  setSelectedItem();
                   setSearchAgain(true);
                   setStartSearch(true);
                   //searchWebClick();
@@ -650,9 +661,9 @@ function ImportScrapper() {
                   setShowResults(false);
                   setTotalPages(0);
                   setPage(1);
-                  setImportMetadata(false)
-                  setMetadata("")
-                  setSelectedItem()
+                  setImportMetadata(false);
+                  setMetadata("");
+                  setSelectedItem();
                   setSearchAgain(false);
                 }}
               >
@@ -662,62 +673,64 @@ function ImportScrapper() {
           </Grid>
         )}
       </Grid>
-      {openDupeDialog && (<Dialog
-        disableEnforceFocus
-        PaperProps={{
-          sx: {
-            width: "50%",
-            maxHeight: 300,
-          },
-          style: {
-            backgroundColor: "rgba(255, 255, 255)",
-            boxShadow: "none",
-          },
-        }}
-        style={{ maxWidth: false, maxHeight: "100%", minHeight: "350px" }}
-        open={openDupeDialog}
-        onClose={handleClose}>
-        <Grid
-          container
-          spacing={{ xs: 2, md: 5 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
-          style={{ backgroundColor: "rgba(245, 245, 245, 1)" }}
-          width="100%"
-        ><Grid
-          item
-          ml={2}
-          mt={2}
-          mr={2}
-          mb={2}
-          component={Paper}
-          elevation={2}
+      {openDupeDialog && (
+        <Dialog
+          disableEnforceFocus
+          PaperProps={{
+            sx: {
+              width: "50%",
+              maxHeight: 300,
+            },
+            style: {
+              backgroundColor: "rgba(255, 255, 255)",
+              boxShadow: "none",
+            },
+          }}
+          style={{ maxWidth: false, maxHeight: "100%", minHeight: "350px" }}
+          open={openDupeDialog}
+          onClose={handleClose}
         >
-            <Typography display="inline" variant="h4" color="red">
-              <FormattedMessage id="app.collection.add_collection_import_scrapper_duplicated"></FormattedMessage>
-            </Typography>
-          </Grid>
-        </Grid>
-        <DialogActions>
-          <Grid container>
-            <Grid item xs={3} ml={12}>
-              <Button variant="contained" onClick={() => setOpenDupeDialog(false)}>
-                <FormattedMessage id="app.button.no"></FormattedMessage>
-              </Button>
-            </Grid>
-            <Grid item xs={4} ml={2}>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  setOpenDupeDialog(false);
-                  importSelectedItem();
-                }}
-              >
-                <FormattedMessage id="app.button.yes"></FormattedMessage>
-              </Button>
+          <DialogTitle id="confirm-dialog"></DialogTitle>
+          <Grid
+            container
+            spacing={{ xs: 2, md: 5 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}
+            width="100%"
+          >
+            <Grid item ml={2} mt={2} mr={2} mb={2}>
+              <Typography display="inline" variant="h4" color="red">
+                <FormattedMessage id="app.collection.add_collection_import_scrapper_duplicated"></FormattedMessage>
+              </Typography>
             </Grid>
           </Grid>
-        </DialogActions>
-      </Dialog>)}
+          <Grid item ml={2} mt={2} mr={2} mb={2}>
+            <FormattedMessage id="app.dialog.confirm_import"></FormattedMessage>
+          </Grid>
+          <DialogActions>
+            <Grid container>
+              <Grid item xs={3} ml={12}>
+                <Button
+                  variant="contained"
+                  onClick={() => setOpenDupeDialog(false)}
+                >
+                  <FormattedMessage id="app.button.no"></FormattedMessage>
+                </Button>
+              </Grid>
+              <Grid item xs={4} ml={2}>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setOpenDupeDialog(false);
+                    importSelectedItem();
+                  }}
+                >
+                  <FormattedMessage id="app.button.yes"></FormattedMessage>
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogActions>
+        </Dialog>
+      )}
     </Box>
   );
 }

@@ -252,6 +252,7 @@
   "app.dialog.delete_title": "Delete element?",
   "app.dialog.gallery_title": "Image Gallery",
   "app.dialog.cascade_delete": "Delete related records?",
+  "app.dialog.confirm_import": "Are you sure you want to import this element?",
   "app.event.created": "Event created sucesfully",
   "app.event.deleted": "Event deleted sucesfully",
   "app.event.edited": "Event editaded sucesfully",
