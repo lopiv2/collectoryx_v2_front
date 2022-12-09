@@ -30,6 +30,57 @@ export default function ApiMetadataFields(props) {
           />
         </Grid>
       </RadioGroup>)}
+      {selectedApi !== undefined && selectedApi.name.includes("Gijoe") && (<RadioGroup
+        aria-labelledby="demo-radio-buttons-group-label"
+        name="radio-buttons-group"
+        value={metadata}
+        onChange={(e) => {
+          setMetadata(e.target.value);
+        }}
+      >
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="classified"
+            control={<Radio />}
+            label="Classified Series"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="retro"
+            control={<Radio />}
+            label="Retro Collection"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="classic"
+            control={<Radio />}
+            label="Classic Collection"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="ultimates"
+            control={<Radio />}
+            label="Super7 Ultimates"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="reaction"
+            control={<Radio />}
+            label="Super7 ReAction"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="25"
+            control={<Radio />}
+            label="25 Anniversary"
+          />
+        </Grid>
+      </RadioGroup>)}
       {selectedApi !== undefined && selectedApi.name.includes("Marvel Legends") && (<RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"
         name="radio-buttons-group"
@@ -101,6 +152,59 @@ export default function ApiMetadataFields(props) {
             value="super7"
             control={<Radio />}
             label="Super7"
+          />
+        </Grid>
+      </RadioGroup>)}
+      {selectedApi !== undefined && selectedApi.name.includes("Star Wars") && (<RadioGroup
+        aria-labelledby="demo-radio-buttons-group-label"
+        name="radio-buttons-group"
+        value={metadata}
+        onChange={(e) => {
+          setMetadata(e.target.value);
+        }}
+      >
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="vintage"
+            control={<Radio />}
+            label="Vintage Collection"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="black"
+            control={<Radio />}
+            label="Black Series"
+          />
+        </Grid>
+      </RadioGroup>)}
+      {selectedApi !== undefined && selectedApi.name.includes("TMNT") && (<RadioGroup
+        aria-labelledby="demo-radio-buttons-group-label"
+        name="radio-buttons-group"
+        value={metadata}
+        onChange={(e) => {
+          setMetadata(e.target.value);
+        }}
+      >
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="neca"
+            control={<Radio />}
+            label="Neca"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="super7"
+            control={<Radio />}
+            label="Super7"
+          />
+        </Grid>
+        <Grid item ml={2}>
+          <FormControlLabel
+            value="playmates"
+            control={<Radio />}
+            label="Playmates"
           />
         </Grid>
       </RadioGroup>)}

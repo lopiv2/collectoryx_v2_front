@@ -1,3 +1,11 @@
+### 1.4.2 - 9 December 2022 
+***
+
+#### New
+ * Star Wars Api import added
+ * Gijoe Api import added
+ * TMNT Api import added
+
 ### 1.4.1 - 8 December 2022 
 ***
 

@@ -86,7 +86,7 @@ function ImportScrapper() {
 
   const checkDuplicate = () => {
     ConfigService.getCollectionItemByData(selectedItem).then((response) => {
-      if (response.data == "") {
+      if (response.data === "") {
         importSelectedItem();
       } else {
         setOpenDupeDialog(true);
@@ -153,10 +153,11 @@ function ImportScrapper() {
       (field) => field.name === dataKey
     );
     //Get the value from selected item
+    var metaValue="";
     if (selectedItem.metadata[index]?.value) {
-      var metaValue = selectedItem.metadata[index].value;
+      metaValue = selectedItem.metadata[index].value;
     } else {
-      var metaValue = "";
+      metaValue = "";
     }
     var newIndex = sentItem.metadata.findIndex(
       (field) => field.key === initialKey
@@ -217,6 +218,29 @@ function ImportScrapper() {
       });
       return;
     }
+    if (selectedApi.name.includes("Gijoe")) {
+      ConfigService.getItemGijoe(
+        page,
+        rowsPerPage,
+        searchString,
+        metadata
+      ).then((response) => {
+        setTotalPages(
+          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+        );
+        setResults(
+          FilterResultsByApiProvider(
+            response.data,
+            selectedApi,
+            location.state.id
+          )
+        );
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
+      return;
+    }
     if (selectedApi.name.includes("Marvel Legends")) {
       ConfigService.getItemMarvelLegends(
         page,
@@ -242,6 +266,48 @@ function ImportScrapper() {
     }
     if (selectedApi.name.includes("MOTU")) {
       ConfigService.getItemMotu(page, rowsPerPage, searchString, metadata).then(
+        (response) => {
+          if (response.data.error)
+            setTotalPages(
+              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+            );
+          setResults(
+            FilterResultsByApiProvider(
+              response.data,
+              selectedApi,
+              location.state.id
+            )
+          );
+          setSearching(false);
+          setStartSearch(false);
+          setShowResults(true);
+        }
+      );
+      return;
+    }
+    if (selectedApi.name.includes("Star Wars")) {
+      ConfigService.getItemStarWars(page, rowsPerPage, searchString, metadata).then(
+        (response) => {
+          if (response.data.error)
+            setTotalPages(
+              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+            );
+          setResults(
+            FilterResultsByApiProvider(
+              response.data,
+              selectedApi,
+              location.state.id
+            )
+          );
+          setSearching(false);
+          setStartSearch(false);
+          setShowResults(true);
+        }
+      );
+      return;
+    }
+    if (selectedApi.name.includes("TMNT")) {
+      ConfigService.getItemTmnt(page, rowsPerPage, searchString, metadata).then(
         (response) => {
           if (response.data.error)
             setTotalPages(

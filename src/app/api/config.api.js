@@ -39,9 +39,12 @@ const GET_ITEM_WEB_QUERY_URL = `${API_URL}/scrapper/get-item-from-api/`;
 const GET_LATEST_APP_VERSION = `${API_URL}/config/get-latest-version/`;
 const GET_SERIE_REBRICKABLE_URL = `${API_URL}/scrapper/get-serie-name-rebrickable/`;
 const GET_DC = `${API_URL}/scrapper/get-dc-multiverse`;
+const GET_GIJOE = `${API_URL}/scrapper/get-gijoe`;
 const GET_HOT_WHEELS = `${API_URL}/scrapper/get-hot-wheels`;
 const GET_MARVEL = `${API_URL}/scrapper/get-marvel-legends`;
 const GET_MOTU = `${API_URL}/scrapper/get-motu`;
+const GET_STARWARS = `${API_URL}/scrapper/get-star-wars`;
+const GET_TMNT = `${API_URL}/scrapper/get-tmnt`;
 const IMPORT_ITEM_WEB_URL = `${API_URL}/create-item-new-serie`;
 const IMAGES_URL = `${API_URL}/images`;
 const IMAGES_URL_SERIE = `${API_URL}/images/create-serie`;
@@ -526,6 +529,29 @@ const getItemDCMultiverse = (page, rowsPerPage, query, metadata) => {
     });
 };
 
+const getItemGijoe = (page, rowsPerPage, query, metadata) => {
+  const params = {
+    page: page,
+    rowsPerPage: rowsPerPage,
+    query: query,
+    metadata: metadata,
+  };
+  return axios
+    .get(GET_GIJOE, { headers: authHeader(), params })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const getItemHotWheels = (page, rowsPerPage, query, metadata) => {
   const params = {
     page: page,
@@ -581,6 +607,52 @@ const getItemMotu = (page, rowsPerPage, query, metadata) => {
   };
   return axios
     .get(GET_MOTU, { headers: authHeader(), params })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
+const getItemStarWars = (page, rowsPerPage, query, metadata) => {
+  const params = {
+    page: page,
+    rowsPerPage: rowsPerPage,
+    query: query,
+    metadata: metadata,
+  };
+  return axios
+    .get(GET_STARWARS, { headers: authHeader(), params })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
+const getItemTmnt = (page, rowsPerPage, query, metadata) => {
+  const params = {
+    page: page,
+    rowsPerPage: rowsPerPage,
+    query: query,
+    metadata: metadata,
+  };
+  return axios
+    .get(GET_TMNT, { headers: authHeader(), params })
     .then((response) => {
       if (response.status === 200 || response.status === 201) {
         return response;
@@ -1113,9 +1185,12 @@ const ConfigService = {
   getCollectionLists,
   getCollectionSeries,
   getItemDCMultiverse,
+  getItemGijoe,
   getItemHotWheels,
   getItemMarvelLegends,
   getItemMotu,
+  getItemStarWars,
+  getItemTmnt,
   getItemFromWeb,
   getLocalImages,
   getMetadataFields,

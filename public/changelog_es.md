@@ -1,7 +1,15 @@
+### 1.4.2 - 9 Diciembre 2022 
+***
+
+#### Nuevo
+ * Importación añadida Star Wars Api
+ * Importación añadida Gijoe Api
+ * Importación añadida TMNT Api
+
 ### 1.4.1 - 8 Diciembre 2022 
 ***
 
-#### New
+#### Nuevo
  * Importación añadida MOTU Api
  * Comprobación de objetos duplicados antes de importar un elemento mediante Scrapper
 

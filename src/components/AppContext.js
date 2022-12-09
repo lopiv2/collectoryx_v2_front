@@ -9,7 +9,7 @@ const ContextProvider = (props) => {
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [feedsList, setFeedsList] = useState([]);
-  const version="1.4.1"
+  const version="1.4.2"
   return (
     <AppContext.Provider
       value={{
