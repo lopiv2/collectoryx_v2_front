@@ -153,7 +153,7 @@ function ImportScrapper() {
       (field) => field.name === dataKey
     );
     //Get the value from selected item
-    var metaValue="";
+    var metaValue = "";
     if (selectedItem.metadata[index]?.value) {
       metaValue = selectedItem.metadata[index].value;
     } else {
@@ -267,10 +267,9 @@ function ImportScrapper() {
     if (selectedApi.name.includes("MOTU")) {
       ConfigService.getItemMotu(page, rowsPerPage, searchString, metadata).then(
         (response) => {
-          if (response.data.error)
-            setTotalPages(
-              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-            );
+          setTotalPages(
+            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+          );
           setResults(
             FilterResultsByApiProvider(
               response.data,
@@ -288,10 +287,9 @@ function ImportScrapper() {
     if (selectedApi.name.includes("Star Wars")) {
       ConfigService.getItemStarWars(page, rowsPerPage, searchString, metadata).then(
         (response) => {
-          if (response.data.error)
-            setTotalPages(
-              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-            );
+          setTotalPages(
+            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+          );
           setResults(
             FilterResultsByApiProvider(
               response.data,
@@ -309,10 +307,9 @@ function ImportScrapper() {
     if (selectedApi.name.includes("TMNT")) {
       ConfigService.getItemTmnt(page, rowsPerPage, searchString, metadata).then(
         (response) => {
-          if (response.data.error)
-            setTotalPages(
-              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-            );
+          setTotalPages(
+            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+          );
           setResults(
             FilterResultsByApiProvider(
               response.data,
@@ -538,7 +535,12 @@ function ImportScrapper() {
               <CircularProgress />
             ) : (
               results.map((item, index) => (
-                <Tooltip title={item.name} key={index} followCursor arrow>
+                <Tooltip title={
+                  <>
+                    <Typography variant="body1">{item.name}</Typography>
+                    <Typography variant="body1">{item.serie}</Typography>
+                  </>
+                } key={index} followCursor arrow>
                   <Grid item key={index} pl={2} pt={2} pb={2}>
                     <Card
                       key={index}
@@ -547,8 +549,8 @@ function ImportScrapper() {
                         cardHover === item
                           ? cardStyleHover
                           : {
-                              boxShadow: 3,
-                            },
+                            boxShadow: 3,
+                          },
                         selectedItem === item
                           ? avatarStyleClicked
                           : avatarStyleHover,
