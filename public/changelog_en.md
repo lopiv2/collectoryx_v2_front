@@ -1,3 +1,15 @@
+### 1.5.0 - 15 December 2022 
+***
+
+#### New
+ * GiantBomb Api import added
+ * Event notification in Avatar bell, with drop-down menu to view events. Currently only those occurring on the current day
+ * New Video Games template added to the collection creation, with metadata embedded.
+
+#### Fixed
+ * Changed API Logic of obtaining Feeds, now it should be faster and more flexible for multiple RSS Feeds
+ * Fixed searching for items with space in the name in the PokemonTCG API.
+
 ### 1.4.2 - 9 December 2022 
 ***
 

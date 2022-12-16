@@ -24,7 +24,7 @@ import LinkIcon from '@mui/icons-material/Link';
 import URLImageDialog from "../components/URLImageDialog";
 
 function AddCollection() {
-  const [template, setTemplate] = useState("");
+  const [template, setTemplate] = useState();
   const [selectedFile, setSelectedFile] = useState("");
   const [preview, setPreview] = useState();
   const navigate = useNavigate();
@@ -39,7 +39,9 @@ function AddCollection() {
   const [urlImageChosen, setUrlImageChosen] = useState(false); //If a image was selected from url
 
   const handleChangeTemplate = (event) => {
-    setTemplate(event.target.value);
+    var index = OptionsService.createCollectionOptions.findIndex(item => item.value === event.target.value);
+    setTemplate(OptionsService.createCollectionOptions[index]);
+    setOptionalFields([])
   };
 
   const handleImageClick = () => {
@@ -58,12 +60,22 @@ function AddCollection() {
     return result;
   }
 
-  const handleClickNewField = () => {
-    const newField = {
-      id: generateId(8),
-      name: "",
-      type: "INTEGER",
-    };
+  const handleClickNewField = (field) => {
+    var newField;
+    if (field === undefined || field === "") {
+      newField = {
+        id: generateId(8),
+        name: "",
+        type: "INTEGER",
+      };
+    }
+    else {
+      newField = {
+        id: generateId(8),
+        name: field.name,
+        type: field.type,
+      };
+    }
     setOptionalFields((optionalFields) => [...optionalFields, newField]);
   };
 
@@ -79,7 +91,7 @@ function AddCollection() {
     if (urlImageChosen === true && values.file === undefined) {
       ConfigService.createCollection(
         values.name,
-        values.template,
+        values.template.value,
         preview,
         values.metadata,
         userData.id
@@ -97,7 +109,7 @@ function AddCollection() {
     if (imgGallerySelected === true && urlImageChosen === false) {
       ConfigService.createCollection(
         values.name,
-        values.template,
+        values.template.value,
         img,
         values.metadata,
         userData.id
@@ -115,7 +127,7 @@ function AddCollection() {
     if (values.file === undefined && imgGallerySelected === false && urlImageChosen === false) {
       ConfigService.createCollection(
         values.name,
-        values.template,
+        values.template.value,
         null,
         values.metadata,
         userData.id
@@ -134,7 +146,7 @@ function AddCollection() {
       ConfigService.putImage(values.name, values.file).then((resp) => {
         ConfigService.createCollection(
           values.name,
-          values.template,
+          values.template.value,
           resp.data.path,
           values.metadata,
           userData.id
@@ -152,7 +164,8 @@ function AddCollection() {
   };
 
   useEffect(() => {
-    setTemplate("New");
+    var index = OptionsService.createCollectionOptions.findIndex(item => item.value === "New");
+    setTemplate(OptionsService.createCollectionOptions[index]);
     setLicenseCollections(OptionsService.createCollectionOptions);
     /*if (userData.license.includes("Free")) {
       setTemplate("Action_Figures")
@@ -164,41 +177,59 @@ function AddCollection() {
   }, []);
 
   useEffect(() => {
-    var tempArray = [];
-    setFields("");
-    tempArray = OptionsService.createCollectionOptions.find(
-      (f) => f.value === template
-    );
-    if (tempArray && template) {
-      for (let i = 0; i < tempArray.fields.length; i++) {
-        const field = intl.formatMessage({
-          id: tempArray.fields[i].value.props.id,
-        });
-        setFields((fields) => [...fields, field]);
-      }
-    } else {
+    if (template != null) {
+      var tempArray = [];
       setFields("");
-    }
-    /*if (userData.license.includes("Free")) {
-      tempArray = OptionsService.createCollectionOptions
-        .slice(1)
-        .find((f) => f.value === template);
-      if (tempArray) {
-        setFields(tempArray.fields);
-      } else {
-        setFields("");
-      }
-    } else {
       tempArray = OptionsService.createCollectionOptions.find(
-        (f) => f.value === template
+        (f) => f.value === template.value
       );
       if (tempArray && template) {
-        setFields(tempArray.fields);
+        for (let i = 0; i < tempArray.fields.length; i++) {
+          const field = intl.formatMessage({
+            id: tempArray.fields[i].value.props.id,
+          });
+          setFields((fields) => [...fields, field]);
+        }
+        if (template.metaFields) {
+          template.metaFields.map((f,index) => {
+            //console.log(intl.formatMessage({id: f.value.props.id}))
+            const translatedMessage=intl.formatMessage({id: f.value.props.id})
+            const newField = {
+              id: generateId(8),
+              name: translatedMessage,
+              type: f.type,
+            };
+            handleClickNewField(newField);
+          })
+        }
       } else {
         setFields("");
       }
-    }*/
+      /*if (userData.license.includes("Free")) {
+        tempArray = OptionsService.createCollectionOptions
+          .slice(1)
+          .find((f) => f.value === template);
+        if (tempArray) {
+          setFields(tempArray.fields);
+        } else {
+          setFields("");
+        }
+      } else {
+        tempArray = OptionsService.createCollectionOptions.find(
+          (f) => f.value === template
+        );
+        if (tempArray && template) {
+          setFields(tempArray.fields);
+        } else {
+          setFields("");
+        }
+      }*/
+    }
   }, [template]);
+
+  /*useEffect(() => {
+    console.log(optionalFields)
+  }, [optionalFields])*/
 
   useEffect(() => {
     if (!selectedFile) {
@@ -224,119 +255,118 @@ function AddCollection() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Grid>
-        <Grid item xs={6}>
-          <Typography variant="h4" component="h4">
-            <FormattedMessage id="app.collection.add_collection_title"></FormattedMessage>
-          </Typography>
-        </Grid>
-        <Formik
-          initialValues={{ name: "", template: "New", logo: "", metadata: [] }}
-          validate={(values) => {
-            const errors = {};
-            /*if (!values.name) {
-              errors.name = 'Required';
-            }
-            return errors;*/
-          }}
-          validationSchema={newCollectionSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            {
-              template === "New"
+      {licenseCollections && template && (
+        <Grid>
+          <Grid item xs={6}>
+            <Typography variant="h4" component="h4">
+              <FormattedMessage id="app.collection.add_collection_title"></FormattedMessage>
+            </Typography>
+          </Grid>
+          <Formik
+            initialValues={{ name: "", template: "New", logo: "", metadata: [] }}
+            validate={(values) => {
+              const errors = {};
+              /*if (!values.name) {
+                errors.name = 'Required';
+              }
+              return errors;*/
+            }}
+            validationSchema={newCollectionSchema}
+            onSubmit={(values, { setSubmitting }) => {
+              template.metadata === "true"
                 ? (values.metadata = optionalFields)
                 : (values.metadata = []);
-            }
-            values.template = template;
-            submitForm(values);
-            setSubmitting(false);
-          }}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            setFieldValue,
-            isSubmitting,
-          }) => (
-            <Form onSubmit={handleSubmit} id="form">
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Box
-                    pt={0}
-                    component="img"
-                    sx={{
-                      height: "auto",
-                      width: "auto",
-                      maxHeight: 300,
-                      maxWidth: 400,
-                    }}
-                    alt="Logo"
-                    src={preview ? preview : NoImage}
-                  ></Box>
-                </Grid>
-                <Grid item>
-                  <Box>
-                    <Button variant="contained" component="label">
-                      {
-                        <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
-                      }
-                      <input
-                        type="file"
-                        hidden
-                        name="file"
-                        accept="image/png, image/jpeg"
-                        onChange={(e) => {
-                          setFieldValue("file", e.currentTarget.files[0]);
-                          setSelectedFile(e.currentTarget.files[0]);
+              values.template = template;
+              submitForm(values);
+              setSubmitting(false);
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              setFieldValue,
+              isSubmitting,
+            }) => (
+              <Form onSubmit={handleSubmit} id="form">
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Box
+                      pt={0}
+                      component="img"
+                      sx={{
+                        height: "auto",
+                        width: "auto",
+                        maxHeight: 300,
+                        maxWidth: 400,
+                      }}
+                      alt="Logo"
+                      src={preview ? preview : NoImage}
+                    ></Box>
+                  </Grid>
+                  <Grid item>
+                    <Box>
+                      <Button variant="contained" component="label">
+                        {
+                          <FormattedMessage id="app.collection.add_collection_upload"></FormattedMessage>
+                        }
+                        <input
+                          type="file"
+                          hidden
+                          name="file"
+                          accept="image/png, image/jpeg"
+                          onChange={(e) => {
+                            setFieldValue("file", e.currentTarget.files[0]);
+                            setSelectedFile(e.currentTarget.files[0]);
+                          }}
+                        />
+                      </Button>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Tooltip
+                      title={intl.formatMessage({
+                        id: "app.tooltip.search_gallery",
+                      })}
+                      placement="bottom"
+                      arrow
+                    >
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={(e) => {
+                          setConfirmOpenGallery(true);
                         }}
-                      />
-                    </Button>
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Tooltip
-                    title={intl.formatMessage({
-                      id: "app.tooltip.search_gallery",
-                    })}
-                    placement="bottom"
-                    arrow
-                  >
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      onClick={(e) => {
-                        setConfirmOpenGallery(true);
-                      }}
+                      >
+                        {
+                          <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
+                        }
+                      </Button>
+                    </Tooltip>
+                  </Grid>
+                  <Grid item>
+                    <Tooltip
+                      title={intl.formatMessage({
+                        id: "app.collection.add_collection_image_url",
+                      })}
+                      placement="right"
+                      arrow
                     >
-                      {
-                        <FormattedMessage id="app.button.search_gallery"></FormattedMessage>
-                      }
-                    </Button>
-                  </Tooltip>
-                </Grid>
-                <Grid item>
-                  <Tooltip
-                    title={intl.formatMessage({
-                      id: "app.collection.add_collection_image_url",
-                    })}
-                    placement="right"
-                    arrow
-                  >
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      onClick={(e) => {
-                        setOpenUrl(true);
-                      }}
-                    >
-                      <LinkIcon />
-                    </Button>
-                  </Tooltip>
-                </Grid>
-                {/*<Grid item xs={2}>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={(e) => {
+                          setOpenUrl(true);
+                        }}
+                      >
+                        <LinkIcon />
+                      </Button>
+                    </Tooltip>
+                  </Grid>
+                  {/*<Grid item xs={2}>
                   <Tooltip
                     title={intl.formatMessage({
                       id: "app.tooltip.search_google",
@@ -355,26 +385,26 @@ function AddCollection() {
                     </Button>
                   </Tooltip>
                     </Grid>*/}
-                <Grid item xs={12}>
-                  <Box pt={2}>
-                    <TextField
-                      sx={{ minWidth: 300 }}
-                      size="small"
-                      id="name"
-                      name="name"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.name && Boolean(errors.name)}
-                      helperText={touched.name && errors.name}
-                      label={
-                        <FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>
-                      }
-                      variant="outlined"
-                      value={values.name}
-                    />
-                  </Box>
-                </Grid>
-                {licenseCollections && (
+                  <Grid item xs={12}>
+                    <Box pt={2}>
+                      <TextField
+                        sx={{ minWidth: 300 }}
+                        size="small"
+                        id="name"
+                        name="name"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.name && Boolean(errors.name)}
+                        helperText={touched.name && errors.name}
+                        label={
+                          <FormattedMessage id="app.collection.add_collection_name"></FormattedMessage>
+                        }
+                        variant="outlined"
+                        value={values.name}
+                      />
+                    </Box>
+                  </Grid>
+
                   <Grid item xs={8}>
                     <TextField
                       id="demo-simple-select"
@@ -383,7 +413,7 @@ function AddCollection() {
                       size="small"
                       sx={{ minWidth: 300 }}
                       defaultValue=""
-                      value={template}
+                      value={template.value}
                       label={
                         <FormattedMessage id="app.collection.template_label"></FormattedMessage>
                       }
@@ -398,60 +428,60 @@ function AddCollection() {
                       })}
                     </TextField>
                   </Grid>
-                )}
-                <Grid item xs={6.8}>
-                  <Typography variant="h6" component="h6">
-                    <FormattedMessage id="app.collection.template_default_fields"></FormattedMessage>
-                  </Typography>
-                  <TagsInput
-                    fields={fields}
-                    optional={optionalFields}
-                  ></TagsInput>
-                </Grid>
-                {template === "New" && (
+
                   <Grid item xs={6.8}>
-                    <Button
-                      variant="contained"
-                      startIcon={<AddIcon />}
-                      onClick={handleClickNewField}
-                    >
-                      <FormattedMessage id="app.collection.add_collection_new_field"></FormattedMessage>
-                    </Button>
+                    <Typography variant="h6" component="h6">
+                      <FormattedMessage id="app.collection.template_default_fields"></FormattedMessage>
+                    </Typography>
+                    <TagsInput
+                      fields={fields}
+                      optional={optionalFields}
+                    ></TagsInput>
                   </Grid>
-                )}
-                <Grid item xs={6.8}>
-                  {optionalFields.length > 0 && (
-                    <TableCustomFields
-                      updateFields={setOptionalFields}
-                      rows={optionalFields}
-                      operation="add"
-                    ></TableCustomFields>
+                  {template.metadata === "true" && (
+                    <Grid item xs={6.8}>
+                      <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        onClick={() => handleClickNewField()}
+                      >
+                        <FormattedMessage id="app.collection.add_collection_new_field"></FormattedMessage>
+                      </Button>
+                    </Grid>
                   )}
-                </Grid>
-              </Grid>
-              <Box pt={3}>
-                <Grid container>
-                  <Grid item xs={1}>
-                    <Button
-                      variant="contained"
-                      type="submit"
-                      disabled={isSubmitting}
-                      form="form"
-                    >
-                      <FormattedMessage id="app.button.accept"></FormattedMessage>
-                    </Button>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Button variant="contained" onClick={() => navigate(-1)}>
-                      <FormattedMessage id="app.button.cancel"></FormattedMessage>
-                    </Button>
+                  <Grid item xs={6.8}>
+                    {optionalFields.length > 0 && (
+                      <TableCustomFields
+                        updateOptionalFields={setOptionalFields}
+                        rows={optionalFields}
+                        operation="add"
+                      ></TableCustomFields>
+                    )}
                   </Grid>
                 </Grid>
-              </Box>
-            </Form>
-          )}
-        </Formik>
-      </Grid>
+                <Box pt={3}>
+                  <Grid container>
+                    <Grid item xs={1}>
+                      <Button
+                        variant="contained"
+                        type="submit"
+                        disabled={isSubmitting}
+                        form="form"
+                      >
+                        <FormattedMessage id="app.button.accept"></FormattedMessage>
+                      </Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Button variant="contained" onClick={() => navigate(-1)}>
+                        <FormattedMessage id="app.button.cancel"></FormattedMessage>
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Form>
+            )}
+          </Formik>
+        </Grid>)}
       <URLImageDialog
         setUrl={setPreview}
         setUrlImageChosen={setUrlImageChosen}

@@ -136,6 +136,9 @@ const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
   if (selectedApi.name.includes("Rebrickable")) {
     return Math.ceil(response.data.count / rowsPerPage);
   }
+  if (selectedApi.name.includes("GiantBomb")) {
+    return Math.ceil(response.data.number_of_total_results / rowsPerPage);
+  }
 };
 
 const CheckLatestVersionInstalled = (version, latestVersion) => {
@@ -168,6 +171,41 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
                 : 0.0
               : 0.0
             : 0.0,
+        })
+      );
+      return items;
+    }
+    return null;
+  }
+  if (selectedApi.name.includes("GiantBomb")) {
+    if (results.results) {
+      console.log(results)
+      results.results.map((item, index) =>
+        items.push({
+          name: item.name,
+          image: item.image.original_url ? item.image.original_url : NoImage,
+          collection: collection,
+          year: new Date(item.original_release_date).getFullYear(),
+          serie: null,
+          own: false,
+          price: 0.0,
+          metadata: [
+            {
+              name: "platform",
+              type: "STRING",
+              value: item.platforms ?? item.platforms[0].name,
+            },
+            {
+              name: "developer",
+              type: "STRING",
+              value: "item.developers.length > 0 ?? item.developers[0].name",
+            },
+            {
+              name: "genre",
+              type: "STRING",
+              value: "item.genres ?? item.genres[0].name",
+            },
+          ],
         })
       );
       return items;
@@ -212,6 +250,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           metadata: item.metadata ?? item.metadata,
         })
       );
+      console.log(items)
       return items;
     }
   }

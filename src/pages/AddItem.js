@@ -143,7 +143,7 @@ function AddItem(props) {
             error={true}
             onChange={(e) => handleChangeMetadataValue(field, e.target.value)}
             variant="outlined"
-            value={field.value}
+            //value={field.value}
           />
         );
     }
@@ -318,8 +318,6 @@ function AddItem(props) {
             }}
             validationSchema={newItemSchema}
             onSubmit={(values, { setSubmitting }) => {
-              {
-              }
               values.own = own;
               const d = format(new Date(date), "yyyy-MM-dd");
               values.acquiringDate = d;

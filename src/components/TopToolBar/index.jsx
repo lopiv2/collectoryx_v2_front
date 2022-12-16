@@ -6,6 +6,7 @@ import Badge from "@mui/material/Badge";
 import MenuIcon from "@mui/icons-material/Menu";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "react-avatar";
 import Grid from "@mui/material/Grid";
@@ -16,6 +17,7 @@ import { AppContext } from "../AppContext";
 import { styled } from "@mui/material/styles";
 import AuthService from "../../app/api/auth.api";
 import { useNavigate } from "react-router-dom";
+import ConfigService from "../../app/api/config.api";
 
 const drawerWidth = 240;
 
@@ -51,6 +53,13 @@ export default function TopToolBar(props) {
     navigate("/profile");
   };
 
+  const handleClickEvents = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseEvents = () => {
+    setAnchorEl(null);
+  };
+
   const handleClick = (event) => {
     props.setAnchorEl(event.currentTarget);
   };
@@ -59,11 +68,51 @@ export default function TopToolBar(props) {
   };
 
   //const navigate = useNavigate();
-  const { userData } = React.useContext(AppContext);
+  const { userData, dailyEvents, setDailyEvents } = React.useContext(AppContext);
   const [expiringDate, setExpiringDate] = useState();
+  const [eventAlarms, setEventAlarms] = useState(0);
+  const [openEventsMenu, setOpenEventsMenu] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openAnch = Boolean(anchorEl);
+
+  useEffect(() => {
+    if (dailyEvents != null) {
+      setEventAlarms(dailyEvents.length)
+    }
+  }, [dailyEvents])
 
   useEffect(() => {
     setExpiringDate(userData.expiringDate);
+    const d = new Date();
+    d.setHours(0)
+    d.setMinutes(0)
+    d.setSeconds(0)
+    const startDay = d;
+    const endDay = new Date(startDay)
+    endDay.setDate(endDay.getDate() + 1)
+    ConfigService.getAllUserEventsPeriod(userData.id, startDay, endDay)
+      .then((response) => {
+        //console.log(response.data)
+        setDailyEvents([]);
+        response.data.map((i) => {
+          const data = {
+            id: i.id,
+            title: i.title,
+            start: i.start,
+            allDay: i.allDay,
+            end: i.end,
+            extendedProps: {
+              description: i.description,
+              type: i.type,
+            },
+          };
+          //console.log(data)
+          setDailyEvents((dailyEvents) => [...dailyEvents, data]);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   }, [userData]);
 
   function capitalizeFirstLetter(string) {
@@ -160,8 +209,14 @@ export default function TopToolBar(props) {
               color="inherit"
               sx={{ color: props.theme.palette.secondary.contrastText }}
             >
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
+              <Badge badgeContent={eventAlarms} color="secondary">
+                <NotificationsIcon
+                  onClick={eventAlarms > 0 ? handleClickEvents : null}
+                  size="small"
+                  sx={{ ml: 1 }}
+                  aria-controls={openAnch ? "events-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openAnch ? "true" : undefined} />
               </Badge>
             </IconButton>
           </Grid>
@@ -178,6 +233,58 @@ export default function TopToolBar(props) {
               <Avatar name={userData.userName} size={35} round="200px" />
             </IconButton>
           </Grid>
+          <Menu
+            id="events-menu"
+            anchorEl={anchorEl}
+            open={openAnch}
+            onClose={handleCloseEvents}
+            onClick={handleCloseEvents}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            {dailyEvents.length > 0 ? dailyEvents.map((event, index) =>
+              <MenuItem key={index}>
+                <Grid>
+                  <Typography variant="body1">
+                    {event.title + "\n"}
+                  </Typography>
+                  <Typography variant="body2">
+                    {event.extendedProps.description}
+                  </Typography>
+                  <Typography variant="body1" style={{whiteSpace: 'pre-line'}}>
+                    
+                  </Typography>
+                  {dailyEvents.length > 1 && index + 1 !== dailyEvents.length ? <Divider variant="fullWidth" /> : null}
+                </Grid>
+              </MenuItem>
+            ) : null}
+          </Menu>
           <Menu
             id="account-menu"
             anchorEl={props.anchorEl}

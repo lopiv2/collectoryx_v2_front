@@ -1,89 +1,120 @@
 import React, { useState, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
+import { makeStyles } from '@material-ui/styles';
 import { Typography } from "@mui/material";
 import { Grid } from "@mui/material";
-import {
-  DragDropContext,
-  Droppable,
-  OnDragEndResponder,
-} from "react-beautiful-dnd";
-import DraggableListItem from "../DraggableListItem";
+import ListItem from '@material-ui/core/ListItem';
+import { TextField, MenuItem } from '@mui/material';
+import OptionsService from '../DropDownOptions';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { Button } from '@material-ui/core';
 import "../../styles/Collections.css";
 
-export default function TableCustomFields(props) {
-  const [itemList, setItemList] = useState(props.rows);
+const useStyles = makeStyles({
+  draggingListItem: {
+    background: 'rgb(235,235,235)'
+  },
+  startICon: {
+    margin: 10
+  }
+});
 
-  const handleDrop = (droppedItem) => {
-    // Ignore drop outside droppable container
-    if (!droppedItem.destination) return;
-    var updatedList = [...itemList];
-    // Remove dragged item
-    const [reorderedItem] = updatedList.splice(droppedItem.source.index, 1);
-    // Add dropped item
-    updatedList.splice(droppedItem.destination.index, 0, reorderedItem);
-    // Update State
-    setItemList(updatedList);
+export default function TableCustomFields(props) {
+  const [itemList, setItemList] = useState([]);
+
+  const classes = useStyles();
+  const [fieldType, setFieldType] = useState("INTEGER");
+
+  const handleChangeType = index => event => {
+    const newField=itemList;
+    newField[index].type=event.target.value;
+    setItemList(newField);
   };
+
+  const handleClickDelete = (index) => {
+    const temp = [...itemList];
+    // removing the element using splice
+    if (index > -1) {
+      temp.splice(index, 1);
+    }
+    // updating the list
+    setItemList([])
+    props.updateOptionalFields(temp);
+  };
+
+  const onChangeField = index => event => {
+    const newField=itemList;
+    newField[index].name=event.target.value;
+    setItemList(newField);
+  }
 
   useEffect(() => {
     if (props.operation === "add") {
-      if (itemList.length > 1) {
-        setItemList((itemList) => [
-          ...itemList,
-          props.rows[props.rows.length - 1],
-        ]);
-      } else {
-        setItemList(props.rows);
-      }
+      setItemList([])
+      setItemList(props.rows)
     }
     if (props.operation === "edit") {
       setItemList(props.rows);
     }
   }, [props.rows]);
 
-  useEffect(() => {
-    //props.updateFields(itemList)
-  }, [props.rows]);
-
   return (
-    <DragDropContext onDragEnd={handleDrop}>
-      <Grid container>
-        <Grid item xs={3} ml={8}>
-          <Typography style={{ fontWeight: 600 }}>
-            <FormattedMessage id="app.collection.add_collection_field_name"></FormattedMessage>
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography style={{ fontWeight: 600 }}>
-            <FormattedMessage id="app.collection.add_collection_field_type"></FormattedMessage>
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Droppable droppableId="droppable-list">
-            {(provided) => (
-              <div
-                className="list-container"
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {itemList.map((item, index) => (
-                  <DraggableListItem
-                    className="item-container"
-                    updateOptionalFields={props.updateFields}
-                    updateItems={setItemList}
-                    item={item}
-                    index={index}
-                    key={item.id}
-                    operation={props.operation}
-                    itemsList={itemList}
-                  />
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </Grid>
+    itemList.length > 0 && (<Grid container>
+      <Grid item xs={3} ml={8}>
+        <Typography style={{ fontWeight: 600 }}>
+          <FormattedMessage id="app.collection.add_collection_field_name"></FormattedMessage>
+        </Typography>
       </Grid>
-    </DragDropContext>
+      <Grid item xs={4}>
+        <Typography style={{ fontWeight: 600 }}>
+          <FormattedMessage id="app.collection.add_collection_field_type"></FormattedMessage>
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        {itemList.map((item, index) => (
+          <Grid container key={index}>
+            <ListItem
+              divider
+            >
+              <Grid item xs={4}>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  label={item.name}
+                  variant="outlined"
+                  onChange={onChangeField(index)} />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  value={item.type ? item.type : fieldType}
+                  id="demo-simple-select"
+                  select
+                  size="small"
+                  onChange={handleChangeType(index)}
+                >
+                  {OptionsService.fieldTypes?.map(option => {
+                    return (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    );
+                  })}
+                </TextField>
+              </Grid>
+              <Grid item mr={10}>
+                <Button
+                  style={{ maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px' }}
+                  variant="contained"
+                  classes={{ startIcon: classes.startICon }}
+                  color="secondary"
+                  startIcon={<RemoveIcon style={{ float: 'right' }} classes={{ startIcon: classes.startICon }} />}
+                  onClick={() => handleClickDelete(index)}>
+                </Button>
+              </Grid>
+            </ListItem>
+          </Grid >
+        ))}
+      </Grid>
+    </Grid>)
   );
 }

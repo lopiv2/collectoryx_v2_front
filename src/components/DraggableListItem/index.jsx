@@ -29,7 +29,7 @@ const DraggableListItem = (props) => {
 
     const handleClickDelete = () => {
         const temp = [...props.itemsList];
-
+        console.log(props.index)
         // removing the element using splice
         if (props.index > -1) {
             temp.splice(props.index, 1);
@@ -37,7 +37,7 @@ const DraggableListItem = (props) => {
 
         // updating the list
         props.updateItems(temp);
-        //props.updateOptionalFields(temp);
+        props.updateOptionalFields(temp);
     };
 
     const onChangeField = (event) => {
@@ -49,11 +49,11 @@ const DraggableListItem = (props) => {
     }, [props.itemsList])
 
     useEffect(() => {
-        if (props.operation === "add") {
+        /*if (props.operation === "add") {
             props.itemsList[props.index].name = field;
             props.itemsList[props.index].type = fieldType;
-        }
-    }, [fieldType,field])
+        }*/
+    }, [fieldType, field])
 
     return (
         <Draggable key={props.item} draggableId={props.item.id} index={props.index}>
@@ -76,7 +76,7 @@ const DraggableListItem = (props) => {
                         </Grid>
                         <Grid item xs={2}>
                             <TextField
-                                value={props.operation === "add" ? fieldType : props.item.type}
+                                value={props.item.type ? props.item.type : fieldType}
                                 id="demo-simple-select"
                                 select
                                 size="small"

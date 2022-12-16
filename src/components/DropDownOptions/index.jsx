@@ -8,6 +8,7 @@ const createCollectionOptions = [
       <FormattedMessage id="app.collection.new_template"></FormattedMessage>
     ),
     value: "New",
+    metadata: "true",
     fields: [
       {
         key: "name",
@@ -51,6 +52,7 @@ const createCollectionOptions = [
       <FormattedMessage id="app.collection.action_figures"></FormattedMessage>
     ),
     value: "Action_Figures",
+    metadata: "false",
     fields: [
       {
         key: "name",
@@ -89,13 +91,68 @@ const createCollectionOptions = [
         value: (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>),
       }]
   },
-  /*{
-    label: <FormattedMessage id="app.collection.coins"></FormattedMessage>,
-    value: "Coins",
-  },
   {
     label: <FormattedMessage id="app.collection.videogames"></FormattedMessage>,
     value: "Videogames",
+    metadata: "true",
+    fields: [
+      {
+        key: "name",
+        value: (<FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>),
+      },
+      {
+        key: "serie",
+        value: (<FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>),
+      },
+      {
+        key: "price",
+        value: (<FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>),
+      },
+      {
+        key: "year",
+        value: (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
+      },
+      {
+        key: "acquiringDate",
+        value: (<FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>),
+      },
+      {
+        key: "own",
+        value: (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
+      },
+      {
+        key: "wanted",
+        value: (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
+      },
+      {
+        key: "image",
+        value: (<FormattedMessage id="app.collection.view_collections_item_image"></FormattedMessage>),
+      },
+      {
+        key: "notes",
+        value: (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>),
+      }],
+    metaFields: [
+      {
+        key: "platform",
+        value: (<FormattedMessage id="app.collection.view_collections_item_platform"></FormattedMessage>),
+        type: "STRING",
+      },
+      {
+        key: "developer",
+        value: (<FormattedMessage id="app.collection.view_collections_item_developer"></FormattedMessage>),
+        type: "STRING",
+      },
+      {
+        key: "genre",
+        value: (<FormattedMessage id="app.collection.view_collections_item_genre"></FormattedMessage>),
+        type: "STRING",
+      },
+    ]
+  },
+  /*{
+    label: <FormattedMessage id="app.collection.coins"></FormattedMessage>,
+    value: "Coins",
   },
   {
     label: (

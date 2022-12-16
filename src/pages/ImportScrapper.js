@@ -112,14 +112,33 @@ function ImportScrapper() {
         }
       );
     } else {
-      ConfigService.importItemFromWeb(sentItem).then((response) => {
-        if (response.status === 200) {
-          toast.success(
-            <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
-            { theme: "colored" }
-          );
-        }
-      });
+      if (selectedApi.name.includes("GiantBomb")) {
+        /*ConfigService.getDeveloperGiantBomb(selectedApi).then(
+          (response) => {
+            console.log(response.data)
+            const developer = response.data.results.map((dev) => dev.games.find((f) => f.name.includes(sentItem.name)))
+            console.log(developer)
+          })*/
+        //sentItem.serie = response.data.name;
+        ConfigService.importItemFromWeb(sentItem).then((response) => {
+          if (response.status === 200) {
+            toast.success(
+              <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
+              { theme: "colored" }
+            );
+          }
+        });
+      }
+      else {
+        ConfigService.importItemFromWeb(sentItem).then((response) => {
+          if (response.status === 200) {
+            toast.success(
+              <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
+              { theme: "colored" }
+            );
+          }
+        });
+      }
     }
   };
 
@@ -356,7 +375,7 @@ function ImportScrapper() {
         selectedApi,
         metadata
       ).then((response) => {
-        //console.log(response.data);
+        console.log(response.data)
         if (response.error) {
           console.log(response);
         }

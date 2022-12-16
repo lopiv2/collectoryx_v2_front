@@ -1,3 +1,15 @@
+### 1.5.0 - 15 Diciembre 2022 
+***
+
+#### Nuevo
+ * Importación añadida GiantBomb Api
+ * Notificación eventos en campana de Avatar, con menu desplegable para ver los eventos. Actualmente solo los que ocurren en el día actual
+ * Nueva plantilla de Videojuegos añadida a la creación de colecciones, con metadatos incorporados
+
+#### Corregido
+ * Cambiada la Lógica de la API de obtención de Feeds, ahora debería ser más rápida y flexible para múltiples RSS Feeds.
+ * Arreglada la busqueda de elementos con espacio en el nombre en la API de PokemonTCG.
+
 ### 1.4.2 - 9 Diciembre 2022 
 ***
 
