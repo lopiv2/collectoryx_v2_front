@@ -375,7 +375,7 @@ function ImportScrapper() {
         selectedApi,
         metadata
       ).then((response) => {
-        console.log(response.data)
+        //console.log(response.data)
         if (response.error) {
           console.log(response);
         }

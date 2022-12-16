@@ -179,7 +179,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   }
   if (selectedApi.name.includes("GiantBomb")) {
     if (results.results) {
-      console.log(results)
+      //console.log(results)
       results.results.map((item, index) =>
         items.push({
           name: item.name,
