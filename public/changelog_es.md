@@ -3,6 +3,7 @@
 
 #### Nuevo
  * Importación añadida GiantBomb Api
+ * Añadida comprobación de Apis nuevas añadidas que faltan para el usuario logueado
  * Notificación eventos en campana de Avatar, con menu desplegable para ver los eventos. Actualmente solo los que ocurren en el día actual
  * Nueva plantilla de Videojuegos añadida a la creación de colecciones, con metadatos incorporados
 

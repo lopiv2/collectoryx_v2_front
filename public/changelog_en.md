@@ -3,6 +3,7 @@
 
 #### New
  * GiantBomb Api import added
+ * Added checking of new added Apis missing for logged in user
  * Event notification in Avatar bell, with drop-down menu to view events. Currently only those occurring on the current day
  * New Video Games template added to the collection creation, with metadata embedded.
 
