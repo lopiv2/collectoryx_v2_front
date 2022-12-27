@@ -1,3 +1,15 @@
+### 1.5.1 - 25 Diciembre 2022 
+***
+
+#### Nuevo
+ * Nueva pestaña Conexiones en Configuración->General, con integración de Telegram añadida sólo para notificaciones de eventos (de momento).
+
+#### Corregido
+ * Corregida la navegación por la página al borrar el último elemento de la colección.
+ * Corregido el número de página inicial al cargar elementos de colecciones con cualquier filtro.
+ * Corregida la comprobación de elementos duplicados. Ahora también se comprueba por colección, por lo que puedes tener el mismo elemento en diferentes colecciones y no ser establecido como duplicado.
+ * Corregida la comprobación de imágenes al importar un artículo. Ahora si la imagen procede de una URL, no va a crear una nueva imagen, en su lugar usará la existente.
+
 ### 1.5.0 - 15 Diciembre 2022 
 ***
 

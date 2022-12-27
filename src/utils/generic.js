@@ -250,7 +250,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           metadata: item.metadata ?? item.metadata,
         })
       );
-      console.log(items)
+      //console.log(items)
       return items;
     }
   }

@@ -27,8 +27,6 @@ import { AppContext } from "../components/AppContext";
 import {
   FilterResultsByApiProvider,
   CheckCountFieldNameApi,
-  CheckSerieApiRebrickable,
-  CheckIsDuplicatedItem,
 } from "../utils/generic";
 import ApiMetadataFields from "../components/ApiMetadata";
 import { isUndefined } from "lodash";
@@ -86,6 +84,7 @@ function ImportScrapper() {
 
   const checkDuplicate = () => {
     ConfigService.getCollectionItemByData(selectedItem).then((response) => {
+      console.log(selectedItem);
       if (response.data === "") {
         importSelectedItem();
       } else {
@@ -128,8 +127,7 @@ function ImportScrapper() {
             );
           }
         });
-      }
-      else {
+      } else {
         ConfigService.importItemFromWeb(sentItem).then((response) => {
           if (response.status === 200) {
             toast.success(
@@ -156,7 +154,9 @@ function ImportScrapper() {
   };
 
   useEffect(() => {
-    if (!isUndefined(selectedItem)) getMetadataFields();
+    if (!isUndefined(selectedItem)) {
+      getMetadataFields();
+    }
   }, [selectedItem]);
 
   //When metadata importing is selected
@@ -304,23 +304,26 @@ function ImportScrapper() {
       return;
     }
     if (selectedApi.name.includes("Star Wars")) {
-      ConfigService.getItemStarWars(page, rowsPerPage, searchString, metadata).then(
-        (response) => {
-          setTotalPages(
-            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-          );
-          setResults(
-            FilterResultsByApiProvider(
-              response.data,
-              selectedApi,
-              location.state.id
-            )
-          );
-          setSearching(false);
-          setStartSearch(false);
-          setShowResults(true);
-        }
-      );
+      ConfigService.getItemStarWars(
+        page,
+        rowsPerPage,
+        searchString,
+        metadata
+      ).then((response) => {
+        setTotalPages(
+          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+        );
+        setResults(
+          FilterResultsByApiProvider(
+            response.data,
+            selectedApi,
+            location.state.id
+          )
+        );
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
       return;
     }
     if (selectedApi.name.includes("TMNT")) {
@@ -554,12 +557,17 @@ function ImportScrapper() {
               <CircularProgress />
             ) : (
               results.map((item, index) => (
-                <Tooltip title={
-                  <>
-                    <Typography variant="body1">{item.name}</Typography>
-                    <Typography variant="body1">{item.serie}</Typography>
-                  </>
-                } key={index} followCursor arrow>
+                <Tooltip
+                  title={
+                    <>
+                      <Typography variant="body1">{item.name}</Typography>
+                      <Typography variant="body1">{item.serie}</Typography>
+                    </>
+                  }
+                  key={index}
+                  followCursor
+                  arrow
+                >
                   <Grid item key={index} pl={2} pt={2} pb={2}>
                     <Card
                       key={index}
@@ -568,8 +576,8 @@ function ImportScrapper() {
                         cardHover === item
                           ? cardStyleHover
                           : {
-                            boxShadow: 3,
-                          },
+                              boxShadow: 3,
+                            },
                         selectedItem === item
                           ? avatarStyleClicked
                           : avatarStyleHover,

@@ -183,7 +183,8 @@ function ManageApiTab(props) {
     <Box sx={{ display: "flex" }}>
       <ToastContainer autoClose={2000} />
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        {/*Hidden: there´s no need by the moment to add apis beside default ones}
+        {/*<Grid item xs={12}>
           <Typography variant="h4" component="h4">
             <FormattedMessage id="app.config.general_apis_tab_add_title"></FormattedMessage>
           </Typography>
@@ -301,7 +302,7 @@ function ManageApiTab(props) {
               </Form>
             )}
           </Formik>
-        </Grid>
+                    </Grid>*/}
         <Grid item xs={12} mr={2}>
           <MaterialTable
             title={

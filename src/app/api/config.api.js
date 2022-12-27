@@ -4,6 +4,12 @@ import authHeader from "./auth-header";
 const API_URL = window.env.API_URL;
 const GET_COLLECTION_ITEMS_ID_URL = `${API_URL}/collections`;
 const GET_RECENT_COLLECTION_ITEMS_ID_URL = `${API_URL}/collections/recent`;
+const CHECK_CONFIG_CONNECTION = (id) =>
+  `${API_URL}/config/check-config-connection/${id}`;
+const CHECK_CONFIG_TELEGRAM = (id) =>
+  `${API_URL}/config/get-config-telegram/${id}`;
+const UPDATE_CONNECTION_URL = `${API_URL}/config/update-connection`;
+const UPDATE_TELEGRAM_URL = `${API_URL}/config/update-telegram`;
 const COUNT_COLLECTIONS_URL = (id) => `${API_URL}/count-collections/${id}`;
 const COUNT_COLLECTIONS_ITEMS_URL = (id) =>
   `${API_URL}/count-collections-items/${id}`;
@@ -23,7 +29,7 @@ const DELETE_COLLECTION_ITEM_ID_URL = (id) =>
 const DELETE_COLLECTION_ID_URL = (id) => `${API_URL}/delete-collection/${id}`;
 const DELETE_COLLECTION_ID_URL_CASCADE = (id) =>
   `${API_URL}/delete-collection-cascade/${id}`;
-  const GET_COLLECTION_ITEM_DATA_URL = `${API_URL}/collections/get-item-data`;
+const GET_COLLECTION_ITEM_DATA_URL = `${API_URL}/collections/get-item-data`;
 const GET_COLLECTION_ITEM_ID_URL = (id) => `${API_URL}/get-item/${id}`;
 const GET_COLLECTION_ITEMS_YEAR_ID_URL = (id) =>
   `${API_URL}/get-items-per-year/${id}`;
@@ -78,6 +84,24 @@ const USER_DETAILS_URL = (id) => `${API_URL}/user/profile/${id}`;
 const UPDATE_USER_PROFILE_URL = `${API_URL}/user/profile/update`;
 const VIEW_COLLECTION_SERIES_URL = (id) =>
   `${API_URL}/view-collection-series/${id}`;
+const TEST_TELEGRAM = (telegramBotKey, chatId, message) =>
+  `https://api.telegram.org/bot${telegramBotKey}/sendMessage?chat_id=${chatId}&text=${message}`;
+
+const checkConnectionConfiguration = (id) => {
+  return axios
+    .get(CHECK_CONFIG_CONNECTION(id), { headers: authHeader() })
+    .then((response) => {
+      return response;
+    });
+};
+
+const checkConnectionTelegram = (id) => {
+  return axios
+    .get(CHECK_CONFIG_TELEGRAM(id), { headers: authHeader() })
+    .then((response) => {
+      return response;
+    });
+};
 
 const countCollectionsMoney = (id) => {
   return axios
@@ -451,6 +475,7 @@ const getCollectionItemsById = (query) => {
 //Check for an item in Database with its data for duplicated check
 const getCollectionItemByData = (query) => {
   const data = {
+    collection: query.collection,
     name: query.name,
     year: query.year,
     serie: query.serie,
@@ -900,6 +925,14 @@ const saveConfigDashboard = (
     });
 };
 
+const sendMessageTelegram = (tokenBot, chatId, message) => {
+  return axios
+    .get(TEST_TELEGRAM(tokenBot, chatId, message))
+    .then((response) => {
+      return response;
+    });
+};
+
 const toggleCollectionAmbit = (id, ambit) => {
   const data = {
     id: id,
@@ -966,6 +999,24 @@ const updateApi = (values) => {
     });
 };
 
+const updateConnection = (values) => {
+  return axios
+    .put(UPDATE_CONNECTION_URL, values, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        //console.log(response.data)
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const updateCollection = (values, image) => {
   const data = {
     id: values.id,
@@ -975,6 +1026,24 @@ const updateCollection = (values, image) => {
   };
   return axios
     .put(UPDATE_COLLECTION_URL, data, { headers: authHeader() })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        //console.log(response.data)
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
+const updateConfigTelegram = (values) => {
+  return axios
+    .put(UPDATE_TELEGRAM_URL, values, { headers: authHeader() })
     .then((response) => {
       if (response.status === 200 || response.status === 201) {
         //console.log(response.data)
@@ -1147,9 +1216,11 @@ const updateSerie = (values, image) => {
     });
 };
 
-const viewFeed = (url) => { };
+const viewFeed = (url) => {};
 
 const ConfigService = {
+  checkConnectionConfiguration,
+  checkConnectionTelegram,
   countCollections,
   countCollectionsItems,
   countCollectionsMoney,
@@ -1206,11 +1277,14 @@ const ConfigService = {
   putImage,
   saveConfigAppearance,
   saveConfigDashboard,
+  sendMessageTelegram,
   toggleCollectionAmbit,
   toggleItemOwn,
   toggleItemWish,
   updateApi,
+  updateConnection,
   updateCollection,
+  updateConfigTelegram,
   updateEvent,
   updateFeed,
   updateImage,

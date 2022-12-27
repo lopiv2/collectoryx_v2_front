@@ -1,3 +1,15 @@
+### 1.5.1 - 25 December 2022 
+***
+
+#### New
+ * New tab Connections in Settings->General, with Telegram integration added for events notifications only (by the moment)
+
+#### Fixed
+ * Fixed page navigation when deleting last item of collection.
+ * Fixed initial page number when loading items from collections with any filter
+ * Fixed duplicated items checking. Now it checks by collection too, so you can have the same item across different collections and not being set as duplicated.
+ * Fixed image checking when import item. Now if the image is from an URL, It won´t create a new image, instead will pick the existant one.
+
 ### 1.5.0 - 15 December 2022 
 ***
 

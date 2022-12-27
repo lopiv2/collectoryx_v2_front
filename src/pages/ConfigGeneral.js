@@ -12,6 +12,7 @@ import { TabPanel } from "@material-ui/lab";
 import * as Yup from "yup";
 import ManageApiTab from "../components/ManageApiTab";
 import ManageApplicationTab from "../components/ManageApplicationTab";
+import ManageConnectionsTab from "../components/ManageConnectionsTab";
 
 function ConfigInterface() {
   const intl = useIntl();
@@ -64,7 +65,11 @@ function ConfigInterface() {
       </Grid>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
+          <TabList
+            onChange={handleChange}
+            aria-label="lab API tabs example"
+            variant="scrollable"
+          >
             <Tab
               label={intl.formatMessage({
                 id: "app.config.general_app_tab",
@@ -77,6 +82,12 @@ function ConfigInterface() {
               })}
               value="2"
             />
+            <Tab
+              label={intl.formatMessage({
+                id: "app.config.general_connections_tab",
+              })}
+              value="3"
+            />
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -84,6 +95,9 @@ function ConfigInterface() {
         </TabPanel>
         <TabPanel value="2">
           <ManageApiTab />
+        </TabPanel>
+        <TabPanel value="3">
+          <ManageConnectionsTab />
         </TabPanel>
       </TabContext>
     </Box>

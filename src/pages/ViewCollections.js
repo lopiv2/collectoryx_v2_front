@@ -165,7 +165,7 @@ function ViewCollection(props) {
   };
 
   useEffect(() => {
-    setPage(0);
+    setPage(1);
     fetchData(0, rowsPerPage, rowsOrder, searchQuery);
   }, [orderDirection]);
 
@@ -186,7 +186,7 @@ function ViewCollection(props) {
 
   const handleChangeRowOrder = (event) => {
     setRowsOrder(event);
-    setPage(0);
+    setPage(1);
     fetchData(0, rowsPerPage, event, searchQuery);
   };
 
