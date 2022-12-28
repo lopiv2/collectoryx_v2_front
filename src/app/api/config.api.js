@@ -84,8 +84,8 @@ const USER_DETAILS_URL = (id) => `${API_URL}/user/profile/${id}`;
 const UPDATE_USER_PROFILE_URL = `${API_URL}/user/profile/update`;
 const VIEW_COLLECTION_SERIES_URL = (id) =>
   `${API_URL}/view-collection-series/${id}`;
-const TEST_TELEGRAM = (telegramBotKey, chatId, message) =>
-  `https://api.telegram.org/bot${telegramBotKey}/sendMessage?chat_id=${chatId}&text=${message}`;
+const TEST_TELEGRAM = (telegramBotKey, chatId, parseMode, message) =>
+  `https://api.telegram.org/bot${telegramBotKey}/sendMessage?chat_id=${chatId}&parse_mode=${parseMode}&text=${message}`;
 
 const checkConnectionConfiguration = (id) => {
   return axios
@@ -925,9 +925,9 @@ const saveConfigDashboard = (
     });
 };
 
-const sendMessageTelegram = (tokenBot, chatId, message) => {
+const sendMessageTelegram = (tokenBot, chatId, parseMode, message) => {
   return axios
-    .get(TEST_TELEGRAM(tokenBot, chatId, message))
+    .get(TEST_TELEGRAM(tokenBot, chatId, parseMode, message))
     .then((response) => {
       return response;
     });
@@ -1216,7 +1216,7 @@ const updateSerie = (values, image) => {
     });
 };
 
-const viewFeed = (url) => {};
+const viewFeed = (url) => { };
 
 const ConfigService = {
   checkConnectionConfiguration,

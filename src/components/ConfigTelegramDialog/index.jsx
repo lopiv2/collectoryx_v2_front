@@ -37,14 +37,15 @@ const ConfigTelegramDialog = (props) => {
       configured: connections[index].configured,
       user: connections[index].user.id,
     };
-    ConfigService.updateConnection(data).then((response) => {});
+    ConfigService.updateConnection(data).then((response) => { });
   };
 
   const testConnection = (values) => {
     ConfigService.sendMessageTelegram(
       values.botToken,
       values.chatId,
-      "This is a test connection from Collectoryx"
+      "HTML",
+      "<b>This is a test connection from Collectoryx</b>%0A<i>Done</i>"
     ).then((response) => {
       if (isUndefined(response)) {
         updateConf(false);

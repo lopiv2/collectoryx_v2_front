@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -68,18 +68,48 @@ export default function TopToolBar(props) {
   };
 
   //const navigate = useNavigate();
-  const { userData, dailyEvents, setDailyEvents } = React.useContext(AppContext);
+  const { userData, dailyEvents, setDailyEvents, userConfig, setUserConfig } = useContext(AppContext);
   const [expiringDate, setExpiringDate] = useState();
   const [eventAlarms, setEventAlarms] = useState(0);
-  const [openEventsMenu, setOpenEventsMenu] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [telegramConnectionParameters, setTelegramConnectionParameters] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
   const openAnch = Boolean(anchorEl);
 
+  //First
   useEffect(() => {
     if (dailyEvents != null) {
       setEventAlarms(dailyEvents.length)
     }
   }, [dailyEvents])
+
+  //Second
+  useEffect(() => {
+    if (eventAlarms != null) {
+      ConfigService.checkConnectionTelegram(userData.id).then((response) => {
+        setTelegramConnectionParameters(response.data);
+      })
+    }
+  }, [eventAlarms])
+
+  //Third, Only send notifications once in a logging session
+  useEffect(() => {
+    if (telegramConnectionParameters != null && userConfig.notificationsSent === false) {
+      dailyEvents.map((event) => {
+        ConfigService.sendMessageTelegram(
+          telegramConnectionParameters.botToken,
+          telegramConnectionParameters.chatId,
+          "HTML",
+          "<b>" + event.title + "</b>" + "%0A" + event.extendedProps.description
+        ).then((response) => {
+
+        })
+      })
+      setUserConfig((previous) => ({
+        ...previous,
+        notificationsSent: true,
+      }));
+    }
+  }, [telegramConnectionParameters])
 
   useEffect(() => {
     setExpiringDate(userData.expiringDate);
@@ -277,8 +307,8 @@ export default function TopToolBar(props) {
                   <Typography variant="body2">
                     {event.extendedProps.description}
                   </Typography>
-                  <Typography variant="body1" style={{whiteSpace: 'pre-line'}}>
-                    
+                  <Typography variant="body1" style={{ whiteSpace: 'pre-line' }}>
+
                   </Typography>
                   {dailyEvents.length > 1 && index + 1 !== dailyEvents.length ? <Divider variant="fullWidth" /> : null}
                 </Grid>

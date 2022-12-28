@@ -41,6 +41,11 @@ function Layout(props) {
         .then((response) => {
           //console.log(response.data)
           setUserConfig(response.data);
+          //Set notifications as false until sent
+          /*setUserConfig((previous) => ({
+            ...previous,
+            notificationsSent: false,
+          }));*/
         })
         .catch((err) => {
           console.log(err);
