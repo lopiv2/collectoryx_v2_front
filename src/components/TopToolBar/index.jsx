@@ -68,58 +68,79 @@ export default function TopToolBar(props) {
   };
 
   //const navigate = useNavigate();
-  const { userData, dailyEvents, setDailyEvents, userConfig, setUserConfig } = useContext(AppContext);
+  const { userData, dailyEvents, setDailyEvents, userConfig, setUserConfig } =
+    useContext(AppContext);
   const [expiringDate, setExpiringDate] = useState();
   const [eventAlarms, setEventAlarms] = useState(0);
-  const [telegramConnectionParameters, setTelegramConnectionParameters] = useState("");
+  const [telegramConnectionParameters, setTelegramConnectionParameters] =
+    useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const openAnch = Boolean(anchorEl);
 
   //First
   useEffect(() => {
-    if (dailyEvents != null) {
-      setEventAlarms(dailyEvents.length)
-    }
-  }, [dailyEvents])
+    ConfigService.checkConnectionTelegram(userData.id).then((response) => {
+      setTelegramConnectionParameters(response.data);
+    });
+  }, []);
 
   //Second
   useEffect(() => {
-    if (eventAlarms != null) {
-      ConfigService.checkConnectionTelegram(userData.id).then((response) => {
-        setTelegramConnectionParameters(response.data);
-      })
-    }
-  }, [eventAlarms])
-
-  //Third, Only send notifications once in a logging session
-  useEffect(() => {
-    if (telegramConnectionParameters != null && userConfig.notificationsSent === false) {
+    //If there are events for this day, it will be notifications
+    if (
+      dailyEvents.length > 0 &&
+      telegramConnectionParameters.sentNotifications === false
+    ) {
+      setEventAlarms(dailyEvents.length);
+      const data = {
+        id: telegramConnectionParameters.id,
+        name: telegramConnectionParameters.name,
+        botToken: telegramConnectionParameters.botToken,
+        chatId: telegramConnectionParameters.chatId,
+        sentNotifications: true,
+      };
       dailyEvents.map((event) => {
         ConfigService.sendMessageTelegram(
           telegramConnectionParameters.botToken,
           telegramConnectionParameters.chatId,
           "HTML",
           "<b>" + event.title + "</b>" + "%0A" + event.extendedProps.description
-        ).then((response) => {
-
-        })
-      })
-      setUserConfig((previous) => ({
-        ...previous,
-        notificationsSent: true,
-      }));
+        ).then((response) => {});
+      });
+      ConfigService.updateConfigTelegram(data).then((response) => {
+        if (response.status === 200) {
+          setTelegramConnectionParameters("");
+          setTelegramConnectionParameters(data);
+        }
+      });
     }
-  }, [telegramConnectionParameters])
+    //If there are no events for this day, it won´t be notifications
+    if (dailyEvents.length === 0 && telegramConnectionParameters.length > 0) {
+      const data = {
+        id: telegramConnectionParameters.id,
+        name: telegramConnectionParameters.name,
+        botToken: telegramConnectionParameters.botToken,
+        chatId: telegramConnectionParameters.chatId,
+        sentNotifications: false,
+      };
+      ConfigService.updateConfigTelegram(data).then((response) => {
+        if (response.status === 200) {
+          setTelegramConnectionParameters("");
+          setTelegramConnectionParameters(data);
+        }
+      });
+    }
+  }, [dailyEvents, telegramConnectionParameters]);
 
   useEffect(() => {
     setExpiringDate(userData.expiringDate);
     const d = new Date();
-    d.setHours(0)
-    d.setMinutes(0)
-    d.setSeconds(0)
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
     const startDay = d;
-    const endDay = new Date(startDay)
-    endDay.setDate(endDay.getDate() + 1)
+    const endDay = new Date(startDay);
+    endDay.setDate(endDay.getDate() + 1);
     ConfigService.getAllUserEventsPeriod(userData.id, startDay, endDay)
       .then((response) => {
         //console.log(response.data)
@@ -142,7 +163,7 @@ export default function TopToolBar(props) {
       })
       .catch((err) => {
         console.log(err);
-      })
+      });
   }, [userData]);
 
   function capitalizeFirstLetter(string) {
@@ -192,7 +213,7 @@ export default function TopToolBar(props) {
                     display: { xs: "none", sm: "block" },
                     typography: { sm: "h5", xs: "h6" },
                     pl: { md: 20, lg: 60, xl: 60 },
-                    pt: 3
+                    pt: 3,
                   }}
                 >
                   <FormattedMessage
@@ -231,7 +252,16 @@ export default function TopToolBar(props) {
               )}
             </Typography>
           </Grid>
-          <Grid item xs={2} sm={4} md={4} sx={{ ml: { sm: 6, md: 10, lg: 27, xl: 90 }, mr: { sm: 0, md: 0, xs: 10, lg: 0 } }} >
+          <Grid
+            item
+            xs={2}
+            sm={4}
+            md={4}
+            sx={{
+              ml: { sm: 6, md: 10, lg: 27, xl: 90 },
+              mr: { sm: 0, md: 0, xs: 10, lg: 0 },
+            }}
+          >
             <LanguageSwitcher></LanguageSwitcher>
           </Grid>
           <Grid item xs={2} sm={4} md={4}>
@@ -246,7 +276,8 @@ export default function TopToolBar(props) {
                   sx={{ ml: 1 }}
                   aria-controls={openAnch ? "events-menu" : undefined}
                   aria-haspopup="true"
-                  aria-expanded={openAnch ? "true" : undefined} />
+                  aria-expanded={openAnch ? "true" : undefined}
+                />
               </Badge>
             </IconButton>
           </Grid>
@@ -298,22 +329,28 @@ export default function TopToolBar(props) {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            {dailyEvents.length > 0 ? dailyEvents.map((event, index) =>
-              <MenuItem key={index}>
-                <Grid>
-                  <Typography variant="body1">
-                    {event.title + "\n"}
-                  </Typography>
-                  <Typography variant="body2">
-                    {event.extendedProps.description}
-                  </Typography>
-                  <Typography variant="body1" style={{ whiteSpace: 'pre-line' }}>
-
-                  </Typography>
-                  {dailyEvents.length > 1 && index + 1 !== dailyEvents.length ? <Divider variant="fullWidth" /> : null}
-                </Grid>
-              </MenuItem>
-            ) : null}
+            {dailyEvents.length > 0
+              ? dailyEvents.map((event, index) => (
+                  <MenuItem key={index}>
+                    <Grid>
+                      <Typography variant="body1">
+                        {event.title + "\n"}
+                      </Typography>
+                      <Typography variant="body2">
+                        {event.extendedProps.description}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        style={{ whiteSpace: "pre-line" }}
+                      ></Typography>
+                      {dailyEvents.length > 1 &&
+                      index + 1 !== dailyEvents.length ? (
+                        <Divider variant="fullWidth" />
+                      ) : null}
+                    </Grid>
+                  </MenuItem>
+                ))
+              : null}
           </Menu>
           <Menu
             id="account-menu"
@@ -358,7 +395,7 @@ export default function TopToolBar(props) {
             </MenuItem>
           </Menu>
         </Toolbar>
-      </AppBar >
+      </AppBar>
     )
   );
 }
