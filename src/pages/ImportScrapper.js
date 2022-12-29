@@ -13,7 +13,6 @@ import {
   Checkbox,
   ListItem,
   MenuItem,
-  Paper,
 } from "@mui/material";
 import { Button } from "@mui/material";
 import ConfigService from "../app/api/config.api";
@@ -84,7 +83,7 @@ function ImportScrapper() {
 
   const checkDuplicate = () => {
     ConfigService.getCollectionItemByData(selectedItem).then((response) => {
-      console.log(selectedItem);
+      //console.log(selectedItem);
       if (response.data === "") {
         importSelectedItem();
       } else {
