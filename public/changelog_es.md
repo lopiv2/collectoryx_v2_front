@@ -1,3 +1,10 @@
+### 1.5.2 - 6 Enero 2023 
+***
+
+#### Corregido
+* Corregidas verificaciones al importar juegos desde Giantbomb.
+* Corregido el algoritmo de eliminación de colecciones. Ahora borra todo en cascada por defecto (Colecciones, objetos, series y metadatos).
+
 ### 1.5.1 - 25 Diciembre 2022 
 ***
 

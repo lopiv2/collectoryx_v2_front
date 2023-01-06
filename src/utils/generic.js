@@ -179,7 +179,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   }
   if (selectedApi.name.includes("GiantBomb")) {
     if (results.results) {
-      //console.log(results)
+      //console.log(results);
       results.results.map((item, index) =>
         items.push({
           name: item.name,
@@ -193,21 +193,22 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
             {
               name: "platform",
               type: "STRING",
-              value: item.platforms ?? item.platforms[0].name,
+              value: item.platforms !== null ? item.platforms[0].name : "",
             },
             {
               name: "developer",
               type: "STRING",
-              value: "item.developers.length > 0 ?? item.developers[0].name",
+              value: item.developers !== undefined ? item.developers[0].name : "",
             },
             {
               name: "genre",
               type: "STRING",
-              value: "item.genres ?? item.genres[0].name",
+              value: item.genres !== undefined ? item.genres[0].name : "",
             },
           ],
         })
       );
+      //console.log(items);
       return items;
     }
     return null;

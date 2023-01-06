@@ -26,7 +26,6 @@ const DELETE_FEED_ID_URL = (id) => `${API_URL}/feeds/delete-feed/${id}`;
 const DELETE_SERIE_ID_URL = (id) => `${API_URL}/delete-serie/${id}`;
 const DELETE_COLLECTION_ITEM_ID_URL = (id) =>
   `${API_URL}/delete-collection-item/${id}`;
-const DELETE_COLLECTION_ID_URL = (id) => `${API_URL}/delete-collection/${id}`;
 const DELETE_COLLECTION_ID_URL_CASCADE = (id) =>
   `${API_URL}/delete-collection-cascade/${id}`;
 const GET_COLLECTION_ITEM_DATA_URL = `${API_URL}/collections/get-item-data`;
@@ -337,20 +336,12 @@ const deleteCollectionItem = (id) => {
     });
 };
 
-const deleteCollection = (id, cascade) => {
-  if (cascade === false) {
-    return axios
-      .delete(DELETE_COLLECTION_ID_URL(id), { headers: authHeader() })
-      .then((response) => {
-        return response;
-      });
-  } else {
-    return axios
-      .delete(DELETE_COLLECTION_ID_URL_CASCADE(id), { headers: authHeader() })
-      .then((response) => {
-        return response;
-      });
-  }
+const deleteCollection = (id) => {
+  return axios
+    .delete(DELETE_COLLECTION_ID_URL_CASCADE(id), { headers: authHeader() })
+    .then((response) => {
+      return response;
+    });
 };
 
 const deleteEvent = (id) => {
@@ -1216,7 +1207,7 @@ const updateSerie = (values, image) => {
     });
 };
 
-const viewFeed = (url) => { };
+const viewFeed = (url) => {};
 
 const ConfigService = {
   checkConnectionConfiguration,

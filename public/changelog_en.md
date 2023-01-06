@@ -1,3 +1,10 @@
+### 1.5.2 - 6 January 2023 
+***
+
+#### Fixed
+* Fixed checks when importing games from Giantbomb.
+* Fixed the collections deletion algorithm. It now deletes everything in cascade by default (Collections, objects, series and metadata).
+
 ### 1.5.1 - 25 December 2022 
 ***
 

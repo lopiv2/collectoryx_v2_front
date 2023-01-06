@@ -63,7 +63,6 @@ function ViewCollection(props) {
   const [openNew, setOpenNew] = useState(false);
   const [value, setValue] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [cascade, setCascade] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [collectionEdited, setCollectionEdited] = useState();
   const [newCollectionEdited, setNewCollectionEdited] = useState();
@@ -261,7 +260,8 @@ function ViewCollection(props) {
   };
 
   const handleDeleteClick = () => {
-    ConfigService.deleteCollection(value, cascade).then((response) => {
+    ConfigService.deleteCollection(value).then((response) => {
+      //console.log(response)
       if (response.data === true) {
         toast.success(
           <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
@@ -582,8 +582,7 @@ function ViewCollection(props) {
                     open={confirmOpen}
                     setOpen={setConfirmOpen}
                     onConfirm={handleDeleteClick}
-                    showCascade={true}
-                    setCascade={setCascade}
+                    showCascade={false}
                   >
                     <FormattedMessage id="app.dialog.confirm_delete"></FormattedMessage>
                   </ConfirmDialog>
