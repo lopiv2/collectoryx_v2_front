@@ -1,8 +1,14 @@
 ### 1.5.2 - 6 Enero 2023 
 ***
 
+#### Nuevo
+ * Nueva plantilla de Lego añadida a la creación de colecciones, con metadatos incorporados
+ * Nueva plantilla de Hot Wheels añadida a la creación de colecciones, con metadatos incorporados
+
 #### Corregido
+* Cuando se importa un objeto de Lego, se añade la palabra partes a los metadatos de inventario
 * Corregidas verificaciones al importar juegos desde Giantbomb.
+* Corregido el checkeo de precios al importar objetos desde la web de Hot Wheels.
 * Corregido el algoritmo de eliminación de colecciones. Ahora borra todo en cascada por defecto (Colecciones, objetos, series y metadatos).
 
 ### 1.5.1 - 25 Diciembre 2022 

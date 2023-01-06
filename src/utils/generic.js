@@ -198,7 +198,8 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
             {
               name: "developer",
               type: "STRING",
-              value: item.developers !== undefined ? item.developers[0].name : "",
+              value:
+                item.developers !== undefined ? item.developers[0].name : "",
             },
             {
               name: "genre",
@@ -224,6 +225,18 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
           serie: item.theme_id,
           own: false,
           price: 0.0,
+          metadata: [
+            {
+              name: "number_id",
+              type: "STRING",
+              value: item.set_num !== null ? item.set_num : "",
+            },
+            {
+              name: "inventory",
+              type: "STRING",
+              value: item.num_parts !== undefined ? item.num_parts : "",
+            },
+          ],
         })
       );
       return items;

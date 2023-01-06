@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom";
@@ -32,7 +32,7 @@ import { isUndefined } from "lodash";
 
 function ImportScrapper() {
   const navigate = useNavigate();
-  //const intl = useIntl();
+  const intl = useIntl();
   const [apisList, setApisList] = useState([]);
   const { userData, setUserData } = React.useContext(AppContext);
   const [selectedApi, setSelectedApi] = useState();
@@ -96,28 +96,26 @@ function ImportScrapper() {
     //Check if item is duplicated before import
     sentItem.own = importOwned;
     if (selectedApi.name.includes("Rebrickable")) {
-      ConfigService.getSerieFromRebrickable(sentItem.serie, selectedApi).then(
-        (response) => {
-          sentItem.serie = response.data.name;
-          ConfigService.importItemFromWeb(sentItem).then((response) => {
-            if (response.status === 200) {
-              toast.success(
-                <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
-                { theme: "colored" }
-              );
-            }
-          });
+      if (metadata.includes("sets")) {
+        ConfigService.getSerieFromRebrickable(sentItem.serie, selectedApi).then(
+          (response) => {
+            sentItem.serie = response.data.name;
+          }
+        );
+      } else {
+        //If metadata is minifig, is a collectible minifigure
+        sentItem.serie = "Collectible Minifigure";
+      }
+      ConfigService.importItemFromWeb(sentItem).then((response) => {
+        if (response.status === 200) {
+          toast.success(
+            <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
+            { theme: "colored" }
+          );
         }
-      );
+      });
     } else {
       if (selectedApi.name.includes("GiantBomb")) {
-        /*ConfigService.getDeveloperGiantBomb(selectedApi).then(
-          (response) => {
-            console.log(response.data)
-            const developer = response.data.results.map((dev) => dev.games.find((f) => f.name.includes(sentItem.name)))
-            console.log(developer)
-          })*/
-        //sentItem.serie = response.data.name;
         ConfigService.importItemFromWeb(sentItem).then((response) => {
           if (response.status === 200) {
             toast.success(
@@ -384,13 +382,27 @@ function ImportScrapper() {
         setTotalPages(
           CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
         );
-        setResults(
-          FilterResultsByApiProvider(
-            response.data,
-            selectedApi,
-            location.state.id
-          )
+        var results = FilterResultsByApiProvider(
+          response.data,
+          selectedApi,
+          location.state.id
         );
+        if (results) {
+          results.map((result) => {
+            if (result.metadata) {
+              result.metadata.map((item) => {
+                //For parts for Lego
+                if (item.name.includes("inventory")) {
+                  const parts = intl.formatMessage({
+                    id: "app.collection.view_collections_item_parts",
+                  });
+                  item.value = item.value + " " + parts;
+                }
+              });
+            }
+          });
+        }
+        setResults(results);
         setSearching(false);
         setStartSearch(false);
         setShowResults(true);

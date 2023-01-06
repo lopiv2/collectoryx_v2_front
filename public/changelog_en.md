@@ -1,8 +1,14 @@
 ### 1.5.2 - 6 January 2023 
 ***
 
+#### New
+ * New Lego template added to the collection creation, with metadata embedded.
+ * New Hot Wheels template added to the collection creation, with metadata embedded.
+
 #### Fixed
+* When importing a Lego object, the word "parts" is added to the inventory metadata.
 * Fixed checks when importing games from Giantbomb.
+* Fixed price checks when importing items from Hot Wheels Web.
 * Fixed the collections deletion algorithm. It now deletes everything in cascade by default (Collections, objects, series and metadata).
 
 ### 1.5.1 - 25 December 2022 

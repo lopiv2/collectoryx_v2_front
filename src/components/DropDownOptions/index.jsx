@@ -150,6 +150,114 @@ const createCollectionOptions = [
       },
     ]
   },
+  {
+    label: <FormattedMessage id="app.collection.lego"></FormattedMessage>,
+    value: "Lego",
+    metadata: "true",
+    fields: [
+      {
+        key: "name",
+        value: (<FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>),
+      },
+      {
+        key: "serie",
+        value: (<FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>),
+      },
+      {
+        key: "price",
+        value: (<FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>),
+      },
+      {
+        key: "year",
+        value: (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
+      },
+      {
+        key: "acquiringDate",
+        value: (<FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>),
+      },
+      {
+        key: "own",
+        value: (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
+      },
+      {
+        key: "wanted",
+        value: (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
+      },
+      {
+        key: "image",
+        value: (<FormattedMessage id="app.collection.view_collections_item_image"></FormattedMessage>),
+      },
+      {
+        key: "notes",
+        value: (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>),
+      }],
+    metaFields: [
+      {
+        key: "inventory",
+        value: (<FormattedMessage id="app.collection.view_collections_item_inventory"></FormattedMessage>),
+        type: "STRING",
+      },
+      {
+        key: "number_id",
+        value: (<FormattedMessage id="app.collection.view_collections_item_number_id"></FormattedMessage>),
+        type: "STRING",
+      },
+    ]
+  },
+  {
+    label: "Hot Wheels",
+    value: "Hot_Wheels",
+    metadata: "true",
+    fields: [
+      {
+        key: "name",
+        value: (<FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>),
+      },
+      {
+        key: "serie",
+        value: (<FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>),
+      },
+      {
+        key: "price",
+        value: (<FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>),
+      },
+      {
+        key: "year",
+        value: (<FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>),
+      },
+      {
+        key: "acquiringDate",
+        value: (<FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>),
+      },
+      {
+        key: "own",
+        value: (<FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>),
+      },
+      {
+        key: "wanted",
+        value: (<FormattedMessage id="app.collection.view_collections_item_wanted"></FormattedMessage>),
+      },
+      {
+        key: "image",
+        value: (<FormattedMessage id="app.collection.view_collections_item_image"></FormattedMessage>),
+      },
+      {
+        key: "notes",
+        value: (<FormattedMessage id="app.collection.view_collections_item_notes"></FormattedMessage>),
+      }],
+    metaFields: [
+      {
+        key: "collection_number",
+        value: (<FormattedMessage id="app.collection.view_collections_item_col_number"></FormattedMessage>),
+        type: "STRING",
+      },
+      {
+        key: "color",
+        value: (<FormattedMessage id="app.collection.view_collections_item_color"></FormattedMessage>),
+        type: "STRING",
+      },
+    ]
+  },
   /*{
     label: <FormattedMessage id="app.collection.coins"></FormattedMessage>,
     value: "Coins",
