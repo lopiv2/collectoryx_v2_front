@@ -36,6 +36,7 @@
     "himalaya": "^1.1.0",
     "html-react-parser": "^3.0.4",
     "http-browserify": "^1.7.0",
+    "json5": "^2.2.3",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "markdown-to-jsx": "^7.1.7",
