@@ -1,3 +1,14 @@
+### 1.5.3 - 12 January 2023 
+***
+
+#### New
+ * Minerals Api import added
+
+#### Fixed
+* When importing elements from CSV, it has been corrected that if they are owned, without acquisition date, today's date is set.
+* If the collection does not have metadata at the time of creation, when importing from Apis, metadata is not imported.
+* Fixed default value in the creation of collections, with metadata, in the data type dropdowns.
+
 ### 1.5.2 - 6 January 2023 
 ***
 

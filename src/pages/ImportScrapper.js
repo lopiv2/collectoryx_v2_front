@@ -218,16 +218,20 @@ function ImportScrapper() {
         searchString,
         metadata
       ).then((response) => {
-        setTotalPages(
-          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-        );
-        setResults(
-          FilterResultsByApiProvider(
-            response.data,
-            selectedApi,
-            location.state.id
-          )
-        );
+        if (response.data !== "") {
+          setTotalPages(
+            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+          );
+          setResults(
+            FilterResultsByApiProvider(
+              response.data,
+              selectedApi,
+              location.state.id
+            )
+          );
+        } else {
+          setResults([]);
+        }
         setSearching(false);
         setStartSearch(false);
         setShowResults(true);
@@ -241,16 +245,20 @@ function ImportScrapper() {
         searchString,
         metadata
       ).then((response) => {
-        setTotalPages(
-          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-        );
-        setResults(
-          FilterResultsByApiProvider(
-            response.data,
-            selectedApi,
-            location.state.id
-          )
-        );
+        if (response.data !== "") {
+          setTotalPages(
+            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+          );
+          setResults(
+            FilterResultsByApiProvider(
+              response.data,
+              selectedApi,
+              location.state.id
+            )
+          );
+        } else {
+          setResults([]);
+        }
         setSearching(false);
         setStartSearch(false);
         setShowResults(true);
@@ -264,25 +272,7 @@ function ImportScrapper() {
         searchString,
         metadata
       ).then((response) => {
-        setTotalPages(
-          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-        );
-        setResults(
-          FilterResultsByApiProvider(
-            response.data,
-            selectedApi,
-            location.state.id
-          )
-        );
-        setSearching(false);
-        setStartSearch(false);
-        setShowResults(true);
-      });
-      return;
-    }
-    if (selectedApi.name.includes("MOTU")) {
-      ConfigService.getItemMotu(page, rowsPerPage, searchString, metadata).then(
-        (response) => {
+        if (response.data !== "") {
           setTotalPages(
             CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
           );
@@ -293,6 +283,59 @@ function ImportScrapper() {
               location.state.id
             )
           );
+        } else {
+          setResults([]);
+        }
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
+      return;
+    }
+    if (selectedApi.name.includes("Minerals")) {
+      ConfigService.getItemMinerals(
+        page,
+        rowsPerPage,
+        searchString,
+        metadata
+      ).then((response) => {
+        if (response.data !== "") {
+          setTotalPages(
+            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+          );
+          setResults(
+            FilterResultsByApiProvider(
+              response.data,
+              selectedApi,
+              location.state.id
+            )
+          );
+        } else {
+          setResults([]);
+        }
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
+      return;
+    }
+    if (selectedApi.name.includes("MOTU")) {
+      ConfigService.getItemMotu(page, rowsPerPage, searchString, metadata).then(
+        (response) => {
+          if (response.data !== "") {
+            setTotalPages(
+              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+            );
+            setResults(
+              FilterResultsByApiProvider(
+                response.data,
+                selectedApi,
+                location.state.id
+              )
+            );
+          } else {
+            setResults([]);
+          }
           setSearching(false);
           setStartSearch(false);
           setShowResults(true);
@@ -307,25 +350,7 @@ function ImportScrapper() {
         searchString,
         metadata
       ).then((response) => {
-        setTotalPages(
-          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-        );
-        setResults(
-          FilterResultsByApiProvider(
-            response.data,
-            selectedApi,
-            location.state.id
-          )
-        );
-        setSearching(false);
-        setStartSearch(false);
-        setShowResults(true);
-      });
-      return;
-    }
-    if (selectedApi.name.includes("TMNT")) {
-      ConfigService.getItemTmnt(page, rowsPerPage, searchString, metadata).then(
-        (response) => {
+        if (response.data !== "") {
           setTotalPages(
             CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
           );
@@ -336,6 +361,32 @@ function ImportScrapper() {
               location.state.id
             )
           );
+        } else {
+          setResults([]);
+        }
+        setSearching(false);
+        setStartSearch(false);
+        setShowResults(true);
+      });
+      return;
+    }
+    if (selectedApi.name.includes("TMNT")) {
+      ConfigService.getItemTmnt(page, rowsPerPage, searchString, metadata).then(
+        (response) => {
+          if (response.data !== "") {
+            setTotalPages(
+              CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+            );
+            setResults(
+              FilterResultsByApiProvider(
+                response.data,
+                selectedApi,
+                location.state.id
+              )
+            );
+          } else {
+            setResults([]);
+          }
           setSearching(false);
           setStartSearch(false);
           setShowResults(true);
@@ -350,17 +401,20 @@ function ImportScrapper() {
         searchString,
         metadata
       ).then((response) => {
-        //console.log(response.data)
-        setTotalPages(
-          CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
-        );
-        setResults(
-          FilterResultsByApiProvider(
-            response.data,
-            selectedApi,
-            location.state.id
-          )
-        );
+        if (response.data !== "") {
+          setTotalPages(
+            CheckCountFieldNameApi(response, selectedApi, rowsPerPage)
+          );
+          setResults(
+            FilterResultsByApiProvider(
+              response.data,
+              selectedApi,
+              location.state.id
+            )
+          );
+        } else {
+          setResults([]);
+        }
         setSearching(false);
         setStartSearch(false);
         setShowResults(true);

@@ -1,5 +1,6 @@
 import axios from "axios";
 import authHeader from "./auth-header";
+import { isUndefined } from "lodash";
 
 const API_URL = window.env.API_URL;
 const GET_COLLECTION_ITEMS_ID_URL = `${API_URL}/collections`;
@@ -47,6 +48,7 @@ const GET_DC = `${API_URL}/scrapper/get-dc-multiverse`;
 const GET_GIJOE = `${API_URL}/scrapper/get-gijoe`;
 const GET_HOT_WHEELS = `${API_URL}/scrapper/get-hot-wheels`;
 const GET_MARVEL = `${API_URL}/scrapper/get-marvel-legends`;
+const GET_MINERALS = `${API_URL}/scrapper/get-minerals`;
 const GET_MOTU = `${API_URL}/scrapper/get-motu`;
 const GET_STARWARS = `${API_URL}/scrapper/get-star-wars`;
 const GET_TMNT = `${API_URL}/scrapper/get-tmnt`;
@@ -614,6 +616,29 @@ const getItemMarvelLegends = (page, rowsPerPage, query, metadata) => {
     });
 };
 
+const getItemMinerals = (page, rowsPerPage, query, metadata) => {
+  const params = {
+    page: page,
+    rowsPerPage: rowsPerPage,
+    query: query,
+    metadata: metadata,
+  };
+  return axios
+    .get(GET_MINERALS, { headers: authHeader(), params })
+    .then((response) => {
+      if (response.status === 200 || response.status === 201) {
+        return response;
+      }
+      return Promise.reject(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.status);
+        return error.response;
+      }
+    });
+};
+
 const getItemMotu = (page, rowsPerPage, query, metadata) => {
   const params = {
     page: page,
@@ -647,8 +672,10 @@ const getItemStarWars = (page, rowsPerPage, query, metadata) => {
   return axios
     .get(GET_STARWARS, { headers: authHeader(), params })
     .then((response) => {
-      if (response.status === 200 || response.status === 201) {
-        return response;
+      if (!isUndefined(response)) {
+        if (response.status === 200 || response.status === 201) {
+          return response;
+        }
       }
       return Promise.reject(response);
     })
@@ -1250,6 +1277,7 @@ const ConfigService = {
   getItemGijoe,
   getItemHotWheels,
   getItemMarvelLegends,
+  getItemMinerals,
   getItemMotu,
   getItemStarWars,
   getItemTmnt,

@@ -456,7 +456,7 @@ function ImportCollectionFile() {
             {allStepsCompleted() ? (
               <Box>
                 {parseFile()}
-                {parseTriggeredRef === false ? (
+                {parseTriggeredRef.current === false ? (
                   <CircularProgress />
                 ) : (
                   <Box>

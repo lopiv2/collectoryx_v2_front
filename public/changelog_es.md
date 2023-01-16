@@ -1,3 +1,15 @@
+### 1.5.3 - 12 Enero 2023 
+***
+
+#### Nuevo
+ * Importación añadida Minerales Api
+
+#### Corregido
+* Al importar elementos desde CSV, se ha corregido que si se poseen, sin fecha de adquisición, se ponga la del día de hoy
+* Si la colección no tiene metadatos a la hora de crearse, al importar desde Apis, los metadatos no se importan
+* Arreglado valor por defecto en la creación de colecciones, con metadatos, en los desplegables del tipo de dato
+
+
 ### 1.5.2 - 6 Enero 2023 
 ***
 

@@ -86,7 +86,7 @@ export default function TableCustomFields(props) {
               </Grid>
               <Grid item xs={2}>
                 <TextField
-                  value={item.type ? item.type : fieldType}
+                  defaultValue="INTEGER"
                   id="demo-simple-select"
                   select
                   size="small"

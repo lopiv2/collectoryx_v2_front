@@ -124,6 +124,7 @@ const CheckCountFieldNameApi = (response, selectedApi, rowsPerPage) => {
   if (
     selectedApi.name.includes("Pokemon") ||
     selectedApi.name.includes("Marvel Legends") ||
+    selectedApi.name.includes("Minerals") ||
     selectedApi.name.includes("MOTU") ||
     selectedApi.name.includes("Gijoe") ||
     selectedApi.name.includes("Star Wars") ||
@@ -244,6 +245,7 @@ const FilterResultsByApiProvider = (results, selectedApi, collection) => {
   }
   if (
     selectedApi.name.includes("Marvel Legends") ||
+    selectedApi.name.includes("Minerals") ||
     selectedApi.name.includes("MOTU") ||
     selectedApi.name.includes("Gijoe") ||
     selectedApi.name.includes("Star Wars") ||
