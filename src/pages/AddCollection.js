@@ -20,7 +20,7 @@ import * as Yup from "yup";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Tooltip } from "@mui/material";
 import ImageGalleryDialog from "../components/ImageGalleryDialog";
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from "@mui/icons-material/Link";
 import URLImageDialog from "../components/URLImageDialog";
 
 function AddCollection() {
@@ -39,9 +39,11 @@ function AddCollection() {
   const [urlImageChosen, setUrlImageChosen] = useState(false); //If a image was selected from url
 
   const handleChangeTemplate = (event) => {
-    var index = OptionsService.createCollectionOptions.findIndex(item => item.value === event.target.value);
+    var index = OptionsService.createCollectionOptions.findIndex(
+      (item) => item.value === event.target.value
+    );
     setTemplate(OptionsService.createCollectionOptions[index]);
-    setOptionalFields([])
+    setOptionalFields([]);
   };
 
   const handleImageClick = () => {
@@ -68,8 +70,7 @@ function AddCollection() {
         name: "",
         type: "INTEGER",
       };
-    }
-    else {
+    } else {
       newField = {
         id: generateId(8),
         name: field.name,
@@ -124,7 +125,11 @@ function AddCollection() {
       });
     }
     //Image not set
-    if (values.file === undefined && imgGallerySelected === false && urlImageChosen === false) {
+    if (
+      values.file === undefined &&
+      imgGallerySelected === false &&
+      urlImageChosen === false
+    ) {
       ConfigService.createCollection(
         values.name,
         values.template.value,
@@ -142,7 +147,11 @@ function AddCollection() {
       });
     }
     //New image uploaded not from gallery nor url
-    if (values.file !== undefined && imgGallerySelected === false && urlImageChosen === false) {
+    if (
+      values.file !== undefined &&
+      imgGallerySelected === false &&
+      urlImageChosen === false
+    ) {
       ConfigService.putImage(values.name, values.file).then((resp) => {
         ConfigService.createCollection(
           values.name,
@@ -164,7 +173,9 @@ function AddCollection() {
   };
 
   useEffect(() => {
-    var index = OptionsService.createCollectionOptions.findIndex(item => item.value === "New");
+    var index = OptionsService.createCollectionOptions.findIndex(
+      (item) => item.value === "New"
+    );
     setTemplate(OptionsService.createCollectionOptions[index]);
     setLicenseCollections(OptionsService.createCollectionOptions);
     /*if (userData.license.includes("Free")) {
@@ -191,16 +202,18 @@ function AddCollection() {
           setFields((fields) => [...fields, field]);
         }
         if (template.metaFields) {
-          template.metaFields.map((f,index) => {
+          template.metaFields.map((f, index) => {
             //console.log(intl.formatMessage({id: f.value.props.id}))
-            const translatedMessage=intl.formatMessage({id: f.value.props.id})
+            const translatedMessage = intl.formatMessage({
+              id: f.value.props.id,
+            });
             const newField = {
               id: generateId(8),
               name: translatedMessage,
               type: f.type,
             };
             handleClickNewField(newField);
-          })
+          });
         }
       } else {
         setFields("");
@@ -254,7 +267,7 @@ function AddCollection() {
   });
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       {licenseCollections && template && (
         <Grid>
           <Grid item xs={6}>
@@ -263,7 +276,12 @@ function AddCollection() {
             </Typography>
           </Grid>
           <Formik
-            initialValues={{ name: "", template: "New", logo: "", metadata: [] }}
+            initialValues={{
+              name: "",
+              template: "New",
+              logo: "",
+              metadata: [],
+            }}
             validate={(values) => {
               const errors = {};
               /*if (!values.name) {
@@ -292,7 +310,11 @@ function AddCollection() {
               isSubmitting,
             }) => (
               <Form onSubmit={handleSubmit} id="form">
-                <Grid container spacing={2}>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3, xl: 1 }}
+                  columns={{ xs: 3, sm: 8, md: 10, xl: 12 }}
+                >
                   <Grid item xs={12}>
                     <Box
                       pt={0}
@@ -307,7 +329,7 @@ function AddCollection() {
                       src={preview ? preview : NoImage}
                     ></Box>
                   </Grid>
-                  <Grid item>
+                  <Grid item xs={1} sm={2} md={2} xl={4}>
                     <Box>
                       <Button variant="contained" component="label">
                         {
@@ -326,7 +348,13 @@ function AddCollection() {
                       </Button>
                     </Box>
                   </Grid>
-                  <Grid item>
+                  <Grid
+                    item
+                    xs={2}
+                    md={3}
+                    xl={4}
+                    sx={{ marginLeft: { xl: -45, md: 0 } }}
+                  >
                     <Tooltip
                       title={intl.formatMessage({
                         id: "app.tooltip.search_gallery",
@@ -347,7 +375,13 @@ function AddCollection() {
                       </Button>
                     </Tooltip>
                   </Grid>
-                  <Grid item>
+                  <Grid
+                    item
+                    xs={3}
+                    md={4}
+                    xl={4}
+                    sx={{ marginLeft: { xl: -52, lg: -25, md: -10 } }}
+                  >
                     <Tooltip
                       title={intl.formatMessage({
                         id: "app.collection.add_collection_image_url",
@@ -460,7 +494,11 @@ function AddCollection() {
                   </Grid>
                 </Grid>
                 <Box pt={3}>
-                  <Grid container>
+                  <Grid
+                    container
+                    spacing={{ xs: 2, sm: 2.5, md: 3 }}
+                    columns={{ xs: 3, sm: 3, md: 3 }}
+                  >
                     <Grid item xs={1}>
                       <Button
                         variant="contained"
@@ -471,7 +509,13 @@ function AddCollection() {
                         <FormattedMessage id="app.button.accept"></FormattedMessage>
                       </Button>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid
+                      item
+                      xs={2}
+                      sx={{
+                        marginLeft: { sm: -10, xl: -47, lg: -25, md: -15 },
+                      }}
+                    >
                       <Button variant="contained" onClick={() => navigate(-1)}>
                         <FormattedMessage id="app.button.cancel"></FormattedMessage>
                       </Button>
@@ -481,7 +525,8 @@ function AddCollection() {
               </Form>
             )}
           </Formik>
-        </Grid>)}
+        </Grid>
+      )}
       <URLImageDialog
         setUrl={setPreview}
         setUrlImageChosen={setUrlImageChosen}

@@ -3,6 +3,7 @@
 
 #### New
  * Minerals Api import added
+ * New Minerals template added to the collection creation, with metadata embedded.
 
 #### Fixed
 * When importing elements from CSV, it has been corrected that if they are owned, without acquisition date, today's date is set.

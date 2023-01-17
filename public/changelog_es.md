@@ -3,6 +3,7 @@
 
 #### Nuevo
  * Importación añadida Minerales Api
+ * Nueva plantilla de Minerales añadida a la creación de colecciones, con metadatos incorporados
 
 #### Corregido
 * Al importar elementos desde CSV, se ha corregido que si se poseen, sin fecha de adquisición, se ponga la del día de hoy

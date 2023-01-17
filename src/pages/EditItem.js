@@ -344,7 +344,7 @@ function EditItem(props) {
   //console.log(location.state.item)
   return (
     location.state !== null && (
-      <Box sx={{ display: "flex" }}>
+      <Box>
         <ToastContainer autoClose={2000} />
         <Grid container>
           <Grid item xs={12}>
@@ -476,15 +476,15 @@ function EditItem(props) {
                       <Grid
                         container
                         spacing={{ xs: 2, sm: 15, md: 12 }}
-                        columns={{ xs: 4, sm: 8, md: 12 }}
+                        columns={{ xs: 4, sm: 8, md: 12, lg: 12, xl: 12 }}
                       >
-                        <Grid item xs={2}>
+                        <Grid item xs={2} md={4} lg={3} xl={2}>
                           <Box pt={2} ml={2}>
                             <Typography variant="body1">
                               <FormattedMessage id="app.collection.view_collections_item_name"></FormattedMessage>
                             </Typography>
                             <TextField
-                              sx={{ minWidth: { xs: 250, sm: 260 } }}
+                              sx={{ minWidth: { xs: 250, sm: 150, md: 235 } }}
                               size="small"
                               id="name"
                               name="name"
@@ -499,8 +499,8 @@ function EditItem(props) {
                             />
                           </Box>
                         </Grid>
-                        <Grid item xs={4}>
-                          <Box pt={2} pl={2}>
+                        <Grid item xs={4} md={6} lg={3} xl={5}>
+                          <Box pt={2} sx={{ pl: { xs: 2, sm: 2.2, md: 2 } }}>
                             <Typography variant="body1">
                               <FormattedMessage id="app.collection.view_collections_item_serie"></FormattedMessage>
                             </Typography>
@@ -534,13 +534,13 @@ function EditItem(props) {
                           </Box>
                         </Grid>
                       </Grid>
-                      <Grid item xs={2}>
-                        <Box pt={2}>
+                      <Grid item xs={2} md={4} lg={3} xl={1.85}>
+                        <Box pt={2} sx>
                           <Typography variant="body1">
                             <FormattedMessage id="app.collection.view_collections_item_price"></FormattedMessage>
                           </Typography>
                           <TextField
-                            sx={{ minWidth: { xs: 100, sm: 260 } }}
+                            sx={{ minWidth: { xs: 100, sm: 150, xl: 80 } }}
                             size="small"
                             id="price"
                             name="price"
@@ -560,13 +560,16 @@ function EditItem(props) {
                           />
                         </Box>
                       </Grid>
-                      <Grid item xs={4}>
-                        <Box pt={2} sx={{ pl: { xs: 7.7, sm: 2.1 } }}>
+                      <Grid item xs={4} md={6} lg={3} xl={2.65}>
+                        <Box
+                          pt={2}
+                          sx={{ pl: { xs: 7.7, sm: 10, md: 4, lg:3, xl: 5 } }}
+                        >
                           <Typography variant="body1">
                             <FormattedMessage id="app.collection.view_collections_item_year"></FormattedMessage>
                           </Typography>
                           <TextField
-                            sx={{ minWidth: { xs: 140, sm: 237 } }}
+                            sx={{ minWidth: { xs: 140, sm: 235} }}
                             size="small"
                             id="year"
                             name="year"
@@ -580,7 +583,7 @@ function EditItem(props) {
                         </Box>
                       </Grid>
                       <Grid container spacing={2}>
-                        <Grid item xs={2}>
+                        <Grid item xs={2} xl={2}>
                           <Box pt={2} ml={2}>
                             <Typography variant="body1">
                               <FormattedMessage id="app.collection.view_collections_item_own"></FormattedMessage>
@@ -592,8 +595,11 @@ function EditItem(props) {
                             ></Checkbox>
                           </Box>
                         </Grid>
-                        <Grid item xs={9}>
-                          <Box pt={2} sx={{ pl: { xs: 9.8, sm: 1.3 } }}>
+                        <Grid item xs={9} xl={4}>
+                          <Box
+                            pt={2}
+                            sx={{ pl: { xs: 9.8, sm: 12, md: 19, lg:15, xl: 4 } }}
+                          >
                             <Typography variant="body1">
                               <FormattedMessage id="app.collection.view_collections_item_date"></FormattedMessage>
                             </Typography>
@@ -608,9 +614,7 @@ function EditItem(props) {
                               onChange={(newValue) => {
                                 setDate(newValue);
                               }}
-                              renderInput={(params) => (
-                                <TextField {...params} />
-                              )}
+                              renderInput={(params) => <TextField {...params} maxWidth={2} />}
                             />
                           </Box>
                         </Grid>
