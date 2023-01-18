@@ -727,22 +727,25 @@ function ImportScrapper() {
           ) : null
         ) : null}
         {importMetadata === true && (
-          <Grid item xs={12}>
+          <Grid container item xs={12}>
             {metaFields.map((item, index) => (
               <ListItem divider key={index}>
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                   <TextField
                     id="outlined-basic"
                     size="small"
                     label={item.key}
                     value={item.key}
                     variant="outlined"
+                    inputProps={{
+                      sx: { fontSize: { xs: ".7rem", xl: "1rem" } },
+                    }}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={3}>
                   {" -> "}
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4}>
                   <TextField
                     defaultValue=""
                     select
