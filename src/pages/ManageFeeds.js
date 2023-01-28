@@ -14,8 +14,8 @@ import { Formik, Form } from "formik";
 import { TextField, Avatar } from "@mui/material";
 import { useIntl } from "react-intl";
 import { cleanUrl } from "../utils/generic";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import * as Yup from "yup";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { AppContext } from "../components/AppContext";
@@ -34,23 +34,19 @@ function ManageFeeds(props) {
   const { userData, setUserData } = React.useContext(AppContext);
 
   const handleDeleteClick = () => {
-    const deleteColl = ConfigService.deleteFeed(value).then(
-      (response) => {
-        if (response.data === true) {
-          toast.success(
-            <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
-            { theme: "colored" }
-          );
-          var index = feedsList.findIndex(
-            (feedsList) => feedsList.id === value
-          );
-          if (index > -1) {
-            feedsList.splice(index, 1);
-            setFeedsList([...feedsList]);
-          }
+    const deleteColl = ConfigService.deleteFeed(value).then((response) => {
+      if (response.data === true) {
+        toast.success(
+          <FormattedMessage id="app.collection.item-deleted"></FormattedMessage>,
+          { theme: "colored" }
+        );
+        var index = feedsList.findIndex((feedsList) => feedsList.id === value);
+        if (index > -1) {
+          feedsList.splice(index, 1);
+          setFeedsList([...feedsList]);
         }
       }
-    );
+    });
   };
 
   useEffect(() => {
@@ -64,17 +60,20 @@ function ManageFeeds(props) {
   }, [newFeedEdited]);
 
   const submitForm = (values) => {
-    ConfigService.createFeed(userData.id, values.name, values.url, cleanUrl(values.url)).then(
-      (response) => {
-        if (response.status === 200) {
-          toast.success(
-            <FormattedMessage id="app.feed.created"></FormattedMessage>,
-            { theme: "colored" }
-          );
-          setFeedsList((feedsList) => [...feedsList, response.data]);
-        }
+    ConfigService.createFeed(
+      userData.id,
+      values.name,
+      values.url,
+      "https://" + cleanUrl(values.url)
+    ).then((response) => {
+      if (response.status === 200) {
+        toast.success(
+          <FormattedMessage id="app.feed.created"></FormattedMessage>,
+          { theme: "colored" }
+        );
+        setFeedsList((feedsList) => [...feedsList, response.data]);
       }
-    );
+    });
   };
 
   const newSerieSchema = Yup.object().shape({
@@ -96,21 +95,21 @@ function ManageFeeds(props) {
         setOpenEdit(true);
       },
     },
-    rowData => ({
+    (rowData) => ({
       icon: DeleteIcon,
       tooltip: intl.formatMessage({ id: "app.button.delete" }),
       onClick: (event, rowData) => {
         setValue(rowData.id);
         setConfirmOpen(true);
-      }
-    })
-  ]
+      },
+    }),
+  ];
 
   const options = {
     sorting: true,
     exportButton: true,
-    headerStyle: { fontWeight: 'bold', },
-    actionsColumnIndex: -1
+    headerStyle: { fontWeight: "bold" },
+    actionsColumnIndex: -1,
   };
 
   const columns = [
@@ -138,13 +137,13 @@ function ManageFeeds(props) {
       id: item.id,
       name: item.name,
       url: item.rssUrl,
-      logo:
+      logo: (
         <Avatar
           variant="rounded"
           src={item.logo ? item.logo : NoImage}
           sx={{ width: 50, height: 50 }}
         ></Avatar>
-
+      ),
     };
     return rows;
   });

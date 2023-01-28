@@ -1,3 +1,9 @@
+### 1.5.4 - 28 Enero 2023 
+***
+
+#### Corregido
+* Al añadir un feed nuevo, cuando coge el favicon de la web, ya no da error.
+
 ### 1.5.3 - 17 Enero 2023 
 ***
 
