@@ -100,20 +100,28 @@ function ImportScrapper() {
         ConfigService.getSerieFromRebrickable(sentItem.serie, selectedApi).then(
           (response) => {
             sentItem.serie = response.data.name;
+            ConfigService.importItemFromWeb(sentItem).then((response) => {
+              if (response.status === 200) {
+                toast.success(
+                  <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
+                  { theme: "colored" }
+                );
+              }
+            });
           }
         );
       } else {
         //If metadata is minifig, is a collectible minifigure
         sentItem.serie = "Collectible Minifigure";
+        ConfigService.importItemFromWeb(sentItem).then((response) => {
+          if (response.status === 200) {
+            toast.success(
+              <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
+              { theme: "colored" }
+            );
+          }
+        });
       }
-      ConfigService.importItemFromWeb(sentItem).then((response) => {
-        if (response.status === 200) {
-          toast.success(
-            <FormattedMessage id="app.collection.item-created"></FormattedMessage>,
-            { theme: "colored" }
-          );
-        }
-      });
     } else {
       if (selectedApi.name.includes("GiantBomb")) {
         ConfigService.importItemFromWeb(sentItem).then((response) => {
@@ -429,7 +437,6 @@ function ImportScrapper() {
         selectedApi,
         metadata
       ).then((response) => {
-        //console.log(response.data)
         if (response.error) {
           console.log(response);
         }
@@ -441,6 +448,7 @@ function ImportScrapper() {
           selectedApi,
           location.state.id
         );
+        //console.log(results)
         if (results) {
           results.map((result) => {
             if (result.metadata) {
