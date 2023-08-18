@@ -108,7 +108,7 @@ function ManageApiTab(props) {
         setValue(rowData.id_api);
         setConfirmOpen(true);
       },
-      hidden: rowData.locked
+      hidden: rowData.locked,
     }),
   ];
 
@@ -163,12 +163,14 @@ function ManageApiTab(props) {
       logo:
         item.logo === null ? (
           <Avatar
+            imgProps={{ referrerPolicy: "no-referrer" }}
             variant="rounded"
             src={NoImage}
             sx={{ width: 100, height: 35 }}
           ></Avatar>
         ) : (
           <Avatar
+            imgProps={{ referrerPolicy: "no-referrer" }}
             variant="rounded"
             src={item.logo}
             sx={{ width: 100, height: 35 }}

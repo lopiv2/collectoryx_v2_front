@@ -340,7 +340,7 @@ function DisplayCollection(props) {
           if (page == 0) {
             fetchData(page, rowsPerPage, rowsOrder, searchQuery);
           } else {
-            setPage(1)
+            setPage(1);
             fetchData(0, rowsPerPage, rowsOrder, searchQuery);
           }
         });
@@ -517,6 +517,7 @@ function DisplayCollection(props) {
             className="button-own"
             startIcon={
               <Avatar
+                imgProps={{ referrerPolicy: "no-referrer" }}
                 variant="square"
                 sx={{ width: 35, height: 35, ml: 2 }}
                 src={item.own ? Tick : Cross}
@@ -541,6 +542,7 @@ function DisplayCollection(props) {
             className="button-own"
             startIcon={
               <Avatar
+                imgProps={{ referrerPolicy: "no-referrer" }}
                 variant="square"
                 sx={{ width: 35, height: 35, ml: 2 }}
                 src={item.wanted ? Tick : Cross}
@@ -573,11 +575,13 @@ function DisplayCollection(props) {
             {item.image != null ? (
               <Avatar
                 variant="rounded"
+                imgProps={{ referrerPolicy: "no-referrer" }}
                 src={checkImage(item)}
                 sx={{ width: 100, height: 35 }}
               />
             ) : (
               <Avatar
+                imgProps={{ referrerPolicy: "no-referrer" }}
                 variant="rounded"
                 src={NoImage}
                 sx={{ width: 100, height: 35 }}
@@ -900,11 +904,11 @@ function DisplayCollection(props) {
                               arrow
                               followCursor
                             >
-                              <CardMedia
-                                component="img"
-                                width="500%"
-                                height="220"
-                                image={checkImage(item)}
+                              <Avatar
+                                variant="rounded"
+                                imgProps={{ referrerPolicy: "no-referrer" }}
+                                src={checkImage(item)}
+                                sx={{ width: 220, height: 220 }}
                                 alt={item.name}
                                 className="card-collection"
                                 onClick={() => {
@@ -977,6 +981,9 @@ function DisplayCollection(props) {
                                   className="button-own"
                                   startIcon={
                                     <Avatar
+                                      imgProps={{
+                                        referrerPolicy: "no-referrer",
+                                      }}
                                       variant="square"
                                       sx={{
                                         width: 75,
@@ -1109,6 +1116,7 @@ function DisplayCollection(props) {
               <Grid container item xs={12} sm={6} pb={2}>
                 <Grid item pt={2} pb={2} sx={{ pl: { xs: 2 } }}>
                   <Avatar
+                    imgProps={{ referrerPolicy: "no-referrer" }}
                     component={Paper}
                     elevation={2}
                     variant="rounded"
@@ -1170,6 +1178,7 @@ function DisplayCollection(props) {
                         </Typography>
                         {
                           <Avatar
+                            imgProps={{ referrerPolicy: "no-referrer" }}
                             variant="square"
                             sx={{ width: 25, height: 25 }}
                             src={itemSelected.wanted ? Tick : Cross}
@@ -1184,6 +1193,7 @@ function DisplayCollection(props) {
                         </Typography>
                         {
                           <Avatar
+                            imgProps={{ referrerPolicy: "no-referrer" }}
                             variant="square"
                             sx={{ width: 25, height: 25, ml: 2 }}
                             src={itemSelected.own ? Tick : Cross}
@@ -1218,6 +1228,7 @@ function DisplayCollection(props) {
                                   {item.name} :
                                 </Typography>
                                 <Avatar
+                                  imgProps={{ referrerPolicy: "no-referrer" }}
                                   variant="square"
                                   sx={{ width: 25, height: 25, ml: 2 }}
                                   src={Tick}
@@ -1229,6 +1240,7 @@ function DisplayCollection(props) {
                                   {item.name} :
                                 </Typography>
                                 <Avatar
+                                  imgProps={{ referrerPolicy: "no-referrer" }}
                                   variant="square"
                                   sx={{ width: 25, height: 25, ml: 2 }}
                                   src={Cross}

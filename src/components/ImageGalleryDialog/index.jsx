@@ -4,7 +4,16 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { FormattedMessage } from "react-intl";
-import { Grid, Box, Avatar, TextField, Typography, Pagination, Button, MenuItem } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Avatar,
+  TextField,
+  Typography,
+  Pagination,
+  Button,
+  MenuItem,
+} from "@mui/material";
 import { Tooltip } from "@mui/material";
 import ConfigService from "../../app/api/config.api";
 import { AppContext } from "../../components/AppContext";
@@ -65,9 +74,8 @@ const ImageGalleryDialog = (props) => {
       filteredResponse = response.data.content.filter(
         (image) => !image.path.includes("http")
       );
-      setImages([])
-      filteredResponse.map((i) =>
-        setImages((images) => [...images, i.path]));
+      setImages([]);
+      filteredResponse.map((i) => setImages((images) => [...images, i.path]));
       setLoading(false);
     });
     //}
@@ -112,10 +120,9 @@ const ImageGalleryDialog = (props) => {
               value={searchQuery}
               onChange={(e) => {
                 if (e.target.value.trim().length === 0) {
-                  setSearchQuery("")
+                  setSearchQuery("");
                   fetchData(page, rowsPerPage, "name");
-                }
-                else {
+                } else {
                   setSearchQuery(e.target.value);
                   fetchData(page, rowsPerPage, rowsOrder, searchQuery);
 
@@ -124,7 +131,7 @@ const ImageGalleryDialog = (props) => {
               }}
               onKeyPress={(e) => {
                 searchQueryInApi(searchQuery);
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   searchQueryInApi(searchQuery);
                 }
               }}
@@ -151,21 +158,25 @@ const ImageGalleryDialog = (props) => {
             <MenuItem value="20">20</MenuItem>
           </TextField>
         </Grid>
-        <Box sx={{
-          display: "flex", flexDirection: "column",
-          overflow: "hidden", overflowY: "scroll", maxHeight: "90px", border: "3px solid grey"
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            overflowY: "scroll",
+            maxHeight: "90px",
+            border: "3px solid grey",
+          }}
+        >
           <Grid container>
             {open && images.length > 0 && (
-              <Grid
-                container
-                justifyContent="space-between"
-              >
+              <Grid container justifyContent="space-between">
                 {images.map((i) => (
                   <Grid item xs={2.4} key={i}>
                     {/*console.log(i)*/}
                     <Tooltip title={i} placement="bottom" arrow>
                       <Avatar
+                        imgProps={{ referrerPolicy: "no-referrer" }}
                         key={i}
                         variant="rounded"
                         sx={
@@ -186,10 +197,10 @@ const ImageGalleryDialog = (props) => {
               </Grid>
             )}
           </Grid>
-
         </Box>
         <Grid
-          item xs={12}
+          item
+          xs={12}
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -213,17 +224,19 @@ const ImageGalleryDialog = (props) => {
           variant="contained"
           onClick={() => {
             setOpen(false);
-            setImages([])
+            setImages([]);
             onConfirm();
           }}
         >
           <FormattedMessage id="app.button.accept"></FormattedMessage>
         </Button>
-        <Button variant="contained" onClick={() => {
-          setOpen(false)
-          setImages([])
-        }
-        }>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setOpen(false);
+            setImages([]);
+          }}
+        >
           <FormattedMessage id="app.button.cancel"></FormattedMessage>
         </Button>
       </DialogActions>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,15 +13,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthService from "../../app/api/auth.api";
 import { AppContext } from "../../components/AppContext";
 import { NavLink, useNavigate } from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css';
-import { toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 //import { Context } from "../../components/Wrapper";
-import { FormattedMessage, useIntl } from 'react-intl';
-import LanguageSwitcher from '../../components/LanguageSelector';
+import { FormattedMessage, useIntl } from "react-intl";
+import LanguageSwitcher from "../../components/LanguageSelector";
 import Logo from "../../assets/Collectoryx_Logo.png";
 
 function Copyright(props) {
-
   return (
     <Typography
       variant="body2"
@@ -41,7 +40,9 @@ function importAll(r) {
   return r.keys().map(r);
 }
 
-const images = importAll(require.context('../../../public/images/home/', false, /\.(png|jpe?g|svg)$/));
+const images = importAll(
+  require.context("../../../public/images/home/", false, /\.(png|jpe?g|svg)$/)
+);
 const theme = createTheme();
 
 export default function SignInSide() {
@@ -54,24 +55,31 @@ export default function SignInSide() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    AuthService.login(data.get("userName"), data.get("password")).then((response) => {
-      setIsLogged(true);
-      setUserName(data.get("userName"));
-      setRole(response.data.role)
-      if (response.data.error === true) {
-        if (response.status === 500) {
-          toast.error(<FormattedMessage id="app.signin_wrong_user"></FormattedMessage>, { theme: "colored" });
+    AuthService.login(data.get("userName"), data.get("password")).then(
+      (response) => {
+        setIsLogged(true);
+        setUserName(data.get("userName"));
+        setRole(response.data.role);
+        if (response.data.error === true) {
+          if (response.status === 500) {
+            toast.error(
+              <FormattedMessage id="app.signin_wrong_user"></FormattedMessage>,
+              { theme: "colored" }
+            );
+          }
+          if (response.status === 401) {
+            toast.error(
+              <FormattedMessage id="app.signin_wrong_credentials"></FormattedMessage>,
+              { theme: "colored" }
+            );
+          }
+          if (response.status !== 500 && response.status !== 401)
+            toast.error(response.data.message, { theme: "colored" });
+        } else {
+          navigate("/");
         }
-        if (response.status === 401) {
-          toast.error(<FormattedMessage id="app.signin_wrong_credentials"></FormattedMessage>, { theme: "colored" });
-        }
-        if (response.status !== 500 && response.status !== 401)
-          toast.error(response.data.message, { theme: "colored" });
       }
-      else {
-        navigate("/");
-      }
-    });
+    );
   };
 
   return (
@@ -82,7 +90,7 @@ export default function SignInSide() {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        style={{ backgroundImage: `url(${selectedImage})`, minHeight: '100vh' }}
+        style={{ backgroundImage: `url(${selectedImage})`, minHeight: "100vh" }}
         sx={{
           backgroundRepeat: "no-repeat",
           backgroundColor: (t) =>
@@ -90,16 +98,20 @@ export default function SignInSide() {
               ? t.palette.grey[50]
               : t.palette.grey[900],
           backgroundSize: "cover",
-          backgroundPosition: "center"
+          backgroundPosition: "center",
         }}
       >
         <Grid item pt={-10}>
-          <Grid item component={Paper}
+          <Grid
+            item
+            component={Paper}
             elevation={6}
             style={{
-              background: 'linear-gradient(to right bottom, #57abdb, #ffffff69)'
-            }}>
-            <Grid container >
+              background:
+                "linear-gradient(to right bottom, #57abdb, #ffffff69)",
+            }}
+          >
+            <Grid container>
               <Grid container justifyContent="flex-end" m={0} p={2}>
                 <LanguageSwitcher></LanguageSwitcher>
               </Grid>
@@ -110,10 +122,11 @@ export default function SignInSide() {
                 mx: 4,
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <Avatar
+                imgProps={{ referrerPolicy: "no-referrer" }}
                 src={Logo} // use normal <img> attributes as props
                 width="100%"
                 variant="rounded"
@@ -136,14 +149,16 @@ export default function SignInSide() {
                     input: {
                       color: "black",
                       background: "white",
-                      opacity: .75
-                    }
+                      opacity: 0.75,
+                    },
                   }}
                   margin="normal"
                   required
                   fullWidth
                   id="userName"
-                  label={<FormattedMessage id="app.signup.fields.name"></FormattedMessage>}
+                  label={
+                    <FormattedMessage id="app.signup.fields.name"></FormattedMessage>
+                  }
                   name="userName"
                   autoComplete="userName"
                   autoFocus
@@ -153,14 +168,16 @@ export default function SignInSide() {
                     input: {
                       color: "black",
                       background: "white",
-                      opacity: .75
-                    }
+                      opacity: 0.75,
+                    },
                   }}
                   margin="normal"
                   required
                   fullWidth
                   name="password"
-                  label={<FormattedMessage id="app.signin.password"></FormattedMessage>}
+                  label={
+                    <FormattedMessage id="app.signin.password"></FormattedMessage>
+                  }
                   type="password"
                   id="password"
                   autoComplete="current-password"
@@ -190,7 +207,9 @@ export default function SignInSide() {
                       style={{
                         color: "black",
                       }}
-                    > <FormattedMessage id="app.signin_not_account"></FormattedMessage>
+                    >
+                      {" "}
+                      <FormattedMessage id="app.signin_not_account"></FormattedMessage>
                     </NavLink>
                   </Grid>
                 </Grid>
@@ -201,6 +220,6 @@ export default function SignInSide() {
         </Grid>
       </Grid>
       <CssBaseline />
-    </ThemeProvider >
+    </ThemeProvider>
   );
 }

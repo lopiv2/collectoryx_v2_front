@@ -252,12 +252,14 @@ function ManageSeries(props) {
       logo:
         item.logo === null ? (
           <Avatar
+            imgProps={{ referrerPolicy: "no-referrer" }}
             variant="rounded"
             src={NoImage}
             sx={{ width: 100, height: 35 }}
           ></Avatar>
         ) : (
           <Avatar
+            imgProps={{ referrerPolicy: "no-referrer" }}
             variant="rounded"
             src={
               !item.logo.path.includes("http")

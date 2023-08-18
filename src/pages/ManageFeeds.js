@@ -139,6 +139,7 @@ function ManageFeeds(props) {
       url: item.rssUrl,
       logo: (
         <Avatar
+          imgProps={{ referrerPolicy: "no-referrer" }}
           variant="rounded"
           src={item.logo ? item.logo : NoImage}
           sx={{ width: 50, height: 50 }}

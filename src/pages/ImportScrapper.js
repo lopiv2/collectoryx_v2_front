@@ -593,6 +593,7 @@ function ImportScrapper() {
                   <Avatar
                     variant="rounded"
                     key={item.name}
+                    imgProps={{ referrerPolicy: "no-referrer" }}
                     sx={
                       selectedApi === item
                         ? avatarStyleClicked
@@ -669,6 +670,7 @@ function ImportScrapper() {
                         style={{ display: "flex", justifyContent: "center" }}
                       >
                         <Avatar
+                          imgProps={{ referrerPolicy: "no-referrer" }}
                           style={avatarCardStyle}
                           variant="rounded"
                           key={item.name}

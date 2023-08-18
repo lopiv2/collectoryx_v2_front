@@ -10,7 +10,7 @@ const ContextProvider = (props) => {
   const [role, setRole] = useState("");
   const [feedsList, setFeedsList] = useState([]);
   const [dailyEvents, setDailyEvents] = useState([]);
-  const version="1.5.4"
+  const version="1.5.5"
   return (
     <AppContext.Provider
       value={{

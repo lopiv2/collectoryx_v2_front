@@ -1,3 +1,9 @@
+### 1.5.5 - 18 Agosto 2023 
+***
+
+#### Corregido
+* Error al cargar imagenes de algunas URLS, se ha añadido referrerPolicy: "no-referrer" a todos los componentes Avatar para solventarlo.
+
 ### 1.5.4 - 28 Enero 2023 
 ***
 

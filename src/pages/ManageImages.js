@@ -312,11 +312,11 @@ function ManageImages(props) {
                             cardHover === i.id
                               ? cardStyleHover
                               : {
-                                height: 200,
-                                minWidth: 200,
-                                maxWidth: 200,
-                                boxShadow: 3,
-                              }
+                                  height: 200,
+                                  minWidth: 200,
+                                  maxWidth: 200,
+                                  boxShadow: 3,
+                                }
                           }
                           onMouseOver={() => {
                             setCardHover(i.id);
@@ -329,6 +329,7 @@ function ManageImages(props) {
                             <Avatar
                               key={i.id}
                               variant="rounded"
+                              imgProps={{ referrerPolicy: "no-referrer" }}
                               sx={
                                 imageClicked === i.id
                                   ? avatarStyleClicked
@@ -388,6 +389,7 @@ function ManageImages(props) {
                       }}
                     >
                       <Avatar
+                        imgProps={{ referrerPolicy: "no-referrer" }}
                         variant="rounded"
                         src={"/images/uploads/" + imageSelected.path} // use normal <img> attributes as props
                         sx={{

@@ -68,6 +68,7 @@ export default function MostValuableItem() {
           >
             <Grid item xs={2}>
               <Avatar
+                imgProps={{ referrerPolicy: "no-referrer" }}
                 variant="rounded"
                 src={checkImage(itemMax)} // use normal <img> attributes as props
                 width="100%"

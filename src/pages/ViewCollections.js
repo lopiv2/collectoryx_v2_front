@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Avatar,
   Pagination,
   TextField,
   MenuItem,
@@ -43,6 +44,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { isUndefined } from "lodash";
+import NoImage from "../images/no-photo-available.png";
 import EditCollectionDialog from "../components/EditCollectionDialog";
 
 function ViewCollection(props) {
@@ -214,7 +216,9 @@ function ViewCollection(props) {
 
   useEffect(() => {
     if (!isUndefined(newCollectionEdited)) {
-      var index = collectionsList.findIndex((x) => x.id === newCollectionEdited.id);
+      var index = collectionsList.findIndex(
+        (x) => x.id === newCollectionEdited.id
+      );
       let newItems = [...collectionsList];
       newItems[index] = newCollectionEdited;
       setCollectionsList(newItems);
@@ -277,6 +281,18 @@ function ViewCollection(props) {
       }
     });
   };
+  const checkImage = (item) => {
+    if (item.logo) {
+      if (item.logo.path) {
+        if (!item.logo.path.includes("http")) {
+          return "/images/uploads/" + item.logo.path;
+        } else {
+          return item.logo.path;
+        }
+      }
+    }
+    return NoImage;
+  };
 
   return (
     <Box>
@@ -316,7 +332,7 @@ function ViewCollection(props) {
                 onClick={() => {
                   setOpenNew(true);
                 }}
-              /*onClick={() => navigate("/collections/add")}*/
+                /*onClick={() => navigate("/collections/add")}*/
               >
                 <AddIcon></AddIcon>
               </Button>
@@ -401,10 +417,9 @@ function ViewCollection(props) {
               value={searchQuery}
               onChange={(e) => {
                 if (e.target.value.trim().length === 0) {
-                  setSearchQuery("")
+                  setSearchQuery("");
                   fetchData(page, rowsPerPage, "name");
-                }
-                else {
+                } else {
                   setSearchQuery(e.target.value);
                   fetchData(page, rowsPerPage, rowsOrder, searchQuery);
 
@@ -413,7 +428,7 @@ function ViewCollection(props) {
               }}
               onKeyPress={(e) => {
                 searchQueryInApi(searchQuery);
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   searchQueryInApi(searchQuery);
                 }
               }}
@@ -442,11 +457,11 @@ function ViewCollection(props) {
                   cardHover === item
                     ? cardStyleHover
                     : {
-                      height: 400,
-                      minWidth: 250,
-                      maxWidth: 250,
-                      boxShadow: 3,
-                    }
+                        height: 400,
+                        minWidth: 250,
+                        maxWidth: 250,
+                        boxShadow: 3,
+                      }
                 }
                 ml={200}
                 onMouseOver={() => {
@@ -472,7 +487,7 @@ function ViewCollection(props) {
                         height: 25,
                         width: 25,
                         ml: -22.5,
-                        mb: 6,
+                        mb: 0,
                       }}
                       onClick={(e) => {
                         handleAmbitClick(e, item.ambit);
@@ -506,6 +521,41 @@ function ViewCollection(props) {
                     arrow
                   >
                     <CardContent>
+                      <Tooltip
+                        title={intl.formatMessage({
+                          id: "app.tooltip.click_public",
+                        })}
+                        placement="right"
+                        arrow
+                      >
+                        <IconButton
+                          id={item.id}
+                          color="primary"
+                          sx={{
+                            position: "relative",
+                            height: 25,
+                            width: 25,
+                            ml: -22.5,
+                            mb: 6,
+                          }}
+                          onClick={(e) => {
+                            handleAmbitClick(e, item.ambit);
+                          }}
+                          className="button-wish"
+                        >
+                          {item.ambit ? (
+                            <VisibilityIcon
+                              color="success"
+                              fontSize="large"
+                            ></VisibilityIcon>
+                          ) : (
+                            <VisibilityOffIcon
+                              htmlColor="red"
+                              fontSize="large"
+                            ></VisibilityOffIcon>
+                          )}
+                        </IconButton>
+                      </Tooltip>
                       {item.logo ? null : (
                         <Typography
                           align="center"
@@ -518,10 +568,11 @@ function ViewCollection(props) {
                       )}
                       <Typography variant="h5" component="div"></Typography>
                       {item.logo != null && (
-                        <CardMedia
-                          component="img"
-                          width="100%"
-                          image={!item.logo.path.includes("http") ? "/images/uploads/" + item.logo.path : item.logo.path}
+                        <Avatar
+                          variant="rounded"
+                          imgProps={{ referrerPolicy: "no-referrer" }}
+                          src={checkImage(item)}
+                          sx={{ width: 220, height: 50 }}
                           alt={item.name}
                           className="card-collection-no-pointer"
                           style={styles}
@@ -549,6 +600,7 @@ function ViewCollection(props) {
                     </CardContent>
                   </Tooltip>
                 </NavLink>
+
                 <CardActions style={{ justifyContent: "center", padding: 3 }}>
                   <Tooltip
                     title={intl.formatMessage({
